@@ -22,7 +22,6 @@ SET row_security = off;
 
 CREATE DATABASE neighborhood WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'C';
 
-ALTER DATABASE neighborhood OWNER TO robertrodes;
 
 \connect neighborhood
 
@@ -54,8 +53,6 @@ CREATE TABLE public.neighborhoods (
 );
 
 
-ALTER TABLE public.neighborhoods OWNER TO robertrodes;
-
 --
 -- Name: neighborhoods_id_seq; Type: SEQUENCE; Schema: public; Owner: robertrodes
 --
@@ -69,7 +66,6 @@ CREATE SEQUENCE public.neighborhoods_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.neighborhoods_id_seq OWNER TO robertrodes;
 
 --
 -- Name: neighborhoods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: robertrodes
@@ -89,8 +85,6 @@ CREATE TABLE public.neighborhoods_users (
 );
 
 
-ALTER TABLE public.neighborhoods_users OWNER TO robertrodes;
-
 --
 -- Name: requests; Type: TABLE; Schema: public; Owner: robertrodes
 --
@@ -105,8 +99,6 @@ CREATE TABLE public.requests (
 );
 
 
-ALTER TABLE public.requests OWNER TO robertrodes;
-
 --
 -- Name: requests_id_seq; Type: SEQUENCE; Schema: public; Owner: robertrodes
 --
@@ -119,8 +111,6 @@ CREATE SEQUENCE public.requests_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.requests_id_seq OWNER TO robertrodes;
 
 --
 -- Name: requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: robertrodes
@@ -143,8 +133,6 @@ CREATE TABLE public.responses (
 );
 
 
-ALTER TABLE public.responses OWNER TO robertrodes;
-
 --
 -- Name: responses_id_seq; Type: SEQUENCE; Schema: public; Owner: robertrodes
 --
@@ -157,8 +145,6 @@ CREATE SEQUENCE public.responses_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.responses_id_seq OWNER TO robertrodes;
 
 --
 -- Name: responses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: robertrodes
@@ -183,7 +169,6 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO robertrodes;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: robertrodes
@@ -198,7 +183,6 @@ CREATE SEQUENCE public.users_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.users_id_seq OWNER TO robertrodes;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: robertrodes
