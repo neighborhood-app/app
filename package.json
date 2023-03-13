@@ -1,7 +1,7 @@
 {
   "name": "neighborhood",
   "version": "1.0.0",
-  "description": "",
+  "description": "1. Install docker desktop https://www.docker.com/products/docker-desktop/ 2. Run docker-compose -f db_init.yaml up;   3. Open browser at localhost:8080;   4. Login:     - System: PostgreSQL       - User: postgres       - Password: example",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,6 @@
   "bugs": {
     "url": "https://github.com/radu-constantin/neighborhood/issues"
   },
-  "homepage": "https://github.com/radu-constantin/neighborhood#readme"
+  "homepage": "https://github.com/radu-constantin/neighborhood#readme",
+  "keywords": []
 }
