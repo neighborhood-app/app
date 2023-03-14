@@ -1,12 +1,19 @@
 ## Setup Instructions:
 
-1. Install docker desktop https://www.docker.com/products/docker-desktop/
-2. Run docker-compose -f db_init.yaml up;  
-3. Open browser at localhost:8080;  
-4. Login:
+1. Run `npm install` to install the dependencies
+2. Install docker desktop https://www.docker.com/products/docker-desktop/
+3. Run docker-compose -f db_init.yaml up;  
+4. Open browser at localhost:8080;  
+5. Login:
     - System: PostgreSQL  
     - User: postgres  
-    - Password: example  
+    - Password: example
+6. Run `npm run dev` to start the dev server at port 3000
+
+*Basic scripts are defined in `./package.json`.*
+
+[] TODO : `Unexpected console statement` lint error is disabled. That should be enabled before shipping for production which means that the code base should have no `console.log` statements.
+[] TODO/IDEA : We should separate the codebase / volume for the database container into a separate directory (and repository), no ?
 
 ### If db schema doesn't load in container:
 1. Delete the container.
