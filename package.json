@@ -7,6 +7,7 @@
     "tsc": "tsc",
     "dev": "ts-node-dev index.ts",
     "lint": "eslint --ext .ts .",
+    "fix-lint": "eslint --fix --ext .ts .",
     "start": "npm run tsc && node build/index.js"
   },
   "author": "Antonina, Bob, Radu, Shwetank",
