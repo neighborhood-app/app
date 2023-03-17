@@ -3,7 +3,7 @@ import dbQuery from './db_query';
 class Neighborhood {
   async getAllNeighborhoods() {
     const GET_ALL_NEIGHBORHOODS = 'SELECT * FROM neighborhoods';
-    let result = await dbQuery(GET_ALL_NEIGHBORHOODS);
+    const result = await dbQuery(GET_ALL_NEIGHBORHOODS);
 
     return result;
   }
@@ -15,7 +15,7 @@ class Neighborhood {
   // }
 }
 
-let neighborhood = new Neighborhood();
-neighborhood.getAllNeighborhoods().then(res => console.log(res.rows));
+const neighborhood = new Neighborhood();
+neighborhood.getAllNeighborhoods().then((res) => console.log(res.rows));
 
 export default Neighborhood;
