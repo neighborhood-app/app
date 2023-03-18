@@ -1,0 +1,26 @@
+# name of the file changed to confirm to common usage
+
+services:
+  # adminer service is not required. We only need CLI to interact with DB container.
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+
+  db:
+    image: postgres
+    container_name: neighborhood-dev-db # name of container to identify the process
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: postgres
+      POSTGRES_DB: neighborhood-dev # name slightly changed
+    ports:
+      - "5436:5432"
+    volumes:
+      - "./src/model/schema.sql:/docker-entrypoint-initdb.d/schema.sql"
+      - neighborhood_pg_db:/var/lib/postgresql/data
+
+volumes:
+  neighborhood_pg_db: # named volume to identify it easily
