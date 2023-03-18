@@ -8,7 +8,9 @@
     "dev": "ts-node-dev index.ts",
     "lint": "eslint --ext .ts .",
     "fix-lint": "eslint --fix --ext .ts .",
-    "start": "npm run tsc && node build/index.js"
+    "start": "npm run tsc && node build/index.js",
+    "start-db": "./scripts/start-db.sh",
+    "connect-dev-db": "./scripts/connect-dev-db.sh"
   },
   "author": "Antonina, Bob, Radu, Shwetank",
   "license": "ISC",
