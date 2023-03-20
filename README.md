@@ -2,25 +2,21 @@
 
 1. Run `npm install` to install the dependencies
 2. Install docker desktop https://www.docker.com/products/docker-desktop/
-3. Run docker-compose -f db_init.yaml up;  
-4. Open browser at localhost:8080;  
-5. Login:
-    - System: PostgreSQL  
-    - User: postgres  
-    - Password: example
-6. Run `npm run dev` to start the dev server at port 3000
+3. Run `npm run start-db` to start (or restart) the database
+    - You can connect to dev db on command line  by running `npm run connect-dev-db`
+    - You can connect to test db on command line by running `npm run connect-test-db`
+4. Run `npm run dev` to start the dev server at port 3000
 
-*Basic scripts are defined in `./package.json`.*
-
-[] TODO : `Unexpected console statement` lint error is disabled. That should be enabled before shipping for production which means that the code base should have no `console.log` statements.  
-[] TODO/IDEA : We should separate the codebase / volume for the database container into a separate directory (and repository), no ?
+_Other npm scripts are defined in `./package.json`._
 
 ### If db schema doesn't load in container:
-1. Delete the container.
-2. Delete the associated volume.
-3. Run docker-compose -f db_init.yaml up;
+
+1. List the container by running `docker ps` and delete the containers by `docker container rm -f <container-name>`
+2. List the volumes by running `docker volume ls` and delete the associated volume by `docker volume rm -f <volume-name>`
+3. Run `npm run start-db`
 
 ## Github Workflow
+
 ### If you start working on a branch started by a teammate
 1. Find out the remote branch name;
 2. In the local git repository run the command `git switch remote_branch_name`;
@@ -31,18 +27,19 @@
 1. Check github repo issues page.
 
 2. Select an issue to work on.
-![1  Check out issues](https://user-images.githubusercontent.com/40914437/224488666-f1be03df-e7b4-4d35-8987-5bdca970fa61.jpg)
+   ![1  Check out issues](https://user-images.githubusercontent.com/40914437/224488666-f1be03df-e7b4-4d35-8987-5bdca970fa61.jpg)
 
 3. Comment on the issue that you will work on it and assign yourself (if you haven’t been assigned to the issue already);
-![2  Assign issue](https://user-images.githubusercontent.com/40914437/224488691-2b47d069-7510-4244-b88e-493b307cd9fa.jpg)
+   ![2  Assign issue](https://user-images.githubusercontent.com/40914437/224488691-2b47d069-7510-4244-b88e-493b307cd9fa.jpg)
 
 4. If you don’t already have the repository on your local machine, clone it:
-  - On the repository’s main page click on the green code button and copy the https link;
-        ![3  Get repo link](https://user-images.githubusercontent.com/40914437/224488739-c342f293-f382-4ed2-aec7-2838e69ea1df.jpg)
-  - In your terminal in a directory of your choice run `git clone <link_to_repo>` in order to copy the github repository to your local machine;
-![4  Clone the repo](https://user-images.githubusercontent.com/40914437/224488745-25ec0c06-f76b-4e7a-bb20-b89dca5ce4f5.jpg)
-  - Go to the newly created project folder;
-![5  Go to directory](https://user-images.githubusercontent.com/40914437/224488750-3e270cee-0734-4bc1-90cb-12ae7abce7fd.jpg)
+
+- On the repository’s main page click on the green code button and copy the https link;
+  ![3  Get repo link](https://user-images.githubusercontent.com/40914437/224488739-c342f293-f382-4ed2-aec7-2838e69ea1df.jpg)
+- In your terminal in a directory of your choice run `git clone <link_to_repo>` in order to copy the github repository to your local machine;
+  ![4  Clone the repo](https://user-images.githubusercontent.com/40914437/224488745-25ec0c06-f76b-4e7a-bb20-b89dca5ce4f5.jpg)
+- Go to the newly created project folder;
+  ![5  Go to directory](https://user-images.githubusercontent.com/40914437/224488750-3e270cee-0734-4bc1-90cb-12ae7abce7fd.jpg)
 
 5.  Create a new branch for the feature that you want to work on.
   - You will have to create a branch on the remote repo (on Github) and one locally on your machine.
