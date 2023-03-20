@@ -5,17 +5,16 @@ class Neighborhood {
     const GET_ALL_NEIGHBORHOODS = 'SELECT * FROM neighborhoods';
     const result = await dbQuery(GET_ALL_NEIGHBORHOODS);
 
-    return result;
+    if (result.rowCount === 0) return null;
+    return result.rows;
   }
 
+  // separate module for Users
   // async getAllUsers() {
   //   const GET_USERS = 'SELECT * FROM users';
   //   let result = await dbQuery(GET_USERS);
   //   return result;
   // }
 }
-
-const neighborhood = new Neighborhood();
-neighborhood.getAllNeighborhoods().then((res) => console.log(res.rows));
 
 export default Neighborhood;
