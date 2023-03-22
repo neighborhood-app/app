@@ -32,6 +32,9 @@ services:
       POSTGRES_DB: neighborhood-test
     ports:
       - '25432:5432'
+    volumes:
+      - "./src/model/schema.sql:/docker-entrypoint-initdb.d/schema.sql"
+      - neighborhood_pg_db:/var/lib/postgresql/data
 
 volumes:
   neighborhood_pg_db: # named volume to identify it easily
