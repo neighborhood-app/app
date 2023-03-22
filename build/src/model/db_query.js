@@ -12,20 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = __importDefault(require("../utils/config"));
 const pg_1 = require("pg");
+const config_1 = __importDefault(require("../utils/config"));
 // should be moved to logger module
 const logQuery = (statement, parameters) => {
-    let timeStamp = new Date();
-    let formattedTimeStamp = timeStamp.toString().substring(4, 24);
+    const timeStamp = new Date();
+    const formattedTimeStamp = timeStamp.toString().substring(4, 24);
     console.log(formattedTimeStamp, statement, parameters);
 };
 function dbQuery(statement, ...parameters) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log(config_1.default.POSTGRES_URL); //REMOVE AFTER TESTING
         const client = new pg_1.Client(config_1.default.POSTGRES_URL);
         yield client.connect();
         logQuery(statement, parameters);
-        let result = yield client.query(statement, parameters);
+        const result = yield client.query(statement, parameters);
         yield client.end();
         return result;
     });
