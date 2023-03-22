@@ -17,11 +17,11 @@ class Neighborhood {
     getAllNeighborhoods() {
         return __awaiter(this, void 0, void 0, function* () {
             const GET_ALL_NEIGHBORHOODS = 'SELECT * FROM neighborhoods';
-            let result = yield (0, db_query_1.default)(GET_ALL_NEIGHBORHOODS);
-            return result;
+            const result = yield (0, db_query_1.default)(GET_ALL_NEIGHBORHOODS);
+            if (result.rowCount === 0)
+                return null;
+            return result.rows;
         });
     }
 }
-let neighborhood = new Neighborhood();
-neighborhood.getAllNeighborhoods().then(res => console.log(res.rows));
 exports.default = Neighborhood;
