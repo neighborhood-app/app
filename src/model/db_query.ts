@@ -12,7 +12,6 @@ export default async function dbQuery(
   statement: string,
   ...parameters: string[]
 ) {
-  console.log(config.POSTGRES_URL); //REMOVE AFTER TESTING
   const client = new Client(config.POSTGRES_URL);
 
   await client.connect();
