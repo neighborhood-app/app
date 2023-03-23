@@ -1,23 +1,6 @@
-import express from 'express';
-import Neighborhood from './src/model/neighborhood';
+import app from './app';
+import config from './src/utils/config';
 
-const app = express();
-app.use(express.json());
-
-const PORT = 3000;
-
-app.get('/', (_req, res) => {
-  console.log('someone pinged here');
-  res.send('pong');
-});
-
-app.get('/neighborhoods', async (_req, res) => {
-  const neighborhoods = await new Neighborhood().getAllNeighborhoods();
-  if (!neighborhoods) return res.sendStatus(404);
-
-  return res.json(neighborhoods);
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(config.PORT, () => {
+  console.log(`Server running on port ${config.PORT}`);
 });
