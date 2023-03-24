@@ -10,7 +10,6 @@ app.get('/', (_req, res) => {
 });
 
 app.get('/neighborhoods', async (_req, res) => {
-  console.log('Works');
   const neighborhoods = await new Neighborhood().getAllNeighborhoods();
   if (!neighborhoods) return res.sendStatus(404);
 
