@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model Gender {
+  id    Int     @id @default(autoincrement())
+  name  String? @db.VarChar(10)
+  users User[]
+}
+
+model Neighborhood {
+  id                  Int                   @id @default(autoincrement())
+  adminID             Int                   @unique
+  admin               User                  @relation(fields: [adminID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  name                String                @db.VarChar(50)
+  description         String?               @db.VarChar(50)
+  location            String?               @db.VarChar(50)
+  neighborhoodUsers   NeighborhoodUsers[]
+  requests            Request[]
+}
+
+model NeighborhoodUsers {
+  neighborhoodID  Int
+  userID          Int
+  active          Boolean?
+  neighborhoods   Neighborhood @relation(fields: [neighborhoodID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users           User         @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([neighborhoodID, userID])
+}
+
+model Request {
+  id              Int           @id @default(autoincrement())
+  neighborhoodID  Int
+  userID          Int
+  title           String        @db.VarChar(50)
+  content         String        @db.VarChar(1000)
+  status          Int?
+  timeCreated     DateTime?     @db.Timestamptz(6)
+  neighborhood    Neighborhood  @relation(fields: [neighborhoodID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user            User          @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  responses       Response[]
+}
+
+model Response {
+  id           Int       @id @default(autoincrement())
+  requestID    Int
+  userID       Int
+  content      String?   @db.VarChar(1000)
+  status       Int?
+  timeCreated  DateTime? @db.Timestamptz(6)
+  request      Request   @relation(fields: [requestID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user         User      @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model User {
+  id                  Int                   @id @default(autoincrement())
+  userName            String                @db.VarChar(25)
+  password            String                @db.VarChar(25)
+  firstName           String?               @db.VarChar(25)
+  lastName            String?               @db.VarChar(25)
+  dob                 DateTime?             @db.Date
+  genderID            Int?
+  bio                 String?               @db.VarChar(500)
+  admin               Neighborhood[]
+  neighborhoodUsers   NeighborhoodUsers[]
+  requests            Request[]
+  responses           Response[]
+  gender              Gender?              @relation(fields: [genderID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_gender_fkey")
+}
