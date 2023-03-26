@@ -20,7 +20,7 @@ model Neighborhood {
   name                String                @db.VarChar(50)
   description         String?               @db.VarChar(50)
   location            String?               @db.VarChar(50)
-  neighborhoodUsers   NeighborhoodUsers[]
+  users               NeighborhoodUsers[]
   requests            Request[]
 }
 
@@ -60,7 +60,7 @@ model Response {
 
 model User {
   id                  Int                   @id @default(autoincrement())
-  userName            String                @db.VarChar(25)
+  userName            String                @db.VarChar(25) @unique
   password            String                @db.VarChar(25)
   firstName           String?               @db.VarChar(25)
   lastName            String?               @db.VarChar(25)
