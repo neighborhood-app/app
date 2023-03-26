@@ -16,6 +16,7 @@ _Other npm scripts are defined in `./package.json`._
 3. Run `npm run start-db`
 
 ## Prisma 
-1. Run `npx prisma db seed` to seed the database;
+1. Run `npx prisma generate` if this is the first time setting up Prisma.
+2. Run `npx prisma db seed` to seed the database;
 2. Check out the db using `npx prisma studio`;
-3 To reset run `npx prisma migrate reset`.
+3. To reset the database run `npx prisma migrate reset`.
