@@ -1,9 +1,11 @@
 import { config } from 'dotenv';
 
-config({ path: `${__dirname}/../../.env` });
+config();
 
-process.env.POSTGRES_URL = process.env.NODE_ENV === 'development'
+const POSTGRES_URL = process.env.NODE_ENV === 'development'
   ? process.env.DEV_POSTGRES_URL
   : process.env.TEST_POSTGRES_URL;
 
-export default process.env;
+const PORT = process.env.PORT;
+
+export default { POSTGRES_URL, PORT };
