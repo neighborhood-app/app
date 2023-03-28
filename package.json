@@ -12,7 +12,7 @@
     "start-db": "./scripts/start-db.sh",
     "connect-dev-db": "./scripts/connect-dev-db.sh",
     "connect-test-db": "./scripts/connect-test-db.sh",
-    "test": "NODE_ENV=test jest --verbose --runInBand"
+    "test": "jest --verbose --runInBand"
   },
   "author": "Antonina, Bob, Radu, Shwetank",
   "license": "ISC",
