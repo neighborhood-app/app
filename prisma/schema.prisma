@@ -11,6 +11,8 @@ model Gender {
   id    Int     @id @default(autoincrement())
   name  String? @db.VarChar(10)
   users User[]
+
+  @@map("genders")
 }
 
 model Neighborhood {
@@ -22,6 +24,8 @@ model Neighborhood {
   location            String?               @db.VarChar(50)
   users               NeighborhoodUsers[]
   requests            Request[]
+
+  @@map("neighborhoods")
 }
 
 model NeighborhoodUsers {
@@ -32,6 +36,7 @@ model NeighborhoodUsers {
   users           User         @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([neighborhoodID, userID])
+  @@map("neighborhoods_users")
 }
 
 model Request {
@@ -45,6 +50,8 @@ model Request {
   neighborhood    Neighborhood  @relation(fields: [neighborhoodID], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user            User          @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: NoAction)
   responses       Response[]
+
+  @@map("requests")
 }
 
 model Response {
@@ -56,6 +63,8 @@ model Response {
   timeCreated  DateTime? @db.Timestamptz(6)
   request      Request   @relation(fields: [requestID], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user         User      @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("responses")
 }
 
 model User {
@@ -72,4 +81,6 @@ model User {
   requests            Request[]
   responses           Response[]
   gender              Gender?              @relation(fields: [genderID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_gender_fkey")
+
+  @@map("users")
 }
