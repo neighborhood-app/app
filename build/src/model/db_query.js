@@ -12,21 +12,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const neighborhood_1 = __importDefault(require("./src/model/neighborhood"));
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-const PORT = 3000;
-app.get('/', (_req, res) => {
-    console.log('someone pinged here');
-    res.send('pong');
-});
-app.get('/neighborhoods', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const neighborhoods = yield new neighborhood_1.default().getAllNeighborhoods();
-    if (!neighborhoods)
-        return res.sendStatus(404);
-    return res.json(neighborhoods);
-}));
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+const pg_1 = require("pg");
+const config_1 = __importDefault(require("../utils/config"));
+// should be moved to logger module
+const logQuery = (statement, parameters) => {
+    const timeStamp = new Date();
+    const formattedTimeStamp = timeStamp.toString().substring(4, 24);
+    console.log(formattedTimeStamp, statement, parameters);
+};
+function dbQuery(statement, ...parameters) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(config_1.default.POSTGRES_URL); //REMOVE AFTER TESTING
+        const client = new pg_1.Client(config_1.default.POSTGRES_URL);
+        yield client.connect();
+        logQuery(statement, parameters);
+        const result = yield client.query(statement, parameters);
+        yield client.end();
+        return result;
+    });
+}
+exports.default = dbQuery;
