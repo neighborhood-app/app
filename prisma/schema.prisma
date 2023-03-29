@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRES_URL")
+  url      = env("DATABASE_URL")
 }
 
 model Gender {
@@ -16,39 +16,38 @@ model Gender {
 }
 
 model Neighborhood {
-  id                  Int                   @id @default(autoincrement())
-  adminID             Int                   @unique
-  admin               User                  @relation(fields: [adminID], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  name                String                @db.VarChar(50)
-  description         String?               @db.VarChar(50)
-  location            String?               @db.VarChar(50)
-  users               NeighborhoodUsers[]
+  id                  Int                 @id @default(autoincrement())
+  admin_id            Decimal             @db.Decimal
+  name                String              @db.VarChar(50)
+  description         String?             @db.VarChar(50)
+  location            String?             @db.VarChar(50)
+  neighborhoods_users NeighborhoodUsers[]
   requests            Request[]
 
   @@map("neighborhoods")
 }
 
 model NeighborhoodUsers {
-  neighborhoodID  Int
-  userID          Int
-  active          Boolean?     @default(true)
-  neighborhoods   Neighborhood @relation(fields: [neighborhoodID], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users           User         @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  neighborhood_id Int
+  user_id         Int
+  active          Boolean?
+  neighborhoods   Neighborhood @relation(fields: [neighborhood_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users           User         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([neighborhoodID, userID])
+  @@id([neighborhood_id, user_id])
   @@map("neighborhoods_users")
 }
 
 model Request {
-  id              Int           @id @default(autoincrement())
-  neighborhoodID  Int
-  userID          Int
-  title           String        @db.VarChar(50)
-  content         String        @db.VarChar(1000)
+  id              Int          @id @default(autoincrement())
+  neighborhood_id Int
+  user_id         Int
+  title           String       @db.VarChar(50)
+  content         String       @db.VarChar(1000)
   status          Int?
-  timeCreated     DateTime?     @db.Timestamptz(6)
-  neighborhood    Neighborhood  @relation(fields: [neighborhoodID], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user            User          @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  time_created    DateTime?    @db.Timestamptz(6)
+  neighborhoods   Neighborhood @relation(fields: [neighborhood_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users           User         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   responses       Response[]
 
   @@map("requests")
@@ -56,31 +55,30 @@ model Request {
 
 model Response {
   id           Int       @id @default(autoincrement())
-  requestID    Int
-  userID       Int
+  request_id   Int
+  user_id      Int
   content      String?   @db.VarChar(1000)
   status       Int?
-  timeCreated  DateTime? @db.Timestamptz(6)
-  request      Request   @relation(fields: [requestID], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user         User      @relation(fields: [userID], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  time_created DateTime? @db.Timestamptz(6)
+  requests     Request   @relation(fields: [request_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users        User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("responses")
 }
 
 model User {
-  id                  Int                   @id @default(autoincrement())
-  userName            String                @db.VarChar(25) @unique
-  password            String                @db.VarChar(25)
-  firstName           String?               @db.VarChar(25)
-  lastName            String?               @db.VarChar(25)
-  dob                 DateTime?             @db.Date
-  genderID            Int?
-  bio                 String?               @db.VarChar(500)
-  admin               Neighborhood[]
-  neighborhoodUsers   NeighborhoodUsers[]
+  id                  Int                 @id @default(autoincrement())
+  user_name           String              @db.VarChar(25)
+  password            String              @db.VarChar(25)
+  first_name          String?             @db.VarChar(25)
+  last_name           String?             @db.VarChar(25)
+  dob                 DateTime?           @db.Date
+  gender_id           Int?
+  bio                 String?             @db.VarChar(500)
+  neighborhoods_users NeighborhoodUsers[]
   requests            Request[]
   responses           Response[]
-  gender              Gender?              @relation(fields: [genderID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_gender_fkey")
+  genders             Gender?             @relation(fields: [gender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_gender_fkey")
 
   @@map("users")
 }
