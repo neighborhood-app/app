@@ -12,11 +12,6 @@ const request = supertest(app);
 
 beforeAll(async () => {
   console.log(process.env.DATABASE_URL);
-  await prisma.user.deleteMany({});
-  await prisma.neighborhood.deleteMany({});
-  await prisma.gender.deleteMany({});
-  await prisma.request.deleteMany({});
-  await prisma.response.deleteMany({});
 });
 
 describe('Testing GET method for neighborhood API.', () => {

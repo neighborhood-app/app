@@ -25,63 +25,63 @@ async function main() {
 
   const bob = await prisma.user.create({
     data: {
-      userName: 'bob',
+      user_name: 'bob',
       password: 'example',
     },
   });
 
   const antonina = await prisma.user.create({
     data: {
-      userName: 'antonina',
+      user_name: 'antonina',
       password: 'example',
     },
   });
 
   const shwetank = await prisma.user.create({
     data: {
-      userName: 'shwetank',
+      user_name: 'shwetank',
       password: 'example',
     },
   });
 
   const radu = await prisma.user.create({
     data: {
-      userName: 'radu',
+      user_name: 'radu',
       password: 'example',
     },
   });
 
   const mike = await prisma.user.create({
     data: {
-      userName: 'mike',
+      user_name: 'mike',
       password: 'example',
     },
   });
 
   const maria = await prisma.user.create({
     data: {
-      userName: 'maria',
+      user_name: 'maria',
       password: 'example',
     },
   });
 
   const bobNeighborhood = await prisma.neighborhood.create({
     data: {
-      adminID: bob.id,
+      admin_id: bob.id,
       name: "Bob's Neighborhood",
     },
   });
 
   const antoninaNeighborhood = await prisma.neighborhood.create({
     data: {
-      adminID: antonina.id,
+      admin_id: antonina.id,
       name: "Antonina's Neighborhood",
     },
   });
 
   const shwetankNeighborhood = await prisma.neighborhood.create({
     data: {
-      adminID: shwetank.id,
+      admin_id: shwetank.id,
       name: "Shwetank's Neighborhood",
     },
   });
@@ -89,12 +89,12 @@ async function main() {
   await prisma.neighborhoodUsers.createMany({
     data: [
       {
-        neighborhoodID: bobNeighborhood.id,
-        userID: radu.id,
+        neighborhood_id: bobNeighborhood.id,
+        user_id: radu.id,
       },
       {
-        neighborhoodID: bobNeighborhood.id,
-        userID: maria.id,
+        neighborhood_id: bobNeighborhood.id,
+        user_id: maria.id,
       },
     ],
   });
