@@ -7,4 +7,15 @@ async function testQuery() {
   console.log(result);
 }
 
-testQuery();
+async function testInsertUser() {
+  const result = await prisma.user.create({
+    data: {
+      userName: 'test',
+      password: 'test',
+    },
+  });
+
+  console.log(result);
+}
+
+testInsertUser();

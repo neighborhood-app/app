@@ -1,14 +1,21 @@
+import { Prisma, PrismaClient } from '@prisma/client';
 import app from '../../app';
 import dbQuery from '../model/db_query';
+import config from '../utils/config';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
 
+const prisma = new PrismaClient({
+  datasources: {
+    db: { url: config.POSTGRES_URL },
+  },
+});
+
 const request = supertest(app);
 
 beforeAll(async () => {
-  await dbQuery('DELETE FROM neighborhoods');
-  await dbQuery("INSERT INTO neighborhoods (admin_id, name, description, location) values (1, 'Example', 'something', 'somewhere')");
+
 });
 
 describe('Testing GET method for neighborhood API.', () => {
