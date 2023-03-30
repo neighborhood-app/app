@@ -14,3 +14,5 @@ _Other npm scripts are defined in `./package.json`._
 1. List the container by running `docker ps` and delete the containers by `docker container rm -f <container-name>`
 2. List the volumes by running `docker volume ls` and delete the associated volume by `docker volume rm -f <volume-name>`
 3. Run `npm run start-db`
+
+# Bob Rodes says hello.
