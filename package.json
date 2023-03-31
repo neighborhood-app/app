@@ -10,6 +10,7 @@
     "fix-lint": "eslint --fix --ext .ts .",
     "start": "NODE_ENV=development npm run tsc && node build/index.js",
     "start-db": "./scripts/start-db.sh",
+    "reinitialize-db": "./scripts/reinitialize-db.sh",
     "connect-dev-db": "./scripts/connect-dev-db.sh",
     "connect-test-db": "./scripts/connect-test-db.sh",
     "test": "jest --verbose --runInBand"
