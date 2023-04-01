@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "dev": "NODE_ENV=development npx prisma migrate deploy && npx prisma db seed && ts-node-dev index.ts",
+    "dev": "NODE_ENV=development npx prisma migrate deploy && ts-node-dev index.ts",
+    "dev seed": "NODE_ENV=development npx prisma migrate deploy && npx prisma db seed && ts-node-dev index.ts",
     "lint": "eslint --ext .ts .",
     "fix-lint": "eslint --fix --ext .ts .",
     "start": "NODE_ENV=development npm run tsc && node build/index.js",
