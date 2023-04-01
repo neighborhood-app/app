@@ -13,11 +13,9 @@ async function main() {
   await prisma.gender.createMany({
     data: [
       {
-        id: 1,
         name: 'male',
       },
       {
-        id: 2,
         name: 'female',
       },
     ],
