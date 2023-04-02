@@ -3,13 +3,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient({ log: ['query'] });
 
 async function main() {
-  await prisma.user.deleteMany({});
-  await prisma.neighborhood.deleteMany({});
-  await prisma.neighborhoodUsers.deleteMany({});
-  await prisma.gender.deleteMany({});
-  await prisma.request.deleteMany({});
-  await prisma.request.deleteMany({});
-
   await prisma.gender.createMany({
     data: [
       {
