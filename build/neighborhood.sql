@@ -76,7 +76,7 @@ ALTER SEQUENCE public.genders_id_seq OWNED BY public.genders.id;
 
 CREATE TABLE public.neighborhoods (
     id integer NOT NULL,
-    admin_id numeric NOT NULL,
+    admin_id integer NOT NULL,
     name character varying(50) NOT NULL,
     description character varying(50),
     location character varying(50)
