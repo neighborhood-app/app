@@ -12,7 +12,7 @@ export default async function dbQuery(
   statement: string,
   ...parameters: string[]
 ) {
-  const client = new Client(config.POSTGRES_URL);
+  const client = new Client(config.DATABASE_URL);
 
   await client.connect();
   logQuery(statement, parameters);
