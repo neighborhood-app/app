@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Gender {
+  id    Int     @id @default(autoincrement())
+  name  String? @db.VarChar(10)
+  users User[]
+
+  @@map("genders")
+}
+
+model Neighborhood {
+  id                  Int                 @id @default(autoincrement())
+  admin_id            Int                 
+  name                String              @db.VarChar(50)
+  description         String?             @db.VarChar(50)
+  location            String?             @db.VarChar(50)
+  neighborhoods_users NeighborhoodUsers[]
+  requests            Request[]
+
+  @@map("neighborhoods")
+}
+
+model NeighborhoodUsers {
+  neighborhood_id Int
+  user_id         Int
+  active          Boolean?
+  neighborhoods   Neighborhood @relation(fields: [neighborhood_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users           User         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([neighborhood_id, user_id])
+  @@map("neighborhoods_users")
+}
+
+model Request {
+  id              Int          @id @default(autoincrement())
+  neighborhood_id Int
+  user_id         Int
+  title           String       @db.VarChar(50)
+  content         String       @db.VarChar(1000)
+  status          Int?
+  time_created    DateTime?    @db.Timestamptz(6)
+  neighborhoods   Neighborhood @relation(fields: [neighborhood_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users           User         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  responses       Response[]
+
+  @@map("requests")
+}
+
+model Response {
+  id           Int       @id @default(autoincrement())
+  request_id   Int
+  user_id      Int
+  content      String?   @db.VarChar(1000)
+  status       Int?
+  time_created DateTime? @db.Timestamptz(6)
+  requests     Request   @relation(fields: [request_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users        User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("responses")
+}
+
+model User {
+  id                  Int                 @id @default(autoincrement())
+  user_name           String              @db.VarChar(25)
+  password            String              @db.VarChar(25)
+  first_name          String?             @db.VarChar(25)
+  last_name           String?             @db.VarChar(25)
+  dob                 DateTime?           @db.Date
+  gender_id           Int?
+  bio                 String?             @db.VarChar(500)
+  neighborhoods_users NeighborhoodUsers[]
+  requests            Request[]
+  responses           Response[]
+  genders             Gender?             @relation(fields: [gender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_gender_fkey")
+
+  @@map("users")
+}

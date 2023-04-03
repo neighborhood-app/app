@@ -1,6 +1,8 @@
 import express from 'express';
-import Neighborhood from './src/model/neighborhood';
 
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient({ log: ['query'] });
 const app = express();
 app.use(express.json());
 
@@ -10,10 +12,16 @@ app.get('/', (_req, res) => {
 });
 
 app.get('/neighborhoods', async (_req, res) => {
-  const neighborhoods = await new Neighborhood().getAllNeighborhoods();
-  if (!neighborhoods) return res.sendStatus(404);
-
-  return res.json(neighborhoods);
+  try {
+    const neighborhoods = await prisma.neighborhood.findMany({});
+    if (neighborhoods.length === 0) {
+      res.status(404).end();
+    } else {
+      res.send(neighborhoods);
+    }
+  } catch (error) {
+    res.status(400).send(error);
+  }
 });
 
 export default app;
