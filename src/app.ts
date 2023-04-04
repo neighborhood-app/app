@@ -1,5 +1,5 @@
 import express from 'express';
-import neighborhoodsRouter from './routes/neighborhoods';
+import neighborhoodsRouter from './controllers/neighborhoods';
 
 const app = express();
 app.use(express.json());
