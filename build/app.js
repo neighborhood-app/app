@@ -12,22 +12,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const pg_1 = require("pg");
-const config_1 = __importDefault(require("../utils/config"));
-// should be moved to logger module
-const logQuery = (statement, parameters) => {
-    const timeStamp = new Date();
-    const formattedTimeStamp = timeStamp.toString().substring(4, 24);
-    console.log(formattedTimeStamp, statement, parameters);
-};
-function dbQuery(statement, ...parameters) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const client = new pg_1.Client(config_1.default.DATABASE_URL);
-        yield client.connect();
-        logQuery(statement, parameters);
-        const result = yield client.query(statement, parameters);
-        yield client.end();
-        return result;
-    });
-}
-exports.default = dbQuery;
+const express_1 = __importDefault(require("express"));
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient({ log: ['query'] });
+const app = (0, express_1.default)();
+app.use(express_1.default.json());
+app.get('/', (_req, res) => {
+    console.log('someone pinged here');
+    res.send('pong');
+});
+app.get('/neighborhoods', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const neighborhoods = yield prisma.neighborhood.findMany({});
+        if (neighborhoods.length === 0) {
+            res.status(404).end();
+        }
+        else {
+            res.send(neighborhoods);
+        }
+    }
+    catch (error) {
+        res.status(400).send(error);
+    }
+}));
+exports.default = app;

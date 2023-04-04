@@ -12,22 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const pg_1 = require("pg");
-const config_1 = __importDefault(require("../utils/config"));
-// should be moved to logger module
-const logQuery = (statement, parameters) => {
-    const timeStamp = new Date();
-    const formattedTimeStamp = timeStamp.toString().substring(4, 24);
-    console.log(formattedTimeStamp, statement, parameters);
-};
-function dbQuery(statement, ...parameters) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const client = new pg_1.Client(config_1.default.DATABASE_URL);
-        yield client.connect();
-        logQuery(statement, parameters);
-        const result = yield client.query(statement, parameters);
-        yield client.end();
-        return result;
-    });
+const db_query_1 = __importDefault(require("./db_query"));
+class Neighborhood {
+    getAllNeighborhoods() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const GET_ALL_NEIGHBORHOODS = 'SELECT * FROM neighborhoods';
+            const result = yield (0, db_query_1.default)(GET_ALL_NEIGHBORHOODS);
+            if (result.rowCount === 0)
+                return null;
+            return result.rows;
+        });
+    }
 }
-exports.default = dbQuery;
+exports.default = Neighborhood;
