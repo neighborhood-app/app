@@ -2,10 +2,10 @@
   "name": "neighborhood_backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "tsc": "tsc",
-    "dev": "NODE_ENV=development npx prisma migrate deploy && ts-node-dev index.ts",
+    "dev": "NODE_ENV=development npx prisma migrate deploy && ts-node-dev src/index.ts",
     "seed": "npx prisma migrate reset",
     "lint": "eslint --ext .ts .",
     "fix-lint": "eslint --fix --ext .ts .",
