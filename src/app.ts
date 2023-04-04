@@ -3,7 +3,7 @@ import neighborhoodsRouter from './routes/neighborhoods';
 
 const app = express();
 app.use(express.json());
-app.use('/neighborhoods', neighborhoodsRouter)
+app.use('/neighborhoods', neighborhoodsRouter);
 
 app.get('/', (_req, res) => {
   console.log('someone pinged here');
