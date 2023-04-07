@@ -26,3 +26,30 @@ describe('Testing GET method for neighborhood API.', () => {
     expect(response.status).toEqual(404);
   });
 });
+
+describe('Testing DELETE method for neighborhood API.', () => {
+  test('Delete one neighborhood by id', async () => {
+    const joe = await prisma.user.create({
+      data: {
+        user_name: 'Joe',
+        password: 'example',
+      },
+    });
+
+    const joeNeighborhood = await prisma.neighborhood.create({
+      data: {
+        admin_id: joe.id,
+        name: "Joe's Neighborhood",
+      },
+    });
+
+    const response = await request.delete(`/neighborhoods/${joeNeighborhood.id}`);
+    expect(response.status).toEqual(200);
+  });
+
+  test('If no neighborhoods exist, return 404 status', async () => {
+    await prisma.neighborhood.deleteMany({});
+    const response = await request.get('/neighborhoods/1');
+    expect(response.status).toEqual(404);
+  });
+});
