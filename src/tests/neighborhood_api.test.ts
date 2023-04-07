@@ -49,7 +49,7 @@ describe('Testing DELETE method for neighborhood API.', () => {
 
   test('If no neighborhoods exist, return 404 status', async () => {
     await prisma.neighborhood.deleteMany({});
-    const response = await request.get('/neighborhoods/1');
+    const response = await request.delete('/neighborhoods/1');
     expect(response.status).toEqual(404);
   });
 });
