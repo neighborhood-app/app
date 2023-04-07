@@ -1,17 +1,10 @@
 import express from 'express';
-
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient({ log: ['query'] });
-const app = express();
-app.use(express.json());
+const neighborhoodsRouter = express.Router();
 
-app.get('/', (_req, res) => {
-  console.log('someone pinged here');
-  res.send('pong');
-});
-
-app.get('/neighborhoods', async (_req, res) => {
+neighborhoodsRouter.get('/', async (_req, res) => {
   try {
     const neighborhoods = await prisma.neighborhood.findMany({});
     if (neighborhoods.length === 0) {
@@ -24,4 +17,4 @@ app.get('/neighborhoods', async (_req, res) => {
   }
 });
 
-export default app;
+export default neighborhoodsRouter;

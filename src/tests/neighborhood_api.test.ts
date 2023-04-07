@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import app from '../../app';
+import app from '../app';
 import seed from './seed';
 
 const supertest = require('supertest'); // eslint-disable-line
