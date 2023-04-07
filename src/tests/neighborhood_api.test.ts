@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 
 const request = supertest(app);
 
-beforeAll(async () => {
+beforeEach(async () => {
   await seed();
 });
 
@@ -29,27 +29,22 @@ describe('Testing GET method for neighborhood API.', () => {
 
 describe('Testing DELETE method for neighborhood API.', () => {
   test('Delete one neighborhood by id', async () => {
-    const joe = await prisma.user.create({
-      data: {
-        user_name: 'Joe',
-        password: 'example',
+    const testNeighborhood = await prisma.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
       },
     });
 
-    const joeNeighborhood = await prisma.neighborhood.create({
-      data: {
-        admin_id: joe.id,
-        name: "Joe's Neighborhood",
-      },
-    });
+    const response = await request.delete(`/neighborhoods/${testNeighborhood!.id}`);
 
-    const response = await request.delete(`/neighborhoods/${joeNeighborhood.id}`);
+    expect(response.text).toEqual('Neighborhood \'Antonina\'s Neighborhood\' has been deleted.');
     expect(response.status).toEqual(200);
   });
 
-  test('If no neighborhoods exist, return 404 status', async () => {
+  test('If neighborhood doesn\'t exist, return 404 status', async () => {
     await prisma.neighborhood.deleteMany({});
     const response = await request.delete('/neighborhoods/1');
+
     expect(response.status).toEqual(404);
   });
 });
