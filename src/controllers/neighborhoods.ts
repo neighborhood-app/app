@@ -19,7 +19,7 @@ neighborhoodsRouter.delete('/:id', catchError(async (req, res) => {
     where: { id: +req.params.id },
   });
 
-  res.status(200).send(`Neighborhood ${deletedNeighborhood.name} has been deleted.`);
+  res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`);
 }));
 
 export default neighborhoodsRouter;
