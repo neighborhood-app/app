@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import catchError from '../utils/catch-error';
+import catchError from '../utils/catchError';
 import prisma from '../model/prismaClient';
 
 const neighborhoodsRouter = express.Router();
