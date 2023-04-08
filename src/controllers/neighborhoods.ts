@@ -1,8 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { PrismaClient } from '@prisma/client';
 import catchError from '../utils/catch-error';
+import prisma from '../model/prismaClient';
 
-const prisma = new PrismaClient({ log: ['query'] });
 const neighborhoodsRouter = express.Router();
 
 neighborhoodsRouter.get('/', catchError(async (_req, res) => {

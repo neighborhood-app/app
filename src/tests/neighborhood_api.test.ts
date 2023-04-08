@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import app from '../app';
 import seed from './seed';
+import prisma from '../model/prismaClient';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
-
-const prisma = new PrismaClient();
 
 const request = supertest(app);
 
