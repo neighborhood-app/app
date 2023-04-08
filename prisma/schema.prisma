@@ -17,7 +17,7 @@ model Gender {
 
 model Neighborhood {
   id                  Int                 @id @default(autoincrement())
-  admin_id            Int                 
+  admin_id            Int
   name                String              @db.VarChar(50)
   description         String?             @db.VarChar(50)
   location            String?             @db.VarChar(50)
@@ -69,7 +69,7 @@ model Response {
 model User {
   id                  Int                 @id @default(autoincrement())
   user_name           String              @db.VarChar(25)
-  password            String              @db.VarChar(25)
+  password_hash       String              @db.VarChar(100)
   first_name          String?             @db.VarChar(25)
   last_name           String?             @db.VarChar(25)
   dob                 DateTime?           @db.Date
