@@ -1,23 +1,20 @@
-import express, { Request, Response, NextFunction } from 'express';
-import 'express-async-errors'; // no lint error through npm run lint
-
+import express from 'express';
 import neighborhoodsRouter from './controllers/neighborhoods';
+import usersRouter from './controllers/users';
 import middleware from './utils/middleware';
 
 const app = express();
 
+// middleware
 app.use(express.json());
 app.use(middleware.requestLogger);
 
 // routes
 app.use('/neighborhoods', neighborhoodsRouter);
+app.use('/api/users', usersRouter);
 
+// error handler and unknown endpoint
 app.use(middleware.unknownEndpoint);
-
-// // Default error handler
-// app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-//   console.error(err);
-//   res.status(400).send('Oops. Something went wrong.');
-// });
+app.use(middleware.errorHandler);
 
 export default app;
