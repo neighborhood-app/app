@@ -21,6 +21,7 @@ model Neighborhood {
   name                String              @db.VarChar(50)
   description         String?             @db.VarChar(50)
   location            String?             @db.VarChar(50)
+  admin               User                @relation(fields: [admin_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   neighborhoods_users NeighborhoodUsers[]
   requests            Request[]
 
@@ -75,6 +76,7 @@ model User {
   dob                 DateTime?           @db.Date
   gender_id           Int?
   bio                 String?             @db.VarChar(500)
+  adminOf            Neighborhood[]
   neighborhoods_users NeighborhoodUsers[]
   requests            Request[]
   responses           Response[]
