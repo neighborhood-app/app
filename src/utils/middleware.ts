@@ -1,8 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import logger from './logger';
 
+/**
+ * - Logs method, path and body of the http request
+ * - if body has property `password`, logs `'*********' inplace of plain-text password`
+ * @param request Request object from express
+ * @param _response Response object from express
+ * @param next NextFunction object from express
+ */
 const requestLogger = (request: Request, _response: Response, next: NextFunction): void => {
-  const { method, path, body } = request;
+  const { method, path } = request;
+  const body = { ...request.body };
+
+  if (body.password !== undefined) { body.password = '********'; }
   logger.info(`${method} ${path} ${JSON.stringify(body)}`);
 
   next();
