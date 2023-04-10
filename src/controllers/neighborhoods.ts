@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import catchError from '../utils/catch-error';
 
@@ -12,6 +12,14 @@ neighborhoodsRouter.get('/', catchError(async (_req, res) => {
   } else {
     res.send(neighborhoods);
   }
+}));
+
+neighborhoodsRouter.delete('/:id', catchError(async (req, res) => {
+  const deletedNeighborhood = await prisma.neighborhood.delete({
+    where: { id: +req.params.id },
+  });
+
+  res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`);
 }));
 
 export default neighborhoodsRouter;
