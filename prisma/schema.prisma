@@ -21,22 +21,11 @@ model Neighborhood {
   name                String              @db.VarChar(50)
   description         String?             @db.VarChar(50)
   location            String?             @db.VarChar(50)
-  admin               User                @relation(fields: [admin_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  neighborhoods_users NeighborhoodUsers[]
+  admin               User                @relation("admin", fields: [admin_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  users               User[]
   requests            Request[]
 
   @@map("neighborhoods")
-}
-
-model NeighborhoodUsers {
-  neighborhood_id Int
-  user_id         Int
-  active          Boolean?
-  neighborhoods   Neighborhood @relation(fields: [neighborhood_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users           User         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([neighborhood_id, user_id])
-  @@map("neighborhoods_users")
 }
 
 model Request {
@@ -76,8 +65,8 @@ model User {
   dob                 DateTime?           @db.Date
   gender_id           Int?
   bio                 String?             @db.VarChar(500)
-  adminOf             Neighborhood[]
-  neighborhoods_users NeighborhoodUsers[]
+  adminOf             Neighborhood[]      @relation("admin")
+  neighborhoods       Neighborhood[]
   requests            Request[]
   responses           Response[]
   gender              Gender?             @relation(fields: [gender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_gender_fkey")
