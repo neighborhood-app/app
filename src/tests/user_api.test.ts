@@ -2,6 +2,7 @@
 import app from '../app';
 import prisma from '../model/prismaClient';
 import { UserWithoutPasswordHash } from '../types';
+import testHelpers from './testHelpers';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
@@ -95,5 +96,29 @@ describe('when there is initially no user in db', () => {
       .expect('Content-Type', /application\/json/);
 
     expect(response2._body.error).toBe('Invalid Password');
+  });
+});
+
+describe('when there is one user in db', () => {
+  beforeEach(async () => {
+    await prisma.user.deleteMany({});
+    await prisma.user.create({
+      data: testHelpers.USER_WITHOUT_ID,
+    });
+  });
+
+  test('unable to add user with same username', async () => {
+    const newUser = {
+      username: 'johnsmith',
+      password: 'secret',
+    };
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response._body.error).toBe('User already exists');
   });
 });

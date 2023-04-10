@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
+import prisma from '../model/prismaClient';
 import { NewUserData, UserWithoutPasswordHash } from '../types';
 
 /**
@@ -30,12 +31,13 @@ const generateNewUserData = async (object: unknown): Promise<NewUserData> => {
   };
 
   /**
- * - narrows username type to string, returns username if its present in req.body and valid
- * - else, throws an Error
+ * - narrows username type to string, checks if username if its present in req.body and valid
+ * - throws Error if username already exists
+ * - throws Error if username not valid
  * @param username from req.body
- * @returns valid username
+ * @returns resolved promise with username as value
  */
-  const parseUsername = (username: unknown): string => {
+  const parseUsername = async (username: unknown): Promise<string> => {
     const MINIMUM_USERNAME_LENGTH = 4;
     if (typeof username !== 'string' || username.length < MINIMUM_USERNAME_LENGTH) {
       const error = new Error('Invalid Username');
@@ -43,7 +45,19 @@ const generateNewUserData = async (object: unknown): Promise<NewUserData> => {
       throw error;
     }
 
-    return username;
+    const existingUser: User | null = await prisma.user.findUnique({
+      where: {
+        user_name: username,
+      },
+    });
+
+    if (existingUser) {
+      const error = new Error('User already exists');
+      error.name = 'UserDataError';
+      throw error;
+    }
+
+    return Promise.resolve(username);
   };
 
   if (!object || typeof object !== 'object') {
@@ -52,7 +66,7 @@ const generateNewUserData = async (object: unknown): Promise<NewUserData> => {
 
   if ('username' in object && 'password' in object) {
     const userData = {
-      user_name: parseUsername(object.username),
+      user_name: await parseUsername(object.username),
       password_hash: await getPasswordHash(object.password),
       first_name: null,
       last_name: null,
