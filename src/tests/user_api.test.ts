@@ -41,7 +41,9 @@ describe('when there is initially no user in db', () => {
     const body: UserWithoutPasswordHash = response._body;
     expect(body.user_name).toBe('johnsmith');
 
-    // need to update to ensure that the user is added to the db
+    const users = await testHelpers.usersInDb();
+    expect(users).toHaveLength(1);
+    expect(users[0].user_name).toBe('johnsmith');
   });
 
   test('creation fails with proper statuscode and message if username or password missing', async () => {
@@ -103,7 +105,7 @@ describe('when there is one user in db', () => {
   beforeEach(async () => {
     await prisma.user.deleteMany({});
     await prisma.user.create({
-      data: testHelpers.USER_WITHOUT_ID,
+      data: testHelpers.INITIAL_USER_DATA_WITHOUT_ID,
     });
   });
 
@@ -120,5 +122,28 @@ describe('when there is one user in db', () => {
       .expect('Content-Type', /application\/json/);
 
     expect(response._body.error).toBe('User already exists');
+  });
+
+  test('able to create user with different username and valid data', async () => {
+    const usersBeforeTest = await testHelpers.usersInDb();
+    const newUser = {
+      username: 'drewneil',
+      password: 'secret',
+    };
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const body: UserWithoutPasswordHash = response._body;
+    expect(body.user_name).toBe('drewneil');
+
+    const usersAfterTest = await testHelpers.usersInDb();
+    expect(usersAfterTest.length).toBe(usersBeforeTest.length + 1);
+
+    const usernames = usersAfterTest.map(user => user.user_name);
+    expect(usernames).toContain('drewneil');
   });
 });

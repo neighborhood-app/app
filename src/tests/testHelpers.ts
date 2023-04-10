@@ -1,6 +1,7 @@
 import { UserWithoutId } from '../types';
+import prisma from '../model/prismaClient';
 
-const USER_WITHOUT_ID: UserWithoutId = {
+const INITIAL_USER_DATA_WITHOUT_ID: UserWithoutId = {
   user_name: 'johnsmith',
   password_hash: 'password_hash_not_required',
   first_name: null,
@@ -10,6 +11,12 @@ const USER_WITHOUT_ID: UserWithoutId = {
   bio: null,
 };
 
+const usersInDb = async () => {
+  const users = await prisma.user.findMany({});
+  return users;
+};
+
 export default {
-  USER_WITHOUT_ID,
+  INITIAL_USER_DATA_WITHOUT_ID,
+  usersInDb,
 };
