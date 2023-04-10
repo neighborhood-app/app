@@ -25,8 +25,15 @@ const getUserWithoutPasswordHash = (user: User): UserWithoutPasswordHash => {
   return userWithoutPasswordHash;
 };
 
+/**
+ * - narrows type of password to string, generates password hash from the password in req.body
+ * - throws error if password is missing or invalid ie less than 4 characters
+ * @param password from req.body
+ * @returns Promise resolved to password hash
+ */
 const getPasswordHash = async (password: unknown): Promise<string> => {
-  if (typeof password !== 'string' || password.length < 4) {
+  const MINIMUM_PASSWORD_LENGTH = 4;
+  if (typeof password !== 'string' || password.length < MINIMUM_PASSWORD_LENGTH) {
     const error = new Error('Invalid Password');
     error.name = 'UserDataError';
     throw error;
@@ -37,8 +44,15 @@ const getPasswordHash = async (password: unknown): Promise<string> => {
   return Promise.resolve(passwordHash);
 };
 
+/**
+ * - narrows username type to string, returns username if its present in req.body and valid
+ * - else, throws an Error
+ * @param username from req.body
+ * @returns valid username
+ */
 const parseUsername = (username: unknown): string => {
-  if (typeof username !== 'string') {
+  const MINIMUM_USERNAME_LENGTH = 4;
+  if (typeof username !== 'string' || username.length < MINIMUM_USERNAME_LENGTH) {
     const error = new Error('Invalid Username');
     error.name = 'UserDataError';
     throw error;
@@ -54,8 +68,8 @@ const generateNewUserData = async (object: unknown): Promise<NewUserData> => {
 
   if ('username' in object && 'password' in object) {
     const userData = {
-      password_hash: await getPasswordHash(object.password),
       user_name: parseUsername(object.username),
+      password_hash: await getPasswordHash(object.password),
       first_name: null,
       last_name: null,
       dob: null,
