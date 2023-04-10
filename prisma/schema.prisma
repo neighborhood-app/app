@@ -68,7 +68,7 @@ model Response {
 
 model User {
   id                  Int                 @id @default(autoincrement())
-  user_name           String              @db.VarChar(25)
+  user_name           String              @unique @db.VarChar(25)
   password_hash       String              @db.VarChar(100)
   first_name          String?             @db.VarChar(25)
   last_name           String?             @db.VarChar(25)
