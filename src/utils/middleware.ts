@@ -22,9 +22,13 @@ const unknownEndpoint = (_request: Request, response: Response): void => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
 
-const errorHandler = (err: Error, _req: Request, response: Response, _next: NextFunction): void => {
-  logger.error(err.message);
-  response.status(500).send({ error: 'something went wrong' });
+const errorHandler = (error: Error, _req: Request, response: Response, _next: NextFunction)
+: void => {
+  if (error.name === 'UserDataError') {
+    response.status(400).send({ error: error.message });
+  } else {
+    response.status(500).send({ error: 'something went wrong' });
+  }
 };
 
 export default {
