@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import { User } from '@prisma/client';
 import catchError from '../utils/catchError';
 import prismaClient from '../model/prismaClient';
@@ -11,9 +11,10 @@ usersRouter.get('/', catchError(async (_req: Request, res: Response) => {
 }));
 
 usersRouter.post('/', catchError(async (req: Request, res: Response) => {
-  const newUserData = await routeHelpers.generateNewUserData(req.body);
+  const createUserData = await routeHelpers.generateCreateUserData(req.body);
+  const userDataWithoutId = await routeHelpers.generateUserDataWithoutId(createUserData);
 
-  const savedUser: User = await prismaClient.user.create({ data: newUserData });
+  const savedUser: User = await prismaClient.user.create({ data: userDataWithoutId });
   const userWithoutPasswordHash = routeHelpers.getUserWithoutPasswordHash(savedUser);
 
   res.status(201).json(userWithoutPasswordHash);

@@ -10,3 +10,8 @@ export interface LoginData {
   username: string,
   password: string
 }
+
+export interface CreateUserData {
+  username: string,
+  password: string
+}

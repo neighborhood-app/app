@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import prismaClient from '../model/prismaClient';
-import { NewUserData, UserWithoutPasswordHash, LoginData } from '../types';
+import {
+  UserWithoutId, UserWithoutPasswordHash, LoginData, CreateUserData,
+} from '../types';
 
 /**
  * - narrows username type to string, checks if username is valid
@@ -53,34 +55,53 @@ const getPasswordHash = async (password: unknown): Promise<string> => {
 };
 
 /**
- * - generates the new user data from req.body
- * - throws Error if username or password missing
- * - individual field parsers throw Error if unable to parse field
- * @param object req.body
- * @returns Promise which is resolved to the NewUserData
+ * - performs input validation and type narrowing for input to POST /user
+ * - if username, password present and of type string, then returns an object containing input data
+ * - else throws Error
+ * @param object request.body should contain username and password
+ * @returns Promise resolved to user input to POST /user
  */
-const generateNewUserData = async (object: unknown): Promise<NewUserData> => {
+const generateCreateUserData = async (object: unknown): Promise<CreateUserData> => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data');
   }
 
-  if ('username' in object && 'password' in object) {
-    const userData = {
-      user_name: await parseUsername(object.username),
-      password_hash: await getPasswordHash(object.password),
-      first_name: null,
-      last_name: null,
-      dob: null,
-      gender_id: null,
-      bio: null,
+  if ('username' in object && 'password' in object
+      && typeof object.username === 'string'
+      && typeof object.password === 'string') {
+    const createUserData = {
+      username: object.username,
+      password: object.password,
     };
 
-    return Promise.resolve(userData);
+    return Promise.resolve(createUserData);
   }
 
   const error = new Error('Username or Password missing');
   error.name = 'UserDataError';
   throw error;
+};
+
+/**
+ * - generates the new user data without id from input to POST /user
+ * - throws Error if username or password invalid using individual field parsers
+ * @param createUserData should contain all the necessary field of the required types
+ * @returns Promise with status resolved to the user data withouti d
+ */
+const generateUserDataWithoutId = async (createUserData: CreateUserData)
+: Promise<UserWithoutId> => {
+  const { username, password } = createUserData;
+  const userData = {
+    user_name: await parseUsername(username),
+    password_hash: await getPasswordHash(password),
+    first_name: null,
+    last_name: null,
+    dob: null,
+    gender_id: null,
+    bio: null,
+  };
+
+  return Promise.resolve(userData);
 };
 
 /**
@@ -101,6 +122,13 @@ const getUserWithoutPasswordHash = (user: User): UserWithoutPasswordHash => {
   return userWithoutPasswordHash;
 };
 
+/**
+ * - performs input validation and type narrowing for input to POST /login
+ * - if username, password present and of type string, then returns an object containing input data
+ * - else throws Error
+ * @param object request.body should contain username and password
+ * @returns Promise resolved to user input to POST /login
+ */
 const generateLoginData = async (object: unknown): Promise<LoginData> => {
   if (!object || typeof object !== 'object') {
     const error = new Error('Username or Password Invalid');
@@ -108,14 +136,14 @@ const generateLoginData = async (object: unknown): Promise<LoginData> => {
     throw error;
   }
 
-  if ('username' in object
-      && 'password' in object
+  if ('username' in object && 'password' in object
       && typeof object.username === 'string'
       && typeof object.password === 'string') {
     const loginData = {
       username: object.username,
       password: object.password,
     };
+
     return Promise.resolve(loginData);
   }
 
@@ -125,7 +153,8 @@ const generateLoginData = async (object: unknown): Promise<LoginData> => {
 };
 
 export default {
-  generateNewUserData,
+  generateCreateUserData,
+  generateUserDataWithoutId,
   getUserWithoutPasswordHash,
   generateLoginData,
 };

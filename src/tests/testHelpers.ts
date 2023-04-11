@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
-import { UserWithoutId } from '../types';
+import { UserWithoutId, CreateUserData } from '../types';
 import prismaClient from '../model/prismaClient';
 
 /**
@@ -22,7 +22,8 @@ const getPasswordHash = async (password: string) => {
  * @param password required to populate password_hash field in users table
  * @returns Promise resolved to an object with user fields without id
  */
-const generateUserData = async (username: string, password: string): Promise<UserWithoutId> => {
+const generateUserData = async (createUserData: CreateUserData): Promise<UserWithoutId> => {
+  const { username, password } = createUserData;
   const user: UserWithoutId = {
     user_name: username,
     password_hash: await getPasswordHash(password),
@@ -46,16 +47,16 @@ const usersInDb = async (): Promise<User[]> => {
 };
 
 /**
- * - creates user in db with given username and password
+ * - creates user in db users table with given username and password
  * - converts password to password hash
  * - rest of the fields are null
  * @param username used to populate user_name field
  * @param password user to populate password_hash field
  */
-const seedUser = async (username: string, password: string) => {
-  const userData = await generateUserData(username, password);
+const seedUser = async (createUserData: CreateUserData) => {
+  const userDataWithoutId = await generateUserData(createUserData);
   await prismaClient.user.create({
-    data: userData,
+    data: userDataWithoutId,
   });
 };
 

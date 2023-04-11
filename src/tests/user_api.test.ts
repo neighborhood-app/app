@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */ // Need to access response._body
 import app from '../app';
 import prismaClient from '../model/prismaClient';
-import { UserWithoutPasswordHash, LoginData } from '../types';
+import { UserWithoutPasswordHash, LoginData, CreateUserData } from '../types';
 import testHelpers from './testHelpers';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -27,7 +27,7 @@ describe('when there is initially no user in db', () => {
   });
 
   test('creation succeeds with valid data', async () => {
-    const newUser = {
+    const newUser: CreateUserData = {
       username: 'johnsmith',
       password: 'secret',
     };
@@ -60,7 +60,7 @@ describe('when there is initially no user in db', () => {
     expect(response1._body.error).toBe('Username or Password missing');
 
     const dataWithoutPassword = {
-      password: 'secret',
+      username: 'johnsmith',
     };
 
     const response2 = await api
@@ -73,7 +73,7 @@ describe('when there is initially no user in db', () => {
   });
 
   test('creation fails with proper statuscode and message if username or password too short', async () => {
-    const dataWithShortUsername = {
+    const dataWithShortUsername: CreateUserData = {
       username: 'foo',
       password: 'secret',
     };
@@ -86,7 +86,7 @@ describe('when there is initially no user in db', () => {
 
     expect(response1._body.error).toBe('Invalid Username');
 
-    const dataWithShortPassword = {
+    const dataWithShortPassword: CreateUserData = {
       username: 'johnsmith',
       password: 'foo',
     };
@@ -104,14 +104,18 @@ describe('when there is initially no user in db', () => {
 describe('when there is one user in db', () => {
   const USERNAME = 'johnsmith';
   const PASSWORD = 'secret';
+  const createUserData: CreateUserData = {
+    username: USERNAME,
+    password: PASSWORD,
+  };
 
   beforeEach(async () => {
     await prismaClient.user.deleteMany({});
-    await testHelpers.seedUser(USERNAME, PASSWORD);
+    await testHelpers.seedUser(createUserData);
   });
 
   test('unable to add user with same username', async () => {
-    const newUser = {
+    const newUser: CreateUserData = {
       username: USERNAME,
       password: 'someOtherPassword',
     };
@@ -127,7 +131,7 @@ describe('when there is one user in db', () => {
 
   test('able to create user with different username and valid data', async () => {
     const usersBeforeTest = await testHelpers.usersInDb();
-    const newUser = {
+    const newUser: CreateUserData = {
       username: 'drewneil',
       password: 'secret',
     };
