@@ -1,5 +1,5 @@
 import { UserWithoutId } from '../types';
-import prisma from '../model/prismaClient';
+import prismaClient from '../model/prismaClient';
 
 const INITIAL_USER_DATA_WITHOUT_ID: UserWithoutId = {
   user_name: 'johnsmith',
@@ -12,7 +12,7 @@ const INITIAL_USER_DATA_WITHOUT_ID: UserWithoutId = {
 };
 
 const usersInDb = async () => {
-  const users = await prisma.user.findMany({});
+  const users = await prismaClient.user.findMany({});
   return users;
 };
 

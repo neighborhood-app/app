@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */ // Need to access response._body
 import app from '../app';
-import prisma from '../model/prismaClient';
+import prismaClient from '../model/prismaClient';
 import { UserWithoutPasswordHash } from '../types';
 import testHelpers from './testHelpers';
 
@@ -23,7 +23,7 @@ describe('Test No Matching Route', () => {
 
 describe('when there is initially no user in db', () => {
   beforeEach(async () => {
-    await prisma.user.deleteMany({});
+    await prismaClient.user.deleteMany({});
   });
 
   test('creation succeeds with valid data', async () => {
@@ -103,8 +103,8 @@ describe('when there is initially no user in db', () => {
 
 describe('when there is one user in db', () => {
   beforeEach(async () => {
-    await prisma.user.deleteMany({});
-    await prisma.user.create({
+    await prismaClient.user.deleteMany({});
+    await prismaClient.user.create({
       data: testHelpers.INITIAL_USER_DATA_WITHOUT_ID,
     });
   });

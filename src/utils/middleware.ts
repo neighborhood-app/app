@@ -26,8 +26,11 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
 : void => {
   if (error.name === 'UserDataError') {
     response.status(400).send({ error: error.message });
+  } else if (error instanceof SyntaxError) {
+    response.status(400).send({ error: error.message });
   } else {
-    response.status(500).send({ error: 'something went wrong' });
+    logger.error(error.message);
+    response.status(500).send({ error: 'Oops! An error happened' });
   }
 };
 
