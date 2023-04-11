@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */ // Need to access response._body
 import app from '../app';
 import prismaClient from '../model/prismaClient';
-import { UserWithoutPasswordHash } from '../types';
+import { UserWithoutPasswordHash, LoginData } from '../types';
 import testHelpers from './testHelpers';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -102,17 +102,18 @@ describe('when there is initially no user in db', () => {
 });
 
 describe('when there is one user in db', () => {
+  const USERNAME = 'johnsmith';
+  const PASSWORD = 'secret';
+
   beforeEach(async () => {
     await prismaClient.user.deleteMany({});
-    await prismaClient.user.create({
-      data: testHelpers.INITIAL_USER_DATA_WITHOUT_ID,
-    });
+    await testHelpers.seedUser(USERNAME, PASSWORD);
   });
 
   test('unable to add user with same username', async () => {
     const newUser = {
-      username: 'johnsmith',
-      password: 'secret',
+      username: USERNAME,
+      password: 'someOtherPassword',
     };
 
     const response = await api
@@ -145,5 +146,51 @@ describe('when there is one user in db', () => {
 
     const usernames = usersAfterTest.map(user => user.user_name);
     expect(usernames).toContain('drewneil');
+  });
+
+  test('able to login with valid username and password', async () => {
+    const loginData: LoginData = {
+      username: USERNAME,
+      password: PASSWORD,
+    };
+
+    const response = await api
+      .post('/api/login')
+      .send(loginData)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const responseBody = response._body;
+
+    expect(responseBody.username).toBe(USERNAME);
+    expect(responseBody.token).toBeDefined();
+  });
+
+  test('unable able to login with invalid username or invalid password', async () => {
+    const loginData1: LoginData = {
+      username: USERNAME,
+      password: 'WrongPassword',
+    };
+
+    const response = await api
+      .post('/api/login')
+      .send(loginData1)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response._body.error).toBe('invalid username or password');
+
+    const loginData2: LoginData = {
+      username: 'WrongUsername',
+      password: PASSWORD,
+    };
+
+    const response2 = await api
+      .post('/api/login')
+      .send(loginData2)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response2._body.error).toBe('invalid username or password');
   });
 });
