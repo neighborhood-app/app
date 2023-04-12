@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
-import prismaClient from '../model/prismaClient';
+import prismaClient from '../../prismaClient';
 import {
   UserWithoutId, UserWithoutPasswordHash, LoginData, CreateUserData,
 } from '../types';
