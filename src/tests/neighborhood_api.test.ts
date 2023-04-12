@@ -20,7 +20,7 @@ describe('Testing GET method for neighborhood API.', () => {
 
   test('If no neighborhoods, return status 404', async () => {
     await prisma.neighborhood.deleteMany({});
-    const response = await request.get('/neighborhoods');
+    const response = await request.get('/api/neighborhoods');
     expect(response.status).toEqual(404);
   });
 });

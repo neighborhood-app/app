@@ -1,1 +1,1 @@
-GET http://localhost:3000/neighborhoods
+GET http://localhost:3000/api/neighborhoods

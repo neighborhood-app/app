@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(middleware.requestLogger);
 
 // routes
-app.use('/neighborhoods', neighborhoodsRouter);
+app.use('/api/neighborhoods', neighborhoodsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 
