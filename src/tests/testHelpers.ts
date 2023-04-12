@@ -15,9 +15,9 @@ const getPasswordHash = async (password: string) => {
 };
 
 /**
- * - Generates user data from input to populate user table during test
- * - only input and password required, rest values are null
- * - generate hash from the given password
+ * - Parses and generates user-data from input-data for users table
+ * - only input and password required, rest values for a user are null
+ * - generate hash from the given password and save it as password_hash
  * @param username required to populate user_name field in users table
  * @param password required to populate password_hash field in users table
  * @returns Promise resolved to an object with user fields without id
@@ -39,7 +39,7 @@ const generateUserData = async (createUserData: CreateUserData): Promise<UserWit
 
 /**
  * Uses prisma client to find all users in db
- * @returns Promise resolved to array of users in json
+ * @returns Promise resolved to an array consisting all users in db
  */
 const usersInDb = async (): Promise<User[]> => {
   const users = await prismaClient.user.findMany({});
@@ -48,7 +48,6 @@ const usersInDb = async (): Promise<User[]> => {
 
 /**
  * - creates user in db users table with given username and password
- * - converts password to password hash
  * - rest of the fields are null
  * @param username used to populate user_name field
  * @param password user to populate password_hash field

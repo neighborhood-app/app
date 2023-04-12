@@ -24,42 +24,42 @@ async function main() {
   const bob = await prisma.user.create({
     data: {
       user_name: 'bob',
-      password: 'example',
+      password_hash: 'example',
     },
   });
 
   const antonina = await prisma.user.create({
     data: {
       user_name: 'antonina',
-      password: 'example',
+      password_hash: 'example',
     },
   });
 
   const shwetank = await prisma.user.create({
     data: {
       user_name: 'shwetank',
-      password: 'example',
+      password_hash: 'example',
     },
   });
 
   const radu = await prisma.user.create({
     data: {
       user_name: 'radu',
-      password: 'example',
+      password_hash: 'example',
     },
   });
 
   const mike = await prisma.user.create({
     data: {
       user_name: 'mike',
-      password: 'example',
+      password_hash: 'example',
     },
   });
 
   const maria = await prisma.user.create({
     data: {
       user_name: 'maria',
-      password: 'example',
+      password_hash: 'example',
     },
   });
 
