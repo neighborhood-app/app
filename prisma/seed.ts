@@ -17,42 +17,42 @@ async function main() {
   const bob = await prisma.user.create({
     data: {
       user_name: 'bob',
-      password: 'example',
+      password_hash: 'example',
     },
   });
 
-  const antonina = await prisma.user.create({
-    data: {
-      user_name: 'antonina',
-      password: 'example',
-    },
-  });
+  // const antonina = await prisma.user.create({
+  //   data: {
+  //     user_name: 'antonina',
+  //     password_hash: 'example',
+  //   },
+  // });
 
-  const shwetank = await prisma.user.create({
-    data: {
-      user_name: 'shwetank',
-      password: 'example',
-    },
-  });
+  // const shwetank = await prisma.user.create({
+  //   data: {
+  //     user_name: 'shwetank',
+  //     password_hash: 'example',
+  //   },
+  // });
 
   const radu = await prisma.user.create({
     data: {
       user_name: 'radu',
-      password: 'example',
+      password_hash: 'example',
     },
   });
 
-  const mike = await prisma.user.create({
-    data: {
-      user_name: 'mike',
-      password: 'example',
-    },
-  });
+  // const mike = await prisma.user.create({
+  //   data: {
+  //     user_name: 'mike',
+  //     password_hash: 'example',
+  //   },
+  // });
 
   const maria = await prisma.user.create({
     data: {
       user_name: 'maria',
-      password: 'example',
+      password_hash: 'example',
     },
   });
 
@@ -63,19 +63,19 @@ async function main() {
     },
   });
 
-  const antoninaNeighborhood = await prisma.neighborhood.create({
-    data: {
-      admin_id: antonina.id,
-      name: "Antonina's Neighborhood",
-    },
-  });
+  // const antoninaNeighborhood = await prisma.neighborhood.create({
+  //   data: {
+  //     admin_id: antonina.id,
+  //     name: "Antonina's Neighborhood",
+  //   },
+  // });
 
-  const shwetankNeighborhood = await prisma.neighborhood.create({
-    data: {
-      admin_id: shwetank.id,
-      name: "Shwetank's Neighborhood",
-    },
-  });
+  // const shwetankNeighborhood = await prisma.neighborhood.create({
+  //   data: {
+  //     admin_id: shwetank.id,
+  //     name: "Shwetank's Neighborhood",
+  //   },
+  // });
 
   await prisma.neighborhoodUsers.createMany({
     data: [

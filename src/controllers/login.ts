@@ -1,23 +1,23 @@
-import express, { Request, Response, NextFunction } from 'express';
-// import { User } from '@prisma/client';
+import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import catchError from '../utils/catchError';
 import config from '../utils/config';
-// import { LoginData } from '../types';
 import prismaClient from '../model/prismaClient';
 import routeHelpers from '../utils/routeHelpers';
+import { LoginData } from '../types';
 
 const loginRouter = express.Router();
 
 loginRouter.post('/', catchError(async (request: Request, response: Response) => {
-  const { username, password } = await routeHelpers.generateLoginData(request.body);
+  const { username, password }: LoginData = await routeHelpers.generateLoginData(request.body);
 
   const user = await prismaClient.user.findUnique({
     where: {
       user_name: username,
     },
   });
+
   const isPasswordCorrect = user === null
     ? false
     : await bcrypt.compare(password, user.password_hash);
@@ -31,7 +31,7 @@ loginRouter.post('/', catchError(async (request: Request, response: Response) =>
     id: user?.id,
   };
 
-  // forced to typenarrow because of jwt conditions
+  // forced to check type of string because of SECRET could be undefined
   if (typeof config.SECRET === 'string') {
     const token = jsonwebtoken.sign(
       userDataForGeneratingToken,
