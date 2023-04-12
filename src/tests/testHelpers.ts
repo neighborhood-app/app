@@ -62,4 +62,5 @@ const seedUser = async (createUserData: CreateUserData) => {
 export default {
   usersInDb,
   seedUser,
+  getPasswordHash,
 };

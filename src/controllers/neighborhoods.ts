@@ -13,4 +13,12 @@ neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => 
   }
 }));
 
+neighborhoodsRouter.delete('/:id', catchError(async (req: Request, res: Response) => {
+  const deletedNeighborhood = await prismaClient.neighborhood.delete({
+    where: { id: +req.params.id },
+  });
+
+  res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`);
+}));
+
 export default neighborhoodsRouter;

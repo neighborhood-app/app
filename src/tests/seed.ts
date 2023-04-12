@@ -1,16 +1,21 @@
-import { PrismaClient } from '@prisma/client';
+import prismaClient from '../../prismaClient';
+import testHelpers from './testHelpers';
 
-const prisma = new PrismaClient();
+const SAMPLE_PASSWORD = 'secret';
 
 async function main() {
-  await prisma.user.deleteMany({});
-  await prisma.neighborhood.deleteMany({});
-  await prisma.neighborhoodUsers.deleteMany({});
-  await prisma.gender.deleteMany({});
-  await prisma.request.deleteMany({});
-  await prisma.request.deleteMany({});
+  // clearing the existing db
+  await prismaClient.user.deleteMany({});
+  await prismaClient.neighborhood.deleteMany({});
+  await prismaClient.neighborhoodUsers.deleteMany({});
+  await prismaClient.gender.deleteMany({});
+  await prismaClient.request.deleteMany({});
+  await prismaClient.request.deleteMany({});
 
-  await prisma.gender.createMany({
+  // same password for all users
+  const passwordHashForSamplePassword = await testHelpers.getPasswordHash(SAMPLE_PASSWORD);
+
+  await prismaClient.gender.createMany({
     data: [
       {
         name: 'male',
@@ -21,81 +26,83 @@ async function main() {
     ],
   });
 
-  const bob = await prisma.user.create({
+  // creating users with same password for seeding the db
+  const bob = await prismaClient.user.create({
     data: {
       user_name: 'bob',
-      password_hash: 'example',
+      password_hash: passwordHashForSamplePassword,
     },
   });
 
-  // const antonina = await prisma.user.create({
-  //   data: {
-  //     user_name: 'antonina',
-  //     password_hash: 'example',
-  //   },
-  // });
+  const antonina = await prismaClient.user.create({
+    data: {
+      user_name: 'antonina',
+      password_hash: passwordHashForSamplePassword,
+    },
+  });
 
-  // const shwetank = await prisma.user.create({
-  //   data: {
-  //     user_name: 'shwetank',
-  //     password_hash: 'example',
-  //   },
-  // });
+  const shwetank = await prismaClient.user.create({
+    data: {
+      user_name: 'shwetank',
+      password_hash: passwordHashForSamplePassword,
+    },
+  });
 
-  const radu = await prisma.user.create({
+  const radu = await prismaClient.user.create({
     data: {
       user_name: 'radu',
-      password_hash: 'example',
+      password_hash: passwordHashForSamplePassword,
     },
   });
 
-  // const mike = await prisma.user.create({
+  // const mike = await prismaClient.user.create({
   //   data: {
   //     user_name: 'mike',
-  //     password_hash: 'example',
+  //     password_hash: passwordHashForSamplePassword,
   //   },
   // });
 
-  const maria = await prisma.user.create({
-    data: {
-      user_name: 'maria',
-      password_hash: 'example',
-    },
-  });
+  // const maria = await prismaClient.user.create({
+  //   data: {
+  //     user_name: 'maria',
+  //     password_hash: passwordHashForSamplePassword,
+  //   },
+  // });
 
-  const bobNeighborhood = await prisma.neighborhood.create({
+  // creating neighborhood for seeding db
+  await prismaClient.neighborhood.create({
     data: {
       admin_id: bob.id,
       name: "Bob's Neighborhood",
     },
   });
 
-  // const antoninaNeighborhood = await prisma.neighborhood.create({
-  //   data: {
-  //     admin_id: antonina.id,
-  //     name: "Antonina's Neighborhood",
-  //   },
-  // });
-
-  // const shwetankNeighborhood = await prisma.neighborhood.create({
-  //   data: {
-  //     admin_id: shwetank.id,
-  //     name: "Shwetank's Neighborhood",
-  //   },
-  // });
-
-  await prisma.neighborhoodUsers.createMany({
-    data: [
-      {
-        neighborhood_id: bobNeighborhood.id,
-        user_id: radu.id,
-      },
-      {
-        neighborhood_id: bobNeighborhood.id,
-        user_id: maria.id,
-      },
-    ],
+  await prismaClient.neighborhood.create({
+    data: {
+      admin_id: antonina.id,
+      name: "Antonina's Neighborhood",
+    },
   });
+
+  await prismaClient.neighborhood.create({
+    data: {
+      admin_id: shwetank.id,
+      name: "Shwetank's Neighborhood",
+    },
+  });
+
+  // await prisma.neighborhoodUsers.createMany({
+  //   data: [
+  //     {
+  //       neighborhood_id: bobNeighborhood.id,
+  //       user_id: radu.id,
+  //     },
+  //     {
+  //       neighborhood_id: bobNeighborhood.id,
+  //       user_id: maria.id,
+  //     },
+  //   ],
+  // });
 }
 
 export default main;
