@@ -1,6 +1,6 @@
 import app from '../app';
 // import seed from './seed';
-import prisma from '../model/prismaClient';
+import prismaClient from '../../prismaClient';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
@@ -19,7 +19,7 @@ describe('Testing GET method for neighborhood API.', () => {
   // });
 
   test('If no neighborhoods, return status 404', async () => {
-    await prisma.neighborhood.deleteMany({});
+    await prismaClient.neighborhood.deleteMany({});
     const response = await request.get('/api/neighborhoods');
     expect(response.status).toEqual(404);
   });

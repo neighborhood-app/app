@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */ // Need to access response._body
 import app from '../app';
-import prismaClient from '../model/prismaClient';
+import prismaClient from '../../prismaClient';
 import { UserWithoutPasswordHash, LoginData, CreateUserData } from '../types';
 import testHelpers from './testHelpers';
 

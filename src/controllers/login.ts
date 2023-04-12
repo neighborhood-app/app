@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import catchError from '../utils/catchError';
 import config from '../utils/config';
-import prismaClient from '../model/prismaClient';
+import prismaClient from '../../prismaClient';
 import routeHelpers from '../utils/routeHelpers';
 import { LoginData } from '../types';
 

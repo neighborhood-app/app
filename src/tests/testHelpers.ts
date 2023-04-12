@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import { UserWithoutId, CreateUserData } from '../types';
-import prismaClient from '../model/prismaClient';
+import prismaClient from '../../prismaClient';
 
 /**
  * Generates a password hash using bcrypt library and 10 salt rounds

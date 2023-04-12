@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { User } from '@prisma/client';
 import catchError from '../utils/catchError';
-import prismaClient from '../model/prismaClient';
+import prismaClient from '../../prismaClient';
 import routeHelpers from '../utils/routeHelpers';
 
 const usersRouter = express.Router();
