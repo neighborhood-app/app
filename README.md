@@ -7,7 +7,7 @@
     - You can re-initialize the db on command line by running `npm run reinitialize-db.sh`. NOTE : THIS WILL DELETE ALL EXISTING DATA FROM THE DEV DATABASE.
     - You can connect to dev db on command line  by running `npm run connect-dev-db`
     - You can connect to test db on command line by running `npm run connect-test-db`
-5. Run `npm run seed` in order to seed the dabase (this will reset all data stored in the db).
+5. Run `npm run seed` in order to seed the database (this will reset all data stored in the db).
 6. Run `npm run dev` to start the dev server at port 3000
 
 _Other npm scripts are defined in `./package.json`._

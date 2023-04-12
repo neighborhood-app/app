@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.user.deleteMany({});
   await prisma.neighborhood.deleteMany({});
-  await prisma.neighborhoodUsers.deleteMany({});
   await prisma.gender.deleteMany({});
   await prisma.request.deleteMany({});
   await prisma.request.deleteMany({});
@@ -84,17 +83,13 @@ async function main() {
     },
   });
 
-  await prisma.neighborhoodUsers.createMany({
-    data: [
-      {
-        neighborhood_id: bobNeighborhood.id,
-        user_id: radu.id,
+  await prisma.neighborhood.update({
+    where: { id: bobNeighborhood.id },
+    data: {
+      users: {
+        connect: [{ id: radu.id }, { id: maria.id }],
       },
-      {
-        neighborhood_id: bobNeighborhood.id,
-        user_id: maria.id,
-      },
-    ],
+    },
   });
 }
 

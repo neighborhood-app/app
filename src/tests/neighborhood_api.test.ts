@@ -48,3 +48,38 @@ describe('Testing DELETE method for neighborhood API.', () => {
     expect(response.status).toEqual(404);
   });
 });
+
+describe('Testing UPDATE method for neighborhood API.', () => {
+  test('Update all of a neighborhood\'s fields by id', async () => {
+    const neighborhoodToUpdate = await prisma.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const newAdmin = await prisma.user.findFirst({
+      where: {
+        NOT: { id: neighborhoodToUpdate!.admin_id },
+      },
+    });
+
+    const newData = {
+      name: 'Test',
+      description: 'Test',
+      admin_id: newAdmin!.id,
+      location: 'Athens',
+    };
+
+    const response = await request.put(`/neighborhoods/${neighborhoodToUpdate!.id}`)
+      .send(newData);
+
+    expect(response.text).toEqual('Neighborhood \'Test\' has been updated.');
+    expect(response.status).toEqual(200);
+    expect(await prisma.neighborhood.findFirst({
+      where: { id: neighborhoodToUpdate!.id },
+    })).toEqual({
+      id: neighborhoodToUpdate!.id,
+      ...newData,
+    });
+  });
+});

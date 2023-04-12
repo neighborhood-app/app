@@ -22,4 +22,23 @@ neighborhoodsRouter.delete('/:id', catchError(async (req, res) => {
   res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`);
 }));
 
+neighborhoodsRouter.put('/:id', catchError(async (req, res) => {
+  interface UpdateData {
+    admin_id?: number,
+    name?: string,
+    description?: string,
+    location?: string
+  }
+
+  const data: UpdateData = req.body;
+  // console.log(data);
+
+  const updatedNeighborhood = await prisma.neighborhood.update({
+    where: { id: +req.params.id },
+    data,
+  });
+
+  res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
+}));
+
 export default neighborhoodsRouter;
