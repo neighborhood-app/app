@@ -206,9 +206,12 @@ describe('When neighborhoods already exist in the db', () => {
   });
 
   test('GET /neighborhoods returns all neighborhoods', async () => {
+    const neighborhoods = await prismaClient.neighborhood.findMany({});
+    const numberOfNeighborhoods = neighborhoods.length;
     const response = await api.get('/api/neighborhoods');
     expect(response.status).toEqual(200);
-    expect(response.body.length).toEqual(3);
+    // expect(response.body.length).toEqual(3);  // 3 was a magic number.
+    expect(response.body.length).toEqual(numberOfNeighborhoods);
   });
 });
 

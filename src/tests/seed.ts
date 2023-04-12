@@ -48,12 +48,12 @@ async function main() {
     },
   });
 
-  const radu = await prismaClient.user.create({
-    data: {
-      user_name: 'radu',
-      password_hash: passwordHashForSamplePassword,
-    },
-  });
+  // const radu = await prismaClient.user.create({
+  //   data: {
+  //     user_name: 'radu',
+  //     password_hash: passwordHashForSamplePassword,
+  //   },
+  // });
 
   // const mike = await prismaClient.user.create({
   //   data: {
