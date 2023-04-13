@@ -16,10 +16,6 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err);
 
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    console.log('----------------');
-    console.log('caught exception');
-    console.log('----------------');
-
     res.status(404).send(err.message);
   }
 

@@ -1,6 +1,7 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import catchError from '../utils/catch-error';
+import { Neighborhood } from '../../types';
 
 const prisma = new PrismaClient({ log: ['query'] });
 const neighborhoodsRouter = express.Router();
@@ -23,16 +24,7 @@ neighborhoodsRouter.delete('/:id', catchError(async (req, res) => {
 }));
 
 neighborhoodsRouter.put('/:id', catchError(async (req, res) => {
-  interface UpdateData {
-    admin_id?: number,
-    name?: string,
-    description?: string,
-    location?: string
-  }
-
-  const data: UpdateData = req.body;
-  // console.log(data);
-
+  const data: Neighborhood = req.body;
   const updatedNeighborhood = await prisma.neighborhood.update({
     where: { id: +req.params.id },
     data,

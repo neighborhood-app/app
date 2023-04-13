@@ -70,8 +70,7 @@ describe('Testing UPDATE method for neighborhood API.', () => {
       location: 'Athens',
     };
 
-    const response = await request.put(`/neighborhoods/${neighborhoodToUpdate!.id}`)
-      .send(newData);
+    const response = await request.put(`/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
 
     expect(response.text).toEqual('Neighborhood \'Test\' has been updated.');
     expect(response.status).toEqual(200);
@@ -80,6 +79,83 @@ describe('Testing UPDATE method for neighborhood API.', () => {
     })).toEqual({
       id: neighborhoodToUpdate!.id,
       ...newData,
+    });
+  });
+
+  test('Partial update works', async () => {
+    const neighborhoodToUpdate = await prisma.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const newData = { name: 'Test' };
+    const response = await request.put(`/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
+
+    expect(response.text).toEqual('Neighborhood \'Test\' has been updated.');
+    expect(response.status).toEqual(200);
+    expect(await prisma.neighborhood.findFirst({
+      where: { id: neighborhoodToUpdate!.id },
+    })).toEqual({
+      ...neighborhoodToUpdate,
+      name: newData.name,
+    });
+  });
+
+  test('Empty input doesn\'t change anything on the server', async () => {
+    const neighborhoodToUpdate = await prisma.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const response = await request.put(`/neighborhoods/${neighborhoodToUpdate!.id}`).send({});
+
+    expect(response.text).toEqual('Neighborhood \'Antonina\'s Neighborhood\' has been updated.');
+    expect(response.status).toEqual(200);
+    expect(await prisma.neighborhood.findFirst({
+      where: { id: neighborhoodToUpdate!.id },
+    })).toEqual({
+      ...neighborhoodToUpdate,
+    });
+  });
+
+  test('Update with invalid properties raises an error', async () => {
+    const neighborhoodToUpdate = await prisma.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const newData = {
+      name: 'Test',
+      description: 'Test',
+      location: 'Athens',
+      invalid: 'Non-existent prop',
+    };
+
+    const response = await request.put(`/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
+
+    expect(response.text).toEqual('Oops. Something went wrong.');
+    expect(response.status).toEqual(400);
+  });
+
+  test('Non-existent admin_id raises a 404 error', async () => {
+    const neighborhoodToUpdate = await prisma.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const newData = { admin_id: 1000 };
+
+    const response = await request.put(`/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
+
+    expect(response.status).toEqual(404);
+    expect(await prisma.neighborhood.findFirst({
+      where: { id: neighborhoodToUpdate!.id },
+    })).toEqual({
+      ...neighborhoodToUpdate,
     });
   });
 });
