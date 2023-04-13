@@ -10,10 +10,10 @@ import logger from './logger';
  */
 const requestLogger = (request: Request, _response: Response, next: NextFunction): void => {
   const { method, path } = request;
-  const body = { ...request.body };
+  const bodyCopy = { ...request.body }; // Dont want to mutate `request.body`
 
-  if (body.password !== undefined) { body.password = '********'; }
-  logger.info(`${method} ${path} ${JSON.stringify(body)}`);
+  if (bodyCopy.password !== undefined) { bodyCopy.password = '********'; }
+  logger.info(`${method} ${path} ${JSON.stringify(bodyCopy)}`);
 
   next();
 };
