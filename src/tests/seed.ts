@@ -7,13 +7,9 @@ async function main() {
   // clearing the existing db
   await prismaClient.user.deleteMany({});
   await prismaClient.neighborhood.deleteMany({});
-  await prismaClient.neighborhoodUsers.deleteMany({});
   await prismaClient.gender.deleteMany({});
   await prismaClient.request.deleteMany({});
   await prismaClient.request.deleteMany({});
-
-  // same password for all users
-  const passwordHashForSamplePassword = await testHelpers.getPasswordHash(SAMPLE_PASSWORD);
 
   await prismaClient.gender.createMany({
     data: [
@@ -30,21 +26,21 @@ async function main() {
   const bob = await prismaClient.user.create({
     data: {
       user_name: 'bob',
-      password_hash: passwordHashForSamplePassword,
+      password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const antonina = await prismaClient.user.create({
     data: {
       user_name: 'antonina',
-      password_hash: passwordHashForSamplePassword,
+      password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const shwetank = await prismaClient.user.create({
     data: {
       user_name: 'shwetank',
-      password_hash: passwordHashForSamplePassword,
+      password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
