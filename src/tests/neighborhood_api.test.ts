@@ -20,7 +20,6 @@ describe('Test No Matching Route', () => {
     const response = await api.post('/foo');
     expect(response.status).toEqual(404);
   });
-});
 
 describe('When there is initially no user in db', () => {
   beforeEach(async () => {
@@ -222,6 +221,28 @@ describe('When no neighborhood exists in the db', () => {
 
   test('GET /neighborhoods return 404', async () => {
     const response = await api.get('/api/neighborhoods');
+    expect(response.status).toEqual(404);
+  });
+});
+
+describe('Testing DELETE method for neighborhood API.', () => {
+  test('Delete one neighborhood by id', async () => {
+    const testNeighborhood = await prisma.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const response = await request.delete(`/neighborhoods/${testNeighborhood!.id}`);
+
+    expect(response.text).toEqual('Neighborhood \'Antonina\'s Neighborhood\' has been deleted.');
+    expect(response.status).toEqual(200);
+  });
+
+  test('If neighborhood doesn\'t exist, return 404 status', async () => {
+    await prisma.neighborhood.deleteMany({});
+    const response = await request.delete('/neighborhoods/1');
+
     expect(response.status).toEqual(404);
   });
 });

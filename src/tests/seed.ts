@@ -99,6 +99,15 @@ async function main() {
   //     },
   //   ],
   // });
+  
+  await prisma.neighborhood.update({
+    where: { id: bobNeighborhood.id },
+    data: {
+      users: {
+        connect: [{ id: radu.id }, { id: maria.id }],
+      },
+    },
+  });
 }
 
 export default main;

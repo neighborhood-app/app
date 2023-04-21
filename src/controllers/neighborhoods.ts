@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express';
-import catchError from '../utils/catchError';
-import prismaClient from '../../prismaClient';
+import express from 'express';
+import { PrismaClient } from '@prisma/client';
+import catchError from '../utils/catch-error';
 
 const neighborhoodsRouter = express.Router();
 
