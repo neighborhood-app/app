@@ -2,11 +2,10 @@ import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import catchError from '../utils/catch-error';
 
-const prisma = new PrismaClient({ log: ['query'] });
 const neighborhoodsRouter = express.Router();
 
-neighborhoodsRouter.get('/', catchError(async (_req, res) => {
-  const neighborhoods = await prisma.neighborhood.findMany({});
+neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => {
+  const neighborhoods = await prismaClient.neighborhood.findMany({});
   if (neighborhoods.length === 0) {
     res.status(404).end();
   } else {
@@ -14,8 +13,8 @@ neighborhoodsRouter.get('/', catchError(async (_req, res) => {
   }
 }));
 
-neighborhoodsRouter.delete('/:id', catchError(async (req, res) => {
-  const deletedNeighborhood = await prisma.neighborhood.delete({
+neighborhoodsRouter.delete('/:id', catchError(async (req: Request, res: Response) => {
+  const deletedNeighborhood = await prismaClient.neighborhood.delete({
     where: { id: +req.params.id },
   });
 

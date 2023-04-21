@@ -1,25 +1,22 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { Prisma } from '@prisma/client';
+import express from 'express';
 import neighborhoodsRouter from './controllers/neighborhoods';
+import usersRouter from './controllers/users';
+import loginRouter from './controllers/login';
+import middleware from './utils/middleware';
 
 const app = express();
+
+// middleware
 app.use(express.json());
-app.use('/neighborhoods', neighborhoodsRouter);
+app.use(middleware.requestLogger);
 
-app.get('/', (_req, res) => {
-  console.log('someone pinged here');
-  res.send('pong');
-});
+// routes
+app.use('/api/neighborhoods', neighborhoodsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/login', loginRouter);
 
-// Default error handler
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  console.error(err);
-
-  if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    res.status(404).send(err.message);
-  }
-
-  res.status(400).send('Oops. Something went wrong.');
-});
+// error handler and unknown endpoint
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
 
 export default app;

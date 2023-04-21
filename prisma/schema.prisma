@@ -16,14 +16,14 @@ model Gender {
 }
 
 model Neighborhood {
-  id                  Int                 @id @default(autoincrement())
-  admin_id            Int
-  name                String              @db.VarChar(50)
-  description         String?             @db.VarChar(50)
-  location            String?             @db.VarChar(50)
-  admin               User                @relation("admin", fields: [admin_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  users               User[]
-  requests            Request[]
+  id          Int       @id @default(autoincrement())
+  admin_id    Int
+  name        String    @db.VarChar(50)
+  description String?   @db.VarChar(50)
+  location    String?   @db.VarChar(50)
+  admin       User      @relation("admin", fields: [admin_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  users       User[]
+  requests    Request[]
 
   @@map("neighborhoods")
 }
@@ -57,19 +57,19 @@ model Response {
 }
 
 model User {
-  id                  Int                 @id @default(autoincrement())
-  user_name           String              @db.VarChar(25)
-  password            String              @db.VarChar(25)
-  first_name          String?             @db.VarChar(25)
-  last_name           String?             @db.VarChar(25)
-  dob                 DateTime?           @db.Date
-  gender_id           Int?
-  bio                 String?             @db.VarChar(500)
-  adminOf             Neighborhood[]      @relation("admin")
-  neighborhoods       Neighborhood[]
-  requests            Request[]
-  responses           Response[]
-  gender              Gender?             @relation(fields: [gender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_gender_fkey")
+  id            Int            @id @default(autoincrement())
+  user_name     String         @unique @db.VarChar(25)
+  password_hash String         @db.VarChar(100)
+  first_name    String?        @db.VarChar(25)
+  last_name     String?        @db.VarChar(25)
+  dob           DateTime?      @db.Date
+  gender_id     Int?
+  bio           String?        @db.VarChar(500)
+  adminOf       Neighborhood[] @relation("admin")
+  neighborhoods Neighborhood[]
+  requests      Request[]
+  responses     Response[]
+  gender        Gender?        @relation(fields: [gender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_gender_fkey")
 
   @@map("users")
 }
