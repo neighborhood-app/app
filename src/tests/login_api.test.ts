@@ -1,16 +1,27 @@
 /* eslint-disable no-underscore-dangle */ // Need to access response._body
 import app from '../app';
-import { LoginData } from '../types';
+import { LoginData, CreateUserData } from '../types';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
 
 const api = supertest(app);
 
-describe('General login tests', () => {
-  const USERNAME = 'johnsmith';
-  const PASSWORD = 'secret';
+const USERNAME = 'johnsmith';
+const PASSWORD = 'secret';
 
+beforeAll(async () => {
+  const newUser: CreateUserData = {
+    username: 'johnsmith',
+    password: 'secret',
+  };
+
+  await api
+    .post('/api/users')
+    .send(newUser);
+});
+
+describe('General login tests', () => {
   test('Able to login with valid username and password', async () => {
     const loginData: LoginData = {
       username: USERNAME,
