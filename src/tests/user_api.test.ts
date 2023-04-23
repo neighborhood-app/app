@@ -9,6 +9,10 @@ const supertest = require('supertest'); // eslint-disable-line
 
 const api = supertest(app);
 
+beforeAll(async () => {
+  await testHelpers.removeAllData();
+});
+
 describe('When there is initially no user in db', () => {
   beforeEach(async () => {
     await prismaClient.user.deleteMany({});

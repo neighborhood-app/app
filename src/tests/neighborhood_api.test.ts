@@ -2,11 +2,16 @@
 import app from '../app';
 import prismaClient from '../../prismaClient';
 import seed from './seed';
+import testHelpers from './testHelpers';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
 
 const api = supertest(app);
+
+beforeAll(async () => {
+  await testHelpers.removeAllData();
+});
 
 describe('When neighborhoods already exist in the db', () => {
   beforeEach(async () => {

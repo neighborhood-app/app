@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */ // Need to access response._body
 import app from '../app';
 import { LoginData, CreateUserData } from '../types';
+import testHelpers from './testHelpers';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
@@ -11,6 +12,8 @@ const USERNAME = 'johnsmith';
 const PASSWORD = 'secret';
 
 beforeAll(async () => {
+  await testHelpers.removeAllData();
+
   const newUser: CreateUserData = {
     username: 'johnsmith',
     password: 'secret',
