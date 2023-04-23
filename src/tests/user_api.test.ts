@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import app from '../app';
 import prismaClient from '../../prismaClient';
 import testHelpers from './testHelpers';
