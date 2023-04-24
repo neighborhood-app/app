@@ -13,6 +13,13 @@ neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => 
   }
 }));
 
+neighborhoodsRouter.get('/:id', catchError(async (req: Request, res: Response) => {
+  const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow({
+    where: { id: +req.params.id },
+  });
+  res.send(neighborhood);
+}));
+
 neighborhoodsRouter.delete('/:id', catchError(async (req: Request, res: Response) => {
   const deletedNeighborhood = await prismaClient.neighborhood.delete({
     where: { id: +req.params.id },

@@ -28,6 +28,8 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
     response.status(400).send({ error: error.message });
   } else if (error instanceof SyntaxError) {
     response.status(400).send({ error: error.message });
+  } else if (error.name === 'NotFoundError') {
+    response.status(404).send({ error: error.message });
   } else {
     logger.error(error.message);
     response.status(500).send({ error: 'Oops! An error happened' });
