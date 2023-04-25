@@ -16,6 +16,7 @@ neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => 
 neighborhoodsRouter.get('/:id', catchError(async (req: Request, res: Response) => {
   const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow({
     where: { id: +req.params.id },
+    include: { users: true }
   });
   res.send(neighborhood);
 }));

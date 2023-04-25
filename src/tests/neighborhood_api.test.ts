@@ -213,6 +213,16 @@ describe('When neighborhoods already exist in the db', () => {
     // expect(response.body.length).toEqual(3);  // 3 was a magic number.
     expect(response.body.length).toEqual(numberOfNeighborhoods);
   });
+
+  test('GET /neighborhoods/id existing id returns single neignborhood', async () => {
+    const neighborhood = await prismaClient.neighborhood.findFirst({
+      where: { name: "Bob's Neighborhood" },
+    });
+    const id = neighborhood?.id;
+    const response = await api.get(`/api/neighborhoods/${id}`);
+    expect(response.status).toEqual(200);
+    expect(response.body.id).toEqual(id);
+  });
 });
 
 describe('When no neighborhood exists in the db', () => {
