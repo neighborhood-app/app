@@ -14,7 +14,7 @@
     "reinitialize-db": "./scripts/reinitialize-db.sh",
     "connect-dev-db": "./scripts/connect-dev-db.sh",
     "connect-test-db": "./scripts/connect-test-db.sh",
-    "test": "dotenv -e ./.env.test -- npx prisma migrate deploy && dotenv -e ./.env.test jest --verbose --runInBand",
+    "test": "dotenv -e ./.env.test -- npx prisma migrate deploy && dotenv -e ./.env.test jest --verbose",
     "prisma-studio-test": "dotenv -e ./.env.test -- npx prisma studio"
   },
   "author": "Antonina, Bob, Radu, Shwetank",
