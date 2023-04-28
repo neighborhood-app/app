@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
+import { RequestWithTokenAndUser } from '../types';
 import jsonwebtoken from 'jsonwebtoken';
 import logger from './logger';
+import prismaClient from '../../prismaClient';
 
 /**
  * - Logs method, path and body of the http request
@@ -35,13 +37,25 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
   }
 };
 
-const loginCheck = (req: Request, response: Response):void => {
-  const decodedToken = req.get('authorization');
-  
-}
+/*
+Extracts the authorization header from an incoming request
+The authorization header is a string composed of the authorization schema (In our case 'Bearer')
+and the token that was saved by the client on login.
+The middleware checks if the correct authorization schema is used and saves the token to a token
+property on the request.
+*/
+const tokenExtractor = (req: RequestWithTokenAndUser, _res: Response, next: NextFunction): void => {
+  const authorization = req.get('authorization');
+  if (authorization && authorization.startsWith('Bearer ')) {
+    req.token = authorization.replace('Bearer ', '');
+  }
+  console.log(req.token);
+  next();
+};
 
 export default {
   requestLogger,
   unknownEndpoint,
   errorHandler,
+  tokenExtractor,
 };

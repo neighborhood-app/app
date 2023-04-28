@@ -83,22 +83,6 @@ const generateCreateUserData = async (object: unknown): Promise<CreateUserData> 
   throw error;
 };
 
-/*
-Extracts the authorization header from an incoming request
-The authorization header is a string composed of the authorization schema (In our case 'Bearer')
-and the token that was saved by the client on login.
-The function checks if the correct authorization schema is used and returns just
-the token.
-If it doesn't receive a correct authorization header, it returns null
-*/
-const getTokenFrom = (request: Request): string | null => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '');
-  }
-  return null;
-};
-
 /**
  * - generates the new user data without id from input to POST /user
  * - throws Error if username or password invalid using individual field parsers
@@ -174,5 +158,4 @@ export default {
   generateUserDataWithoutId,
   getUserWithoutPasswordHash,
   generateLoginData,
-  getTokenFrom,
 };
