@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import jsonwebtoken from 'jsonwebtoken';
 import logger from './logger';
 
 /**
@@ -33,6 +34,11 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
     response.status(500).send({ error: 'Oops! An error happened' });
   }
 };
+
+const loginCheck = (req: Request, response: Response):void => {
+  const decodedToken = req.get('authorization');
+  
+}
 
 export default {
   requestLogger,

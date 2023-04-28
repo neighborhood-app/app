@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { Request } from 'express';
 import { User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
@@ -67,8 +68,8 @@ const generateCreateUserData = async (object: unknown): Promise<CreateUserData> 
   }
 
   if ('username' in object && 'password' in object
-      && typeof object.username === 'string'
-      && typeof object.password === 'string') {
+    && typeof object.username === 'string'
+    && typeof object.password === 'string') {
     const createUserData = {
       username: object.username,
       password: object.password,
@@ -80,6 +81,22 @@ const generateCreateUserData = async (object: unknown): Promise<CreateUserData> 
   const error = new Error('Username or Password missing');
   error.name = 'UserDataError';
   throw error;
+};
+
+/*
+Extracts the authorization header from an incoming request
+The authorization header is a string composed of the authorization schema (In our case 'Bearer')
+and the token that was saved by the client on login.
+The function checks if the correct authorization schema is used and returns just
+the token.
+If it doesn't receive a correct authorization header, it returns null
+*/
+const getTokenFrom = (request: Request): string | null => {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '');
+  }
+  return null;
 };
 
 /**
@@ -137,8 +154,8 @@ const generateLoginData = async (object: unknown): Promise<LoginData> => {
   }
 
   if ('username' in object && 'password' in object
-      && typeof object.username === 'string'
-      && typeof object.password === 'string') {
+    && typeof object.username === 'string'
+    && typeof object.password === 'string') {
     const loginData = {
       username: object.username,
       password: object.password,
@@ -157,4 +174,5 @@ export default {
   generateUserDataWithoutId,
   getUserWithoutPasswordHash,
   generateLoginData,
+  getTokenFrom,
 };
