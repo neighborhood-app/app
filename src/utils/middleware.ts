@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import jsonwebtoken, { JwtPayload, Secret } from 'jsonwebtoken';
-import { User } from '@prisma/client';
 import logger from './logger';
 import config from './config';
 import prismaClient from '../../prismaClient';
+import { CustomRequest } from '../types';
+import catchError from './catchError';
 
 /**
  * - Logs method, path and body of the http request
@@ -31,7 +32,7 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
   if (error.name === 'UserDataError') {
     response.status(400).send({ error: error.message });
   } else if (error.name === 'JsonWebTokenError') {
-    response.status(400).json({ error: error.message });
+    response.status(400).send({ error: error.message });
   } else if (error instanceof SyntaxError) {
     response.status(400).send({ error: error.message });
   } else {
@@ -47,10 +48,9 @@ and the token that was saved by the client on login.
 The middleware checks if the correct authorization schema is used and saves the token to a token
 property on the request.
 */
-const tokenExtractor = (req: Request, _res: Response, next: NextFunction): void => {
+const tokenExtractor = (req: CustomRequest, _res: Response, next: NextFunction): void => {
   const authorization = req.get('authorization');
   if (authorization && authorization.startsWith('Bearer ')) {
-    // @ts-ignore
     req.token = authorization.replace('Bearer ', '');
   }
   next();
@@ -59,27 +59,24 @@ const tokenExtractor = (req: Request, _res: Response, next: NextFunction): void 
 /*
 Extracts the logged in user that made the request based on the request token.
 */
-const userExtractor = async (req: Request, res: Response, next: NextFunction) => {
-  // @ts-ignore
+const userExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
   if (!req.token) {
     res.status(401).json({ error: 'no token given' });
-  }
-  // @ts-ignore
-  const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
-  if (!decodedToken.id) {
-    res.status(401).json({ error: 'token invalid' });
-  }
-  // @ts-ignore
-  req.user = await prismaClient.user.findFirst({
-    where: {
-      id: decodedToken.id,
-    },
-  }) as User;
+  } else {
+    const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
+    if (!decodedToken.id) {
+      res.status(401).json({ error: 'token invalid' });
+    }
 
-  // @ts-ignore
-  console.log(req);
-  next();
-};
+    req.user = await prismaClient.user.findFirstOrThrow({
+      where: {
+        id: decodedToken.id,
+      },
+    });
+
+    next();
+  }
+});
 
 export default {
   requestLogger,
