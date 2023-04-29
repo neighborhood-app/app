@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { RequestWithTokenAndUser } from '../types';
-import jsonwebtoken from 'jsonwebtoken';
+import jsonwebtoken, { JwtPayload, Secret } from 'jsonwebtoken';
+import { User } from '@prisma/client';
 import logger from './logger';
+import config from './config';
 import prismaClient from '../../prismaClient';
 
 /**
@@ -29,6 +30,8 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
 : void => {
   if (error.name === 'UserDataError') {
     response.status(400).send({ error: error.message });
+  } else if (error.name === 'JsonWebTokenError') {
+    response.status(400).json({ error: error.message });
   } else if (error instanceof SyntaxError) {
     response.status(400).send({ error: error.message });
   } else {
@@ -44,12 +47,37 @@ and the token that was saved by the client on login.
 The middleware checks if the correct authorization schema is used and saves the token to a token
 property on the request.
 */
-const tokenExtractor = (req: RequestWithTokenAndUser, _res: Response, next: NextFunction): void => {
+const tokenExtractor = (req: Request, _res: Response, next: NextFunction): void => {
   const authorization = req.get('authorization');
   if (authorization && authorization.startsWith('Bearer ')) {
+    // @ts-ignore
     req.token = authorization.replace('Bearer ', '');
   }
-  console.log(req.token);
+  next();
+};
+
+/*
+Extracts the logged in user that made the request based on the request token.
+*/
+const userExtractor = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-ignore
+  if (!req.token) {
+    res.status(401).json({ error: 'no token given' });
+  }
+  // @ts-ignore
+  const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
+  if (!decodedToken.id) {
+    res.status(401).json({ error: 'token invalid' });
+  }
+  // @ts-ignore
+  req.user = await prismaClient.user.findFirst({
+    where: {
+      id: decodedToken.id,
+    },
+  }) as User;
+
+  // @ts-ignore
+  console.log(req);
   next();
 };
 
@@ -58,4 +86,5 @@ export default {
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
+  userExtractor,
 };

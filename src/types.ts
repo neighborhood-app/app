@@ -1,5 +1,4 @@
 import { User } from '@prisma/client';
-import { Request } from 'express';
 
 /**
  * format of the user data, without password hash, which is send in response
@@ -10,10 +9,6 @@ export type UserWithoutPasswordHash = Omit<User, 'password_hash'>;
  * format of user data, without id, to create entry in users table
  */
 export type UserWithoutId = Omit<User, 'id'>;
-
-export type RequestWithTokenAndUser = Request & {
-  token?: string,
-};
 
 /**
  * format of the data sent to `POST /login` to login user

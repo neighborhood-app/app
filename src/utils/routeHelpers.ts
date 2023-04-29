@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import { Request } from 'express';
 import { User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {

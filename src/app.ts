@@ -12,7 +12,7 @@ app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);
 
 // routes
-app.use('/api/neighborhoods', neighborhoodsRouter);
+app.use('/api/neighborhoods', middleware.userExtractor, neighborhoodsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 
