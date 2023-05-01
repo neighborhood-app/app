@@ -45,6 +45,30 @@ describe('When neighborhoods already exist in the db', () => {
     expect(response.status).toEqual(200);
     expect(currentNeighborhoods.body.length).toEqual(initialNeighborhoods.body.length - 1);
   });
+
+  test('User cannot delete neighborhood if he/she is not admin', async () => {
+    const initialNeighborhoods = await api.get('/api/neighborhoods');
+    const loginResponse = await api
+      .post('/api/login')
+      .send(loginData);
+    const { token } = loginResponse.body;
+
+    const response = await api.delete('/api/neighborhoods/2').set('Authorization', `Bearer ${token}`);
+    const currentNeighborhoods = await api.get('/api/neighborhoods');
+
+    expect(response.status).toEqual(403);
+    expect(currentNeighborhoods.body.length).toEqual(initialNeighborhoods.body.length);
+  });
+
+  test('User cannot delete neighborhood if he/she is not logged in', async () => {
+    const initialNeighborhoods = await api.get('/api/neighborhoods');
+
+    const response = await api.delete('/api/neighborhoods/2');
+    const currentNeighborhoods = await api.get('/api/neighborhoods');
+
+    expect(response.status).toEqual(401);
+    expect(currentNeighborhoods.body.length).toEqual(initialNeighborhoods.body.length);
+  });
 });
 
 describe('When no neighborhood exists in the db', () => {
