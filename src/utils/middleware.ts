@@ -41,13 +41,13 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
   }
 };
 
-/*
-Extracts the authorization header from an incoming request
-The authorization header is a string composed of the authorization schema (In our case 'Bearer')
-and the token that was saved by the client on login.
-The middleware checks if the correct authorization schema is used and saves the token to a token
-property on the request.
-*/
+/**
+ * Extracts the authorization header from an incoming request
+ * The authorization header is a string composed of the authorization schema (In our case 'Bearer')
+and the token that was saved by the client on user login
+ * The middleware checks if the correct authorization schema is used and saves the token to a
+'token' property on the request object.
+ */
 const tokenExtractor = (req: CustomRequest, _res: Response, next: NextFunction): void => {
   const authorization = req.get('authorization');
   if (authorization && authorization.startsWith('Bearer ')) {
@@ -56,9 +56,10 @@ const tokenExtractor = (req: CustomRequest, _res: Response, next: NextFunction):
   next();
 };
 
-/*
-Extracts the logged in user that made the request based on the request token.
-*/
+/**
+Creates a user property on the request object with the user extracted with the
+aid of the authentication token
+ */
 const userExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
   if (!req.token) {
     res.status(401).json({ error: 'no token given' });
