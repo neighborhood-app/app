@@ -59,7 +59,7 @@ describe('When neighborhoods already exist in the db', () => {
     expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods - 1);
   });
 
-  test('User cannot delete neighborhood if he/she is not admin', async () => {
+  test('User cannot delete neighborhood if user is not admin', async () => {
     const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
     const numInitialNeighborhoods = initialNeighborhoods.length;
 
@@ -78,7 +78,7 @@ describe('When neighborhoods already exist in the db', () => {
     expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods);
   });
 
-  test('User cannot delete neighborhood if he/she is not logged in', async () => {
+  test('User cannot delete neighborhood if user is not logged in', async () => {
     const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
     const numInitialNeighborhoods = initialNeighborhoods.length;
 
