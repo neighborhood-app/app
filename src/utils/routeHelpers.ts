@@ -152,9 +152,19 @@ const generateLoginData = async (object: unknown): Promise<LoginData> => {
   throw error;
 };
 
+const isAdmin = async (loggedUserID: number, neighborhoodID: number): Promise<boolean> => {
+  const neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
+    where: {
+      id: neighborhoodID,
+    },
+  });
+  return (neighborhood.admin_id === loggedUserID);
+};
+
 export default {
   generateCreateUserData,
   generateUserDataWithoutId,
   getUserWithoutPasswordHash,
   generateLoginData,
+  isAdmin,
 };

@@ -9,6 +9,11 @@ const supertest = require('supertest'); // eslint-disable-line
 
 const api = supertest(app);
 
+const loginData = {
+  username: 'bob',
+  password: 'secret',
+};
+
 beforeAll(async () => {
   await testHelpers.removeAllData();
 });
@@ -25,6 +30,20 @@ describe('When neighborhoods already exist in the db', () => {
     expect(response.status).toEqual(200);
     // expect(response.body.length).toEqual(3);  // 3 was a magic number.
     expect(response.body.length).toEqual(numberOfNeighborhoods);
+  });
+
+  test('DELETE /neighborhoods/:id removes a neighborhood', async () => {
+    const initialNeighborhoods = await api.get('/api/neighborhoods');
+    const loginResponse = await api
+      .post('/api/login')
+      .send(loginData);
+    const { token } = loginResponse.body;
+
+    const response = await api.delete('/api/neighborhoods/1').set('Authorization', `Bearer ${token}`);
+    const currentNeighborhoods = await api.get('/api/neighborhoods');
+
+    expect(response.status).toEqual(200);
+    expect(currentNeighborhoods.body.length).toEqual(initialNeighborhoods.body.length - 1);
   });
 });
 
