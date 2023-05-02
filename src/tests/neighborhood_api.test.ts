@@ -4,17 +4,11 @@ import prismaClient from '../../prismaClient';
 import seed from './seed';
 import testHelpers from './testHelpers';
 import { LoginData } from '../types';
-import routeHelpers from '../utils/routeHelpers';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
 
 const api = supertest(app);
-
-const loginData: LoginData = {
-  username: 'bob',
-  password: 'secret',
-};
 
 const LOGIN_DATA: LoginData = {
   username: 'bob',
