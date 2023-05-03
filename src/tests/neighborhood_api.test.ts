@@ -38,6 +38,12 @@ describe('When neighborhoods already exist in the db', () => {
   });
 });
 
+test('GET /neighborhoods/id invalid id returns expected error', async () => {
+  const response = await api.get(`/api/neighborhoods/0`);
+  expect(response.status).toEqual(404);
+  expect(response.body.error).toEqual('No Neighborhood found');
+});
+
 describe('When no neighborhood exists in the db', () => {
   beforeEach(async () => {
     await prismaClient.neighborhood.deleteMany({});
