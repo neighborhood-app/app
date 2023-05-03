@@ -38,3 +38,118 @@ describe('When no neighborhood exists in the db', () => {
     expect(response.status).toEqual(404);
   });
 });
+
+describe('Testing UPDATE method for neighborhood API.', () => {
+  beforeEach(async () => {
+    await seed();
+  });
+
+  test('Update all of a neighborhood\'s fields by id', async () => {
+    const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const newAdmin = await prismaClient.user.findFirst({
+      where: {
+        NOT: { id: neighborhoodToUpdate!.admin_id },
+      },
+    });
+
+    const newData = {
+      name: 'Test',
+      description: 'Test',
+      admin_id: newAdmin!.id,
+      location: 'Athens',
+    };
+
+    const response = await api.put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
+
+    expect(response.text).toEqual('Neighborhood \'Test\' has been updated.');
+    expect(response.status).toEqual(200);
+    expect(await prismaClient.neighborhood.findFirst({
+      where: { id: neighborhoodToUpdate!.id },
+    })).toEqual({
+      id: neighborhoodToUpdate!.id,
+      ...newData,
+    });
+  });
+
+  test('Partial update works', async () => {
+    const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const newData = { name: 'Test' };
+    const response = await api.put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
+
+    expect(response.text).toEqual('Neighborhood \'Test\' has been updated.');
+    expect(response.status).toEqual(200);
+    expect(await prismaClient.neighborhood.findFirst({
+      where: { id: neighborhoodToUpdate!.id },
+    })).toEqual({
+      ...neighborhoodToUpdate,
+      name: newData.name,
+    });
+  });
+
+  test('Empty input doesn\'t change anything on the server', async () => {
+    const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const response = await api.put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`).send({});
+
+    expect(response.text).toEqual('Neighborhood \'Antonina\'s Neighborhood\' has been updated.');
+    expect(response.status).toEqual(200);
+    expect(await prismaClient.neighborhood.findFirst({
+      where: { id: neighborhoodToUpdate!.id },
+    })).toEqual({
+      ...neighborhoodToUpdate,
+    });
+  });
+
+  test('Update with invalid properties raises an error', async () => {
+    const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const newData = {
+      name: 'Test',
+      description: 'Test',
+      location: 'Athens',
+      invalid: 'Non-existent prop',
+    };
+
+    const response = await api.put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
+
+    expect(response.text).toEqual('Oops. Something went wrong.');
+    expect(response.status).toEqual(400);
+  });
+
+  test('Non-existent admin_id raises a 404 error', async () => {
+    const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const newData = { admin_id: 1000 };
+
+    const response = await api.put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
+
+    expect(response.status).toEqual(404);
+    expect(await prismaClient.neighborhood.findFirst({
+      where: { id: neighborhoodToUpdate!.id },
+    })).toEqual({
+      ...neighborhoodToUpdate,
+    });
+  });
+});
