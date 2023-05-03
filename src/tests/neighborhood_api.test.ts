@@ -129,8 +129,6 @@ describe('Testing UPDATE method for neighborhood API.', () => {
     };
 
     const response = await api.put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
-
-    expect(response.text).toEqual('Oops. Something went wrong.');
     expect(response.status).toEqual(400);
   });
 
@@ -145,7 +143,7 @@ describe('Testing UPDATE method for neighborhood API.', () => {
 
     const response = await api.put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
 
-    expect(response.status).toEqual(404);
+    expect(response.status).toEqual(400);
     expect(await prismaClient.neighborhood.findFirst({
       where: { id: neighborhoodToUpdate!.id },
     })).toEqual({

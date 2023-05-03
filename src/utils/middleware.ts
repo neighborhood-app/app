@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { Prisma } from '@prisma/client';
 import logger from './logger';
 
 /**
@@ -27,6 +28,12 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
   if (error.name === 'UserDataError') {
     response.status(400).send({ error: error.message });
   } else if (error instanceof SyntaxError) {
+    response.status(400).send({ error: error.message });
+  } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === 'P2003') {
+      response.status(400).send({ error: error.message });
+    }
+  } else if (error instanceof Prisma.PrismaClientValidationError) {
     response.status(400).send({ error: error.message });
   } else {
     logger.error(error.message);
