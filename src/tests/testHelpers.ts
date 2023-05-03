@@ -59,8 +59,23 @@ const seedUser = async (createUserData: CreateUserData) => {
   });
 };
 
+const removeAllData = async () => {
+  await prismaClient.response.deleteMany({});
+  await prismaClient.request.deleteMany({});
+  await prismaClient.neighborhood.deleteMany({});
+  await prismaClient.user.deleteMany({});
+  await prismaClient.gender.deleteMany({});
+
+  await prismaClient.$executeRaw`ALTER SEQUENCE genders_id_seq RESTART WITH 1`;
+  await prismaClient.$executeRaw`ALTER SEQUENCE users_id_seq RESTART WITH 1`;
+  await prismaClient.$executeRaw`ALTER SEQUENCE responses_id_seq RESTART WITH 1`;
+  await prismaClient.$executeRaw`ALTER SEQUENCE requests_id_seq RESTART WITH 1`;
+  await prismaClient.$executeRaw`ALTER SEQUENCE neighborhoods_id_seq RESTART WITH 1`;
+};
+
 export default {
   usersInDb,
   seedUser,
   getPasswordHash,
+  removeAllData,
 };
