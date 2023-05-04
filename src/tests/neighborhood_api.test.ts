@@ -132,7 +132,7 @@ describe('Testing UPDATE method for neighborhood API.', () => {
     expect(response.status).toEqual(400);
   });
 
-  test('Non-existent admin_id raises a 404 error', async () => {
+  test('Non-existent admin_id raises a 400 error', async () => {
     const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
       where: {
         name: "Antonina's Neighborhood",

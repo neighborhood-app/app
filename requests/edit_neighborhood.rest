@@ -1,0 +1,20 @@
+# should work provided neighborhood with id 2 exists
+PUT http://localhost:3000/api/neighborhoods/2
+Content-Type: application/json
+
+{
+  "name": "Test",
+  "description": "Test",
+  "location": "Athens"
+}
+
+# should fail with a 400
+# PUT http://localhost:3000/api/neighborhoods/2
+# Content-Type: application/json
+
+# {
+#   "name": "Test",
+#   "description": "Test",
+#   "location": "Athens",
+#   "invalid": "Non-existent prop"
+# }
