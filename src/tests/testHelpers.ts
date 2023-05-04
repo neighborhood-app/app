@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { User } from '@prisma/client';
+import { Neighborhood, User } from '@prisma/client';
 import { UserWithoutId, CreateUserData } from '../types';
 import prismaClient from '../../prismaClient';
 
@@ -47,6 +47,15 @@ const usersInDb = async (): Promise<User[]> => {
 };
 
 /**
+ * Uses prisma client to find all neighborhoods in the db
+ * @returns Promise resolved to an array consisting all users in db
+ */
+const neighborhoodsInDb = async (): Promise<Neighborhood[]> => {
+  const neighborhoods = await prismaClient.neighborhood.findMany({});
+  return Promise.resolve(neighborhoods);
+};
+
+/**
  * - creates user in db users table with given username and password
  * - rest of the fields are null
  * @param username used to populate user_name field
@@ -75,6 +84,7 @@ const removeAllData = async () => {
 
 export default {
   usersInDb,
+  neighborhoodsInDb,
   seedUser,
   getPasswordHash,
   removeAllData,

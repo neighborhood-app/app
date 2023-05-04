@@ -5,11 +5,7 @@ const SAMPLE_PASSWORD = 'secret';
 
 async function main() {
   // clearing the existing db
-  await prismaClient.user.deleteMany({});
-  await prismaClient.neighborhood.deleteMany({});
-  await prismaClient.gender.deleteMany({});
-  await prismaClient.request.deleteMany({});
-  await prismaClient.request.deleteMany({});
+  await testHelpers.removeAllData();
 
   await prismaClient.gender.createMany({
     data: [
