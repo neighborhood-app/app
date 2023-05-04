@@ -67,8 +67,8 @@ const generateCreateUserData = async (object: unknown): Promise<CreateUserData> 
   }
 
   if ('username' in object && 'password' in object
-      && typeof object.username === 'string'
-      && typeof object.password === 'string') {
+    && typeof object.username === 'string'
+    && typeof object.password === 'string') {
     const createUserData = {
       username: object.username,
       password: object.password,
@@ -137,8 +137,8 @@ const generateLoginData = async (object: unknown): Promise<LoginData> => {
   }
 
   if ('username' in object && 'password' in object
-      && typeof object.username === 'string'
-      && typeof object.password === 'string') {
+    && typeof object.username === 'string'
+    && typeof object.password === 'string') {
     const loginData = {
       username: object.username,
       password: object.password,
@@ -152,9 +152,19 @@ const generateLoginData = async (object: unknown): Promise<LoginData> => {
   throw error;
 };
 
+const isAdmin = async (loggedUserID: number, neighborhoodID: number): Promise<boolean> => {
+  const neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
+    where: {
+      id: neighborhoodID,
+    },
+  });
+  return (neighborhood.admin_id === loggedUserID);
+};
+
 export default {
   generateCreateUserData,
   generateUserDataWithoutId,
   getUserWithoutPasswordHash,
   generateLoginData,
+  isAdmin,
 };
