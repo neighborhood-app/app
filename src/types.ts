@@ -1,4 +1,5 @@
 import { User } from '@prisma/client';
+import { Request } from 'express';
 
 /**
  * format of the user data, without password hash, which is send in response
@@ -24,4 +25,9 @@ export interface LoginData {
 export interface CreateUserData {
   username: string,
   password: string
+}
+
+export interface CustomRequest extends Request {
+  token?: string,
+  user?: User
 }
