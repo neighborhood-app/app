@@ -18,3 +18,13 @@ Content-Type: application/json
 #   "location": "Athens",
 #   "invalid": "Non-existent prop"
 # }
+
+# should fail with a 404 provided neighborhood with id 20939 doesn't exist
+# PUT http://localhost:3000/api/neighborhoods/20939
+# Content-Type: application/json
+
+# {
+#   "name": "Test",
+#   "description": "Test",
+#   "location": "Athens"
+# }

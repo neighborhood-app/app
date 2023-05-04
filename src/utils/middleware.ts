@@ -30,7 +30,9 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
   } else if (error instanceof SyntaxError) {
     response.status(400).send({ error: error.message });
   } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    if (error.code === 'P2003') {
+    if (error.code === 'P2025') {
+      response.status(404).send({ error: error.message });
+    } else {
       response.status(400).send({ error: error.message });
     }
   } else if (error instanceof Prisma.PrismaClientValidationError) {

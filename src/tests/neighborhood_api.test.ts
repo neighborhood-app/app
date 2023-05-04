@@ -132,6 +132,22 @@ describe('Testing UPDATE method for neighborhood API.', () => {
     expect(response.status).toEqual(400);
   });
 
+  test('Update with invalid property value types fails', async () => {
+    const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
+      where: {
+        name: "Antonina's Neighborhood",
+      },
+    });
+
+    const newData = {
+      name: 1000,
+      description: [1, 2, 3],
+    };
+
+    const response = await api.put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
+    expect(response.status).toEqual(400);
+  });
+
   test('Non-existent admin_id raises a 400 error', async () => {
     const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
       where: {
@@ -140,7 +156,6 @@ describe('Testing UPDATE method for neighborhood API.', () => {
     });
 
     const newData = { admin_id: 1000 };
-
     const response = await api.put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`).send(newData);
 
     expect(response.status).toEqual(400);
@@ -149,5 +164,13 @@ describe('Testing UPDATE method for neighborhood API.', () => {
     })).toEqual({
       ...neighborhoodToUpdate,
     });
+  });
+
+  test('Non-existent neighborhood id raises a 404 error', async () => {
+    const NON_EXISTENT_ID = 399495;
+    const newData = { name: 'Test' };
+    const response = await api.put(`/api/neighborhoods/${NON_EXISTENT_ID}`).send(newData);
+
+    expect(response.status).toEqual(404);
   });
 });
