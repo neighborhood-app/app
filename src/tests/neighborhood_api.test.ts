@@ -36,12 +36,12 @@ describe('When neighborhoods already exist in the db', () => {
     expect(response.status).toEqual(200);
     expect(response.body.id).toEqual(id);
   });
-});
 
-test('GET /neighborhoods/id invalid id returns expected error', async () => {
-  const response = await api.get(`/api/neighborhoods/0`);
-  expect(response.status).toEqual(404);
-  expect(response.body.error).toEqual('No Neighborhood found');
+  test('GET /neighborhoods/id invalid id returns expected error', async () => {
+    const response = await api.get(`/api/neighborhoods/0`);
+    expect(response.status).toEqual(404);
+    expect(response.body.error).toEqual('No Neighborhood found');
+  });
 });
 
 describe('When no neighborhood exists in the db', () => {
