@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { Neighborhood } from '@prisma/client';
 import catchError from '../utils/catchError';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
@@ -35,6 +36,16 @@ neighborhoodsRouter.put('/:id', catchError(async (req, res) => {
   });
 
   res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
+}));
+
+neighborhoodsRouter.post('/', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
+  req.body.admin_id = req.user?.id; // adding user_id to request.body
+  const createNeighborhoodData = await routeHelpers.generateCreateNeighborhoodData(req.body);
+
+  const newNeighborhood: Neighborhood = await prismaClient.neighborhood
+    .create({ data: createNeighborhoodData });
+
+  res.status(200).json(newNeighborhood);
 }));
 
 export default neighborhoodsRouter;

@@ -27,6 +27,14 @@ export interface CreateUserData {
   password: string
 }
 
+/**
+ * Format of data sent to POST /api/neighborhood to create new neighborhood
+ */
+export interface CreateNeighborhoodData {
+  admin_id: number,
+  name: string
+}
+
 export interface CustomRequest extends Request {
   token?: string,
   user?: User

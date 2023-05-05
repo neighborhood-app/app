@@ -232,3 +232,22 @@ describe('Testing UPDATE method for neighborhood API.', () => {
     expect(response.status).toEqual(404);
   });
 });
+
+describe('Testing CREATE neighborhood at POST /api/neighborhood', () => {
+  beforeEach(async () => {
+    await seed();
+  });
+
+  test('when user not logged in, unable to create neighborhood', async () => {
+    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numInitialNeighborhoods = initialNeighborhoods.length;
+
+    const postResponse = await api.post('/api/neighborhoods');
+
+    const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numCurrentNeighborhoods = currentNeighborhoods.length;
+
+    expect(postResponse.status).toEqual(401);
+    expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods);
+  });
+});

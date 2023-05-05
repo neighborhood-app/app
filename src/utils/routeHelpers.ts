@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
-  UserWithoutId, UserWithoutPasswordHash, LoginData, CreateUserData,
+  UserWithoutId, UserWithoutPasswordHash, LoginData, CreateUserData, CreateNeighborhoodData,
 } from '../types';
 
 /**
@@ -78,6 +78,25 @@ const generateCreateUserData = async (object: unknown): Promise<CreateUserData> 
   }
 
   const error = new Error('Username or Password missing');
+  error.name = 'UserDataError';
+  throw error;
+};
+
+const generateCreateNeighborhoodData = async (object: unknown): Promise<CreateNeighborhoodData> => {
+  if (!object || typeof object !== 'object') {
+    throw new Error('Incorrect or missing data');
+  }
+
+  if ('name' in object && typeof object.name === 'string' && object.name.length >= 4
+      && 'admin_id' in object && typeof object.admin_id === 'number') {
+    const neighborhoodData: CreateNeighborhoodData = {
+      admin_id: object.admin_id,
+      name: object.name,
+    };
+    return Promise.resolve(neighborhoodData);
+  }
+
+  const error = new Error('user id or neighborhood name missing');
   error.name = 'UserDataError';
   throw error;
 };
@@ -165,6 +184,7 @@ export default {
   generateCreateUserData,
   generateUserDataWithoutId,
   getUserWithoutPasswordHash,
+  generateCreateNeighborhoodData,
   generateLoginData,
   isAdmin,
 };

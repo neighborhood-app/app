@@ -71,11 +71,11 @@ aid of the authentication token
  */
 const userExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
   if (!req.token) {
-    res.status(401).json({ error: 'no token given' });
+    res.status(401).json({ error: 'Invalid User Credentials' });
   } else {
     const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
     if (!decodedToken.id) {
-      res.status(401).json({ error: 'token invalid' });
+      res.status(401).json({ error: 'Invalid User Credentials' });
     }
 
     req.user = await prismaClient.user.findFirstOrThrow({
