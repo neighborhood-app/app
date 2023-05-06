@@ -21,7 +21,7 @@ async function main() {
   // creating users with same password for seeding the db
   const bob = await prismaClient.user.create({
     data: {
-      user_name: 'bob',
+      user_name: 'bob1234',
       password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });

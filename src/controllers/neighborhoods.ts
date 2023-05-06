@@ -45,7 +45,7 @@ neighborhoodsRouter.post('/', middleware.userExtractor, catchError(async (req: C
   const newNeighborhood: Neighborhood = await prismaClient.neighborhood
     .create({ data: createNeighborhoodData });
 
-  res.status(200).json(newNeighborhood);
+  res.status(201).json(newNeighborhood);
 }));
 
 export default neighborhoodsRouter;

@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { User } from '@prisma/client';
+import { Neighborhood, User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
   UserWithoutId, UserWithoutPasswordHash, LoginData, CreateUserData, CreateNeighborhoodData,
@@ -82,22 +82,59 @@ const generateCreateUserData = async (object: unknown): Promise<CreateUserData> 
   throw error;
 };
 
+/**
+ * - narrows name type to string, checks if name is valid
+ * - throws Error if name already exists in neighborhoods.name
+ * - throws Error if name not valid
+ * @param name this should be a valid username
+ * @returns resolved promise with name as value
+ */
+const parseNeighborhoodName = async (name: unknown): Promise<string> => {
+  const MINIMUM_NAME_LENGTH = 4;
+
+  if (typeof name !== 'string' || name.length < MINIMUM_NAME_LENGTH) {
+    const error = new Error('Invalid Neighborhood Name');
+    error.name = 'NeighborhoodDataError';
+    throw error;
+  }
+
+  const existingNeighborhood: Neighborhood | null = await prismaClient.neighborhood.findUnique({
+    where: {
+      name,
+    },
+  });
+
+  if (existingNeighborhood) {
+    const error = new Error('Neighborhood already exists');
+    error.name = 'NeighborhoodDataError';
+    throw error;
+  }
+
+  return Promise.resolve(name);
+};
+
+/**
+ * transforms req.body to data for creating neighborhood
+ * throws Error if admin_id or name field not present or invalid
+ * @param object req.body, admin_id and name properties must be present
+ * @returns Promise resolved to valid data for creating neighborhood
+ */
 const generateCreateNeighborhoodData = async (object: unknown): Promise<CreateNeighborhoodData> => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data');
   }
 
-  if ('name' in object && typeof object.name === 'string' && object.name.length >= 4
-      && 'admin_id' in object && typeof object.admin_id === 'number') {
+  if ('admin_id' in object && typeof object.admin_id === 'number' && 'name' in object) {
     const neighborhoodData: CreateNeighborhoodData = {
       admin_id: object.admin_id,
-      name: object.name,
+      name: await parseNeighborhoodName(object.name),
     };
+
     return Promise.resolve(neighborhoodData);
   }
 
   const error = new Error('user id or neighborhood name missing');
-  error.name = 'UserDataError';
+  error.name = 'NeighborhoodDataError';
   throw error;
 };
 

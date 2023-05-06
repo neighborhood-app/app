@@ -30,7 +30,9 @@ const unknownEndpoint = (_request: Request, response: Response): void => {
 
 const errorHandler = (error: Error, _req: Request, response: Response, _next: NextFunction)
 : void => {
-  if (error.name === 'UserDataError') {
+  if (error.name === 'UserDataError') { // invalid data while creating user
+    response.status(400).send({ error: error.message });
+  } else if (error.name === 'NeighborhoodDataError') { // invalid data while creating neighborhood
     response.status(400).send({ error: error.message });
   } else if (error.name === 'JsonWebTokenError') {
     response.status(400).send({ error: error.message });
