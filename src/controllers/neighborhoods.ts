@@ -24,14 +24,6 @@ neighborhoodsRouter.get('/:id', catchError(async (req: Request, res: Response) =
   res.send(neighborhood);
 }));
 
-neighborhoodsRouter.get('/:id', catchError(async (req: Request, res: Response) => {
-  const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow({
-    where: { id: +req.params.id },
-    include: { users: true }
-  });
-  res.send(neighborhood);
-}));
-
 neighborhoodsRouter.delete('/:id', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
   if (req.user && await routeHelpers.isAdmin(req.user.id, Number(req.params.id))) {
     const deletedNeighborhood = await prismaClient.neighborhood.delete({
