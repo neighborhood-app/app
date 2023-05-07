@@ -1,4 +1,5 @@
 import express from 'express';
+const cors = require('cors');
 import neighborhoodsRouter from './controllers/neighborhoods';
 import usersRouter from './controllers/users';
 import loginRouter from './controllers/login';
@@ -7,6 +8,7 @@ import middleware from './utils/middleware';
 const app = express();
 
 // middleware
+app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);

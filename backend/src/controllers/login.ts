@@ -24,6 +24,9 @@ loginRouter.post('/', catchError(async (request: Request, response: Response) =>
 
   if (!isPasswordCorrect) {
     response.status(401).json({ error: 'invalid username or password' });
+    // The return below was added here because after the response above was sent back to the client, the request still passed through the error handler
+    // middleware which attempted to send a second request back to the client, causing an error on the server.
+    return;
   }
 
   const userDataForGeneratingToken = {

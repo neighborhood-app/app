@@ -1,6 +1,6 @@
 import styles from './LoginForm.module.css'
 import React, { ChangeEvent, FormEventHandler, useState } from 'react'
-import { login } from '../services/loginService';
+import { login } from '../services/login';
 
 export default function LoginForm() {
     const [username, setUsername] = useState('');
@@ -16,7 +16,7 @@ export default function LoginForm() {
         setPassword(element.value);
     }
 
-    async function handleSubmit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
+    async function handleLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         try {
             const user = await login(username, password);
@@ -35,7 +35,7 @@ export default function LoginForm() {
             <div className={styles.logoContainer}>
                 <h2>NEIGHBORHOOD</h2>
             </div>
-            <form onSubmit={handleSubmit} className={styles.form}>
+            <form onSubmit={handleLogin} className={styles.form}>
                 <label className={styles.label} htmlFor='username'>USERNAME:</label>
                 <input className={styles.input} type='text' name='username' id='username' value={username} onChange={handleUserNameInput}></input>
 
