@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { Prisma } from '@prisma/client';
 import jsonwebtoken, { JwtPayload, Secret } from 'jsonwebtoken';
 import logger from './logger';
 import config from './config';
@@ -35,8 +36,14 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
     response.status(400).send({ error: error.message });
   } else if (error instanceof SyntaxError) {
     response.status(400).send({ error: error.message });
-  } else if (error.name === 'NotFoundError') {
-    response.status(404).send({ error: error.message });
+  } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === 'P2025') {
+      response.status(404).send({ error: error.message });
+    } else {
+      response.status(400).send({ error: error.message });
+    }
+  } else if (error instanceof Prisma.PrismaClientValidationError) {
+    response.status(400).send({ error: error.message });
   } else {
     logger.error(error.message);
     response.status(500).send({ error: 'Oops! An error happened' });

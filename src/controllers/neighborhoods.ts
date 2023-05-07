@@ -35,4 +35,14 @@ neighborhoodsRouter.delete('/:id', middleware.userExtractor, catchError(async (r
   } 
 }));
 
+neighborhoodsRouter.put('/:id', catchError(async (req, res) => {
+  const data = req.body;
+  const updatedNeighborhood = await prismaClient.neighborhood.update({
+    where: { id: +req.params.id },
+    data,
+  });
+
+  res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
+}));
+
 export default neighborhoodsRouter;
