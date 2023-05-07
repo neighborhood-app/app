@@ -1,6 +1,7 @@
 import styles from './LoginForm.module.css'
-import React, { ChangeEvent, FormEventHandler, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { login } from '../services/login';
+import { AxiosError } from 'axios';
 
 export default function LoginForm() {
     const [username, setUsername] = useState('');
@@ -23,10 +24,9 @@ export default function LoginForm() {
             window.localStorage.setItem('loggedNeighborhoodUser', JSON.stringify(user));
             setUsername('');
             setPassword('');
-            //@ts-ignore
-        } catch(error: Error) {
-            if (error.type)
-            console.log(error.message);
+        } catch(error) {
+            // To be replaced with a proper error notifiaction
+            if (error instanceof AxiosError && error.response) console.log(error.response.data.error);
         }
     }
 
