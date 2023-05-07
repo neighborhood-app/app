@@ -45,7 +45,13 @@ neighborhoodsRouter.post('/', middleware.userExtractor, catchError(async (req: C
   const newNeighborhood: Neighborhood = await prismaClient.neighborhood
     .create({ data: createNeighborhoodData });
 
+  // console.log(newNeighborhood.users);
+
   res.status(201).json(newNeighborhood);
+}));
+
+neighborhoodsRouter.post('/:id/join', catchError(async (_req: CustomRequest, res: Response) => {
+  res.status(200).send('user will join the neighborhood');
 }));
 
 export default neighborhoodsRouter;

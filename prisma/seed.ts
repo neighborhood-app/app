@@ -28,7 +28,7 @@ async function main() {
 
   const bob = await prismaClient.user.create({
     data: {
-      user_name: 'bobrhodes',
+      user_name: 'bob1234',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
