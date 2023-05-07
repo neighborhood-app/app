@@ -6,12 +6,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  color: #28587B;
+  color: white;
   border: 1px black;
   border-radius: 15px;
   box-shadow: 15px 12px 12px 0px rgba(0,0,0,0.1);
-  background: rgb(238, 238, 255, 0.15);
-  backdrop-filter: blur(10px);
+  background: #6DA9E4;
+  /* opacity: 90%; */
   padding: 15px;
 }
 
@@ -45,7 +45,7 @@
 }
 
 .submit {
-  background-color: #7F7CAF;
+  background-color: #F6BA6F;
   color: white;
   padding: 10px 20px;
   font-size: 18px;

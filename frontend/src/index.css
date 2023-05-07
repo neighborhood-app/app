@@ -13,7 +13,7 @@ html {
 
 html {
   min-height: 100vh;
-  
+
 }
 
 body {
@@ -23,8 +23,7 @@ body {
     sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: rgb(112, 117, 120);
-  background: linear-gradient(173deg, rgba(112, 117, 120, 1) 0%, rgba(155, 152, 203, 1) 51%, rgba(40, 88, 123, 1) 97%);
+  background: #ADE4DB;
 }
 
 code {
