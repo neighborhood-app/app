@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
-  UserWithoutId, UserWithoutPasswordHash, LoginData, CreateUserData,
+  UserWithoutId, UserWithoutPasswordHash, LoginData, CreateUserData, CustomRequest,
 } from '../types';
 
 /**
@@ -161,10 +161,15 @@ const isAdmin = async (loggedUserID: number, neighborhoodID: number): Promise<bo
   return (neighborhood.admin_id === loggedUserID);
 };
 
+const isLoggedInAdmin = async (req: CustomRequest) => (
+  (req.user !== undefined) && await isAdmin(req.user!.id, Number(req.params.id))
+);
+
 export default {
   generateCreateUserData,
   generateUserDataWithoutId,
   getUserWithoutPasswordHash,
   generateLoginData,
   isAdmin,
+  isLoggedInAdmin,
 };

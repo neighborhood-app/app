@@ -17,7 +17,7 @@ neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => 
 }));
 
 neighborhoodsRouter.delete('/:id', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
-  if (req.user && await routeHelpers.isAdmin(req.user.id, Number(req.params.id))) {
+  if (await routeHelpers.isLoggedInAdmin(req)) {
     const deletedNeighborhood = await prismaClient.neighborhood.delete({
       where: { id: +req.params.id },
     });
@@ -27,14 +27,18 @@ neighborhoodsRouter.delete('/:id', middleware.userExtractor, catchError(async (r
   }
 }));
 
-neighborhoodsRouter.put('/:id', catchError(async (req, res) => {
+neighborhoodsRouter.put('/:id', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
+  if (!(await routeHelpers.isLoggedInAdmin(req))) {
+    return res.status(403).send({ error: 'User does not have edit rights for this neighborhood.' });
+  }
+
   const data = req.body;
   const updatedNeighborhood = await prismaClient.neighborhood.update({
     where: { id: +req.params.id },
     data,
   });
 
-  res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
+  return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
 }));
 
 export default neighborhoodsRouter;
