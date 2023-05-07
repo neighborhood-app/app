@@ -278,6 +278,16 @@ describe('Testing CREATE neighborhood at POST /api/neighborhood', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
+    const neighborhoodUsers = await prismaClient.neighborhood.findFirst({
+      where: {
+        id: createResponse.body.id,
+      },
+      select: { users: true },
+    });
+
+    const userNames = neighborhoodUsers?.users.map(u => u.user_name);
+    expect(userNames).toContain(BOBS_LOGIN_DATA.username);
+
     expect(createResponse.body.name).toBe(NEW_NEIGHBORHOOD_NAME);
     expect(createResponse.body.admin_id).toBe(bobUserId);
 

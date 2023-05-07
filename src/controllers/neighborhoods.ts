@@ -39,11 +39,20 @@ neighborhoodsRouter.put('/:id', catchError(async (req, res) => {
 }));
 
 neighborhoodsRouter.post('/', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
-  req.body.admin_id = req.user?.id; // adding user_id to request.body
+  req.body.admin_id = req.user?.id; // adding user_id as admin_id  pto request.body
   const createNeighborhoodData = await routeHelpers.generateCreateNeighborhoodData(req.body);
 
   const newNeighborhood: Neighborhood = await prismaClient.neighborhood
     .create({ data: createNeighborhoodData });
+
+  await prismaClient.neighborhood.update({
+    where: { id: newNeighborhood.id },
+    data: {
+      users: {
+        connect: { id: req.body.admin_id },
+      },
+    },
+  });
 
   // console.log(newNeighborhood.users);
 
