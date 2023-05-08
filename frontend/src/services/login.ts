@@ -7,4 +7,4 @@ async function login(username: string, password: string) {
   return response.data;
 }
 
-export { login };
+export default {login};

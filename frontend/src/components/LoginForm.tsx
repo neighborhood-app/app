@@ -1,6 +1,6 @@
 import styles from './LoginForm.module.css'
 import React, { ChangeEvent, useState } from 'react'
-import { login } from '../services/login';
+import loginService from '../services/login';
 import { AxiosError } from 'axios';
 
 export default function LoginForm() {
@@ -20,7 +20,7 @@ export default function LoginForm() {
     async function handleLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
         try {
-            const user = await login(username, password);
+            const user = await loginService.login(username, password);
             window.localStorage.setItem('loggedNeighborhoodUser', JSON.stringify(user));
             setUsername('');
             setPassword('');
