@@ -16,6 +16,14 @@ neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => 
   }
 }));
 
+neighborhoodsRouter.get('/:id', catchError(async (req: Request, res: Response) => {
+  const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow({
+    where: { id: +req.params.id },
+    include: { users: true }
+  });
+  res.send(neighborhood);
+}));
+
 neighborhoodsRouter.delete('/:id', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
   if (await routeHelpers.isLoggedInAdmin(req)) {
     const deletedNeighborhood = await prismaClient.neighborhood.delete({
@@ -24,7 +32,7 @@ neighborhoodsRouter.delete('/:id', middleware.userExtractor, catchError(async (r
     res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`);
   } else {
     res.status(403).send({ error: 'User is not the admin of this neighborhood' });
-  }
+  } 
 }));
 
 neighborhoodsRouter.put('/:id', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
