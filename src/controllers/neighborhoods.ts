@@ -54,14 +54,20 @@ neighborhoodsRouter.post('/', middleware.userExtractor, catchError(async (req: C
   res.status(201).json(newNeighborhoodWithRelatedFields);
 }));
 
-neighborhoodsRouter.post('/:id/join', middleware.userExtractor, catchError(async (_req: CustomRequest, res: Response) => {
-  // const neighborhoodId = Number(req.params.id);
+neighborhoodsRouter.post('/:id/join', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
+  const userId = req.user?.id as number; // user should be extracted by the middleware
+  const neighborhoodId = Number(req.params.id);
 
-  // check if neighborhood valid
-  // check if user is not already joined with the neighborhood
-  // join user to the neighborhood
+  if (!neighborhoodId || Number.isNaN(neighborhoodId)) {
+    res.status(400).send({ error: 'Unable to parse URL' });
+  }
 
-  res.status(200).send('user will join the neighborhood');
+  await routeHelpers.connectUsertoNeighborhood(userId, neighborhoodId);
+
+  const neighborhoodWithUsers = await
+  routeHelpers.generateNeighborhoodDataWithRelatedFields(neighborhoodId);
+
+  res.status(200).send(neighborhoodWithUsers);
 }));
 
 export default neighborhoodsRouter;
