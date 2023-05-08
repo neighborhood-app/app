@@ -68,6 +68,25 @@ const seedUser = async (createUserData: CreateUserData) => {
   });
 };
 
+const getUsersAssociatedWithNeighborhood = async (neighborhoodId: number): Promise<User[] | null> => {
+  const neighborhood = await prismaClient
+    .neighborhood.findFirst({
+      where: {
+        id: neighborhoodId,
+      },
+      select: {
+        users: true,
+      },
+    });
+
+  if (!neighborhood) {
+    throw new Error('neighborhood does not exist');
+  } else {
+    const { users } = neighborhood;
+    return Promise.resolve(users);
+  }
+};
+
 const removeAllData = async () => {
   await prismaClient.response.deleteMany({});
   await prismaClient.request.deleteMany({});
@@ -88,4 +107,5 @@ export default {
   seedUser,
   getPasswordHash,
   removeAllData,
+  getUsersAssociatedWithNeighborhood,
 };

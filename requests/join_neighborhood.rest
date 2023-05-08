@@ -1,1 +1,7 @@
 POST http://localhost:3000/api/neighborhoods/1/join
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjgzNTA3NzgyLCJleHAiOjE2ODM1MTEzODJ9.CtOpr9FWqngMncrXOSS811H1HumLNEQeD5jWwuzuNsc
+
+{
+  
+}

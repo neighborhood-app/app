@@ -16,6 +16,8 @@ const BOBS_LOGIN_DATA: LoginData = {
   password: 'secret',
 };
 
+const ANTONINAS_NHOOD_ID = 2;
+
 beforeAll(async () => {
   await testHelpers.removeAllData();
 });
@@ -345,5 +347,23 @@ describe('Testing CREATE neighborhood at POST /api/neighborhood', () => {
     const numCurrentNeighborhoods = currentNeighborhoods.length;
 
     expect(numCurrentNeighborhoods).toBe(numInitialNeighborhoods);
+  });
+});
+
+describe('Testing user JOIN neighborhood at POST /api/neighborhood/:id/join', () => {
+  beforeEach(async () => {
+    await seed();
+  });
+
+  test('when user not logged in, users remain unchanged', async () => {
+    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+
+    const joinResponse = await api.post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join`);
+
+    expect(joinResponse.status).toEqual(401);
+
+    const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+
+    expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 });
