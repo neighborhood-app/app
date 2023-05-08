@@ -3,6 +3,7 @@ import { Neighborhood, User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
   UserWithoutId, UserWithoutPasswordHash, LoginData, CreateUserData, CreateNeighborhoodData,
+  NeighborhoodWithRelatedFields,
 } from '../types';
 
 /**
@@ -217,6 +218,25 @@ const isAdmin = async (loggedUserID: number, neighborhoodID: number): Promise<bo
   return (neighborhood.admin_id === loggedUserID);
 };
 
+const generateNeighborhoodDataWithRelatedFields = async (neighborhoodData: Neighborhood):
+Promise<NeighborhoodWithRelatedFields | null> => {
+  const neighborhoodId = neighborhoodData.id;
+
+  const dataWithRelatedFields: NeighborhoodWithRelatedFields | null = await prismaClient
+    .neighborhood.findFirst({
+      where: {
+        id: neighborhoodId,
+      },
+      include: {
+        admin: true,
+        users: true,
+        // requests: true, TODO: Radu please see why we cant include requests here
+      },
+    });
+
+  return Promise.resolve(dataWithRelatedFields);
+};
+
 export default {
   generateCreateUserData,
   generateUserDataWithoutId,
@@ -224,4 +244,5 @@ export default {
   generateCreateNeighborhoodData,
   generateLoginData,
   isAdmin,
+  generateNeighborhoodDataWithRelatedFields,
 };

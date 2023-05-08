@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Neighborhood, User } from '@prisma/client';
 import { Request } from 'express';
 
 /**
@@ -38,4 +38,10 @@ export interface CreateNeighborhoodData {
 export interface CustomRequest extends Request {
   token?: string,
   user?: User
+}
+
+export interface NeighborhoodWithRelatedFields extends Neighborhood {
+  admin: User,
+  users: User[],
+  requests?: Request[]
 }

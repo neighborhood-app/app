@@ -54,9 +54,10 @@ neighborhoodsRouter.post('/', middleware.userExtractor, catchError(async (req: C
     },
   });
 
-  // console.log(newNeighborhood.users);
+  const newNeighborhoodWithRelatedFields = await routeHelpers
+    .generateNeighborhoodDataWithRelatedFields(newNeighborhood);
 
-  res.status(201).json(newNeighborhood);
+  res.status(201).json(newNeighborhoodWithRelatedFields);
 }));
 
 neighborhoodsRouter.post('/:id/join', catchError(async (_req: CustomRequest, res: Response) => {

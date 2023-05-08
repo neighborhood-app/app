@@ -272,24 +272,19 @@ describe('Testing CREATE neighborhood at POST /api/neighborhood', () => {
 
     const NEW_NEIGHBORHOOD_NAME = 'new-neighborhood';
 
-    const createResponse = await api.post('/api/neighborhoods')
+    const createNeighborhoodResponse = await api.post('/api/neighborhoods')
       .set('Authorization', `Bearer ${token}`)
       .send({ name: NEW_NEIGHBORHOOD_NAME })
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const neighborhoodUsers = await prismaClient.neighborhood.findFirst({
-      where: {
-        id: createResponse.body.id,
-      },
-      select: { users: true },
-    });
+    const neighborhoodUsers = createNeighborhoodResponse.body.users;
 
-    const userNames = neighborhoodUsers?.users.map(u => u.user_name);
+    const userNames = neighborhoodUsers.map((u: { user_name: any; }) => u.user_name);
     expect(userNames).toContain(BOBS_LOGIN_DATA.username);
 
-    expect(createResponse.body.name).toBe(NEW_NEIGHBORHOOD_NAME);
-    expect(createResponse.body.admin_id).toBe(bobUserId);
+    expect(createNeighborhoodResponse.body.name).toBe(NEW_NEIGHBORHOOD_NAME);
+    expect(createNeighborhoodResponse.body.admin_id).toBe(bobUserId);
 
     const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
     const numCurrentNeighborhoods = currentNeighborhoods.length;
