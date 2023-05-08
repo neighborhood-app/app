@@ -68,7 +68,8 @@ const seedUser = async (createUserData: CreateUserData) => {
   });
 };
 
-const getUsersAssociatedWithNeighborhood = async (neighborhoodId: number): Promise<User[] | null> => {
+const getUsersAssociatedWithNeighborhood = async (neighborhoodId: number):
+Promise<User[] | null> => {
   const neighborhood = await prismaClient
     .neighborhood.findFirst({
       where: {

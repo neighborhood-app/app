@@ -218,10 +218,15 @@ const isAdmin = async (loggedUserID: number, neighborhoodID: number): Promise<bo
   return (neighborhood.admin_id === loggedUserID);
 };
 
-const generateNeighborhoodDataWithRelatedFields = async (neighborhoodData: Neighborhood):
-Promise<NeighborhoodWithRelatedFields | null> => {
-  const neighborhoodId = neighborhoodData.id;
-
+/**
+ * makes db query, fetches and returns associated fields to neighborhood
+ * adds admin, users and requests (to be implemented) fields and returns it
+ * throws error if neighborhood not present
+ * @param neighborhoodId
+ * @returns a promise resolved to neighborhood data with associated fields
+ */
+const generateNeighborhoodDataWithRelatedFields = async (neighborhoodId: number):
+Promise<NeighborhoodWithRelatedFields> => {
   const dataWithRelatedFields: NeighborhoodWithRelatedFields | null = await prismaClient
     .neighborhood.findFirst({
       where: {
@@ -234,7 +239,49 @@ Promise<NeighborhoodWithRelatedFields | null> => {
       },
     });
 
+  if (!dataWithRelatedFields) {
+    const error = new Error('Neighborhood');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+
   return Promise.resolve(dataWithRelatedFields);
+};
+
+/**
+ * associates user to neighborhood in the database
+ * throws error if neighborhood not present or user not present
+ * or user already associated with the neighborhood
+ * @param userId
+ * @param neighborhoodId
+ */
+const connectUsertoNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
+  const user: User | null = await prismaClient.user.findUnique({ where: { id: userId } });
+  const neighborhood: Neighborhood | null = await prismaClient
+    .neighborhood.findUnique({ where: { id: neighborhoodId } });
+
+  if (!user || !neighborhood) {
+    const error = new Error('Invalid User or Neighborhood');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+
+  const neighborhoodWithUsers = await generateNeighborhoodDataWithRelatedFields(neighborhoodId);
+  const neighborhoodUserIds = neighborhoodWithUsers.users.map(u => u.id);
+  if (neighborhoodUserIds.includes(userId)) {
+    const error = new Error('User already associated with Neighborhood');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+
+  await prismaClient.neighborhood.update({
+    where: { id: neighborhoodId },
+    data: {
+      users: {
+        connect: { id: userId },
+      },
+    },
+  });
 };
 
 export default {
@@ -245,4 +292,5 @@ export default {
   generateLoginData,
   isAdmin,
   generateNeighborhoodDataWithRelatedFields,
+  connectUsertoNeighborhood,
 };
