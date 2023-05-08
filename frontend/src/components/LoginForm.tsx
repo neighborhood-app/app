@@ -35,7 +35,7 @@ export default function LoginForm() {
             <div className={styles.logoContainer}>
                 <h2>NEIGHBORHOOD</h2>
             </div>
-            <form onSubmit={handleLogin} className={styles.form}>
+            <form onSubmit={handleLogin} className={styles.form} name='login-form'>
                 <label className={styles.label} htmlFor='username'>USERNAME:</label>
                 <input className={styles.input} type='text' name='username' id='username' value={username} onChange={handleUserNameInput}></input>
 
