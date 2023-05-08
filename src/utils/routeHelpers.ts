@@ -161,6 +161,10 @@ const isAdmin = async (loggedUserID: number, neighborhoodID: number): Promise<bo
   return (neighborhood.admin_id === loggedUserID);
 };
 
+/**
+ * @param req custome request object with the user log-in token and user object
+ * @returns Promise resolved to `true` if user is logged-in and admin of current neighborhood
+ */
 const isLoggedInAdmin = async (req: CustomRequest) => (
   (req.user !== undefined) && await isAdmin(req.user!.id, Number(req.params.id))
 );
