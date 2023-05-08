@@ -18,7 +18,11 @@ export default function LoginForm() {
     }
 
     async function handleLogin(event: React.FormEvent<HTMLFormElement>): Promise<void> {
-        event.preventDefault();
+        if (!username || !password) {
+            //To be replaced with a proper notification
+            console.error('Please enter a username and password!');
+            return;
+        }
         try {
             const user = await loginService.login(username, password);
             window.localStorage.setItem('loggedNeighborhoodUser', JSON.stringify(user));
@@ -37,10 +41,10 @@ export default function LoginForm() {
             </div>
             <form onSubmit={handleLogin} className={styles.form} name='login-form'>
                 <label className={styles.label} htmlFor='username'>USERNAME:</label>
-                <input className={styles.input} type='text' name='username' id='username' value={username} onChange={handleUserNameInput}></input>
+                <input className={styles.input} type='text' name='username' id='username' required value={username} onChange={handleUserNameInput}></input>
 
                 <label className={styles.label} htmlFor='password'>PASSWORD:</label>
-                <input className={styles.input} type='password' name='password' id='password' value={password} onChange={handlePasswordInput}></input>
+                <input className={styles.input} type='password' name='password' id='password' required value={password} onChange={handlePasswordInput}></input>
 
                 <input className={styles.submit} type='submit' value='LOGIN'></input>
             </form>
