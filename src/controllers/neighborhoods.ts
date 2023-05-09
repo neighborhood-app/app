@@ -60,14 +60,14 @@ neighborhoodsRouter.post('/:id/join', middleware.userExtractor, catchError(async
 
   if (!neighborhoodId || Number.isNaN(neighborhoodId)) {
     res.status(400).send({ error: 'Unable to parse URL' });
+  } else {
+    await routeHelpers.connectUsertoNeighborhood(userId, neighborhoodId);
+
+    const neighborhoodWithUsers = await
+    routeHelpers.generateNeighborhoodDataWithRelatedFields(neighborhoodId);
+
+    res.status(200).send(neighborhoodWithUsers);
   }
-
-  await routeHelpers.connectUsertoNeighborhood(userId, neighborhoodId);
-
-  const neighborhoodWithUsers = await
-  routeHelpers.generateNeighborhoodDataWithRelatedFields(neighborhoodId);
-
-  res.status(200).send(neighborhoodWithUsers);
 }));
 
 export default neighborhoodsRouter;
