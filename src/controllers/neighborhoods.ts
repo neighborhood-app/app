@@ -62,11 +62,7 @@ neighborhoodsRouter.post('/:id/join', middleware.userExtractor, catchError(async
     res.status(400).send({ error: 'Unable to parse URL' });
   } else {
     await routeHelpers.connectUsertoNeighborhood(userId, neighborhoodId);
-
-    const neighborhoodWithUsers = await
-    routeHelpers.generateNeighborhoodDataWithRelatedFields(neighborhoodId);
-
-    res.status(200).send(neighborhoodWithUsers);
+    res.status(201).send({ success: 'You have joined the neighborhood' });
   }
 }));
 

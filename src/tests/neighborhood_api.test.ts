@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */ // Need to access response._body
 import { Neighborhood, User } from '@prisma/client';
-import { join } from '@prisma/client/runtime';
 import app from '../app';
 import prismaClient from '../../prismaClient';
 import seed from './seed';
@@ -374,17 +373,13 @@ describe('Testing user JOIN neighborhood at POST /api/neighborhood/:id/join', ()
     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
     const { token } = loginResponse.body;
 
-    const joinResponse = await api.post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join`)
+    await api.post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join`)
       .set('Authorization', `Bearer ${token}`)
-      .expect(200)
+      .expect(201)
       .expect('Content-Type', /application\/json/);
 
     const finalUsersInDb = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
     expect(finalUsersInDb?.length).toBe(numInitialUsers + 1);
-
-    const finalUserNamesInResponse = joinResponse.body.users
-      .map((u: { user_name: any; }) => u.user_name);
-    expect(finalUserNamesInResponse).toContain(BOBS_LOGIN_DATA.username);
 
     const finalUserNamesInDb = finalUsersInDb?.map(u => u.user_name);
     expect(finalUserNamesInDb).toContain(BOBS_LOGIN_DATA.username);
