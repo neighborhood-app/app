@@ -6,18 +6,18 @@
   padding: 0;
 }
 
+html, body, #root {
+  height: 100%;
+}
+
 body,
 html {
   font-family: 'Roboto', sans-serif;
 }
 
-html {
-  min-height: 100vh;
-
-}
-
 body {
   margin: 0;
+  height: 100%;
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif; */
