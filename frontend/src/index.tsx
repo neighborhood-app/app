@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import Login from './routes/login';
+import Login, {action as loginAction} from './routes/login';
 import {
   createBrowserRouter, RouterProvider
 } from 'react-router-dom';
@@ -14,7 +14,8 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />
+    element: <Login />,
+    action: loginAction,
   }
 ])
 
