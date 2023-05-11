@@ -235,7 +235,7 @@ Promise<NeighborhoodWithRelatedFields> => {
       include: {
         admin: true,
         users: true,
-        // requests: true, TODO: Radu please see why we cant include requests here
+        requests: true,
       },
     });
 

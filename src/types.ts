@@ -1,4 +1,4 @@
-import { Neighborhood, User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { Request } from 'express';
 
 /**
@@ -40,8 +40,16 @@ export interface CustomRequest extends Request {
   user?: User
 }
 
-export interface NeighborhoodWithRelatedFields extends Neighborhood {
-  admin: User,
-  users: User[],
-  requests?: Request[]
-}
+const neighborhoodWithRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>()({
+  include: {
+    users: true,
+    requests: true,
+  },
+});
+
+// const NeighborhoodRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>()({
+//   select: { admin: true },
+// });
+
+export type NeighborhoodWithRelatedFields = Prisma
+  .NeighborhoodGetPayload<typeof neighborhoodWithRelatedFields>;
