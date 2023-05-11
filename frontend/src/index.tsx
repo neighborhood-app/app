@@ -6,11 +6,12 @@ import Login, {action as loginAction} from './routes/login';
 import {
   createBrowserRouter, RouterProvider
 } from 'react-router-dom';
+import MainLayout from './components/MainLayout';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div>Placeholder!</div>
+    element: <MainLayout />,
   },
   {
     path: "/login",
