@@ -1,9 +1,10 @@
 import express from 'express';
-const cors = require('cors');
 import neighborhoodsRouter from './controllers/neighborhoods';
 import usersRouter from './controllers/users';
 import loginRouter from './controllers/login';
 import middleware from './utils/middleware';
+
+const cors = require('cors');
 
 const app = express();
 
