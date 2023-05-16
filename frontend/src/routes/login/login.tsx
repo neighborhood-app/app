@@ -7,9 +7,14 @@ import { redirect } from "react-router";
 export async function action({ request }: {request: Request}) {
   const formData = await request.formData();
   const loginData = Object.fromEntries(formData) as unknown as LoginData;
-  const response = await loginService.login(loginData);
+  const user = await loginService.login(loginData);
   
-  if (response) return redirect('/');
+  if (user) {
+    window.localStorage.setItem(
+      'loggedNeighborhoodUser', JSON.stringify(user)
+    );
+    return redirect('/');
+  }
 }
 
 export default function Login() {
