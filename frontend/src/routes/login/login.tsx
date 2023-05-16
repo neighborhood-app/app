@@ -4,10 +4,9 @@ import loginService from "../../services/login";
 import { LoginData } from "../../types";
 import { redirect } from "react-router";
 
-//@ts-ignore
-export async function action({ request }) {
+export async function action({ request }: {request: Request}) {
   const formData = await request.formData();
-  const loginData = Object.fromEntries(formData) as LoginData;
+  const loginData = Object.fromEntries(formData) as unknown as LoginData;
   const response = await loginService.login(loginData);
   
   if (response) return redirect('/');
