@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LoginForm from './LoginForm';
-import loginService from '../services/login'; 
+import loginService from '../../services/login'; 
 
 // Use screen.debug(element) if you want to check out the rendered HTML;
 

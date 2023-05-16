@@ -1,7 +1,7 @@
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../../components/LoginForm/LoginForm";
 import styles from './login.module.css'
-import loginService from "../services/login";
-import { LoginData } from "../types";
+import loginService from "../../services/login";
+import { LoginData } from "../../types";
 import { redirect } from "react-router";
 
 //@ts-ignore

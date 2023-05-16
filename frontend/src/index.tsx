@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import Login, {action as loginAction} from './routes/login';
+import Login, {action as loginAction} from './routes/login/login';
 import {
   createBrowserRouter, RouterProvider
 } from 'react-router-dom';
-import MainLayout from './components/MainLayout';
+import MainLayout from './components/MainLayout/MainLayout';
 
 const router = createBrowserRouter([
   {
