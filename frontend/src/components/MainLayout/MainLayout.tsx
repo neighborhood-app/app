@@ -3,7 +3,7 @@ import styles from "./MainLayout.module.css";
 
 export default function MainLayout() {
   return (
-    <>
+    <main className={styles.main}>
       <nav className={styles.nav}>
         <div className={styles.navLeft}>
           <a className={styles.link}>Home</a>
@@ -13,12 +13,10 @@ export default function MainLayout() {
           <a className={styles.link}>Sign out</a>
         </div>
       </nav>
-      <main>
         <Outlet />
-      </main>
       <footer className={styles.footer}>
         <p>Placeholder</p>
       </footer>
-    </>
+    </main>
   )
 }

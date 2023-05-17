@@ -19,8 +19,8 @@ export async function action({ request }: {request: Request}) {
 
 export default function Login() {
   return (
-    <main className={styles.main}>
+    <div className={styles.loginContainer}>
       <LoginForm />
-    </main>
+    </div>  
   )
 }

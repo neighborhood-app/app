@@ -1,3 +1,10 @@
+.main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-between;
+}
+
 .nav {
   height: 8vh;
   background-color: #6DA9E4;
@@ -21,16 +28,12 @@
   padding: 15px;
 }
 
-.main {
-  padding-bottom: 8vh;
-}
-
 .footer {
   width: 100vw;
   height: 8vh;
   background-color: #6DA9E4;
-  position: absolute;
-  bottom: 0;
+  /* position: absolute; */
+  /* bottom: 0; */
   display: flex;
   justify-content: center;
   align-items: center;
