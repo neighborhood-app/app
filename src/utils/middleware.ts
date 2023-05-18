@@ -30,7 +30,11 @@ const unknownEndpoint = (_request: Request, response: Response): void => {
 
 const errorHandler = (error: Error, _req: Request, response: Response, _next: NextFunction)
 : void => {
-  if (error.name === 'UserDataError') {
+  if (error.name === 'UserDataError') { // invalid data while creating user
+    response.status(400).send({ error: error.message });
+  } else if (error.name === 'NeighborhoodDataError') { // invalid data while creating neighborhood
+    response.status(400).send({ error: error.message });
+  } else if (error.name === 'InvalidInputError') {
     response.status(400).send({ error: error.message });
   } else if (error.name === 'JsonWebTokenError') {
     response.status(400).send({ error: error.message });
@@ -71,11 +75,11 @@ aid of the authentication token
  */
 const userExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
   if (!req.token) {
-    res.status(401).json({ error: 'no token given' });
+    res.status(401).json({ error: 'Invalid User Credentials' });
   } else {
     const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
     if (!decodedToken.id) {
-      res.status(401).json({ error: 'token invalid' });
+      res.status(401).json({ error: 'Invalid User Credentials' });
     }
 
     req.user = await prismaClient.user.findFirstOrThrow({

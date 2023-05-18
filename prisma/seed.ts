@@ -14,6 +14,22 @@ const getPasswordHash = async (password: string): Promise<string> => {
   return Promise.resolve(passwordHash);
 };
 
+/**
+ * connects user to neighborhood in the db
+ * @param userId
+ * @param neighborhoodId
+ */
+const connectUsertoNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
+  await prismaClient.neighborhood.update({
+    where: { id: neighborhoodId },
+    data: {
+      users: {
+        connect: { id: userId },
+      },
+    },
+  });
+};
+
 async function main() {
   await prismaClient.gender.createMany({
     data: [
@@ -28,7 +44,7 @@ async function main() {
 
   const bob = await prismaClient.user.create({
     data: {
-      user_name: 'bobrhodes',
+      user_name: 'bob1234',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
@@ -68,47 +84,32 @@ async function main() {
   //   },
   // });
 
-  // const bobNeighborhood = await prisma.neighborhood.create({
-  //   data: {
-  //     admin_id: bob.id,
-  //     name: "Bob's Neighborhood",
-  //   },
-  // });
-
-  // const antoninaNeighborhood = await prisma.neighborhood.create({
-  //   data: {
-  //     admin_id: antonina.id,
-  //     name: "Antonina's Neighborhood",
-  //   },
-  // });
-
-  // const shwetankNeighborhood = await prisma.neighborhood.create({
-  //   data: {
-  //     admin_id: shwetank.id,
-  //     name: "Shwetank's Neighborhood",
-  //   },
-  // });
-
-  await prismaClient.neighborhood.create({
+  const bobNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: bob.id,
       name: "Bob's Neighborhood",
     },
   });
 
-  await prismaClient.neighborhood.create({
+  await connectUsertoNeighborhood(bob.id, bobNeighborhood.id);
+
+  const antoninaNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: antonina.id,
       name: "Antonina's Neighborhood",
     },
   });
 
-  await prismaClient.neighborhood.create({
+  await connectUsertoNeighborhood(antonina.id, antoninaNeighborhood.id);
+
+  const shwetankNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: shwetank.id,
       name: "Shwetank's Neighborhood",
     },
   });
+
+  await connectUsertoNeighborhood(shwetank.id, shwetankNeighborhood.id);
 }
 
 main()
