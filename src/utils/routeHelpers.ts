@@ -209,6 +209,13 @@ const generateLoginData = async (object: unknown): Promise<LoginData> => {
   throw error;
 };
 
+/**
+ * Checks whether user is the admin of a neighborhood
+ * throws error if neighborhood is not present
+ * @param loggedUserID 
+ * @param neighborhoodID 
+ * @returns true is user is admin of neighborhood, false otherwise
+ */
 const isAdmin = async (loggedUserID: number, neighborhoodID: number): Promise<boolean> => {
   const neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
     where: {
@@ -283,6 +290,16 @@ const connectUsertoNeighborhood = async (userId: number, neighborhoodId: number)
     },
   });
 };
+
+//TODO: need to implement this function
+/**
+ * checks whether user is logged in and admin
+ * @param req 
+ */
+const isLoggedInAdmin = async (req: object) => {
+  console.log(req);
+  return true;
+}
 
 export default {
   generateCreateUserData,

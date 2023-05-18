@@ -133,7 +133,7 @@ describe('Testing UPDATE method for neighborhood API.', () => {
 
     const loginResponse = await api
       .post('/api/login')
-      .send(LOGIN_DATA);
+      .send(BOBS_LOGIN_DATA);
 
     token = loginResponse.body.token;
   });
