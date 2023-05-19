@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { Request } from 'express';
 
 /**
@@ -27,29 +27,7 @@ export interface CreateUserData {
   password: string
 }
 
-/**
- * Format of data sent to POST /api/neighborhood to create new neighborhood
- */
-export interface CreateNeighborhoodData {
-  admin_id: number,
-  name: string
-}
-
 export interface CustomRequest extends Request {
   token?: string,
   user?: User
 }
-
-const neighborhoodWithRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>()({
-  include: {
-    users: true,
-    requests: true,
-  },
-});
-
-// const NeighborhoodRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>()({
-//   select: { admin: true },
-// });
-
-export type NeighborhoodWithRelatedFields = Prisma
-  .NeighborhoodGetPayload<typeof neighborhoodWithRelatedFields>;

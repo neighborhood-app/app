@@ -1,9 +1,8 @@
 import bcrypt from 'bcrypt';
-import { Neighborhood, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
-  UserWithoutId, UserWithoutPasswordHash, LoginData, CreateUserData, CreateNeighborhoodData,
-  NeighborhoodWithRelatedFields,
+  UserWithoutId, UserWithoutPasswordHash, LoginData, CreateUserData, CustomRequest,
 } from '../types';
 
 /**
@@ -84,62 +83,6 @@ const generateCreateUserData = async (object: unknown): Promise<CreateUserData> 
 };
 
 /**
- * - narrows name type to string, checks if name is valid
- * - throws Error if name already exists in neighborhoods.name
- * - throws Error if name not valid
- * @param name this should be a valid username
- * @returns resolved promise with name as value
- */
-const parseNeighborhoodName = async (name: unknown): Promise<string> => {
-  const MINIMUM_NAME_LENGTH = 4;
-
-  if (typeof name !== 'string' || name.length < MINIMUM_NAME_LENGTH) {
-    const error = new Error('Invalid Neighborhood Name');
-    error.name = 'NeighborhoodDataError';
-    throw error;
-  }
-
-  const existingNeighborhood: Neighborhood | null = await prismaClient.neighborhood.findUnique({
-    where: {
-      name,
-    },
-  });
-
-  if (existingNeighborhood) {
-    const error = new Error('Neighborhood already exists');
-    error.name = 'NeighborhoodDataError';
-    throw error;
-  }
-
-  return Promise.resolve(name);
-};
-
-/**
- * transforms req.body to data for creating neighborhood
- * throws Error if admin_id or name field not present or invalid
- * @param object req.body, admin_id and name properties must be present
- * @returns Promise resolved to valid data for creating neighborhood
- */
-const generateCreateNeighborhoodData = async (object: unknown): Promise<CreateNeighborhoodData> => {
-  if (!object || typeof object !== 'object') {
-    throw new Error('Incorrect or missing data');
-  }
-
-  if ('admin_id' in object && typeof object.admin_id === 'number' && 'name' in object) {
-    const neighborhoodData: CreateNeighborhoodData = {
-      admin_id: object.admin_id,
-      name: await parseNeighborhoodName(object.name),
-    };
-
-    return Promise.resolve(neighborhoodData);
-  }
-
-  const error = new Error('user id or neighborhood name missing');
-  error.name = 'NeighborhoodDataError';
-  throw error;
-};
-
-/**
  * - generates the new user data without id from input to POST /user
  * - throws Error if username or password invalid using individual field parsers
  * @param createUserData should contain all the necessary field of the required types
@@ -209,13 +152,6 @@ const generateLoginData = async (object: unknown): Promise<LoginData> => {
   throw error;
 };
 
-/**
- * Checks whether user is the admin of a neighborhood
- * throws error if neighborhood is not present
- * @param loggedUserID 
- * @param neighborhoodID 
- * @returns true is user is admin of neighborhood, false otherwise
- */
 const isAdmin = async (loggedUserID: number, neighborhoodID: number): Promise<boolean> => {
   const neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
     where: {
@@ -226,88 +162,18 @@ const isAdmin = async (loggedUserID: number, neighborhoodID: number): Promise<bo
 };
 
 /**
- * makes db query, fetches and returns associated fields to neighborhood
- * adds admin, users and requests (to be implemented) fields and returns it
- * throws error if neighborhood not present
- * @param neighborhoodId
- * @returns a promise resolved to neighborhood data with associated fields
+ * @param req custom request object with the user log-in token and user object
+ * @returns Promise resolved to `true` if user is logged-in and admin of current neighborhood
  */
-const generateNeighborhoodDataWithRelatedFields = async (neighborhoodId: number):
-Promise<NeighborhoodWithRelatedFields> => {
-  const dataWithRelatedFields: NeighborhoodWithRelatedFields | null = await prismaClient
-    .neighborhood.findFirst({
-      where: {
-        id: neighborhoodId,
-      },
-      include: {
-        admin: true,
-        users: true,
-        requests: true,
-      },
-    });
-
-  if (!dataWithRelatedFields) {
-    const error = new Error('Neighborhood');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-
-  return Promise.resolve(dataWithRelatedFields);
-};
-
-/**
- * associates user to neighborhood in the database
- * throws error if neighborhood not present or user not present
- * or user already associated with the neighborhood
- * @param userId
- * @param neighborhoodId
- */
-const connectUsertoNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
-  const user: User | null = await prismaClient.user.findUnique({ where: { id: userId } });
-  const neighborhood: Neighborhood | null = await prismaClient
-    .neighborhood.findUnique({ where: { id: neighborhoodId } });
-
-  if (!user || !neighborhood) {
-    const error = new Error('Invalid User or Neighborhood');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-
-  const neighborhoodWithUsers = await generateNeighborhoodDataWithRelatedFields(neighborhoodId);
-  const neighborhoodUserIds = neighborhoodWithUsers.users.map(u => u.id);
-  if (neighborhoodUserIds.includes(userId)) {
-    const error = new Error('User already associated with Neighborhood');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-
-  await prismaClient.neighborhood.update({
-    where: { id: neighborhoodId },
-    data: {
-      users: {
-        connect: { id: userId },
-      },
-    },
-  });
-};
-
-//TODO: need to implement this function
-/**
- * checks whether user is logged in and admin
- * @param req 
- */
-const isLoggedInAdmin = async (req: object) => {
-  console.log(req);
-  return true;
-}
+const isLoggedInAdmin = async (req: CustomRequest) => (
+  (req.user !== undefined) && await isAdmin(req.user!.id, Number(req.params.id))
+);
 
 export default {
   generateCreateUserData,
   generateUserDataWithoutId,
   getUserWithoutPasswordHash,
-  generateCreateNeighborhoodData,
   generateLoginData,
   isAdmin,
-  generateNeighborhoodDataWithRelatedFields,
-  connectUsertoNeighborhood,
+  isLoggedInAdmin,
 };
