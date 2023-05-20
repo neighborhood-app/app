@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */ // Need to access response._body
+import { Neighborhood, User } from '@prisma/client';
 import app from '../app';
 import prismaClient from '../../prismaClient';
 import seed from './seed';
@@ -10,9 +11,20 @@ const supertest = require('supertest'); // eslint-disable-line
 
 const api = supertest(app);
 
-const LOGIN_DATA: LoginData = {
-  username: 'bob',
+const BOBS_LOGIN_DATA: LoginData = {
+  username: 'bob1234',
   password: 'secret',
+};
+
+const BOBS_NHOOD_ID = 1;
+const ANTONINAS_NHOOD_ID = 2;
+
+const loginUser = async (loginData: LoginData) => {
+  const loginResponse = await api
+    .post('/api/login')
+    .send(loginData);
+
+  return loginResponse;
 };
 
 beforeAll(async () => {
@@ -38,11 +50,11 @@ describe('When neighborhoods already exist in the db', () => {
 
     const loginResponse = await api
       .post('/api/login')
-      .send(LOGIN_DATA);
+      .send(BOBS_LOGIN_DATA);
 
     const { token } = loginResponse.body;
 
-    // 1 is valid neighborhood id for LOGIN_DATA
+    // 1 is valid neighborhood id for BOBS_LOGIN_DATA
     const deleteResponse = await api.delete('/api/neighborhoods/1')
       .set('Authorization', `Bearer ${token}`);
 
@@ -59,10 +71,10 @@ describe('When neighborhoods already exist in the db', () => {
 
     const loginResponse = await api
       .post('/api/login')
-      .send(LOGIN_DATA);
+      .send(BOBS_LOGIN_DATA);
     const { token } = loginResponse.body;
 
-    // 2 is invalid neighborhood id for LOGIN_DATA
+    // 2 is invalid neighborhood id for BOBS_LOGIN_DATA
     const deleteResponse = await api.delete('/api/neighborhoods/2').set('Authorization', `Bearer ${token}`);
 
     const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
@@ -315,5 +327,208 @@ describe('Testing UPDATE method for neighborhood API.', () => {
       .send(newData);
 
     expect(response.status).toBe(404);
+  });
+});
+
+describe('Testing CREATE neighborhood at POST /api/neighborhood', () => {
+  beforeEach(async () => {
+    await seed();
+  });
+
+  test('when user not logged in, unable to create neighborhood', async () => {
+    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numInitialNeighborhoods = initialNeighborhoods.length;
+
+    const postResponse = await api.post('/api/neighborhoods');
+
+    const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numCurrentNeighborhoods = currentNeighborhoods.length;
+
+    expect(postResponse.status).toEqual(401);
+    expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods);
+  });
+
+  test('when user logged in, able to create neighborhood with valid data', async () => {
+    const initialNeighborhoods: Array<Neighborhood> = await testHelpers.neighborhoodsInDb();
+    const numInitialNeighborhoods: number = initialNeighborhoods.length;
+
+    const bobUser: User | null = await prismaClient.user.findUnique({
+      where: {
+        user_name: BOBS_LOGIN_DATA.username,
+      },
+    });
+
+    const bobUserId: number | undefined = bobUser?.id;
+
+    const loginResponse = await api
+      .post('/api/login')
+      .send(BOBS_LOGIN_DATA);
+
+    const { token } = loginResponse.body;
+
+    const NEW_NEIGHBORHOOD_NAME = 'new-neighborhood';
+
+    const createNeighborhoodResponse = await api.post('/api/neighborhoods')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: NEW_NEIGHBORHOOD_NAME })
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const neighborhoodUsers = createNeighborhoodResponse.body.users;
+
+    const userNames = neighborhoodUsers.map((u: { user_name: any; }) => u.user_name);
+    expect(userNames).toContain(BOBS_LOGIN_DATA.username);
+
+    expect(createNeighborhoodResponse.body.name).toBe(NEW_NEIGHBORHOOD_NAME);
+    expect(createNeighborhoodResponse.body.admin_id).toBe(bobUserId);
+
+    const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numCurrentNeighborhoods = currentNeighborhoods.length;
+
+    expect(numCurrentNeighborhoods).toBe(numInitialNeighborhoods + 1);
+
+    const currentNeighborhoodNames = currentNeighborhoods.map(n => n.name);
+    expect(currentNeighborhoodNames).toContain(NEW_NEIGHBORHOOD_NAME);
+  });
+
+  test('when user logged in, unable to create neighborhood with invalid neighborhood name', async () => {
+    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numInitialNeighborhoods = initialNeighborhoods.length;
+
+    const loginResponse = await api
+      .post('/api/login')
+      .send(BOBS_LOGIN_DATA);
+
+    const { token } = loginResponse.body;
+
+    const NEW_NEIGHBORHOOD_NAME = 'new'; // invalid because shorter than 4 characters
+
+    const createResponse = await api.post('/api/neighborhoods')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: NEW_NEIGHBORHOOD_NAME })
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(createResponse.body.error).toBeDefined();
+
+    const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numCurrentNeighborhoods = currentNeighborhoods.length;
+
+    expect(numCurrentNeighborhoods).toBe(numInitialNeighborhoods);
+  });
+
+  test('when user logged in, unable to create neighborhood with existing neighborhood name', async () => {
+    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numInitialNeighborhoods = initialNeighborhoods.length;
+
+    const loginResponse = await api
+      .post('/api/login')
+      .send(BOBS_LOGIN_DATA);
+
+    const { token } = loginResponse.body;
+
+    const existingNeighborhoodName = initialNeighborhoods[0].name;
+
+    const createResponse = await api.post('/api/neighborhoods')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: existingNeighborhoodName })
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(createResponse.body.error).toBeDefined();
+
+    const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numCurrentNeighborhoods = currentNeighborhoods.length;
+
+    expect(numCurrentNeighborhoods).toBe(numInitialNeighborhoods);
+  });
+});
+
+describe('Testing user JOIN neighborhood at POST /api/neighborhood/:id/join', () => {
+  // We are testing to join Bob to Antonina's Neighborhood
+  beforeEach(async () => {
+    await seed();
+  });
+
+  test('able to join user to neighborhood with valid data', async () => {
+    // we are trying to join Bob to Antonina's neighborhood
+    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    const numInitialUsers = initialUsers?.length as number; // We are passing a valid n_hood id
+
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    await api.post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const finalUsersInDb = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    expect(finalUsersInDb?.length).toBe(numInitialUsers + 1);
+
+    const finalUserNamesInDb = finalUsersInDb?.map(u => u.user_name);
+    expect(finalUserNamesInDb).toContain(BOBS_LOGIN_DATA.username);
+  });
+
+  test('when user not logged in, error occurs', async () => {
+    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+
+    const joinResponse = await api.post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join`);
+
+    expect(joinResponse.status).toEqual(401);
+
+    const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+
+    expect(finalUsers?.length).toBe(initialUsers?.length);
+  });
+
+  test('when user logged in and invalid url, error occurs', async () => {
+    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    await api.post('/api/neighborhoods/xyz/join')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+
+    expect(finalUsers?.length).toBe(initialUsers?.length);
+  });
+
+  test('when user logged in and invalid neighborhood, error occurs', async () => {
+    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const INVALID_NHOOD_ID = 100000;
+    await api.post(`/api/neighborhoods/${INVALID_NHOOD_ID}/join`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+
+    expect(finalUsers?.length).toBe(initialUsers?.length);
+  });
+
+  test('when user logged in and user already added to the neighborhood, error occurs', async () => {
+    // we are trying to add Bob to Bob's neighborhood
+    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(BOBS_NHOOD_ID);
+
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    await api.post(`/api/neighborhoods/${BOBS_NHOOD_ID}/join`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(BOBS_NHOOD_ID);
+
+    expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 });

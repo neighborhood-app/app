@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { Neighborhood } from '@prisma/client';
 import catchError from '../utils/catchError';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
@@ -47,6 +48,34 @@ neighborhoodsRouter.put('/:id', middleware.userExtractor, catchError(async (req:
   });
 
   return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
+}));
+
+neighborhoodsRouter.post('/', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
+  const userId: number = req.user?.id as number; // user.id shoul be extracted from the middleware
+  req.body.admin_id = userId; // adding user_id as admin_id to request.body
+  const createNeighborhoodData = await routeHelpers.generateCreateNeighborhoodData(req.body);
+
+  const newNeighborhood: Neighborhood = await prismaClient.neighborhood
+    .create({ data: createNeighborhoodData });
+
+  await routeHelpers.connectUsertoNeighborhood(userId, newNeighborhood.id);
+
+  const newNeighborhoodWithRelatedFields = await routeHelpers
+    .generateNeighborhoodDataWithRelatedFields(newNeighborhood.id);
+
+  res.status(201).json(newNeighborhoodWithRelatedFields);
+}));
+
+neighborhoodsRouter.post('/:id/join', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
+  const userId = req.user?.id as number; // user should be extracted by the middleware
+  const neighborhoodId = Number(req.params.id);
+
+  if (!neighborhoodId || Number.isNaN(neighborhoodId)) {
+    res.status(400).send({ error: 'Unable to parse URL' });
+  } else {
+    await routeHelpers.connectUsertoNeighborhood(userId, neighborhoodId);
+    res.status(201).send({ success: 'You have joined the neighborhood' });
+  }
 }));
 
 export default neighborhoodsRouter;
