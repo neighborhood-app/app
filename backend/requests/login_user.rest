@@ -2,6 +2,15 @@ POST http://localhost:3000/api/login
 Content-Type: application/json
 
 {
-  "username": "johnsmith",
+  "username": "bob1234",
+  "password": "secret"
+}
+
+### wrong credentials
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "username": "bob12345",
   "password": "secret"
 }

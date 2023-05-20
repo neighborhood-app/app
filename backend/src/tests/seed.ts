@@ -3,6 +3,22 @@ import testHelpers from './testHelpers';
 
 const SAMPLE_PASSWORD = 'secret';
 
+/**
+ * connects user to neighborhood in the db
+ * @param userId
+ * @param neighborhoodId
+ */
+const connectUsertoNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
+  await prismaClient.neighborhood.update({
+    where: { id: neighborhoodId },
+    data: {
+      users: {
+        connect: { id: userId },
+      },
+    },
+  });
+};
+
 async function main() {
   // clearing the existing db
   await testHelpers.removeAllData();
@@ -21,7 +37,7 @@ async function main() {
   // creating users with same password for seeding the db
   const bob = await prismaClient.user.create({
     data: {
-      user_name: 'bob',
+      user_name: 'bob1234',
       password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });
@@ -62,26 +78,32 @@ async function main() {
   // });
 
   // creating neighborhood for seeding db
-  await prismaClient.neighborhood.create({
+  const bobsNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: bob.id,
       name: "Bob's Neighborhood",
     },
   });
 
-  await prismaClient.neighborhood.create({
+  connectUsertoNeighborhood(bob.id, bobsNeighborhood.id);
+
+  const antoninasNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: antonina.id,
       name: "Antonina's Neighborhood",
     },
   });
 
-  await prismaClient.neighborhood.create({
+  connectUsertoNeighborhood(antonina.id, antoninasNeighborhood.id);
+
+  const shwetanksNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: shwetank.id,
       name: "Shwetank's Neighborhood",
     },
   });
+
+  connectUsertoNeighborhood(shwetank.id, shwetanksNeighborhood.id);
 
   // await prisma.neighborhoodUsers.createMany({
   //   data: [
