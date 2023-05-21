@@ -209,6 +209,19 @@ const generateLoginData = async (object: unknown): Promise<LoginData> => {
   throw error;
 };
 
+const isMember = async (loggedUserID: number, neighborhoodID: number): Promise<boolean> => {
+  const neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
+    where: {
+      id: neighborhoodID,
+    },
+    include: {
+      users: true,
+    },
+  });
+
+  return (neighborhood.users.map(user => user.id).includes(loggedUserID));
+};
+
 const isAdmin = async (loggedUserID: number, neighborhoodID: number): Promise<boolean> => {
   const neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
     where: {
@@ -302,4 +315,5 @@ export default {
   generateNeighborhoodDataWithRelatedFields,
   connectUsertoNeighborhood,
   isLoggedInAdmin,
+  isMember,
 };

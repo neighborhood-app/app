@@ -92,10 +92,31 @@ const userExtractor = catchError(async (req: CustomRequest, res: Response, next:
   }
 });
 
+/**
+ * Same as userExtractor but will not raise error if no user is logged in.
+ */
+const ifUserExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
+  if (req.token) {
+    const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
+    if (!decodedToken.id) {
+      res.status(401).json({ error: 'token invalid' });
+    }
+
+    req.user = await prismaClient.user.findFirstOrThrow({
+      where: {
+        id: decodedToken.id,
+      },
+    });
+  }
+
+  next();
+});
+
 export default {
   requestLogger,
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
   userExtractor,
+  ifUserExtractor,
 };
