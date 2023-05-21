@@ -24,25 +24,30 @@ loginRouter.post('/', catchError(async (request: Request, response: Response) =>
 
   if (!isPasswordCorrect) {
     response.status(401).json({ error: 'invalid username or password' });
-  } else {
-    const userDataForGeneratingToken = {
+    // The return below was added here because after the response above was sent back to the client,
+    // the request still passed through the error handler
+    // middleware which attempted to send a second request back to the client,
+    // causing an error on the server.
+    return;
+  }
+
+  const userDataForGeneratingToken = {
+    username: user?.user_name,
+    id: user?.id,
+  };
+
+  // forced to check type of string because of SECRET could be undefined
+  if (typeof config.SECRET === 'string') {
+    const token = jsonwebtoken.sign(
+      userDataForGeneratingToken,
+      config.SECRET,
+      { expiresIn: '1h' }, // token expires in 1 hour
+    );
+
+    response.status(200).json({
       username: user?.user_name,
-      id: user?.id,
-    };
-
-    // forced to check type of string because of SECRET could be undefined
-    if (typeof config.SECRET === 'string') {
-      const token = jsonwebtoken.sign(
-        userDataForGeneratingToken,
-        config.SECRET,
-        { expiresIn: '1h' }, // token expires in 1 hour
-      );
-
-      response.status(200).json({
-        username: user?.user_name,
-        token,
-      });
-    }
+      token,
+    });
   }
 }));
 

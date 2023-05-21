@@ -14,8 +14,8 @@
     "reinitialize-db": "./scripts/reinitialize-db.sh",
     "connect-dev-db": "./scripts/connect-dev-db.sh",
     "connect-test-db": "./scripts/connect-test-db.sh",
-    "test": "dotenv -e ./.env.test -- npx prisma migrate deploy && dotenv -e ./.env.test jest --verbose",
-    "prisma-studio-test": "dotenv -e ./.env.test -- npx prisma studio"
+    "test": "dotenv -e ./test.env -- npx prisma migrate deploy && dotenv -e ./test.env jest --verbose",
+    "prisma-studio-test": "dotenv -e ./test.env -- npx prisma studio"
   },
   "author": "Antonina, Bob, Radu, Shwetank",
   "license": "ISC",
@@ -42,6 +42,7 @@
   "dependencies": {
     "@prisma/client": "^4.11.0",
     "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "dotenv-cli": "^7.1.0",
     "express": "^4.17.3",

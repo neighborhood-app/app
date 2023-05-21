@@ -4,9 +4,12 @@ import usersRouter from './controllers/users';
 import loginRouter from './controllers/login';
 import middleware from './utils/middleware';
 
+const cors = require('cors');
+
 const app = express();
 
 // middleware
+app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);
