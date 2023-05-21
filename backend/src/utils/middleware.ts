@@ -95,7 +95,11 @@ const userExtractor = catchError(async (req: CustomRequest, res: Response, next:
 /**
  * Same as userExtractor but will not raise error if no user is logged in.
  */
-const ifUserExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
+const ifUserExtractor = catchError(async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   if (req.token) {
     const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
     if (!decodedToken.id) {
