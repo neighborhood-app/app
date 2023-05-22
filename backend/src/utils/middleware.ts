@@ -70,16 +70,18 @@ const tokenExtractor = (req: CustomRequest, _res: Response, next: NextFunction):
 };
 
 /**
-Creates a user property on the request object with the user extracted with the
-aid of the authentication token
+ * IF Authorization token was sent with a request, the function extracts the user associated
+ * with the token and assigns it to a user property on the request object.
  */
-const userExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
-  if (!req.token) {
-    res.status(401).json({ error: 'Invalid User Credentials' });
-  } else {
+const getUserFromRequest = catchError(async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (req.token) {
     const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
     if (!decodedToken.id) {
-      res.status(401).json({ error: 'Invalid User Credentials' });
+      res.status(401).json({ error: 'Invalid token' });
     }
 
     req.user = await prismaClient.user.findFirstOrThrow({
@@ -87,8 +89,20 @@ const userExtractor = catchError(async (req: CustomRequest, res: Response, next:
         id: decodedToken.id,
       },
     });
+  }
 
-    next();
+  next();
+});
+
+/**
+Creates a user property on the request object with the user extracted with the
+aid of the authentication token.
+ */
+const userExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
+  if (!req.token) {
+    res.status(401).json({ error: 'Invalid User Credentials' });
+  } else {
+    getUserFromRequest(req, res, next);
   }
 });
 
@@ -98,4 +112,5 @@ export default {
   errorHandler,
   tokenExtractor,
   userExtractor,
+  getUserFromRequest,
 };

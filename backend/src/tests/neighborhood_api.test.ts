@@ -16,6 +16,11 @@ const BOBS_LOGIN_DATA: LoginData = {
   password: 'secret',
 };
 
+const ANTONINA_LOGIN_DATA: LoginData = {
+  username: 'antonina',
+  password: 'secret',
+};
+
 const BOBS_NHOOD_ID = 1;
 const ANTONINAS_NHOOD_ID = 2;
 
@@ -98,19 +103,78 @@ describe('When neighborhoods already exist in the db', () => {
   });
 
   test('GET /neighborhoods/id existing id returns single neignborhood', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
     const neighborhood = await prismaClient.neighborhood.findFirst({
       where: { name: "Bob's Neighborhood" },
+      include: {
+        admin: true,
+        users: true,
+        requests: true,
+      },
     });
     const id = neighborhood?.id;
-    const response = await api.get(`/api/neighborhoods/${id}`);
+    const response = await api.get(`/api/neighborhoods/${id}`).set('Authorization', `Bearer ${token}`);
     expect(response.status).toEqual(200);
     expect(response.body.id).toEqual(id);
+    expect(response.body).toHaveProperty('admin');
+    expect(response.body).toHaveProperty('users');
+    expect(response.body).toHaveProperty('requests');
   });
 
   test('GET /neighborhoods/id invalid id returns expected error', async () => {
-    const response = await api.get(`/api/neighborhoods/0`);
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const response = await api.get('/api/neighborhoods/0').set('Authorization', `Bearer ${token}`);
     expect(response.status).toEqual(404);
     expect(response.body.error).toEqual('No Neighborhood found');
+  });
+
+  test('GET /neighborhoods/id only returns the id, name, description and location of neighborhood if user is not logged in', async () => {
+    const neighborhood = await prismaClient.neighborhood.findFirst({
+      where: { name: "Bob's Neighborhood" },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        location: true,
+      },
+    });
+    const id = neighborhood?.id;
+    const response = await api.get(`/api/neighborhoods/${id}`);
+
+    const neighborhoodFromDBKeys = Object.keys(neighborhood as Neighborhood);
+    const neighborhoodFromResponseKeys = Object.keys(response.body);
+
+    expect(response.status).toEqual(200);
+    expect(neighborhoodFromResponseKeys.length).toEqual(neighborhoodFromDBKeys.length);
+    expect(neighborhoodFromResponseKeys).toEqual(neighborhoodFromDBKeys);
+  });
+
+  test('GET /neighborhoods/id only returns the id, name, description and location of neighborhood if is logged in but not a member', async () => {
+    const loginResponse = await loginUser(ANTONINA_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const neighborhood = await prismaClient.neighborhood.findFirst({
+      where: { name: "Bob's Neighborhood" },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        location: true,
+      },
+    });
+    const id = neighborhood?.id;
+    const response = await api.get(`/api/neighborhoods/${id}`).set('Authorization', `Bearer ${token}`);
+
+    const neighborhoodFromDBKeys = Object.keys(neighborhood as object);
+    const neighborhoodFromResponseKeys = Object.keys(response.body);
+
+    expect(response.status).toEqual(200);
+    expect(neighborhoodFromResponseKeys.length).toEqual(neighborhoodFromDBKeys.length);
+    expect(neighborhoodFromResponseKeys).toEqual(neighborhoodFromDBKeys);
   });
 });
 
