@@ -24,6 +24,8 @@ jobs:
         run: npm run lint
 
   run_tests:
+    env:
+      DATABASE_URL: postgresql://postgres:example@localhost:25432/neighborhood-test
     timeout-minutes: 10
     defaults:
       run:
