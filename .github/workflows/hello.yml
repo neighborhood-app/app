@@ -8,21 +8,13 @@ on:
 jobs:
   hello_world_job:
     runs-on: ubuntu-20.04
+    name: Build pipeline
     steps:
-      - name: Say hello
-        run: |
-          echo "Hello World"
-    
-  show_date_job:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Show date
-        run: |
-          date
-
-  show_directory_job:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Show directory
-        run: |
-          ls
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Check styles
+        run: npm lint
