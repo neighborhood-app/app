@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  hello_world_job:
+  check_linting:
     defaults:
       run:
         working-directory: ./backend
@@ -22,7 +22,7 @@ jobs:
         run: npm install
       - name: Check styles
         run: npm run lint
-  test:
+  run_tests:
     defaults:
       run:
         working-directory: ./backend
@@ -34,10 +34,9 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Start docker
+        run: npm run start-db
+
       - name: Run tests
-        uses: cloudposse/github-action-docker-compose-test-run@main
-        with:
-          registry: my-registry
-          file: ./backend/docker-compose.dev.yaml
-          service: db-test
-          command: npm test
+        run: npm test
+
