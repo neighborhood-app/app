@@ -1,5 +1,5 @@
 ## Setup Instructions:
-
+TEST
 1. Run `npm install` to install the dependencies in both the frontend folder and the backend folder
 2. Install docker desktop https://www.docker.com/products/docker-desktop/
 3. Create `.env` file in the `backend`directory with values from `backend/src/utils/sample.env` and a `test.env` file with values from `backend/src/utils/test-sample.env`
