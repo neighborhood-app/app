@@ -26,6 +26,8 @@ jobs:
   run_tests:
     env:
       DATABASE_URL: postgresql://postgres:example@localhost:25432/neighborhood-test
+      PORT: 3001
+      SECRET: my-secret
     timeout-minutes: 10
     defaults:
       run:
