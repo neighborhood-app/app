@@ -39,5 +39,5 @@ jobs:
         with:
           registry: my-registry
           file: ./backend/docker-compose.dev.yaml
-          service: app
+          service: db-test
           command: npm test
