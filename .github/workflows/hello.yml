@@ -38,6 +38,6 @@ jobs:
         uses: cloudposse/github-action-docker-compose-test-run@main
         with:
           registry: my-registry
-          file: docker-compose.dev.yaml
+          file: ./backend/docker-compose.dev.yaml
           service: app
           command: npm test
