@@ -209,6 +209,13 @@ const generateLoginData = async (object: unknown): Promise<LoginData> => {
   throw error;
 };
 
+/**
+ * Takes a user's id and a neighborhood id and checks if the user associated with the
+ * given id is a part of that neighborhood.
+ * @param loggedUserID
+ * @param neighborhoodID
+ * @returns a promise that resolves to a boolean
+ */
 const isMember = async (loggedUserID: number, neighborhoodID: number): Promise<boolean> => {
   const neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
     where: {

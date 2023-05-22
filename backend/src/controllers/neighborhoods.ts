@@ -17,29 +17,28 @@ neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => 
   }
 }));
 
-neighborhoodsRouter.get('/:id', middleware.ifUserExtractor, catchError(async (req: CustomRequest, res: Response) => {
+neighborhoodsRouter.get('/:id', middleware.getUserFromRequest, catchError(async (req: CustomRequest, res: Response) => {
+  const options: { where: { id: number }, include?: object, select?: object } = {
+    where: { id: +req.params.id },
+  };
+
   if (req.user && await routeHelpers.isMember(req.user.id, Number(req.params.id))) {
-    const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow({
-      where: { id: +req.params.id },
-      include: {
-        admin: true,
-        users: true,
-        requests: true,
-      },
-    });
-    res.send(neighborhood);
+    options.include = {
+      admin: true,
+      users: true,
+      requests: true,
+    };
   } else {
-    const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow({
-      where: { id: +req.params.id },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        location: true,
-      },
-    });
-    res.send(neighborhood);
+    options.select = {
+      id: true,
+      name: true,
+      description: true,
+      location: true,
+    };
   }
+
+  const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow(options);
+  res.send(neighborhood);
 }));
 
 neighborhoodsRouter.delete('/:id', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {

@@ -145,16 +145,12 @@ describe('When neighborhoods already exist in the db', () => {
     const id = neighborhood?.id;
     const response = await api.get(`/api/neighborhoods/${id}`);
 
-    const neighborhoodFromDBKeys = Object.keys(neighborhood as object);
+    const neighborhoodFromDBKeys = Object.keys(neighborhood as Neighborhood);
     const neighborhoodFromResponseKeys = Object.keys(response.body);
 
     expect(response.status).toEqual(200);
-    expect(neighborhoodFromResponseKeys.length).toEqual(4);
     expect(neighborhoodFromResponseKeys.length).toEqual(neighborhoodFromDBKeys.length);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toHaveProperty('name');
-    expect(response.body).toHaveProperty('description');
-    expect(response.body).toHaveProperty('location');
+    expect(neighborhoodFromResponseKeys).toEqual(neighborhoodFromDBKeys);
   });
 
   test('GET /neighborhoods/id only returns the id, name, description and location of neighborhood if is logged in but not a member', async () => {
@@ -177,12 +173,8 @@ describe('When neighborhoods already exist in the db', () => {
     const neighborhoodFromResponseKeys = Object.keys(response.body);
 
     expect(response.status).toEqual(200);
-    expect(neighborhoodFromResponseKeys.length).toEqual(4);
     expect(neighborhoodFromResponseKeys.length).toEqual(neighborhoodFromDBKeys.length);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toHaveProperty('name');
-    expect(response.body).toHaveProperty('description');
-    expect(response.body).toHaveProperty('location');
+    expect(neighborhoodFromResponseKeys).toEqual(neighborhoodFromDBKeys);
   });
 });
 

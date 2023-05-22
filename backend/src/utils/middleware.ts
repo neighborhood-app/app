@@ -70,32 +70,10 @@ const tokenExtractor = (req: CustomRequest, _res: Response, next: NextFunction):
 };
 
 /**
-Creates a user property on the request object with the user extracted with the
-aid of the authentication token
+ * IF Authorization token was sent with a request, the function extracts the user associated
+ * with the token and assigns it to a user property on the request object.
  */
-const userExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
-  if (!req.token) {
-    res.status(401).json({ error: 'Invalid User Credentials' });
-  } else {
-    const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
-    if (!decodedToken.id) {
-      res.status(401).json({ error: 'Invalid User Credentials' });
-    }
-
-    req.user = await prismaClient.user.findFirstOrThrow({
-      where: {
-        id: decodedToken.id,
-      },
-    });
-
-    next();
-  }
-});
-
-/**
- * Same as userExtractor but will not raise error if no user is logged in.
- */
-const ifUserExtractor = catchError(async (
+const getUserFromRequest = catchError(async (
   req: CustomRequest,
   res: Response,
   next: NextFunction,
@@ -103,7 +81,7 @@ const ifUserExtractor = catchError(async (
   if (req.token) {
     const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
     if (!decodedToken.id) {
-      res.status(401).json({ error: 'token invalid' });
+      res.status(401).json({ error: 'Invalid token' });
     }
 
     req.user = await prismaClient.user.findFirstOrThrow({
@@ -116,11 +94,23 @@ const ifUserExtractor = catchError(async (
   next();
 });
 
+/**
+Creates a user property on the request object with the user extracted with the
+aid of the authentication token.
+ */
+const userExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
+  if (!req.token) {
+    res.status(401).json({ error: 'Invalid User Credentials' });
+  } else {
+    getUserFromRequest(req, res, next);
+  }
+});
+
 export default {
   requestLogger,
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
   userExtractor,
-  ifUserExtractor,
+  getUserFromRequest,
 };
