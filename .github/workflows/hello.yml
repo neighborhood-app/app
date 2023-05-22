@@ -1,4 +1,4 @@
-name: Hello World!
+name: Continuous Integration
 
 on:
   push:
