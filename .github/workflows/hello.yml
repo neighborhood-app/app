@@ -22,7 +22,9 @@ jobs:
         run: npm install
       - name: Check styles
         run: npm run lint
+
   run_tests:
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: ./backend
