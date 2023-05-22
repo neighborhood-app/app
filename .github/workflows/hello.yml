@@ -14,9 +14,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - name: Navigate to backend folder
-        run: cd backend
       - name: Install dependencies
-        run: npm install
+        run: cd backend & npm install
       - name: Check styles
         run: npm lint
