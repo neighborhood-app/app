@@ -21,4 +21,4 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Check styles
-        run: npm lint
+        run: npm run lint
