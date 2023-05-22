@@ -9,11 +9,11 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  check_linting:
     defaults:
       run:
         working-directory: ./backend
     runs-on: ubuntu-20.04
+
     name: Run linter
     steps:
       - uses: actions/checkout@v3
