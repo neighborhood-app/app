@@ -9,12 +9,13 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
+  check_linting:
     defaults:
       run:
         working-directory: ./backend
     runs-on: ubuntu-20.04
-
-    name: Run linter
+    
+    name: run-linter
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -36,6 +37,7 @@ jobs:
       run:
         working-directory: ./backend
 
+    name: run-tests    
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
