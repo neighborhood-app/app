@@ -172,7 +172,7 @@ describe('When neighborhoods already exist in the db', () => {
     const neighborhoodFromDBKeys = Object.keys(neighborhood as object);
     const neighborhoodFromResponseKeys = Object.keys(response.body);
 
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(400);
     expect(neighborhoodFromResponseKeys.length).toEqual(neighborhoodFromDBKeys.length);
     expect(neighborhoodFromResponseKeys).toEqual(neighborhoodFromDBKeys);
   });

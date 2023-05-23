@@ -87,7 +87,7 @@ neighborhoodsRouter.post('/:id/join', middleware.userExtractor, catchError(async
   const neighborhoodId = Number(req.params.id);
 
   if (!neighborhoodId || Number.isNaN(neighborhoodId)) {
-    res.status(400).send({ error: 'Unable to parse URL' });
+    res.status(400).send({ error: "Unable to parse URL" });
   } else {
     await routeHelpers.connectUsertoNeighborhood(userId, neighborhoodId);
     res.status(201).send({ success: 'You have joined the neighborhood' });
