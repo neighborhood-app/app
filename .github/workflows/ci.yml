@@ -1,5 +1,10 @@
+#Workflow name
 name: Continuous Integration
 
+#Events that trigger this workflow to run
+#Currently it runs when a pull request is opened, reopened,
+#or when you push new changes to the branch related to the
+#pull request
 on:
   push:
     branches:
@@ -8,13 +13,16 @@ on:
     branches: [main] 
     types: [opened, reopened, synchronize]
 
+#Workflows are formed by different jobs
+#A job is formed by different steps that are executed
+#in order
 jobs:
   check_linting:
     defaults:
       run:
         working-directory: ./backend
     runs-on: ubuntu-20.04
-    
+
     name: run-linter
     steps:
       - uses: actions/checkout@v3
@@ -36,8 +44,8 @@ jobs:
     defaults:
       run:
         working-directory: ./backend
- 
     runs-on: ubuntu-20.04
+
     name: run-tests   
     steps:
       - uses: actions/checkout@v3
