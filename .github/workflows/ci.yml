@@ -1,0 +1,73 @@
+#Workflow name
+name: Continuous Integration
+
+#Events that trigger this workflow to run
+#Currently it runs when a pull request is opened, reopened,
+#or when you push new changes to the branch related to the
+#pull request
+on:
+  push:
+    branches:
+      - main
+  pull_request: 
+    branches: [main] 
+    types: [opened, reopened, synchronize]
+
+#Workflows are formed by different jobs
+#A job is formed by different steps that are executed
+#in order
+jobs:
+  #First jobs runs eslint
+  check_linting:
+  #Some default settings
+  #I set the default folder for running commands to be
+  #./backend
+    defaults:
+      run:
+        working-directory: ./backend
+#Defines the environment the job will run in
+    runs-on: ubuntu-20.04
+
+#Name of the job
+    name: run-linter
+    steps:
+      #Allows the workflow to access the repository
+      - uses: actions/checkout@v3
+      #Allows us to work with node in this workflow
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      #This are the actual steps of this job
+      - name: Install dependencies
+        run: npm install
+      - name: Check styles
+        run: npm run lint
+  #Second job runs our tests
+  run_tests:
+    env:
+      DATABASE_URL: postgresql://postgres:example@localhost:25432/neighborhood-test
+      PORT: 3001
+      SECRET: my-secret
+    #Added a timeout in case for some reason the tests run indefinetely
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ./backend
+    runs-on: ubuntu-20.04
+
+    name: run-tests   
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start docker
+        run: npm run start-db
+
+      - name: Run tests
+        run: npm test
+
