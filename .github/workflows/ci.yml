@@ -21,6 +21,7 @@ jobs:
     defaults:
       run:
         working-directory: ./backend
+#Defines the environment the job will run in
     runs-on: ubuntu-20.04
 
     name: run-linter
