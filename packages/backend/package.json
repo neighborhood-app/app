@@ -1,7 +1,6 @@
 {
-  "name": "neighborhood_backend",
+  "name": "@neighborhood/backend",
   "version": "1.0.0",
-  "description": "",
   "main": "build/index.js",
   "scripts": {
     "tsc": "tsc",
@@ -52,5 +51,12 @@
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neighborhood-app/app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/neighborhood-app/app/issues"
   }
 }

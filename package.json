@@ -1,0 +1,11 @@
+{
+  "name": "neighborhood",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "@neighborhood/backend": "^1.0.0",
+    "@neighborhood/frontend": "^1.0.0"
+  }
+}
