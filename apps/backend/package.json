@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "tsc": "tsc",
-    "dev": "NODE_ENV=development npx prisma migrate deploy && ts-node-dev --quiet --exit-child src/index.ts",
+    "dev": "NODE_ENV=development npx prisma migrate dev && ts-node-dev --quiet --exit-child src/index.ts",
     "seed": "npx prisma migrate reset",
     "lint": "eslint --ext .ts .",
     "fix-lint": "eslint --fix --ext .ts .",
@@ -15,7 +15,7 @@
     "reinitialize-db": "./scripts/reinitialize-db.sh",
     "connect-dev-db": "./scripts/connect-dev-db.sh",
     "connect-test-db": "./scripts/connect-test-db.sh",
-    "test": "dotenv -e ./test.env -- npx prisma migrate deploy && dotenv -e ./test.env jest --verbose",
+    "test": "dotenv -e ./test.env -- npx prisma migrate dev && dotenv -e ./test.env jest --verbose",
     "prisma-studio-test": "dotenv -e ./test.env -- npx prisma studio"
   },
   "dependencies": {
