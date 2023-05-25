@@ -55,9 +55,21 @@ const findUserByUsername = async (username: string): Promise<User> => {
   throw error;
 };
 
+/**
+ * checks if password matches the password hash according to bcrypt encryption
+ * @param password
+ * @param password_hash
+ * @returns true if password matches
+ */
 const isPasswordCorrect = async (password: string, password_hash: string)
 : Promise<Boolean> => bcrypt.compare(password, password_hash);
 
+/**
+ * generates a json web token valid for 1 hour corresponding to userName and id
+ * @param username
+ * @param userId
+ * @returns the token
+ */
 const generateToken = async (username: string, userId: number): Promise<string> => {
   const userDataForGeneratingToken = {
     username,
