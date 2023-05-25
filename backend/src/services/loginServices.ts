@@ -1,6 +1,9 @@
 import { User } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import jsonwebtoken from 'jsonwebtoken';
 import { LoginData } from '../types';
 import prismaClient from '../../prismaClient';
+import config from '../utils/config';
 
 /**
  * - performs input validation and type narrowing for data sent to POST /login in req.body
@@ -11,7 +14,7 @@ import prismaClient from '../../prismaClient';
  */
 const parseLoginData = async (body: unknown): Promise<LoginData> => {
   if (!body || typeof body !== 'object') {
-    const error = new Error('Username or Password Invalid');
+    const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
   }
@@ -26,28 +29,56 @@ const parseLoginData = async (body: unknown): Promise<LoginData> => {
 
     return Promise.resolve(loginData);
   }
-
-  const error = new Error('Username or Password Invalid');
+  const error = new Error('unable to parse data');
   error.name = 'InvalidInputError';
   throw error;
 };
 
 /**
  * finds user in db by username
+ * throws an error if username does not exist
  * @param username
- * @returns Promise resolved to user if user exists, else returns null
+ * @returns Promise resolved to user if user exists
  */
-const findUserByUsername = async (username: string): Promise<User | null> => {
-  const user = await prismaClient.user.findUnique({
+const findUserByUsername = async (username: string): Promise<User> => {
+  const user: User | null = await prismaClient.user.findUnique({
     where: {
       user_name: username,
     },
   });
 
-  return Promise.resolve(user);
+  if (user) {
+    return Promise.resolve(user);
+  }
+  const error = new Error('invalid username or password');
+  error.name = 'InvalidUserameOrPasswordError';
+  throw error;
+};
+
+const isPasswordCorrect = async (password: string, password_hash: string)
+: Promise<Boolean> => bcrypt.compare(password, password_hash);
+
+const generateToken = async (username: string, userId: number): Promise<string> => {
+  const userDataForGeneratingToken = {
+    username,
+    id: userId,
+  };
+
+  // forced to type-narrow
+  const SECRET = config.SECRET as string;
+
+  const token = jsonwebtoken.sign(
+    userDataForGeneratingToken,
+    SECRET,
+    { expiresIn: '1h' }, // token expires in 1 hour
+  );
+
+  return Promise.resolve(token);
 };
 
 export default {
   parseLoginData,
   findUserByUsername,
+  isPasswordCorrect,
+  generateToken,
 };

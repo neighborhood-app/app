@@ -32,7 +32,9 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
 : void => {
   if (error.name === 'UserDataError') { // invalid data while creating user should be removed
     response.status(400).send({ error: error.message });
-  } else if (error.name === 'NeighborhoodDataError') { // invalid data while creating neighborhood
+  } else if (error.name === 'InvalidUserameOrPasswordError') {
+    response.status(401).send({ error: error.message });
+  } else if (error.name === 'NeighborhoodDataError') {
     response.status(400).send({ error: error.message });
   } else if (error.name === 'InvalidInputError') {
     response.status(400).send({ error: error.message });

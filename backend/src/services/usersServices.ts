@@ -4,7 +4,17 @@ import { CreateUserData, UserWithoutId, UserWithoutPasswordHash } from '../types
 import prismaClient from '../../prismaClient';
 
 // helpers
-const helpers: any = {};
+
+const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
+  id: true,
+  user_name: true,
+  first_name: true,
+  last_name: true,
+  dob: true,
+  gender_id: true,
+  bio: true,
+};
+
 /**
  * - narrows username type to string, checks if username is valid
  * - throws Error if username already exists
@@ -12,7 +22,7 @@ const helpers: any = {};
  * @param username this should be a valid username
  * @returns resolved promise with username as value
  */
-helpers.parseUsername = async (username: unknown): Promise<string> => {
+const parseUsername = async (username: unknown): Promise<string> => {
   const MINIMUM_USERNAME_LENGTH = 4;
   if (typeof username !== 'string' || username.length < MINIMUM_USERNAME_LENGTH) {
     const error = new Error('Invalid Username');
@@ -41,7 +51,7 @@ helpers.parseUsername = async (username: unknown): Promise<string> => {
    * @param password this should be a valid password
    * @returns Promise resolved to password hash
    */
-helpers.getPasswordHash = async (password: unknown): Promise<string> => {
+const getPasswordHash = async (password: unknown): Promise<string> => {
   const MINIMUM_PASSWORD_LENGTH = 4;
   if (typeof password !== 'string' || password.length < MINIMUM_PASSWORD_LENGTH) {
     const error = new Error('Invalid Password');
@@ -96,10 +106,9 @@ const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
  */
 const generateUserDataWithoutId = async (createUserData: CreateUserData)
 : Promise<UserWithoutId> => {
-  const { username, password } = createUserData;
   const userData = {
-    user_name: await helpers.parseUsername(username),
-    password_hash: await helpers.getPasswordHash(password),
+    user_name: await parseUsername(createUserData.username),
+    password_hash: await getPasswordHash(createUserData.password),
     first_name: null,
     last_name: null,
     dob: null,
@@ -108,16 +117,6 @@ const generateUserDataWithoutId = async (createUserData: CreateUserData)
   };
 
   return Promise.resolve(userData);
-};
-
-const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
-  id: true,
-  user_name: true,
-  first_name: true,
-  last_name: true,
-  dob: true,
-  gender_id: true,
-  bio: true,
 };
 
 /**
@@ -134,33 +133,44 @@ const getAllUsers = async (): Promise<Array<UserWithoutPasswordHash>> => {
 
 /**
  * fetches user from db based on userId
+ * throws an error, if userId does not correspond to a user
  * @param userId
- * @returns user without password hash if user exists, null otherwise
+ * @returns user without password hash if user exists
  */
-const getUserById = async (userId: number): Promise<UserWithoutPasswordHash | null> => {
-  const user = await prismaClient.user.findUnique({
+const getUserById = async (userId: number): Promise<UserWithoutPasswordHash > => {
+  const user: UserWithoutPasswordHash | null = await prismaClient.user.findUnique({
     where: {
       id: userId,
     },
     select: USER_FIELDS_WITHOUT_PASSWORD_HASH,
   });
 
-  return Promise.resolve(user);
+  if (user) {
+    return Promise.resolve(user);
+  }
+  const error = new Error('User not found');
+  error.name = 'InvalidInputError';
+  throw error;
 };
 
 /**
  * creates new user in db based on the userData
  * throws error if userData is invalid
  * @param userData must contain the required fields, currently only username and password required
- * @returns created new user if user was created, returns null if user was not created
+ * @returns created new user if user was created
  */
-const createUser = async (userData: CreateUserData): Promise<UserWithoutPasswordHash | null> => {
+const createUser = async (userData: CreateUserData): Promise<UserWithoutPasswordHash> => {
   const userDataForDb: UserWithoutId = await generateUserDataWithoutId(userData);
   const newUser: User = await prismaClient.user.create({ data: userDataForDb });
   const newUsersId: number = newUser.id;
-  const userToReturn: UserWithoutPasswordHash | null = await getUserById(newUsersId);
+  const newUserWithoutPasswordHash: UserWithoutPasswordHash | null = await getUserById(newUsersId);
 
-  return Promise.resolve(userToReturn);
+  if (newUserWithoutPasswordHash) {
+    return Promise.resolve(newUserWithoutPasswordHash);
+  }
+  const error = new Error('Could Not Create User');
+  error.name = 'DataBaseError';
+  throw error;
 };
 
 export default {
