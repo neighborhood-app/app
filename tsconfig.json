@@ -2,7 +2,6 @@
   "compilerOptions": {
     // active ones inspired from fullstackopen typescript chapter
     "target": "ES6",
-    "outDir": "./build/",
     "module": "commonjs",
     "strict": true,
     "noUnusedLocals": false,
