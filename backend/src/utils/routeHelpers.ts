@@ -179,35 +179,35 @@ const getUserWithoutPasswordHash = (user: User): UserWithoutPasswordHash => {
   return userWithoutPasswordHash;
 };
 
-/**
- * - performs input validation and type narrowing for input to POST /login
- * - if username, password present and of type string, then returns an object containing input data
- * - else throws Error
- * @param object request.body should contain username and password
- * @returns Promise resolved to user input to POST /login
- */
-const generateLoginData = async (object: unknown): Promise<LoginData> => {
-  if (!object || typeof object !== 'object') {
-    const error = new Error('Username or Password Invalid');
-    error.name = 'UserDataError';
-    throw error;
-  }
+// /**
+//  * - performs input validation and type narrowing for input to POST /login
+//  * - if username, password present and of type string, then returns an object containing input data
+//  * - else throws Error
+//  * @param object request.body should contain username and password
+//  * @returns Promise resolved to user input to POST /login
+//  */
+// const generateLoginData = async (object: unknown): Promise<LoginData> => {
+//   if (!object || typeof object !== 'object') {
+//     const error = new Error('Username or Password Invalid');
+//     error.name = 'UserDataError';
+//     throw error;
+//   }
 
-  if ('username' in object && 'password' in object
-    && typeof object.username === 'string'
-    && typeof object.password === 'string') {
-    const loginData = {
-      username: object.username,
-      password: object.password,
-    };
+//   if ('username' in object && 'password' in object
+//     && typeof object.username === 'string'
+//     && typeof object.password === 'string') {
+//     const loginData = {
+//       username: object.username,
+//       password: object.password,
+//     };
 
-    return Promise.resolve(loginData);
-  }
+//     return Promise.resolve(loginData);
+//   }
 
-  const error = new Error('Username or Password Invalid');
-  error.name = 'UserDataError';
-  throw error;
-};
+//   const error = new Error('Username or Password Invalid');
+//   error.name = 'UserDataError';
+//   throw error;
+// };
 
 /**
  * Takes a user's id and a neighborhood id and checks if the user associated with the
@@ -317,7 +317,7 @@ export default {
   generateUserDataWithoutId,
   getUserWithoutPasswordHash,
   generateCreateNeighborhoodData,
-  generateLoginData,
+  // generateLoginData,
   isAdmin,
   generateNeighborhoodDataWithRelatedFields,
   connectUsertoNeighborhood,

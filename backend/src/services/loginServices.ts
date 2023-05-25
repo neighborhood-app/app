@@ -1,4 +1,6 @@
+import { User } from '@prisma/client';
 import { LoginData } from '../types';
+import prismaClient from '../../prismaClient';
 
 /**
  * - performs input validation and type narrowing for data sent to POST /login in req.body
@@ -7,7 +9,7 @@ import { LoginData } from '../types';
  * @param body request.body should contain username and password
  * @returns Promise resolved to the input for POST /login
  */
-const generateLoginData = async (body: unknown): Promise<LoginData> => {
+const parseLoginData = async (body: unknown): Promise<LoginData> => {
   if (!body || typeof body !== 'object') {
     const error = new Error('Username or Password Invalid');
     error.name = 'InvalidInputError';
@@ -30,6 +32,21 @@ const generateLoginData = async (body: unknown): Promise<LoginData> => {
   throw error;
 };
 
+/**
+ * @param username
+ * @returns
+ */
+const findUserByUsername = async (username: string): Promise<User | null> => {
+  const user = await prismaClient.user.findUnique({
+    where: {
+      user_name: username,
+    },
+  });
+
+  return Promise.resolve(user);
+};
+
 export default {
-  generateLoginData,
+  parseLoginData,
+  findUserByUsername,
 };

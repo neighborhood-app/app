@@ -3,21 +3,15 @@ import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import catchError from '../utils/catchError';
 import config from '../utils/config';
-import prismaClient from '../../prismaClient';
-import routeHelpers from '../utils/routeHelpers';
 import { LoginData } from '../types';
 import loginServices from '../services/loginServices';
 
 const loginRouter = express.Router();
 
 loginRouter.post('/', catchError(async (request: Request, response: Response) => {
-  const loginData: LoginData = await loginServices.generateLoginData(request.body);
+  const loginData: LoginData = await loginServices.parseLoginData(request.body);
 
-  const userFromDb = await prismaClient.user.findUnique({
-    where: {
-      user_name: loginData.username,
-    },
-  });
+  const userFromDb = await loginServices.findUserByUsername(loginData.username);
 
   const isPasswordCorrect = userFromDb === null
     ? false
