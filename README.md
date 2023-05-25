@@ -2,9 +2,9 @@
 
 1. Run `npm install` to install the dependencies in both the frontend folder and the backend folder
 2. Install docker desktop https://www.docker.com/products/docker-desktop/
-3. Create `.env` file in the `backend`directory with values from `backend/src/utils/sample.env` and a `test.env` file with values from `backend/src/utils/test-sample.env`
+3. Create `.env` file in the `backend` directory using `packages/backend/src/utils/sample.env` and a `test.env` file using `packages/backend/src/utils/test-sample.env`
 4. In the backend folder run `npm run start-db` to start (or restart) the database
-    - You can re-initialize the db on command line by running `npm run reinitialize-db.sh`. NOTE : THIS WILL DELETE ALL EXISTING DATA FROM THE DEV DATABASE.
+    - You can re-initialize the db on command line by running `npm run reinitialize-db`. NOTE: THIS WILL DELETE ALL EXISTING DATA FROM THE DEV DATABASE.
     - You can connect to dev db on command line  by running `npm run connect-dev-db`
     - You can connect to test db on command line by running `npm run connect-test-db`
 5. In the backend folder run `npm run seed` in order to seed the dabase (this will reset all data stored in the db).

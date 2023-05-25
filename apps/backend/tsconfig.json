@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    /* Modules */
+    // "rootDir": "backend"                                  /* Specify the root folder within your source files. */
+
+    /* Emit */
+    // "outDir": "lib",                                   /* Specify an output folder for all emitted files. */
+  }
+}

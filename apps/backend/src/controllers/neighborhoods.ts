@@ -37,7 +37,7 @@ neighborhoodsRouter.get('/:id', middleware.getUserFromRequest, catchError(async 
     };
   }
 
-  const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow(options);
+  const neighborhood: Neighborhood = await prismaClient.neighborhood.findUniqueOrThrow(options);
   res.send(neighborhood);
 }));
 
@@ -58,7 +58,7 @@ neighborhoodsRouter.put('/:id', middleware.userExtractor, catchError(async (req:
   }
 
   const data = req.body;
-  const updatedNeighborhood = await prismaClient.neighborhood.update({
+  const updatedNeighborhood: Neighborhood = await prismaClient.neighborhood.update({
     where: { id: +req.params.id },
     data,
   });

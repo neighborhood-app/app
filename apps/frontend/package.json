@@ -2,7 +2,9 @@
   "name": "@neighborhood/frontend",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
+  "author": "Antonina, Bob, Radu, Shwetank",
+  "license": "ISC",
+  "main": "index.ts",
   "dependencies": {
     "@neighborhood/backend": "1.0.0",
     "@types/axios": "^0.14.0",
@@ -16,7 +18,6 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.1",
     "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -57,16 +58,12 @@
       "node_modules/(?!@shotgunjed)/"
     ]
   },
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/neighborhood-app/app.git"
   },
-  "author": "Antonina, Bob, Radu, Shwetank",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/neighborhood-app/app/issues"
   },
-  "homepage": "https://github.com/neighborhood-app/app#readme"
+  "homepage": "/"
 }
