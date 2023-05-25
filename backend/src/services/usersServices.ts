@@ -91,7 +91,7 @@ const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
  * - throws Error if fields invalid (currently checks for username and password)
  * - other field parsers can be added in future
  * @param createUserData should contain all the necessary field of the required types
- * currently only username and password
+ * currently only username and password required
  * @returns Promise with status resolved to the user data withouti d
  */
 const generateUserDataWithoutId = async (createUserData: CreateUserData)
@@ -110,7 +110,62 @@ const generateUserDataWithoutId = async (createUserData: CreateUserData)
   return Promise.resolve(userData);
 };
 
+const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
+  id: true,
+  user_name: true,
+  first_name: true,
+  last_name: true,
+  dob: true,
+  gender_id: true,
+  bio: true,
+};
+
+/**
+ * fetches all users from db
+ * @returns users from db. Individual user's password_hash field is removed
+ */
+const getAllUsers = async (): Promise<Array<UserWithoutPasswordHash>> => {
+  const users = await prismaClient.user.findMany({
+    select: USER_FIELDS_WITHOUT_PASSWORD_HASH,
+  });
+
+  return Promise.resolve(users);
+};
+
+/**
+ * fetches user from db based on userId
+ * @param userId
+ * @returns user without password hash if user exists, null otherwise
+ */
+const getUserById = async (userId: number): Promise<UserWithoutPasswordHash | null> => {
+  const user = await prismaClient.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: USER_FIELDS_WITHOUT_PASSWORD_HASH,
+  });
+
+  return Promise.resolve(user);
+};
+
+/**
+ * creates new user in db based on the userData
+ * throws error if userData is invalid
+ * @param userData must contain the required fields, currently only username and password required
+ * @returns created new user if user was created, returns null if user was not created
+ */
+const createUser = async (userData: CreateUserData): Promise<UserWithoutPasswordHash | null> => {
+  const userDataForDb: UserWithoutId = await generateUserDataWithoutId(userData);
+  const newUser: User = await prismaClient.user.create({ data: userDataForDb });
+  const newUsersId: number = newUser.id;
+  const userToReturn: UserWithoutPasswordHash | null = await getUserById(newUsersId);
+
+  return Promise.resolve(userToReturn);
+};
+
 export default {
   parseCreateUserData,
-  generateUserDataWithoutId,
+  getAllUsers,
+  getUserById,
+  createUser,
 };

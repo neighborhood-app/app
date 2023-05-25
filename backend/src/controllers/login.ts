@@ -13,11 +13,11 @@ loginRouter.post('/', catchError(async (request: Request, response: Response) =>
 
   const userFromDb = await loginServices.findUserByUsername(loginData.username);
 
-  const isPasswordCorrect = userFromDb === null
+  const isUsernameAndPasswordCorrect = userFromDb === null
     ? false
     : await bcrypt.compare(loginData.password, userFromDb.password_hash);
 
-  if (!isPasswordCorrect) {
+  if (!isUsernameAndPasswordCorrect) {
     response.status(401).json({ error: 'invalid username or password' });
     // the request still passed through the error handler
     // middleware which attempted to send a second request back to the client,

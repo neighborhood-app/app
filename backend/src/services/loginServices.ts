@@ -33,8 +33,9 @@ const parseLoginData = async (body: unknown): Promise<LoginData> => {
 };
 
 /**
+ * finds user in db by username
  * @param username
- * @returns
+ * @returns Promise resolved to user if user exists, else returns null
  */
 const findUserByUsername = async (username: string): Promise<User | null> => {
   const user = await prismaClient.user.findUnique({
