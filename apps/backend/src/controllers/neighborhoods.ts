@@ -15,7 +15,7 @@ import neighborhoodServices from '../services/neighborhoodServices';
 const neighborhoodsRouter = express.Router();
 
 neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => {
-  const neighborhoods = await prismaClient.neighborhood.findMany({});
+  const neighborhoods = await neighborhoodServices.getAllNeighborhoods();
   res.status(200).send(neighborhoods);
 }));
 

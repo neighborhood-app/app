@@ -3,8 +3,6 @@ import { User } from '@prisma/client';
 import { CreateUserData, UserWithoutId, UserWithoutPasswordHash } from '../types';
 import prismaClient from '../../prismaClient';
 
-// helpers
-
 const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   id: true,
   user_name: true,
@@ -15,6 +13,8 @@ const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   bio: true,
 };
 
+// helpers
+
 /**
  * - narrows username type to string, checks if username is valid
  * - throws Error if username already exists
@@ -22,7 +22,7 @@ const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
  * @param username this should be a valid username
  * @returns resolved promise with username as value
  */
-const parseUsername = async (username: unknown): Promise<string> => {
+const parseAndValidateUsername = async (username: unknown): Promise<string> => {
   const MINIMUM_USERNAME_LENGTH = 4;
   if (typeof username !== 'string' || username.length < MINIMUM_USERNAME_LENGTH) {
     const error = new Error('Invalid Username');
@@ -107,7 +107,7 @@ const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
 const generateUserDataWithoutId = async (createUserData: CreateUserData)
 : Promise<UserWithoutId> => {
   const userData = {
-    user_name: await parseUsername(createUserData.username),
+    user_name: await parseAndValidateUsername(createUserData.username),
     password_hash: await getPasswordHash(createUserData.password),
     first_name: null,
     last_name: null,
@@ -138,19 +138,14 @@ const getAllUsers = async (): Promise<Array<UserWithoutPasswordHash>> => {
  * @returns user without password hash if user exists
  */
 const getUserById = async (userId: number): Promise<UserWithoutPasswordHash > => {
-  const user: UserWithoutPasswordHash | null = await prismaClient.user.findUnique({
+  const user: UserWithoutPasswordHash = await prismaClient.user.findUniqueOrThrow({
     where: {
       id: userId,
     },
     select: USER_FIELDS_WITHOUT_PASSWORD_HASH,
   });
 
-  if (user) {
-    return Promise.resolve(user);
-  }
-  const error = new Error('User not found');
-  error.name = 'InvalidInputError';
-  throw error;
+  return Promise.resolve(user);
 };
 
 /**
@@ -163,14 +158,9 @@ const createUser = async (userData: CreateUserData): Promise<UserWithoutPassword
   const userDataForDb: UserWithoutId = await generateUserDataWithoutId(userData);
   const newUser: User = await prismaClient.user.create({ data: userDataForDb });
   const newUsersId: number = newUser.id;
-  const newUserWithoutPasswordHash: UserWithoutPasswordHash | null = await getUserById(newUsersId);
+  const newUserWithoutPasswordHash: UserWithoutPasswordHash = await getUserById(newUsersId);
 
-  if (newUserWithoutPasswordHash) {
-    return Promise.resolve(newUserWithoutPasswordHash);
-  }
-  const error = new Error('Could Not Create User');
-  error.name = 'DataBaseError';
-  throw error;
+  return Promise.resolve(newUserWithoutPasswordHash);
 };
 
 export default {
