@@ -53,16 +53,11 @@ neighborhoodsRouter.get('/:id', middleware.getUserFromRequest, catchError(async 
       .isUserMemberOfNeighborhood(loggedUser.id, neighborhoodID);
   }
 
-<<<<<<< HEAD:backend/src/controllers/neighborhoods.ts
   const neighborhood = isUserMemberOfNeighborhood
     ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
     : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
   res.status(200).send(neighborhood);
-=======
-  const neighborhood: Neighborhood = await prismaClient.neighborhood.findUniqueOrThrow(options);
-  res.send(neighborhood);
->>>>>>> main:apps/backend/src/controllers/neighborhoods.ts
 }));
 
 neighborhoodsRouter.delete('/:id', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {
