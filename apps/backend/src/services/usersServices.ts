@@ -76,7 +76,9 @@ const getPasswordHash = async (password: unknown): Promise<string> => {
  */
 const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
   if (!body || typeof body !== 'object') {
-    throw new Error('Incorrect or missing data');
+    const error = new Error('unable to parse data');
+    error.name = 'InvalidInputError';
+    throw error;
   }
 
   if ('username' in body && 'password' in body
