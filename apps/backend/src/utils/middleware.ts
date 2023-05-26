@@ -4,7 +4,7 @@ import jsonwebtoken, { JwtPayload, Secret } from 'jsonwebtoken';
 import logger from './logger';
 import config from './config';
 import prismaClient from '../../prismaClient';
-import { CustomRequest } from '../types';
+import { CustomRequest, RequestWithAuthentication } from '../types';
 import catchError from './catchError';
 
 /**
@@ -110,6 +110,31 @@ const userExtractor = catchError(async (req: CustomRequest, res: Response, next:
   }
 });
 
+/**
+ * if request has valid token, extracts userId and adds it to the request
+ * else if , request has invalid token ends the request with 401
+ * else if request has no token, does nothing
+ */
+const userIdExtractor = catchError(async (
+  req: RequestWithAuthentication,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { token } = req;
+
+  if (token) {
+    const secret: string = config.SECRET as string;
+    const decodedToken = jsonwebtoken.verify(token, secret) as JwtPayload;
+    if (!decodedToken.id) {
+      res.status(401).json({ error: 'Invalid token' });
+    } else {
+      req.loggedUserId = decodedToken.id;
+    }
+  }
+
+  next();
+});
+
 export default {
   requestLogger,
   unknownEndpoint,
@@ -117,4 +142,5 @@ export default {
   tokenExtractor,
   userExtractor,
   getUserFromRequest,
+  userIdExtractor,
 };

@@ -40,6 +40,11 @@ export interface CustomRequest extends Request {
   user?: User
 }
 
+export interface RequestWithAuthentication extends Request {
+  token?: string,
+  loggedUserId?: number
+}
+
 const neighborhoodWithRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>()({
   include: {
     users: true,

@@ -9,7 +9,7 @@ import catchError from '../utils/catchError';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import routeHelpers from '../utils/routeHelpers';
-import { CustomRequest } from '../types';
+import { CustomRequest, RequestWithAuthentication } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
 
 const neighborhoodsRouter = express.Router();
@@ -19,41 +19,15 @@ neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => 
   res.status(200).send(neighborhoods);
 }));
 
-neighborhoodsRouter.get('/:id', middleware.getUserFromRequest, catchError(async (req: CustomRequest, res: Response) => {
-  // const options: { where: { id: number }, include?: object, select?: object } = {
-  //   where: { id: +req.params.id },
-  // };
-
-  // if (req.user
-  //   && await neighborhoodServices.isUserMemberOfNeighborhood(req.user.id, Number(req.params.id))) {
-  //   options.include = {
-  //     admin: true,
-  //     users: true,
-  //     requests: true,
-  //   };
-  // } else {
-  //   options.select = {
-  //     id: true,
-  //     name: true,
-  //     description: true,
-  //     location: true,
-  //   };
-  // }
-
-  // const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow(options);
-  // res.send(neighborhood);
-
+neighborhoodsRouter.get('/:id', middleware.userIdExtractor, catchError(async (req: RequestWithAuthentication, res: Response) => {
   const neighborhoodID: number = Number(req.params.id);
-  const loggedUser = req.user;
+  const { loggedUserId } = req;
 
-  // TODO use ternary operator
-  let isUserMemberOfNeighborhood: boolean = false;
-  if (loggedUser) {
-    isUserMemberOfNeighborhood = await neighborhoodServices
-      .isUserMemberOfNeighborhood(loggedUser.id, neighborhoodID);
-  }
+  const isUserLoggedInAndMemberOfNeighborhood = (loggedUserId === undefined)
+    ? false
+    : await neighborhoodServices.isUserMemberOfNeighborhood(loggedUserId, neighborhoodID);
 
-  const neighborhood = isUserMemberOfNeighborhood
+  const neighborhood = isUserLoggedInAndMemberOfNeighborhood
     ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
     : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
