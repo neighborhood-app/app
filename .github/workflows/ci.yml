@@ -21,10 +21,10 @@ jobs:
   check_linting:
   #Some default settings
   #I set the default folder for running commands to be
-  #./backend
+  #./
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./
 #Defines the environment the job will run in
     runs-on: ubuntu-20.04
 
@@ -37,11 +37,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      #This are the actual steps of this job
+      #These are the actual steps of this job
       - name: Install dependencies
         run: npm install
       - name: Check styles
-        run: npm run lint
+        run: npm run lint -w apps/backend
   #Second job runs our tests
   run_tests:
     env:
@@ -52,7 +52,7 @@ jobs:
     timeout-minutes: 10
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./
     runs-on: ubuntu-20.04
 
     name: run-tests   
@@ -66,7 +66,7 @@ jobs:
         run: npm install
 
       - name: Start docker
-        run: npm run start-db
+        run: npm run start-db -w apps/backend
 
       - name: Run tests
         run: npm test
