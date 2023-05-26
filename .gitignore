@@ -1,2 +1,10 @@
+<<<<<<< HEAD
 node_modules
 node_modules
+=======
+# dependencies
+/node_modules
+
+# misc
+.vscode
+>>>>>>> main
