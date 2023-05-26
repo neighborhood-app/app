@@ -1,3 +1,8 @@
+// TODO
+// improve error handling by letting Prisma do it as much as possible
+// Check for various error generated and how they are handled
+// extract only userId and change code accordingly
+
 import express, { Request, Response } from 'express';
 import { Neighborhood } from '@prisma/client';
 import catchError from '../utils/catchError';
@@ -5,40 +10,54 @@ import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import routeHelpers from '../utils/routeHelpers';
 import { CustomRequest } from '../types';
+import neighborhoodServices from '../services/neighborhoodServices';
 
 const neighborhoodsRouter = express.Router();
 
 neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => {
   const neighborhoods = await prismaClient.neighborhood.findMany({});
-  if (neighborhoods.length === 0) {
-    res.status(404).end();
-  } else {
-    res.send(neighborhoods);
-  }
+  res.status(200).send(neighborhoods);
 }));
 
 neighborhoodsRouter.get('/:id', middleware.getUserFromRequest, catchError(async (req: CustomRequest, res: Response) => {
-  const options: { where: { id: number }, include?: object, select?: object } = {
-    where: { id: +req.params.id },
-  };
+  // const options: { where: { id: number }, include?: object, select?: object } = {
+  //   where: { id: +req.params.id },
+  // };
 
-  if (req.user && await routeHelpers.isMember(req.user.id, Number(req.params.id))) {
-    options.include = {
-      admin: true,
-      users: true,
-      requests: true,
-    };
-  } else {
-    options.select = {
-      id: true,
-      name: true,
-      description: true,
-      location: true,
-    };
+  // if (req.user
+  //   && await neighborhoodServices.isUserMemberOfNeighborhood(req.user.id, Number(req.params.id))) {
+  //   options.include = {
+  //     admin: true,
+  //     users: true,
+  //     requests: true,
+  //   };
+  // } else {
+  //   options.select = {
+  //     id: true,
+  //     name: true,
+  //     description: true,
+  //     location: true,
+  //   };
+  // }
+
+  // const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow(options);
+  // res.send(neighborhood);
+
+  const neighborhoodID: number = Number(req.params.id);
+  const loggedUser = req.user;
+
+  // TODO use ternary operator
+  let isUserMemberOfNeighborhood: boolean = false;
+  if (loggedUser) {
+    isUserMemberOfNeighborhood = await neighborhoodServices
+      .isUserMemberOfNeighborhood(loggedUser.id, neighborhoodID);
   }
 
-  const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow(options);
-  res.send(neighborhood);
+  const neighborhood = isUserMemberOfNeighborhood
+    ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
+    : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
+
+  res.status(200).send(neighborhood);
 }));
 
 neighborhoodsRouter.delete('/:id', middleware.userExtractor, catchError(async (req: CustomRequest, res: Response) => {

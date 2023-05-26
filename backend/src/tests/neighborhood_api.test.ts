@@ -183,9 +183,10 @@ describe('When no neighborhood exists in the db', () => {
     await prismaClient.neighborhood.deleteMany({});
   });
 
-  test('GET /neighborhoods return 404', async () => {
+  test('GET /neighborhoods return 200', async () => {
     const response = await api.get('/api/neighborhoods');
-    expect(response.status).toEqual(404);
+    expect(response.status).toEqual(200);
+    expect(response.body.length).toBe(0);
   });
 });
 
