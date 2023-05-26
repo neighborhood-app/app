@@ -40,6 +40,9 @@ export interface CustomRequest extends Request {
   user?: User
 }
 
+/**
+ * Request with token for authentication
+ */
 export interface RequestWithAuthentication extends Request {
   token?: string,
   loggedUserId?: number

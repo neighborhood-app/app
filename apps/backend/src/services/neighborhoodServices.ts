@@ -2,6 +2,31 @@ import { Neighborhood, User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import { NeighborhoodWithRelatedFields, CreateNeighborhoodData } from '../types';
 
+// helpers
+
+/**
+ * performs input validation for create neighborhood data
+ * @param data
+ * @returns true if data is valid
+ */
+const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Promise<boolean> => {
+  const MINIMUM_NAME_LENGTH = 4;
+  const neighborhoodName = data.name;
+
+  const existingNeighborhood: Neighborhood | null = await prismaClient.neighborhood.findUnique({
+    where: {
+      name: neighborhoodName,
+    },
+  });
+
+  if (neighborhoodName.length < MINIMUM_NAME_LENGTH || existingNeighborhood) {
+    return false;
+  } // else
+  return true;
+};
+
+// neighborhood services
+
 const getAllNeighborhoods = async (): Promise<Array<Neighborhood>> => {
   const neighborhoods: Array<Neighborhood> = await prismaClient.neighborhood.findMany({});
   return neighborhoods;
@@ -138,27 +163,6 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
   const error = new Error('user id or neighborhood name missing');
   error.name = 'InvalidInputError';
   throw error;
-};
-
-/**
- * performs input validation for create neighborhood data
- * @param data
- * @returns true if data is valid
- */
-const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Promise<boolean> => {
-  const MINIMUM_NAME_LENGTH = 4;
-  const neighborhoodName = data.name;
-
-  const existingNeighborhood: Neighborhood | null = await prismaClient.neighborhood.findUnique({
-    where: {
-      name: neighborhoodName,
-    },
-  });
-
-  if (neighborhoodName.length < MINIMUM_NAME_LENGTH || existingNeighborhood) {
-    return false;
-  } // else
-  return true;
 };
 
 /**

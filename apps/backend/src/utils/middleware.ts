@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { Prisma } from '@prisma/client';
-import jsonwebtoken, { JwtPayload, Secret } from 'jsonwebtoken';
+import jsonwebtoken, { JwtPayload } from 'jsonwebtoken';
 import logger from './logger';
 import config from './config';
-import prismaClient from '../../prismaClient';
 import { CustomRequest, RequestWithAuthentication } from '../types';
 import catchError from './catchError';
 
@@ -30,13 +29,13 @@ const unknownEndpoint = (_request: Request, response: Response): void => {
 
 const errorHandler = (error: Error, _req: Request, response: Response, _next: NextFunction)
 : void => {
-  if (error.name === 'UserDataError') { // used
+  if (error.name === 'UserDataError') {
     response.status(400).send({ error: error.message });
-  } else if (error.name === 'InvalidUserameOrPasswordError') { // used
+  } else if (error.name === 'InvalidUserameOrPasswordError') {
     response.status(401).send({ error: error.message });
-  } else if (error.name === 'NeighborhoodDataError') {
-    response.status(400).send({ error: error.message });
-  } else if (error.name === 'InvalidInputError') { // used
+  // } else if (error.name === 'NeighborhoodDataError') {
+  //   response.status(400).send({ error: error.message });
+  } else if (error.name === 'InvalidInputError') {
     response.status(400).send({ error: error.message });
   } else if (error.name === 'ResourceDoesNotExistError') {
     response.status(404).send({ error: error.message });
@@ -72,43 +71,6 @@ const tokenExtractor = (req: CustomRequest, _res: Response, next: NextFunction):
   }
   next();
 };
-
-/**
- * IF Authorization token was sent with a request, the function extracts the user associated
- * with the token and assigns it to a user property on the request object.
- */
-const getUserFromRequest = catchError(async (
-  req: CustomRequest,
-  res: Response,
-  next: NextFunction,
-) => {
-  if (req.token) {
-    const decodedToken = jsonwebtoken.verify(req.token, config.SECRET as Secret) as JwtPayload;
-    if (!decodedToken.id) {
-      res.status(401).json({ error: 'Invalid token' });
-    }
-
-    req.user = await prismaClient.user.findFirstOrThrow({
-      where: {
-        id: decodedToken.id,
-      },
-    });
-  }
-
-  next();
-});
-
-/**
-Creates a user property on the request object with the user extracted with the
-aid of the authentication token.
- */
-const userExtractor = catchError(async (req: CustomRequest, res: Response, next: NextFunction) => {
-  if (!req.token) {
-    res.status(401).json({ error: 'Invalid User Credentials' });
-  } else {
-    getUserFromRequest(req, res, next);
-  }
-});
 
 /**
  * if request has valid token, extracts userId and adds it to the request
@@ -160,8 +122,6 @@ export default {
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
-  userExtractor,
-  getUserFromRequest,
   userIdExtractor,
   userIdExtractorAndLoginValidator,
 };

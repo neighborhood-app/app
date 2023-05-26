@@ -78,11 +78,11 @@ const generateToken = async (username: string, userId: number): Promise<string> 
   };
 
   // config.SECRET could be undefined
-  const SECRET = config.SECRET as string;
+  const secret = config.SECRET as string;
 
   const token = jsonwebtoken.sign(
     userDataForGeneratingToken,
-    SECRET,
+    secret,
     { expiresIn: '1h' }, // token expires in 1 hour
   );
 
