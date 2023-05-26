@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 import jsonwebtoken, { JwtPayload } from 'jsonwebtoken';
 import logger from './logger';
 import config from './config';
-import { CustomRequest, RequestWithAuthentication } from '../types';
+import { RequestWithAuthentication } from '../types';
 import catchError from './catchError';
 
 /**
@@ -64,7 +64,8 @@ and the token that was saved by the client on user login
  * The middleware checks if the correct authorization schema is used and saves the token to a
 'token' property on the request object.
  */
-const tokenExtractor = (req: CustomRequest, _res: Response, next: NextFunction): void => {
+const tokenExtractor = (req: RequestWithAuthentication, _res: Response, next: NextFunction)
+: void => {
   const authorization = req.get('authorization');
   if (authorization && authorization.startsWith('Bearer ')) {
     req.token = authorization.replace('Bearer ', '');

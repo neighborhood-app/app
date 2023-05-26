@@ -35,11 +35,6 @@ export interface CreateNeighborhoodData {
   name: string
 }
 
-export interface CustomRequest extends Request {
-  token?: string,
-  user?: User
-}
-
 /**
  * Request with token for authentication
  */
@@ -54,10 +49,6 @@ const neighborhoodWithRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>(
     requests: true,
   },
 });
-
-// const NeighborhoodRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>()({
-//   select: { admin: true },
-// });
 
 export type NeighborhoodWithRelatedFields = Prisma
   .NeighborhoodGetPayload<typeof neighborhoodWithRelatedFields>;
