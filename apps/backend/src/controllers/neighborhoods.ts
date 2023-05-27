@@ -12,7 +12,7 @@ const neighborhoodsRouter = express.Router();
 
 neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => {
   const neighborhoods = await neighborhoodServices.getAllNeighborhoods();
-  res.status(200).send(neighborhoods);
+  return res.status(200).send(neighborhoods).end();
 }));
 
 neighborhoodsRouter.get('/:id', middleware.userIdExtractor, catchError(async (req: RequestWithAuthentication, res: Response) => {
@@ -27,7 +27,7 @@ neighborhoodsRouter.get('/:id', middleware.userIdExtractor, catchError(async (re
     ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
     : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
-  res.status(200).send(neighborhood);
+  return res.status(200).send(neighborhood).end();
 }));
 
 neighborhoodsRouter.delete('/:id', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
@@ -40,10 +40,11 @@ neighborhoodsRouter.delete('/:id', middleware.userIdExtractorAndLoginValidator, 
     .isUserAdminOfNeighborhood(loggedUserID, neighborhoodID);
 
   if (!isUserAdminOfNeighborhood) {
-    res.status(403).send({ error: 'User is not the admin of this neighborhood' }).end();
-  } // else
+    return res.status(403).send({ error: 'User is not the admin of this neighborhood' }).end();
+  }
+
   const deletedNeighborhood = await neighborhoodServices.deleteNeighborhood(neighborhoodID);
-  res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`);
+  return res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`).end();
 }));
 
 // Since update routes are not critical, not spending too much time on it
@@ -57,14 +58,15 @@ neighborhoodsRouter.put('/:id', middleware.userIdExtractorAndLoginValidator, cat
     .isUserAdminOfNeighborhood(loggedUserID, neighborhoodID);
 
   if (!isUserAdminOfNeighborhood) {
-    res.status(403).send({ error: 'User is not the admin of this neighborhood' }).end();
-  } // else
+    return res.status(403).send({ error: 'User is not the admin of this neighborhood' }).end();
+  }
+
   const data = req.body;
   const updatedNeighborhood: Neighborhood = await prismaClient.neighborhood.update({
     where: { id: +req.params.id },
     data,
   });
-  return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
+  return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`).end();
 }));
 
 neighborhoodsRouter.post('/', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
@@ -82,19 +84,21 @@ neighborhoodsRouter.post('/', middleware.userIdExtractorAndLoginValidator, catch
   const newNeighborhoodWithRelatedFields: NeighborhoodWithRelatedFields = await neighborhoodServices
     .getNeighborhoodDetailsForMembers(newNeighborhood.id);
 
-  res.status(201).json(newNeighborhoodWithRelatedFields);
+  return res.status(201).json(newNeighborhoodWithRelatedFields).end();
 }));
 
 neighborhoodsRouter.post('/:id/join', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
   const loggedUserId = req.loggedUserId as number; // user should be extracted by the middleware
   const neighborhoodId = Number(req.params.id);
 
+  // Just checking for presence and type of param id,
+  // rest validation will be done by neighborhoodServices
   if (!neighborhoodId || Number.isNaN(neighborhoodId)) {
-    res.status(400).send({ error: 'Unable to parse URL' });
-  } else {
-    await neighborhoodServices.connectUserToNeighborhood(loggedUserId, neighborhoodId);
-    res.status(201).send({ success: 'You have joined the neighborhood' });
+    return res.status(400).send({ error: 'Unable to parse URL' }).end();
   }
+
+  await neighborhoodServices.connectUserToNeighborhood(loggedUserId, neighborhoodId);
+  return res.status(201).send({ success: 'You have joined the neighborhood' }).end();
 }));
 
 export default neighborhoodsRouter;

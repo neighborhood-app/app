@@ -1,13 +1,16 @@
 import { Neighborhood, User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
-import { NeighborhoodWithRelatedFields, CreateNeighborhoodData } from '../types';
+import {
+  NeighborhoodWithRelatedFields, CreateNeighborhoodData,
+  NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers,
+} from '../types';
 
 // helpers
 
 /**
  * performs input validation for create neighborhood data
  * @param data
- * @returns true if data is valid
+ * @returns Promise resolving to true if data is valid
  */
 const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Promise<boolean> => {
   const MINIMUM_NAME_LENGTH = 4;
@@ -27,6 +30,10 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
 
 // neighborhood services
 
+/**
+ * fetches all neighborhoods from the db
+ * @returns Promise resolving to array of neighborhoods
+ */
 const getAllNeighborhoods = async (): Promise<Array<Neighborhood>> => {
   const neighborhoods: Array<Neighborhood> = await prismaClient.neighborhood.findMany({});
   return neighborhoods;
@@ -38,7 +45,7 @@ const getAllNeighborhoods = async (): Promise<Array<Neighborhood>> => {
  * throws error if neighborhood id is invalid
  * @param loggedUserID
  * @param neighborhoodID
- * @returns true if user if part of neighborhood, false otherwise
+ * @returns Promise resolving to true if user if part of neighborhood, false otherwise
  */
 const isUserMemberOfNeighborhood = async (loggedUserID: number, neighborhoodID: number)
 :Promise<boolean> => {
@@ -68,9 +75,10 @@ const isUserMemberOfNeighborhood = async (loggedUserID: number, neighborhoodID: 
  * does not fetch data from joined tables
  * throws error if unable to find neighborhood
  * @param neighborhoodId
- * @returns neighborhood details with id, name, description and location only
+ * @returns Promise resolving to neighborhood details without admin_id
  */
-const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number) => {
+const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number)
+: Promise<NeighborhoodDetailsForNonMembers> => {
   const FIELDS_TO_SELECT_FOR_NON_MEMBERS = {
     id: true,
     name: true,
@@ -78,12 +86,13 @@ const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number) => {
     location: true,
   };
 
-  const neighborhood = await prismaClient.neighborhood.findUniqueOrThrow({
-    where: {
-      id: neighborhoodId,
-    },
-    select: FIELDS_TO_SELECT_FOR_NON_MEMBERS,
-  });
+  const neighborhood: NeighborhoodDetailsForNonMembers = await prismaClient
+    .neighborhood.findUniqueOrThrow({
+      where: {
+        id: neighborhoodId,
+      },
+      select: FIELDS_TO_SELECT_FOR_NON_MEMBERS,
+    });
 
   return neighborhood;
 };
@@ -95,14 +104,14 @@ const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number) => {
  * @returns neighborhood details with admin, users and requests
  */
 const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
-: Promise<NeighborhoodWithRelatedFields> => {
+: Promise<NeighborhoodDetailsForMembers> => {
   const FIELDS_TO_INCLUDE_FOR_MEMBERS = {
     admin: true,
     users: true,
     requests: true,
   };
 
-  const neighborhood: NeighborhoodWithRelatedFields = await prismaClient
+  const neighborhood: NeighborhoodDetailsForMembers = await prismaClient
     .neighborhood.findUniqueOrThrow({
       where: {
         id: neighborhoodId,
@@ -115,6 +124,7 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
 
 /**
  * checks if the user is admin of the neighborhood
+ * throws error if neighborhoodId is invalid
  * @param userID
  * @param neighborhoodID
  * @returns true if user is admin, false otherwise

@@ -7,10 +7,10 @@ import config from '../utils/config';
 
 /**
  * - performs input validation and type narrowing for data sent to POST /login in req.body
- * - if username, password present and of type string, then returns an body containing input data
+ * - if username, password present and of type string, then returns loginData
  * - else throws Error
  * @param body request.body should contain username and password
- * @returns Promise resolved to the input for POST /login
+ * @returns Promise resolving to input data for POST /login
  */
 const parseLoginData = async (body: unknown): Promise<LoginData> => {
   if (!body || typeof body !== 'object') {
@@ -22,12 +22,12 @@ const parseLoginData = async (body: unknown): Promise<LoginData> => {
   if ('username' in body && 'password' in body
       && typeof body.username === 'string'
       && typeof body.password === 'string') {
-    const loginData = {
+    const loginData: LoginData = {
       username: body.username,
       password: body.password,
     };
 
-    return Promise.resolve(loginData);
+    return loginData;
   }
   const error = new Error('unable to parse data');
   error.name = 'InvalidInputError';
@@ -38,7 +38,7 @@ const parseLoginData = async (body: unknown): Promise<LoginData> => {
  * finds user in db by username
  * throws an error if username does not exist
  * @param username
- * @returns Promise resolved to user if user exists
+ * @returns Promise resolving to user
  */
 const findUserByUsername = async (username: string): Promise<User> => {
   // using findUnique because we want to throw custom 401 error
@@ -49,7 +49,7 @@ const findUserByUsername = async (username: string): Promise<User> => {
   });
 
   if (user) {
-    return Promise.resolve(user);
+    return user;
   }
   const error = new Error('invalid username or password');
   error.name = 'InvalidUserameOrPasswordError';
@@ -69,7 +69,7 @@ const isPasswordCorrect = async (password: string, password_hash: string)
  * generates a json web token valid for 1 hour corresponding to userName and id
  * @param username
  * @param userId
- * @returns the token
+ * @returns Promise resolving to the token
  */
 const generateToken = async (username: string, userId: number): Promise<string> => {
   const userDataForGeneratingToken = {
@@ -86,7 +86,7 @@ const generateToken = async (username: string, userId: number): Promise<string> 
     { expiresIn: '1h' }, // token expires in 1 hour
   );
 
-  return Promise.resolve(token);
+  return token;
 };
 
 export default {

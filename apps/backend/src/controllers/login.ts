@@ -14,7 +14,7 @@ loginRouter.post('/', catchError(async (request: Request, response: Response) =>
   const isPasswordCorrect = await loginServices
     .isPasswordCorrect(loginData.password, userInDb.password_hash);
 
-  if (userInDb && isPasswordCorrect) {
+  if (isPasswordCorrect) {
     const token: string = await loginServices.generateToken(userInDb.user_name, userInDb.id);
     const responseData = {
       username: userInDb.user_name,

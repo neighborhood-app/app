@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client';
+import { Neighborhood, Prisma, User } from '@prisma/client';
 import { Request } from 'express';
 
 /**
@@ -52,3 +52,22 @@ const neighborhoodWithRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>(
 
 export type NeighborhoodWithRelatedFields = Prisma
   .NeighborhoodGetPayload<typeof neighborhoodWithRelatedFields>;
+
+/**
+ * format of the neighborhood data, without admin_id, to be displayed for non members
+ */
+export type NeighborhoodDetailsForNonMembers = Omit<Neighborhood, 'admin_id'>;
+
+const neighborhoodDetailsForMembers = Prisma.validator<Prisma.NeighborhoodArgs>()({
+  include: {
+    admin: true,
+    users: true,
+    requests: true,
+  },
+});
+
+/**
+ * format of neighborhood data, with all related fields, for members
+ */
+export type NeighborhoodDetailsForMembers = Prisma
+  .NeighborhoodGetPayload<typeof neighborhoodDetailsForMembers>;
