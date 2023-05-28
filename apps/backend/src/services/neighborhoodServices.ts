@@ -16,6 +16,8 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
   const MINIMUM_NAME_LENGTH = 4;
   const neighborhoodName = data.name;
 
+  // we do not want to throw an error if neighborhood does not exist
+  // hence not using findUniqueOrThrow
   const existingNeighborhood: Neighborhood | null = await prismaClient.neighborhood.findUnique({
     where: {
       name: neighborhoodName,
@@ -183,16 +185,7 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
  * @param neighborhoodId
  */
 const connectUserToNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
-  const user: User | null = await prismaClient.user.findUnique({ where: { id: userId } });
-  const neighborhood: Neighborhood | null = await prismaClient
-    .neighborhood.findUnique({ where: { id: neighborhoodId } });
-
-  if (!user || !neighborhood) {
-    const error = new Error('Invalid User or Neighborhood');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-
+  const user: User = await prismaClient.user.findUniqueOrThrow({ where: { id: userId } });
   const neighborhoodWithUsers: NeighborhoodWithRelatedFields = await prismaClient
     .neighborhood.findUniqueOrThrow({
       where: {
@@ -207,7 +200,7 @@ const connectUserToNeighborhood = async (userId: number, neighborhoodId: number)
 
   const neighborhoodUsersIds = neighborhoodWithUsers.users.map(u => u.id);
 
-  if (neighborhoodUsersIds.includes(userId)) {
+  if (neighborhoodUsersIds.includes(user.id)) {
     const error = new Error('User already associated with Neighborhood');
     error.name = 'InvalidInputError';
     throw error;

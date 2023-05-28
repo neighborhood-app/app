@@ -12,7 +12,7 @@ const neighborhoodsRouter = express.Router();
 
 neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => {
   const neighborhoods = await neighborhoodServices.getAllNeighborhoods();
-  return res.status(200).send(neighborhoods).end();
+  res.status(200).send(neighborhoods);
 }));
 
 neighborhoodsRouter.get('/:id', middleware.userIdExtractor, catchError(async (req: RequestWithAuthentication, res: Response) => {
@@ -27,7 +27,7 @@ neighborhoodsRouter.get('/:id', middleware.userIdExtractor, catchError(async (re
     ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
     : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
-  return res.status(200).send(neighborhood).end();
+  res.status(200).send(neighborhood);
 }));
 
 neighborhoodsRouter.delete('/:id', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
@@ -40,11 +40,11 @@ neighborhoodsRouter.delete('/:id', middleware.userIdExtractorAndLoginValidator, 
     .isUserAdminOfNeighborhood(loggedUserID, neighborhoodID);
 
   if (!isUserAdminOfNeighborhood) {
-    return res.status(403).send({ error: 'User is not the admin of this neighborhood' }).end();
+    return res.status(403).send({ error: 'User is not the admin of this neighborhood' });
   }
 
   const deletedNeighborhood = await neighborhoodServices.deleteNeighborhood(neighborhoodID);
-  return res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`).end();
+  return res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`);
 }));
 
 // Since update routes are not critical, not spending too much time on it
@@ -58,7 +58,7 @@ neighborhoodsRouter.put('/:id', middleware.userIdExtractorAndLoginValidator, cat
     .isUserAdminOfNeighborhood(loggedUserID, neighborhoodID);
 
   if (!isUserAdminOfNeighborhood) {
-    return res.status(403).send({ error: 'User is not the admin of this neighborhood' }).end();
+    return res.status(403).send({ error: 'User is not the admin of this neighborhood' });
   }
 
   const data = req.body;
@@ -66,7 +66,7 @@ neighborhoodsRouter.put('/:id', middleware.userIdExtractorAndLoginValidator, cat
     where: { id: +req.params.id },
     data,
   });
-  return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`).end();
+  return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
 }));
 
 neighborhoodsRouter.post('/', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
@@ -84,7 +84,7 @@ neighborhoodsRouter.post('/', middleware.userIdExtractorAndLoginValidator, catch
   const newNeighborhoodWithRelatedFields: NeighborhoodWithRelatedFields = await neighborhoodServices
     .getNeighborhoodDetailsForMembers(newNeighborhood.id);
 
-  return res.status(201).json(newNeighborhoodWithRelatedFields).end();
+  res.status(201).json(newNeighborhoodWithRelatedFields);
 }));
 
 neighborhoodsRouter.post('/:id/join', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
@@ -94,11 +94,11 @@ neighborhoodsRouter.post('/:id/join', middleware.userIdExtractorAndLoginValidato
   // Just checking for presence and type of param id,
   // rest validation will be done by neighborhoodServices
   if (!neighborhoodId || Number.isNaN(neighborhoodId)) {
-    return res.status(400).send({ error: 'Unable to parse URL' }).end();
+    return res.status(400).send({ error: 'Unable to parse URL' });
   }
 
   await neighborhoodServices.connectUserToNeighborhood(loggedUserId, neighborhoodId);
-  return res.status(201).send({ success: 'You have joined the neighborhood' }).end();
+  return res.status(201).send({ success: 'You have joined the neighborhood' });
 }));
 
 export default neighborhoodsRouter;
