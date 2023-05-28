@@ -2,7 +2,7 @@
 
 1. Run `npm install` to install the dependencies in all linked apps.
 2. Install docker desktop https://www.docker.com/products/docker-desktop/
-3. Create `.env` file in the `backend` directory using `packages/backend/src/utils/sample.env` and a `test.env` file using `packages/backend/src/utils/test-sample.env`.
+3. Create `.env` file in the `apps/backend` directory using `apps/backend/src/utils/sample.env` and a `test.env` file using `apps/backend/src/utils/test-sample.env`.
 4. Run `npm run server` to start (or restart) the db and backend server on port 3001.
     - You can re-initialize the db on command line by running `npm run reinitialize-db -w apps/backend`. NOTE: THIS WILL DELETE ALL EXISTING DATA FROM THE DEV DATABASE.
     - You can connect to dev db on command line  by running `npm run connect-dev-db -w apps/backend`
