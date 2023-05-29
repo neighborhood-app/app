@@ -593,7 +593,7 @@ describe('Testing user JOIN neighborhood at POST /api/neighborhood/:id/join', ()
     const INVALID_NHOOD_ID = 100000;
     await api.post(`/api/neighborhoods/${INVALID_NHOOD_ID}/join`)
       .set('Authorization', `Bearer ${token}`)
-      .expect(404)
+      .expect(400)
       .expect('Content-Type', /application\/json/);
 
     const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);

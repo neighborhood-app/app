@@ -4,7 +4,10 @@ import catchError from '../utils/catchError';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import {
-  CreateNeighborhoodData, NeighborhoodWithRelatedFields, RequestWithAuthentication,
+  CreateNeighborhoodData,
+  NeighborhoodDetailsForMembers,
+  NeighborhoodDetailsForNonMembers,
+  NeighborhoodWithRelatedFields, RequestWithAuthentication,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
 
@@ -19,11 +22,12 @@ neighborhoodsRouter.get('/:id', middleware.userIdExtractor, catchError(async (re
   const neighborhoodID: number = Number(req.params.id);
   const { loggedUserId } = req;
 
-  const isUserLoggedInAndMemberOfNeighborhood = (loggedUserId === undefined)
+  const isUserLoggedInAndMemberOfNeighborhood: boolean = (loggedUserId === undefined)
     ? false
     : await neighborhoodServices.isUserMemberOfNeighborhood(loggedUserId, neighborhoodID);
 
-  const neighborhood = isUserLoggedInAndMemberOfNeighborhood
+  const neighborhood: NeighborhoodDetailsForMembers |
+  NeighborhoodDetailsForNonMembers = isUserLoggedInAndMemberOfNeighborhood
     ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
     : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
