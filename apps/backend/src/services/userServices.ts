@@ -131,7 +131,7 @@ const getAllUsers = async (): Promise<Array<UserWithoutPasswordHash>> => {
     select: USER_FIELDS_WITHOUT_PASSWORD_HASH,
   });
 
-  return Promise.resolve(users);
+  return users;
 };
 
 /**
@@ -148,7 +148,7 @@ const getUserById = async (userId: number): Promise<UserWithoutPasswordHash > =>
     select: USER_FIELDS_WITHOUT_PASSWORD_HASH,
   });
 
-  return Promise.resolve(user);
+  return user;
 };
 
 /**

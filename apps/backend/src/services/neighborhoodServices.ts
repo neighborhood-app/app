@@ -26,7 +26,8 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
 
   if (neighborhoodName.length < MINIMUM_NAME_LENGTH || existingNeighborhood) {
     return false;
-  } // else
+  }
+
   return true;
 };
 
@@ -153,7 +154,7 @@ const deleteNeighborhood = async (neighborhoodId: number) => {
  * transforms req.body to data for creating neighborhood for POST /neighborhood
  * throws Error if admin_id or name field not present or of wrong type
  * @param object req.body, admin_id and name properties must be present
- * @returns Promise resolved to valid data for creating neighborhood
+ * @returns Promise resolving to valid data for creating neighborhood
  */
 const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeighborhoodData> => {
   if (!object || typeof object !== 'object') {
@@ -169,7 +170,7 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
       name: object.name,
     };
 
-    return Promise.resolve(neighborhoodData);
+    return neighborhoodData;
   }
 
   const error = new Error('user id or neighborhood name missing');
