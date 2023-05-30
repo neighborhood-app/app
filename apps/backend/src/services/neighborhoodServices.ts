@@ -1,4 +1,4 @@
-import { Neighborhood, User } from '@prisma/client';
+import { Neighborhood } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
   NeighborhoodWithRelatedFields, CreateNeighborhoodData,
