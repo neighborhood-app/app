@@ -1,40 +1,30 @@
 import express, { Request, Response } from 'express';
-import { User } from '@prisma/client';
 import catchError from '../utils/catchError';
-import prismaClient from '../../prismaClient';
-import routeHelpers from '../utils/routeHelpers';
+import userServices from '../services/userServices';
+import { UserWithoutPasswordHash } from '../types';
 
 const usersRouter = express.Router();
 
 usersRouter.get('/', catchError(async (_req: Request, res: Response) => {
-  const users: Array<User> = await prismaClient.user.findMany({});
-  const usersWithoutPasswordHash = users.map(user => routeHelpers.getUserWithoutPasswordHash(user));
-  res.status(200).json(usersWithoutPasswordHash);
+  const users: Array<UserWithoutPasswordHash> = await userServices.getAllUsers();
+
+  res.status(200).json(users);
 }));
 
 usersRouter.get('/:id', catchError(async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const user = await prismaClient.user.findUnique({
-    where: {
-      id,
-    },
-  });
-  if (user) {
-    const userWithoutPasswordHash = routeHelpers.getUserWithoutPasswordHash(user);
-    res.status(200).json(userWithoutPasswordHash);
-  } else {
-    res.status(404).json({ error: 'user not found' });
-  }
+  const userId: number = Number(req.params.id);
+
+  const user: UserWithoutPasswordHash = await userServices.getUserById(userId);
+
+  res.status(200).json(user);
 }));
 
 usersRouter.post('/', catchError(async (req: Request, res: Response) => {
-  const createUserData = await routeHelpers.generateCreateUserData(req.body);
-  const userDataWithoutId = await routeHelpers.generateUserDataWithoutId(createUserData);
+  const createUserData = await userServices.parseCreateUserData(req.body);
 
-  const savedUser: User = await prismaClient.user.create({ data: userDataWithoutId });
-  const userWithoutPasswordHash = routeHelpers.getUserWithoutPasswordHash(savedUser);
+  const newUser: UserWithoutPasswordHash = await userServices.createUser(createUserData);
 
-  res.status(201).json(userWithoutPasswordHash);
+  res.status(201).json(newUser);
 }));
 
 export default usersRouter;

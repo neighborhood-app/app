@@ -1,4 +1,4 @@
-POST http://localhost:3000/api/login
+POST http://localhost:3001/api/login
 Content-Type: application/json
 
 {
@@ -6,11 +6,20 @@ Content-Type: application/json
   "password": "secret"
 }
 
-### wrong credentials
-POST http://localhost:3000/api/login
+### wrong username
+POST http://localhost:3001/api/login
 Content-Type: application/json
 
 {
   "username": "bob12345",
   "password": "secret"
+}
+
+### wrong password
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "bob1234",
+  "password": "secret1"
 }

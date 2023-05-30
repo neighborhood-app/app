@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client';
+import { Neighborhood, Prisma, User } from '@prisma/client';
 import { Request } from 'express';
 
 /**
@@ -35,9 +35,12 @@ export interface CreateNeighborhoodData {
   name: string
 }
 
-export interface CustomRequest extends Request {
+/**
+ * Request with token for authentication
+ */
+export interface RequestWithAuthentication extends Request {
   token?: string,
-  user?: User
+  loggedUserId?: number
 }
 
 const neighborhoodWithRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>()({
@@ -47,9 +50,24 @@ const neighborhoodWithRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>(
   },
 });
 
-// const NeighborhoodRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>()({
-//   select: { admin: true },
-// });
-
 export type NeighborhoodWithRelatedFields = Prisma
   .NeighborhoodGetPayload<typeof neighborhoodWithRelatedFields>;
+
+/**
+ * format of the neighborhood data, without admin_id, to be displayed for non members
+ */
+export type NeighborhoodDetailsForNonMembers = Omit<Neighborhood, 'admin_id'>;
+
+const neighborhoodDetailsForMembers = Prisma.validator<Prisma.NeighborhoodArgs>()({
+  include: {
+    admin: true,
+    users: true,
+    requests: true,
+  },
+});
+
+/**
+ * format of neighborhood data, with all related fields, for members
+ */
+export type NeighborhoodDetailsForMembers = Prisma
+  .NeighborhoodGetPayload<typeof neighborhoodDetailsForMembers>;

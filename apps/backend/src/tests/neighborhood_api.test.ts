@@ -70,6 +70,27 @@ describe('When neighborhoods already exist in the db', () => {
     expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods - 1);
   });
 
+  test('DELETE /neighborhoods/:id with invalid id returns appropriate error', async () => {
+    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numInitialNeighborhoods = initialNeighborhoods.length;
+
+    const loginResponse = await api
+      .post('/api/login')
+      .send(BOBS_LOGIN_DATA);
+
+    const { token } = loginResponse.body;
+
+    // 1234 is invalid neighborhood id for BOBS_LOGIN_DATA
+    const deleteResponse = await api.delete('/api/neighborhoods/1234')
+      .set('Authorization', `Bearer ${token}`);
+
+    const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
+    const numCurrentNeighborhoods = currentNeighborhoods.length;
+
+    expect(deleteResponse.status).toEqual(404);
+    expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods);
+  });
+
   test('User cannot delete neighborhood if user is not admin', async () => {
     const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
     const numInitialNeighborhoods = initialNeighborhoods.length;
@@ -79,7 +100,7 @@ describe('When neighborhoods already exist in the db', () => {
       .send(BOBS_LOGIN_DATA);
     const { token } = loginResponse.body;
 
-    // 2 is invalid neighborhood id for BOBS_LOGIN_DATA
+    // 2 is invalid neighborhood id for BOBS_LOGIN_DATA with bob as admin
     const deleteResponse = await api.delete('/api/neighborhoods/2').set('Authorization', `Bearer ${token}`);
 
     const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
@@ -183,9 +204,10 @@ describe('When no neighborhood exists in the db', () => {
     await prismaClient.neighborhood.deleteMany({});
   });
 
-  test('GET /neighborhoods return 404', async () => {
+  test('GET /neighborhoods return 200', async () => {
     const response = await api.get('/api/neighborhoods');
-    expect(response.status).toEqual(404);
+    expect(response.status).toEqual(200);
+    expect(response.body.length).toBe(0);
   });
 });
 
@@ -509,7 +531,7 @@ describe('Testing CREATE neighborhood at POST /api/neighborhood', () => {
 });
 
 describe('Testing user JOIN neighborhood at POST /api/neighborhood/:id/join', () => {
-  // We are testing to join Bob to Antonina's Neighborhood
+  // We are testing to join the user Bob to Antonina's Neighborhood
   beforeEach(async () => {
     await seed();
   });

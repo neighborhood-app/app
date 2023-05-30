@@ -1,4 +1,5 @@
-GET http://localhost:3000/api/users/1
+GET http://localhost:3001/api/users/1
 
-###
-GET http://localhost:3000/api/users/1237298372
+
+### Invalid User
+GET http://localhost:3001/api/users/12121
