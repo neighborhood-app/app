@@ -63,26 +63,26 @@ async function main() {
     },
   });
 
-  // const radu = await prisma.user.create({
-  //   data: {
-  //     user_name: 'radu',
-  //     password_hash: 'example',
-  //   },
-  // });
+  const radu = await prismaClient.user.create({
+    data: {
+      user_name: 'radu',
+      password_hash: await getPasswordHash(SAMPLE_PASSWORD),
+    },
+  });
 
-  // const mike = await prisma.user.create({
-  //   data: {
-  //     user_name: 'mike',
-  //     password_hash: 'example',
-  //   },
-  // });
+  const mike = await prismaClient.user.create({
+    data: {
+      user_name: 'mike',
+      password_hash: await getPasswordHash(SAMPLE_PASSWORD),
+    },
+  });
 
-  // const maria = await prisma.user.create({
-  //   data: {
-  //     user_name: 'maria',
-  //     password_hash: 'example',
-  //   },
-  // });
+  const maria = await prismaClient.user.create({
+    data: {
+      user_name: 'maria',
+      password_hash: await getPasswordHash(SAMPLE_PASSWORD),
+    },
+  });
 
   const bobNeighborhood = await prismaClient.neighborhood.create({
     data: {
@@ -92,6 +92,7 @@ async function main() {
   });
 
   await connectUsertoNeighborhood(bob.id, bobNeighborhood.id);
+  await connectUsertoNeighborhood(mike.id, bobNeighborhood.id);
 
   const antoninaNeighborhood = await prismaClient.neighborhood.create({
     data: {
@@ -101,6 +102,8 @@ async function main() {
   });
 
   await connectUsertoNeighborhood(antonina.id, antoninaNeighborhood.id);
+  await connectUsertoNeighborhood(radu.id, antoninaNeighborhood.id);
+  await connectUsertoNeighborhood(maria.id, antoninaNeighborhood.id);
 
   const shwetankNeighborhood = await prismaClient.neighborhood.create({
     data: {
