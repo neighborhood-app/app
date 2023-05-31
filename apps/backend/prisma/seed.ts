@@ -42,7 +42,7 @@ async function main() {
     ],
   });
 
-  //Create users
+  // Create users
   const bob = await prismaClient.user.create({
     data: {
       user_name: 'bob1234',
@@ -86,7 +86,7 @@ async function main() {
   });
   //---------------------------------------------------------
 
-  //Bob's Neighborhood
+  // Bob's Neighborhood
   const bobNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: bob.id,
@@ -97,17 +97,19 @@ async function main() {
   await connectUsertoNeighborhood(bob.id, bobNeighborhood.id);
   await connectUsertoNeighborhood(mike.id, bobNeighborhood.id);
 
+  // The variable will be used in the future when we add responses.
+  // eslint-disable-next-line
   const mikeRequest = await prismaClient.request.create({
     data: {
       neighborhood_id: bobNeighborhood.id,
       user_id: mike.id,
       title: 'Help moving furniture in apartment',
-      content: 'I need help moving my furniture this Saturday'
+      content: 'I need help moving my furniture this Saturday',
     },
   });
   //---------------------------------------------------------
 
-  //Antonina's Neighborhood
+  // Antonina's Neighborhood
   const antoninaNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: antonina.id,
@@ -119,26 +121,30 @@ async function main() {
   await connectUsertoNeighborhood(radu.id, antoninaNeighborhood.id);
   await connectUsertoNeighborhood(maria.id, antoninaNeighborhood.id);
 
+  // The variable will be used in the future when we add responses.
+  // eslint-disable-next-line
   const raduRequest = await prismaClient.request.create({
     data: {
       neighborhood_id: antoninaNeighborhood.id,
       user_id: radu.id,
       title: 'Plant trees',
-      content: 'I want to plant some trees in the rezidential area this Sunday. Who wants to help?'
+      content: 'I want to plant some trees in the rezidential area this Sunday. Who wants to help?',
     },
   });
 
+  // The variable will be used in the future when we add responses.
+  // eslint-disable-next-line
   const mariaRequest = await prismaClient.request.create({
     data: {
       neighborhood_id: antoninaNeighborhood.id,
       user_id: maria.id,
       title: 'Install washing machine',
-      content: 'Can anyone help me install a washing machine?'
+      content: 'Can anyone help me install a washing machine?',
     },
   });
   //---------------------------------------------------------
 
-  //Shwetank's Neighborhood
+  // Shwetank's Neighborhood
   const shwetankNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: shwetank.id,

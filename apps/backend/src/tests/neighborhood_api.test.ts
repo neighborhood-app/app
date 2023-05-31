@@ -38,7 +38,7 @@ beforeAll(async () => {
 
 describe('Tests for getting all neighborhoods: GET /neighborhoods', () => {
   test('GET /neighborhoods returns all neighborhoods', async () => {
-    //Seeds the database to have existing neighborhoods to check.
+    // Seeds the database to have existing neighborhoods to check.
     await seed();
     const neighborhoods = await testHelpers.neighborhoodsInDb();
     const numberOfNeighborhoods = neighborhoods.length;
@@ -623,19 +623,3 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 });
-
-
-
-/*
-describe('When neighborhoods already exist in the db', () => {
-
-});
-
-
-
-describe('Testing CREATE neighborhood at POST /api/neighborhood', () => {
-  
-});
-
-
-*/
