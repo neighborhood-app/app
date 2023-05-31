@@ -20,7 +20,7 @@ const connectUsertoNeighborhood = async (userId: number, neighborhoodId: number)
 };
 
 async function main() {
-  // clearing the existing db
+// clearing the existing db
   await testHelpers.removeAllData();
 
   await prismaClient.gender.createMany({
@@ -34,7 +34,7 @@ async function main() {
     ],
   });
 
-  // creating users with same password for seeding the db
+  //Create users
   const bob = await prismaClient.user.create({
     data: {
       user_name: 'bob1234',
@@ -56,67 +56,89 @@ async function main() {
     },
   });
 
-  // const radu = await prismaClient.user.create({
-  //   data: {
-  //     user_name: 'radu',
-  //     password_hash: passwordHashForSamplePassword,
-  //   },
-  // });
+  const radu = await prismaClient.user.create({
+    data: {
+      user_name: 'radu',
+      password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
+    },
+  });
 
-  // const mike = await prismaClient.user.create({
-  //   data: {
-  //     user_name: 'mike',
-  //     password_hash: passwordHashForSamplePassword,
-  //   },
-  // });
+  const mike = await prismaClient.user.create({
+    data: {
+      user_name: 'mike',
+      password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
+    },
+  });
 
-  // const maria = await prismaClient.user.create({
-  //   data: {
-  //     user_name: 'maria',
-  //     password_hash: passwordHashForSamplePassword,
-  //   },
-  // });
+  const maria = await prismaClient.user.create({
+    data: {
+      user_name: 'maria',
+      password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
+    },
+  });
+  //---------------------------------------------------------
 
-  // creating neighborhood for seeding db
-  const bobsNeighborhood = await prismaClient.neighborhood.create({
+  //Bob's Neighborhood
+  const bobNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: bob.id,
       name: "Bob's Neighborhood",
     },
   });
 
-  connectUsertoNeighborhood(bob.id, bobsNeighborhood.id);
+  await connectUsertoNeighborhood(bob.id, bobNeighborhood.id);
+  await connectUsertoNeighborhood(mike.id, bobNeighborhood.id);
 
-  const antoninasNeighborhood = await prismaClient.neighborhood.create({
+  const mikeRequest = await prismaClient.request.create({
+    data: {
+      neighborhood_id: bobNeighborhood.id,
+      user_id: mike.id,
+      title: 'Help moving furniture in apartment',
+      content: 'I need help moving my furniture this Saturday'
+    },
+  });
+  //---------------------------------------------------------
+
+  //Antonina's Neighborhood
+  const antoninaNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: antonina.id,
       name: "Antonina's Neighborhood",
     },
   });
 
-  connectUsertoNeighborhood(antonina.id, antoninasNeighborhood.id);
+  await connectUsertoNeighborhood(antonina.id, antoninaNeighborhood.id);
+  await connectUsertoNeighborhood(radu.id, antoninaNeighborhood.id);
+  await connectUsertoNeighborhood(maria.id, antoninaNeighborhood.id);
 
-  const shwetanksNeighborhood = await prismaClient.neighborhood.create({
+  const raduRequest = await prismaClient.request.create({
+    data: {
+      neighborhood_id: antoninaNeighborhood.id,
+      user_id: radu.id,
+      title: 'Plant trees',
+      content: 'I want to plant some trees in the rezidential area this Sunday. Who wants to help?'
+    },
+  });
+
+  const mariaRequest = await prismaClient.request.create({
+    data: {
+      neighborhood_id: antoninaNeighborhood.id,
+      user_id: maria.id,
+      title: 'Install washing machine',
+      content: 'Can anyone help me install a washing machine?'
+    },
+  });
+  //---------------------------------------------------------
+
+  //Shwetank's Neighborhood
+  const shwetankNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: shwetank.id,
       name: "Shwetank's Neighborhood",
     },
   });
 
-  connectUsertoNeighborhood(shwetank.id, shwetanksNeighborhood.id);
-
-  // await prisma.neighborhoodUsers.createMany({
-  //   data: [
-  //     {
-  //       neighborhood_id: bobNeighborhood.id,
-  //       user_id: radu.id,
-  //     },
-  //     {
-  //       neighborhood_id: bobNeighborhood.id,
-  //       user_id: maria.id,
-  //     },
-  //   ],
-  // });
+  await connectUsertoNeighborhood(shwetank.id, shwetankNeighborhood.id);
 }
 
 export default main;

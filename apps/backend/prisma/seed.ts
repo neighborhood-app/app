@@ -147,9 +147,6 @@ async function main() {
   });
 
   await connectUsertoNeighborhood(shwetank.id, shwetankNeighborhood.id);
-
-  
-
 }
 
 main()
