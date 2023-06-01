@@ -1,14 +1,17 @@
-import express, { Request, Response } from 'express';
+import express, { Response } from 'express';
 import { User } from '@prisma/client';
 import catchError from '../utils/catchError';
-import { LoginData } from '../types';
+import { LoginData, RequestWithAuthentication } from '../types';
 import loginServices from '../services/loginServices';
+import middleware from '../utils/middleware';
 
 const loginRouter = express.Router();
 
-loginRouter.post('/', catchError(async (request: Request, response: Response) => {
-  const loginData: LoginData = await loginServices.parseLoginData(request.body);
+loginRouter.post('/', middleware.userIdExtractor, catchError(async (request: RequestWithAuthentication, response: Response) => {
+  const userIsLoggedIn = typeof request.loggedUserId === 'number';
+  if (userIsLoggedIn) return response.status(409).json({ error: 'user already logged in' });
 
+  const loginData: LoginData = await loginServices.parseLoginData(request.body);
   const userInDb: User = await loginServices.findUserByUsername(loginData.username);
 
   const isPasswordCorrect = await loginServices

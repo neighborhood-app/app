@@ -75,7 +75,7 @@ const tokenExtractor = (req: RequestWithAuthentication, _res: Response, next: Ne
 
 /**
  * if request has valid token, extracts userId and adds it to the request
- * else if , request has invalid token ends the request with 401
+ * else if request has invalid token ends the request with 401
  * else if request has no token, does nothing
  */
 const userIdExtractor = catchError(async (
