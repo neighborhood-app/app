@@ -7,7 +7,6 @@ import seed from './seed';
 import testHelpers from './testHelpers';
 import { LoginData, NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers } from '../types';
 
-
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
 
@@ -141,14 +140,16 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
 });
 
 describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', () => {
-  beforeEach(async () => {
+  let initialNeighborhoods: Array<Neighborhood>;
+  let numInitialNeighborhoods: number;
+  beforeAll(async () => {
     await seed();
   });
-
+  beforeEach(async () => {
+    initialNeighborhoods = await testHelpers.neighborhoodsInDb();
+    numInitialNeighborhoods = initialNeighborhoods.length;
+  });
   test('when user not logged in, unable to create neighborhood', async () => {
-    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
-    const numInitialNeighborhoods = initialNeighborhoods.length;
-
     const postResponse: Response = await api.post('/api/neighborhoods');
 
     const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
@@ -159,9 +160,6 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
   });
 
   test('when user logged in, able to create neighborhood with valid data', async () => {
-    const initialNeighborhoods: Array<Neighborhood> = await testHelpers.neighborhoodsInDb();
-    const numInitialNeighborhoods: number = initialNeighborhoods.length;
-
     const bobUser: User | null = await prismaClient.user.findUnique({
       where: {
         user_name: BOBS_LOGIN_DATA.username,
@@ -202,9 +200,6 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
   });
 
   test('when user logged in, unable to create neighborhood with invalid neighborhood name', async () => {
-    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
-    const numInitialNeighborhoods = initialNeighborhoods.length;
-
     const loginResponse: Response = await api
       .post('/api/login')
       .send(BOBS_LOGIN_DATA);
@@ -228,9 +223,6 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
   });
 
   test('when user logged in, unable to create neighborhood with existing neighborhood name', async () => {
-    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
-    const numInitialNeighborhoods = initialNeighborhoods.length;
-
     const loginResponse: Response = await api
       .post('/api/login')
       .send(BOBS_LOGIN_DATA);
