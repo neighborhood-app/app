@@ -247,20 +247,24 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
 });
 
 describe('Tests for deleting a single neighborhood: DELETE /neighborhoods/:id', () => {
-  beforeEach(async () => {
-    await seed();
-  });
+  let initialNeighborhoods: Array<Neighborhood>;
+  let numInitialNeighborhoods: number;
+  let token: string;
 
-  test('DELETE /neighborhoods/:id removes a neighborhood', async () => {
-    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
-    const numInitialNeighborhoods = initialNeighborhoods.length;
-
+  beforeAll(async () => {
     const loginResponse: Response = await api
       .post('/api/login')
       .send(BOBS_LOGIN_DATA);
+    token = loginResponse.body.token;
+  });
 
-    const { token } = loginResponse.body;
+  beforeEach(async () => {
+    await seed();
+    initialNeighborhoods = await testHelpers.neighborhoodsInDb();
+    numInitialNeighborhoods = initialNeighborhoods.length;
+  });
 
+  test('DELETE /neighborhoods/:id removes a neighborhood', async () => {
     // 1 is valid neighborhood id for BOBS_LOGIN_DATA
     const deleteResponse: Response = await api.delete('/api/neighborhoods/1')
       .set('Authorization', `Bearer ${token}`);
@@ -273,15 +277,6 @@ describe('Tests for deleting a single neighborhood: DELETE /neighborhoods/:id', 
   });
 
   test('DELETE /neighborhoods/:id with invalid id returns appropriate error', async () => {
-    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
-    const numInitialNeighborhoods = initialNeighborhoods.length;
-
-    const loginResponse: Response = await api
-      .post('/api/login')
-      .send(BOBS_LOGIN_DATA);
-
-    const { token } = loginResponse.body;
-
     // 1234 is invalid neighborhood id for BOBS_LOGIN_DATA
     const deleteResponse: Response = await api.delete('/api/neighborhoods/1234')
       .set('Authorization', `Bearer ${token}`);
@@ -294,14 +289,6 @@ describe('Tests for deleting a single neighborhood: DELETE /neighborhoods/:id', 
   });
 
   test('User cannot delete neighborhood if user is not admin', async () => {
-    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
-    const numInitialNeighborhoods = initialNeighborhoods.length;
-
-    const loginResponse: Response = await api
-      .post('/api/login')
-      .send(BOBS_LOGIN_DATA);
-    const { token } = loginResponse.body;
-
     // 2 is invalid neighborhood id for BOBS_LOGIN_DATA with bob as admin
     const deleteResponse: Response = await api.delete('/api/neighborhoods/2').set('Authorization', `Bearer ${token}`);
 
@@ -313,9 +300,6 @@ describe('Tests for deleting a single neighborhood: DELETE /neighborhoods/:id', 
   });
 
   test('User cannot delete neighborhood if user is not logged in', async () => {
-    const initialNeighborhoods = await testHelpers.neighborhoodsInDb();
-    const numInitialNeighborhoods = initialNeighborhoods.length;
-
     const deleteResponse: Response = await api.delete('/api/neighborhoods/1');
 
     const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
@@ -329,14 +313,16 @@ describe('Tests for deleting a single neighborhood: DELETE /neighborhoods/:id', 
 describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () => {
   let token: string;
 
-  beforeEach(async () => {
-    await seed();
-
+  beforeAll(async () => {
     const loginResponse: Response = await api
       .post('/api/login')
       .send(BOBS_LOGIN_DATA);
 
     token = loginResponse.body.token;
+  });
+
+  beforeEach(async () => {
+    await seed();
   });
 
   test('Update all of a neighborhood\'s fields by id', async () => {
@@ -533,6 +519,13 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
 
 describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', () => {
   // We are testing to join the user Bob to Antonina's Neighborhood
+  let token: string;
+
+  beforeAll(async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    token = loginResponse.body.token;
+  });
+
   beforeEach(async () => {
     await seed();
   });
@@ -541,9 +534,6 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
     // we are trying to join Bob to Antonina's neighborhood
     const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
     const numInitialUsers = initialUsers?.length as number; // We are passing a valid n_hood id
-
-    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-    const { token } = loginResponse.body;
 
     await api.post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join`)
       .set('Authorization', `Bearer ${token}`)
@@ -572,9 +562,6 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
   test('when user logged in and invalid url, error occurs', async () => {
     const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
 
-    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-    const { token } = loginResponse.body;
-
     await api.post('/api/neighborhoods/xyz/join')
       .set('Authorization', `Bearer ${token}`)
       .expect(400)
@@ -587,9 +574,6 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
 
   test('when user logged in and invalid neighborhood, error occurs', async () => {
     const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
-
-    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-    const { token } = loginResponse.body;
 
     const INVALID_NHOOD_ID = 100000;
     await api.post(`/api/neighborhoods/${INVALID_NHOOD_ID}/join`)
@@ -605,9 +589,6 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
   test('when user logged in and user already added to the neighborhood, error occurs', async () => {
     // we are trying to add Bob to Bob's neighborhood
     const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(BOBS_NHOOD_ID);
-
-    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-    const { token } = loginResponse.body;
 
     await api.post(`/api/neighborhoods/${BOBS_NHOOD_ID}/join`)
       .set('Authorization', `Bearer ${token}`)
