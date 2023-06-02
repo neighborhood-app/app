@@ -8,6 +8,10 @@ import middleware from '../utils/middleware';
 const loginRouter = express.Router();
 
 loginRouter.post('/', middleware.userIdExtractor, catchError(async (request: RequestWithAuthentication, response: Response) => {
+  // console.log(request.headers);
+  // console.log(request.loggedUserId);
+  console.log(request.body);
+
   const userIsLoggedIn = typeof request.loggedUserId === 'number';
   if (userIsLoggedIn) return response.status(409).json({ error: 'user already logged in' });
 
