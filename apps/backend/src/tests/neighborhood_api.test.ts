@@ -38,9 +38,12 @@ beforeAll(async () => {
 });
 
 describe('Tests for getting all neighborhoods: GET /neighborhoods', () => {
+  beforeAll(async () => {
+    await seed();
+  });
+
   test('GET /neighborhoods returns all neighborhoods', async () => {
     // Seeds the database to have existing neighborhoods to check.
-    await seed();
     const neighborhoods = await testHelpers.neighborhoodsInDb();
     const numberOfNeighborhoods = neighborhoods.length;
     const response: Response = await api.get('/api/neighborhoods');
