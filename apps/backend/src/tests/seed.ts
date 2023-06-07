@@ -8,7 +8,7 @@ const SAMPLE_PASSWORD = 'secret';
  * @param userId
  * @param neighborhoodId
  */
-const connectUsertoNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
+const connectUserToNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
   await prismaClient.neighborhood.update({
     where: { id: neighborhoodId },
     data: {
@@ -85,7 +85,7 @@ async function main() {
     },
   });
 
-  connectUsertoNeighborhood(bob.id, bobsNeighborhood.id);
+  await connectUserToNeighborhood(bob.id, bobsNeighborhood.id);
 
   const antoninasNeighborhood = await prismaClient.neighborhood.create({
     data: {
@@ -94,7 +94,7 @@ async function main() {
     },
   });
 
-  connectUsertoNeighborhood(antonina.id, antoninasNeighborhood.id);
+  await connectUserToNeighborhood(antonina.id, antoninasNeighborhood.id);
 
   const shwetanksNeighborhood = await prismaClient.neighborhood.create({
     data: {
@@ -103,7 +103,7 @@ async function main() {
     },
   });
 
-  connectUsertoNeighborhood(shwetank.id, shwetanksNeighborhood.id);
+  await connectUserToNeighborhood(shwetank.id, shwetanksNeighborhood.id);
 
   // await prisma.neighborhoodUsers.createMany({
   //   data: [

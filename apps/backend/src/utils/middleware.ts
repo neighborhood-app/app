@@ -117,7 +117,7 @@ const isUserLoggedIn = catchError(async (
   next: NextFunction,
 ) => {
   try {
-    await extractUserId(req, res, next);
+    return await extractUserId(req, res, next);
   } catch (error: unknown) {
     if (error instanceof TokenExpiredError) return next();
 
