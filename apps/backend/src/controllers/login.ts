@@ -7,11 +7,7 @@ import middleware from '../utils/middleware';
 
 const loginRouter = express.Router();
 
-loginRouter.post('/', middleware.userIdExtractor, catchError(async (request: RequestWithAuthentication, response: Response) => {
-  // console.log(request.headers);
-  // console.log(request.loggedUserId);
-  console.log(request.body);
-
+loginRouter.post('/', middleware.isUserLoggedIn, catchError(async (request: RequestWithAuthentication, response: Response) => {
   const userIsLoggedIn = typeof request.loggedUserId === 'number';
   if (userIsLoggedIn) return response.status(409).json({ error: 'user already logged in' });
 
@@ -21,17 +17,17 @@ loginRouter.post('/', middleware.userIdExtractor, catchError(async (request: Req
   const isPasswordCorrect = await loginServices
     .isPasswordCorrect(loginData.password, userInDb.password_hash);
 
-  if (isPasswordCorrect) {
-    const token: string = await loginServices.generateToken(userInDb.user_name, userInDb.id);
-    const responseData = {
-      username: userInDb.user_name,
-      token,
-    };
-
-    response.status(200).json(responseData);
-  } else {
-    response.status(401).json({ error: 'invalid username or password' });
+  if (!isPasswordCorrect) {
+    return response.status(401).json({ error: 'invalid username or password' });
   }
+
+  const token: string = await loginServices.generateToken(userInDb.user_name, userInDb.id);
+  const responseData = {
+    username: userInDb.user_name,
+    token,
+  };
+
+  return response.status(200).json(responseData);
 }));
 
 export default loginRouter;

@@ -8,29 +8,23 @@ const supertest = require('supertest'); // eslint-disable-line
 
 const api = supertest(app);
 
-const USERNAME = 'johnsmith';
-const PASSWORD = 'secret';
+const loginData: LoginData = {
+  username: 'johnsmith',
+  password: 'secret',
+};
 
 beforeAll(async () => {
   await testHelpers.removeAllData();
 
-  const newUser: CreateUserData = {
-    username: 'johnsmith',
-    password: 'secret',
-  };
+  const newUser: CreateUserData = loginData;
 
   await api
     .post('/api/users')
     .send(newUser);
 });
 
-describe('General login tests', () => {
+describe('Tests for logging in the app: POST /login', () => {
   test('Able to login with valid username and password', async () => {
-    const loginData: LoginData = {
-      username: USERNAME,
-      password: PASSWORD,
-    };
-
     const response = await api
       .post('/api/login')
       .send(loginData)
@@ -39,13 +33,13 @@ describe('General login tests', () => {
 
     const responseBody = response._body;
 
-    expect(responseBody.username).toBe(USERNAME);
+    expect(responseBody.username).toBe(loginData.username);
     expect(responseBody.token).toBeDefined();
   });
 
   test('Unable able to login with invalid username or invalid password', async () => {
     const loginData1: LoginData = {
-      username: USERNAME,
+      username: loginData.username,
       password: 'WrongPassword',
     };
 
@@ -59,7 +53,7 @@ describe('General login tests', () => {
 
     const loginData2: LoginData = {
       username: 'WrongUsername',
-      password: PASSWORD,
+      password: loginData.password,
     };
 
     const response2 = await api
@@ -69,5 +63,26 @@ describe('General login tests', () => {
       .expect('Content-Type', /application\/json/);
 
     expect(response2._body.error).toBe('invalid username or password');
+  });
+
+  test('Unable to login if user is already logged in', async () => {
+    const loginResponse = await api
+      .post('/api/login')
+      .send(loginData);
+
+    const { token } = loginResponse.body;
+
+    const response = await api
+      .post('/api/login')
+      .set('Authorization', `Bearer ${token}`)
+      .send(loginData)
+      .expect(409)
+      .expect('Content-Type', /application\/json/);
+
+    console.log(response.request);
+
+    // This should be handled differently, e.g. using `loggedUserId`
+    expect(response.request._data.username).toBe(loginData.username);
+    expect(response.body.error).toBe('user already logged in');
   });
 });

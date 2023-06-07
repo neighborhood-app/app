@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Prisma } from '@prisma/client';
-import jsonwebtoken, { JwtPayload } from 'jsonwebtoken';
+import jsonwebtoken, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 import logger from './logger';
 import config from './config';
 import { RequestWithAuthentication } from '../types';
@@ -29,6 +29,8 @@ const unknownEndpoint = (_request: Request, response: Response): void => {
 
 const errorHandler = (error: Error, _req: Request, response: Response, _next: NextFunction)
 : void => {
+  logger.error(error.message);
+
   if (error.name === 'UserDataError') {
     response.status(400).send({ error: error.message });
   } else if (error.name === 'InvalidUserameOrPasswordError') {
@@ -52,8 +54,7 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
   } else if (error instanceof Prisma.PrismaClientValidationError) {
     response.status(400).send({ error: error.message });
   } else {
-    logger.error(error.message);
-    response.status(500).send({ error: 'Oops! An error happened' });
+    response.status(response.statusCode).send({ error: error.message });
   }
 };
 
@@ -84,10 +85,12 @@ const userIdExtractor = catchError(async (
   next: NextFunction,
 ) => {
   const { token } = req;
+  console.log({ token });
 
   if (token) {
     const secret: string = config.SECRET as string;
     const decodedToken = jsonwebtoken.verify(token, secret) as JwtPayload;
+    console.log({ decodedToken });
     if (!decodedToken.id) {
       res.status(401).json({ error: 'Invalid token' });
     } else {
@@ -96,6 +99,26 @@ const userIdExtractor = catchError(async (
   }
 
   next();
+});
+
+const isUserLoggedIn = catchError(async (
+  req: RequestWithAuthentication,
+  res: Response,
+  next: NextFunction,
+): Promise<boolean | void> => {
+  try {
+    userIdExtractor(req, res, next);
+    console.log('got past userIdExtractor');
+    console.log(req.loggedUserId);
+
+    return true;
+  } catch (error: unknown) {
+    console.log('catch block');
+    console.log(error);
+
+    if (error instanceof TokenExpiredError) return false;
+    throw error;
+  }
 });
 
 /**
@@ -125,4 +148,5 @@ export default {
   tokenExtractor,
   userIdExtractor,
   userIdExtractorAndLoginValidator,
+  isUserLoggedIn,
 };
