@@ -8,6 +8,13 @@ import {
   createBrowserRouter, RouterProvider
 } from 'react-router-dom';
 import MainLayout from './components/MainLayout/MainLayout';
+import Neighborhoods from './routes/neighborhoods/neighborhoods';
+import neighborhoodsService from './services/neighborhoods';
+
+async function neighborhoodsLoader() {
+  const neighborhoods = await neighborhoodsService.getAllNeighborhoods();
+  return neighborhoods;
+}
 
 const router = createBrowserRouter([
   {
@@ -25,6 +32,11 @@ const router = createBrowserRouter([
         {
           path: "/test",
           element: <TestRoute />
+        },
+        {
+          path: "/neighborhoods",
+          loader: neighborhoodsLoader,
+          element: <Neighborhoods />
         }
       ]
     }

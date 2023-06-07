@@ -13,7 +13,7 @@ export async function action({ request }: {request: Request}) {
     window.localStorage.setItem(
       'loggedNeighborhoodUser', JSON.stringify(user)
     );
-    return redirect('/');
+    return redirect('/neighborhoods');
   }
 }
 
