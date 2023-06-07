@@ -54,7 +54,7 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
   } else if (error instanceof Prisma.PrismaClientValidationError) {
     response.status(400).send({ error: error.message });
   } else {
-    response.status(response.statusCode).send({ error: error.message });
+    response.status(400).send({ error: error.message });
   }
 };
 
@@ -79,18 +79,16 @@ const tokenExtractor = (req: RequestWithAuthentication, _res: Response, next: Ne
  * else if request has invalid token ends the request with 401
  * else if request has no token, does nothing
  */
-const userIdExtractor = catchError(async (
+const extractUserId = async (
   req: RequestWithAuthentication,
   res: Response,
   next: NextFunction,
 ) => {
   const { token } = req;
-  console.log({ token });
 
   if (token) {
     const secret: string = config.SECRET as string;
     const decodedToken = jsonwebtoken.verify(token, secret) as JwtPayload;
-    console.log({ decodedToken });
     if (!decodedToken.id) {
       res.status(401).json({ error: 'Invalid token' });
     } else {
@@ -99,24 +97,30 @@ const userIdExtractor = catchError(async (
   }
 
   next();
-});
+};
 
+/**
+ * Same functionality as above but wrapped in `catchError` module
+ */
+const userIdExtractor = catchError(extractUserId);
+
+/**
+ * Middleware used to disallow logging in while a user is logged in.
+ * if request has valid token, extracts userId and adds it to the request
+ * else if the token has expired, moves on to the next middleware
+ * else if request has no token, moves on to the next middleware
+ * else if request has invalid token, ends the request with 401
+ */
 const isUserLoggedIn = catchError(async (
   req: RequestWithAuthentication,
   res: Response,
   next: NextFunction,
-): Promise<boolean | void> => {
+) => {
   try {
-    userIdExtractor(req, res, next);
-    console.log('got past userIdExtractor');
-    console.log(req.loggedUserId);
-
-    return true;
+    await extractUserId(req, res, next);
   } catch (error: unknown) {
-    console.log('catch block');
-    console.log(error);
+    if (error instanceof TokenExpiredError) return next();
 
-    if (error instanceof TokenExpiredError) return false;
     throw error;
   }
 });

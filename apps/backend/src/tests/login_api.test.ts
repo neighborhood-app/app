@@ -79,9 +79,7 @@ describe('Tests for logging in the app: POST /login', () => {
       .expect(409)
       .expect('Content-Type', /application\/json/);
 
-    console.log(response.request);
-
-    // This should be handled differently, e.g. using `loggedUserId`
+    // This would better be handled differently, e.g. using `loggedUserId`
     expect(response.request._data.username).toBe(loginData.username);
     expect(response.body.error).toBe('user already logged in');
   });

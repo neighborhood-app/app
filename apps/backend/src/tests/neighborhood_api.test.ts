@@ -586,6 +586,7 @@ describe('Testing user JOIN neighborhood at POST /api/neighborhood/:id/join', ()
 
   test('when user logged in and invalid neighborhood, error occurs', async () => {
     const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    console.log(initialUsers);
 
     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
     const { token } = loginResponse.body;
@@ -597,6 +598,7 @@ describe('Testing user JOIN neighborhood at POST /api/neighborhood/:id/join', ()
       .expect('Content-Type', /application\/json/);
 
     const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    console.log(finalUsers);
 
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
