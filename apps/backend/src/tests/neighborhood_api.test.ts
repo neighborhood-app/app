@@ -68,14 +68,15 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
     const { token } = loginResponse.body;
 
-    const neighborhood: NeighborhoodDetailsForMembers = await prismaClient.neighborhood.findFirst({
-      where: { name: "Bob's Neighborhood" },
-      include: {
-        admin: true,
-        users: true,
-        requests: true,
-      },
-    }) as NeighborhoodDetailsForMembers;
+    const neighborhood: NeighborhoodDetailsForMembers | null = await prismaClient
+      .neighborhood.findFirst({
+        where: { name: "Bob's Neighborhood" },
+        include: {
+          admin: true,
+          users: true,
+          requests: true,
+        },
+      });
     const id = neighborhood?.id;
     const response: Response = await api.get(`/api/neighborhoods/${id}`).set('Authorization', `Bearer ${token}`);
     expect(response.status).toEqual(200);
@@ -95,7 +96,7 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
   });
 
   test('GET /neighborhoods/:id only returns the id, name, description and location of neighborhood if user is not logged in', async () => {
-    const neighborhood: NeighborhoodDetailsForNonMembers = await prismaClient
+    const neighborhood: NeighborhoodDetailsForNonMembers | null = await prismaClient
       .neighborhood.findFirst({
         where: { name: "Bob's Neighborhood" },
         select: {
@@ -104,7 +105,7 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
           description: true,
           location: true,
         },
-      }) as NeighborhoodDetailsForNonMembers;
+      });
     const id = neighborhood?.id;
     const response: Response = await api.get(`/api/neighborhoods/${id}`);
 
@@ -120,7 +121,7 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
     const loginResponse = await loginUser(ANTONINA_LOGIN_DATA);
     const { token } = loginResponse.body;
 
-    const neighborhood: NeighborhoodDetailsForNonMembers = await prismaClient
+    const neighborhood: NeighborhoodDetailsForNonMembers | null = await prismaClient
       .neighborhood.findFirst({
         where: { name: "Bob's Neighborhood" },
         select: {
@@ -129,7 +130,7 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
           description: true,
           location: true,
         },
-      }) as NeighborhoodDetailsForNonMembers;
+      });
     const id = neighborhood?.id;
     const response: Response = await api.get(`/api/neighborhoods/${id}`).set('Authorization', `Bearer ${token}`);
 
@@ -562,7 +563,7 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 
-  test('when user logged in and invalid url, error occurs', async () => {
+  test('when user logged in and invalid neighborhood ID, error occurs', async () => {
     const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
 
     await api.post('/api/neighborhoods/xyz/join')
@@ -575,7 +576,7 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 
-  test('when user logged in and invalid neighborhood, error occurs', async () => {
+  test('when user logged in and non-existend neighborhood ID, error occurs', async () => {
     const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
 
     const INVALID_NHOOD_ID = 100000;
