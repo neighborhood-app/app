@@ -578,6 +578,7 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
 
   test('when user logged in and non-existend neighborhood ID, error occurs', async () => {
     const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    console.log(initialUsers);
 
     const INVALID_NHOOD_ID = 100000;
     await api.post(`/api/neighborhoods/${INVALID_NHOOD_ID}/join`)
@@ -586,6 +587,7 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
       .expect('Content-Type', /application\/json/);
 
     const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    console.log(finalUsers);
 
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
