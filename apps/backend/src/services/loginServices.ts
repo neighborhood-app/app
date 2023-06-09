@@ -20,8 +20,8 @@ const parseLoginData = async (body: unknown): Promise<LoginData> => {
   }
 
   if ('username' in body && 'password' in body
-      && typeof body.username === 'string'
-      && typeof body.password === 'string') {
+    && typeof body.username === 'string'
+    && typeof body.password === 'string') {
     const loginData: LoginData = {
       username: body.username,
       password: body.password,
@@ -63,7 +63,7 @@ const findUserByUsername = async (username: string): Promise<User> => {
  * @returns true if password matches
  */
 const isPasswordCorrect = async (password: string, password_hash: string)
-: Promise<Boolean> => bcrypt.compare(password, password_hash);
+  : Promise<Boolean> => bcrypt.compare(password, password_hash);
 
 /**
  * generates a json web token valid for 1 hour corresponding to userName and id
@@ -83,7 +83,8 @@ const generateToken = async (username: string, userId: number): Promise<string> 
   const token = jsonwebtoken.sign(
     userDataForGeneratingToken,
     secret,
-    { expiresIn: '1h' }, // token expires in 1 hour
+    // { expiresIn: '1h' }, // token expires in 1 hour
+    { expiresIn: '1000h' }, // token expires in 1000 hours while dev
   );
 
   return token;

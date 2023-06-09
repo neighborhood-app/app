@@ -66,8 +66,23 @@ const neighborhoodDetailsForMembers = Prisma.validator<Prisma.NeighborhoodArgs>(
   },
 });
 
+export type CreateRequestData = {
+  neighborhood_id: number,
+  title: string,
+  content: string
+};
+
 /**
  * format of neighborhood data, with all related fields, for members
  */
 export type NeighborhoodDetailsForMembers = Prisma
   .NeighborhoodGetPayload<typeof neighborhoodDetailsForMembers>;
+
+const neighborhoodWithUsers = Prisma.validator<Prisma.NeighborhoodArgs>()({
+  include: {
+    users: true,
+  },
+});
+
+export type NeighborhoodWithUsers = Prisma
+  .NeighborhoodGetPayload<typeof neighborhoodWithUsers>;

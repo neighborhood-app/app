@@ -28,13 +28,13 @@ const unknownEndpoint = (_request: Request, response: Response): void => {
 };
 
 const errorHandler = (error: Error, _req: Request, response: Response, _next: NextFunction)
-: void => {
+  : void => {
   if (error.name === 'UserDataError') {
     response.status(400).send({ error: error.message });
   } else if (error.name === 'InvalidUserameOrPasswordError') {
     response.status(401).send({ error: error.message });
-  // } else if (error.name === 'NeighborhoodDataError') {
-  //   response.status(400).send({ error: error.message });
+    // } else if (error.name === 'NeighborhoodDataError') {
+    //   response.status(400).send({ error: error.message });
   } else if (error.name === 'InvalidInputError') {
     response.status(400).send({ error: error.message });
   } else if (error.name === 'ResourceDoesNotExistError') {
@@ -65,7 +65,7 @@ and the token that was saved by the client on user login
 'token' property on the request object.
  */
 const tokenExtractor = (req: RequestWithAuthentication, _res: Response, next: NextFunction)
-: void => {
+  : void => {
   const authorization = req.get('authorization');
   if (authorization && authorization.startsWith('Bearer ')) {
     req.token = authorization.replace('Bearer ', '');
@@ -99,10 +99,10 @@ const userIdExtractor = catchError(async (
 });
 
 /**
- * Ensures that unauthenticated requests are ended immediately
- * if request has valid token, extracts userId and adds it to the request
- * else if , request has invalid token, ends the request with 401
- * else if request has no token, ends the request with 401
+ * - Ensures that unauthenticated requests are ended immediately
+ * - if request has valid token, extracts userId and adds it to the request
+ * - else if , request has invalid token, ends the request with 401
+ * - else if request has no token, ends the request with 401
  */
 const userIdExtractorAndLoginValidator = catchError(async (
   req: RequestWithAuthentication,

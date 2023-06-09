@@ -69,7 +69,7 @@ const seedUser = async (createUserData: CreateUserData) => {
 };
 
 const getUsersAssociatedWithNeighborhood = async (neighborhoodId: number):
-Promise<User[] | null> => {
+  Promise<User[] | null> => {
   const neighborhood = await prismaClient
     .neighborhood.findFirst({
       where: {
@@ -86,6 +86,14 @@ Promise<User[] | null> => {
     const { users } = neighborhood;
     return Promise.resolve(users);
   }
+};
+
+/**
+ * @returns number of requests present in the db
+ */
+const getNumberOfRequests = async (): Promise<number> => {
+  const requests = await prismaClient.request.findMany({});
+  return requests.length;
 };
 
 const removeAllData = async () => {
@@ -109,4 +117,5 @@ export default {
   getPasswordHash,
   removeAllData,
   getUsersAssociatedWithNeighborhood,
+  getNumberOfRequests,
 };

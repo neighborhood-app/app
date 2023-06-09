@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output = "../../../node_modules/.prisma/client"
+  output   = "../../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -35,8 +35,8 @@ model Request {
   user_id         Int
   title           String       @db.VarChar(50)
   content         String       @db.VarChar(1000)
-  status          Int?
-  time_created    DateTime?    @db.Timestamptz(6)
+  status          Status       @default(OPEN)
+  time_created    DateTime     @default(now()) @db.Timestamptz(6)
   neighborhood    Neighborhood @relation(fields: [neighborhood_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user            User         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   responses       Response[]
@@ -73,4 +73,9 @@ model User {
   gender        Gender?        @relation(fields: [gender_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_gender_fkey")
 
   @@map("users")
+}
+
+enum Status {
+  OPEN
+  CLOSED
 }
