@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -9,6 +10,7 @@ import {
 } from 'react-router-dom';
 import MainLayout from './components/MainLayout/MainLayout';
 import Neighborhoods, {loader as neighborhoodsLoader} from './routes/neighborhoods/neighborhoods';
+import Neighborhood from './routes/neighborhood/neighborhood';
 
 const router = createBrowserRouter([
   {
@@ -33,7 +35,8 @@ const router = createBrowserRouter([
             element: <Neighborhoods />
           },
           {
-            
+            path: "/neighborhoods/:id",
+            element: <Neighborhood />
           }
         ]
       }
