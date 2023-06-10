@@ -1,4 +1,4 @@
-import { Neighborhood } from '@prisma/client';
+import { Neighborhood, Request } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
   NeighborhoodWithRelatedFields, CreateNeighborhoodData,
@@ -51,7 +51,7 @@ const getAllNeighborhoods = async (): Promise<Array<Neighborhood>> => {
  * @returns Promise resolving to true if user if part of neighborhood, false otherwise
  */
 const isUserMemberOfNeighborhood = async (loggedUserID: number, neighborhoodID: number)
-:Promise<boolean> => {
+  : Promise<boolean> => {
   const neighborhood: NeighborhoodWithRelatedFields | null = await prismaClient
     .neighborhood.findUnique({
       where: {
@@ -81,7 +81,7 @@ const isUserMemberOfNeighborhood = async (loggedUserID: number, neighborhoodID: 
  * @returns Promise resolving to neighborhood details without admin_id
  */
 const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number)
-: Promise<NeighborhoodDetailsForNonMembers> => {
+  : Promise<NeighborhoodDetailsForNonMembers> => {
   const FIELDS_TO_SELECT_FOR_NON_MEMBERS = {
     id: true,
     name: true,
@@ -107,7 +107,7 @@ const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number)
  * @returns neighborhood details with admin, users and requests
  */
 const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
-: Promise<NeighborhoodDetailsForMembers> => {
+  : Promise<NeighborhoodDetailsForMembers> => {
   const FIELDS_TO_INCLUDE_FOR_MEMBERS = {
     admin: true,
     users: true,
@@ -133,7 +133,7 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
  * @returns true if user is admin, false otherwise
  */
 const isUserAdminOfNeighborhood = async (userID: number, neighborhoodID: number):
-Promise<boolean> => {
+  Promise<boolean> => {
   const neighborhood: Neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
     where: {
       id: neighborhoodID,
@@ -164,7 +164,7 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
   }
 
   if ('admin_id' in object && typeof object.admin_id === 'number'
-      && 'name' in object && typeof object.name === 'string') {
+    && 'name' in object && typeof object.name === 'string') {
     const neighborhoodData: CreateNeighborhoodData = {
       admin_id: object.admin_id,
       name: object.name,
@@ -230,6 +230,27 @@ const createNeighborhood = async (data: CreateNeighborhoodData): Promise<Neighbo
   }
 };
 
+const getRequestsAssociatedWithNeighborhood = async (nhoodId: number): Promise<Request[]> => {
+  const neighborhood: NeighborhoodWithRelatedFields | null = await prismaClient
+    .neighborhood.findUnique({
+      where: {
+        id: nhoodId,
+      },
+      include: {
+        requests: true,
+        users: true,
+      },
+    });
+
+  if (!neighborhood) {
+    const error = new Error('Neighborhood does not exist');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+  const { requests } = neighborhood;
+  return requests;
+};
+
 export default {
   getAllNeighborhoods,
   isUserMemberOfNeighborhood,
@@ -240,4 +261,5 @@ export default {
   parseCreateNeighborhoodData,
   createNeighborhood,
   connectUserToNeighborhood,
+  getRequestsAssociatedWithNeighborhood,
 };

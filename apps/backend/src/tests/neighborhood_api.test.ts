@@ -23,6 +23,7 @@ const ANTONINA_LOGIN_DATA: LoginData = {
 };
 
 const BOBS_NHOOD_ID = 1;
+const BOBS_USER_ID = 1;
 const ANTONINAS_NHOOD_ID = 2;
 
 const loginUser = async (loginData: LoginData) => {
@@ -602,5 +603,57 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
     const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(BOBS_NHOOD_ID);
 
     expect(finalUsers?.length).toBe(initialUsers?.length);
+  });
+});
+
+describe('Tests for GET /neighborhoods/:id/requests', () => {
+  beforeAll(async () => {
+    await seed();
+  });
+
+  test('unable to fetch data when user no token present', async () => {
+    const response: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests`);
+
+    expect(response.status).toEqual(401);
+    expect(response.body.error).toBe('user not signed in');
+  });
+
+  test('unable to fetch data when token invalid', async () => {
+    const response: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests`)
+      .set('Authorization', 'invalid-token');
+
+    expect(response.status).toEqual(401);
+    expect(response.body.error).toBe('user not signed in');
+  });
+
+  test('unable to fetch data when user not a member of neighborhood', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const response: Response = await api
+      .get(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/requests`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toEqual('user is not a member of the neighborhood');
+  });
+
+  test('able to fetch data with valid data', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const requestsWithNeighborhoodInDb = await testHelpers
+      .getRequestsAssociatedWithNeighborhood(BOBS_NHOOD_ID);
+
+    const response: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response.body.length).toBe(requestsWithNeighborhoodInDb.length);
+    expect(response.body[0].neighborhood_id).toBe(BOBS_NHOOD_ID);
   });
 });
