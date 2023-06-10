@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import { Neighborhood, User } from '@prisma/client';
-import { UserWithoutId, CreateUserData } from '../types';
+import { Neighborhood, User, Request } from '@prisma/client';
+import { UserWithoutId, CreateUserData, UserWithRequests } from '../types';
 import prismaClient from '../../prismaClient';
 
 /**
@@ -96,6 +96,34 @@ const getNumberOfRequests = async (): Promise<number> => {
   return requests.length;
 };
 
+const getRequestsAssociatedWithUser = async (userID: number): Promise<Request[]> => {
+  const user: UserWithRequests = await prismaClient.user.findUnique({
+    where: {
+      id: userID,
+    },
+    include: {
+      requests: true,
+    },
+  }) as UserWithRequests;
+
+  return user.requests;
+};
+
+const getRequestsAssociatedWithNeighborhood = async (neighborhoodId: number) => {
+  const neighborhood = await prismaClient.neighborhood.findUnique({
+    where: {
+      id: neighborhoodId,
+    },
+    include: {
+      requests: true,
+    },
+  });
+
+  const requests: Request[] = neighborhood?.requests as Request[];
+
+  return requests;
+};
+
 const removeAllData = async () => {
   await prismaClient.response.deleteMany({});
   await prismaClient.request.deleteMany({});
@@ -118,4 +146,6 @@ export default {
   removeAllData,
   getUsersAssociatedWithNeighborhood,
   getNumberOfRequests,
+  getRequestsAssociatedWithUser,
+  getRequestsAssociatedWithNeighborhood,
 };

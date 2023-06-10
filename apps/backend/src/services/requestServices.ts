@@ -29,8 +29,6 @@ const validateCreateRequestData = async (requestData: CreateRequestData, userId:
 
   const neighborhoodsUsersIds = neighborhood.users.map(u => u.id);
 
-  console.log(neighborhoodsUsersIds, userId);
-
   if (!neighborhoodsUsersIds.includes(userId)) {
     const error = new Error('User is not a member of neighborhood');
     error.name = 'InvalidInputError';

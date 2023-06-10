@@ -86,3 +86,13 @@ const neighborhoodWithUsers = Prisma.validator<Prisma.NeighborhoodArgs>()({
 
 export type NeighborhoodWithUsers = Prisma
   .NeighborhoodGetPayload<typeof neighborhoodWithUsers>;
+
+//
+const userWithRequests = Prisma.validator<Prisma.UserArgs>()({
+  include: {
+    requests: true,
+  },
+});
+
+export type UserWithRequests = Prisma
+  .UserGetPayload<typeof userWithRequests>;
