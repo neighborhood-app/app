@@ -42,6 +42,7 @@ async function main() {
     ],
   });
 
+  // Create users
   const bob = await prismaClient.user.create({
     data: {
       user_name: 'bob1234',
@@ -63,27 +64,29 @@ async function main() {
     },
   });
 
-  // const radu = await prisma.user.create({
-  //   data: {
-  //     user_name: 'radu',
-  //     password_hash: 'example',
-  //   },
-  // });
+  const radu = await prismaClient.user.create({
+    data: {
+      user_name: 'radu',
+      password_hash: await getPasswordHash(SAMPLE_PASSWORD),
+    },
+  });
 
-  // const mike = await prisma.user.create({
-  //   data: {
-  //     user_name: 'mike',
-  //     password_hash: 'example',
-  //   },
-  // });
+  const mike = await prismaClient.user.create({
+    data: {
+      user_name: 'mike',
+      password_hash: await getPasswordHash(SAMPLE_PASSWORD),
+    },
+  });
 
-  // const maria = await prisma.user.create({
-  //   data: {
-  //     user_name: 'maria',
-  //     password_hash: 'example',
-  //   },
-  // });
+  const maria = await prismaClient.user.create({
+    data: {
+      user_name: 'maria',
+      password_hash: await getPasswordHash(SAMPLE_PASSWORD),
+    },
+  });
+  //---------------------------------------------------------
 
+  // Bob's Neighborhood
   const bobNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: bob.id,
@@ -92,7 +95,21 @@ async function main() {
   });
 
   await connectUsertoNeighborhood(bob.id, bobNeighborhood.id);
+  await connectUsertoNeighborhood(mike.id, bobNeighborhood.id);
 
+  // The variable will be used in the future when we add responses.
+  // eslint-disable-next-line
+  const mikeRequest = await prismaClient.request.create({
+    data: {
+      neighborhood_id: bobNeighborhood.id,
+      user_id: mike.id,
+      title: 'Help moving furniture in apartment',
+      content: 'I need help moving my furniture this Saturday',
+    },
+  });
+  //---------------------------------------------------------
+
+  // Antonina's Neighborhood
   const antoninaNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: antonina.id,
@@ -101,7 +118,33 @@ async function main() {
   });
 
   await connectUsertoNeighborhood(antonina.id, antoninaNeighborhood.id);
+  await connectUsertoNeighborhood(radu.id, antoninaNeighborhood.id);
+  await connectUsertoNeighborhood(maria.id, antoninaNeighborhood.id);
 
+  // The variable will be used in the future when we add responses.
+  // eslint-disable-next-line
+  const raduRequest = await prismaClient.request.create({
+    data: {
+      neighborhood_id: antoninaNeighborhood.id,
+      user_id: radu.id,
+      title: 'Plant trees',
+      content: 'I want to plant some trees in the rezidential area this Sunday. Who wants to help?',
+    },
+  });
+
+  // The variable will be used in the future when we add responses.
+  // eslint-disable-next-line
+  const mariaRequest = await prismaClient.request.create({
+    data: {
+      neighborhood_id: antoninaNeighborhood.id,
+      user_id: maria.id,
+      title: 'Install washing machine',
+      content: 'Can anyone help me install a washing machine?',
+    },
+  });
+  //---------------------------------------------------------
+
+  // Shwetank's Neighborhood
   const shwetankNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: shwetank.id,

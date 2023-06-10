@@ -1,15 +1,15 @@
 POST http://localhost:3000/api/neighborhoods/xyz/join
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjgzNTgxOTkzLCJleHAiOjE2ODM1ODU1OTN9.7NWRy6QSCJlMGVtseceZ3RF_uxgsbgEiKraeJKu5Ye4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjg1NjE3MjU4LCJleHAiOjE2ODU2MjA4NTh9.BNbd4wnOPiOpqh9wCMU3BLeXs0cNnTZxlqpJMSc8tFY
 
 {
   
 }
 
 ###
-POST http://localhost:3000/api/neighborhoods/1/join
+POST http://localhost:3000/api/neighborhoods/2/join
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjgzNTgxOTkzLCJleHAiOjE2ODM1ODU1OTN9.7NWRy6QSCJlMGVtseceZ3RF_uxgsbgEiKraeJKu5Ye4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjg1NjE3MjU4LCJleHAiOjE2ODU2MjA4NTh9.BNbd4wnOPiOpqh9wCMU3BLeXs0cNnTZxlqpJMSc8tFY
 
 {
   
