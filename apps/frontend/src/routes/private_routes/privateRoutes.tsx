@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 const PrivateRoutes = () => {
   //@ts-ignore
-  let auth = JSON.parse(window.localStorage.getItem('loggedNeighborhoodUser'));
+  let auth = JSON.parse(window.localStorage.getItem('user'));
   if (auth) {
     return (
     //@ts-ignore
