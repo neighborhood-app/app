@@ -2,6 +2,14 @@ import { Request } from '@prisma/client';
 import { CreateRequestData, NeighborhoodWithUsers } from '../types';
 import prismaClient from '../../prismaClient';
 
+/**
+ * - validates data for creating new request in the db
+ * - neighborhood must exist, title length should be >= 4,
+ * - and user must be a member of that neighborhood
+ * - throws Error if data is not valid
+ * @param requestData parsed request data sent to POST /requests
+ * @param userId should be a member of neighborhood
+ */
 const validateCreateRequestData = async (requestData: CreateRequestData, userId: number) => {
   const neighborhood: NeighborhoodWithUsers | null = await prismaClient
     .neighborhood.findUnique({
@@ -36,6 +44,12 @@ const validateCreateRequestData = async (requestData: CreateRequestData, userId:
   }
 };
 
+/**
+ * - parses data sent to POST /request
+ * - must contain neighborhood_id, title and content
+ * @param body req.body
+ * @returns Promise which resolves to parsed create request data
+ */
 const parseCreateRequestData = async (body: unknown): Promise<CreateRequestData> => {
   if (!body || typeof body !== 'object') {
     const error = new Error('unable to parse data');
@@ -60,7 +74,13 @@ const parseCreateRequestData = async (body: unknown): Promise<CreateRequestData>
   throw error;
 };
 
-const createRequest = async (requestData: CreateRequestData, userId: number) => {
+/**
+ * - creates a new request in the database
+ * @param requestData - should contain title, content and neighborhoodId
+ * @param userId - user must be a member of the neighborhood
+ * @returns - Promise resolving to newly created request
+ */
+const createRequest = async (requestData: CreateRequestData, userId: number): Promise<Request> => {
   await validateCreateRequestData(requestData, userId);
 
   const request: Request = await prismaClient.request.create({

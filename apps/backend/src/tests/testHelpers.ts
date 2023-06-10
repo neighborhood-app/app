@@ -96,6 +96,10 @@ const getNumberOfRequests = async (): Promise<number> => {
   return requests.length;
 };
 
+/**
+ * @param userID
+ * @returns a Promise resolving to Requests associated with User
+ */
 const getRequestsAssociatedWithUser = async (userID: number): Promise<Request[]> => {
   const user: UserWithRequests = await prismaClient.user.findUnique({
     where: {
@@ -109,6 +113,10 @@ const getRequestsAssociatedWithUser = async (userID: number): Promise<Request[]>
   return user.requests;
 };
 
+/**
+ * @param neighborhoodId
+ * @returns Returns a Promise resolving to Requests associated with a neighborhood
+ */
 const getRequestsAssociatedWithNeighborhood = async (neighborhoodId: number) => {
   const neighborhood = await prismaClient.neighborhood.findUnique({
     where: {
