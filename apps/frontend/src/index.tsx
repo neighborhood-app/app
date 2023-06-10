@@ -18,29 +18,29 @@ async function neighborhoodsLoader() {
 
 const router = createBrowserRouter([
   {
+    path: "/",
     element: <MainLayout />,
     children: [
       {
-      path: "/login",
-      element: <Login />,
-      action: loginAction,
-    },
-    {
-      path: "/",
-      element: <PrivateRoutes/>,
-      children: [
-        {
-          path: "/test",
-          element: <TestRoute />
-        },
-        {
-          path: "/neighborhoods",
-          loader: neighborhoodsLoader,
-          element: <Neighborhoods />
-        }
-      ]
-    }
-  ]
+        path: "/login",
+        element: <Login />,
+        action: loginAction,
+      },
+      {
+        element: <PrivateRoutes />,
+        children: [
+          {
+            path: "/test",
+            element: <TestRoute />
+          },
+          {
+            path: "/neighborhoods",
+            loader: neighborhoodsLoader,
+            element: <Neighborhoods />
+          }
+        ]
+      }
+    ]
   }
 ])
 
