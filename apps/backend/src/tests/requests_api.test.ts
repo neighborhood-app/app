@@ -34,8 +34,8 @@ beforeAll(async () => {
   await testHelpers.removeAllData();
 });
 
-describe('Tests for creating a new request', () => {
-  beforeAll(async () => {
+describe('Tests for creating a new request at POST /requests', () => {
+  beforeEach(async () => {
     await seed();
   });
 
@@ -216,5 +216,70 @@ describe('Tests for creating a new request', () => {
     expect(numberOfFinalRequestsAssociatedWithNeighborhood)
       .toEqual(numInitialRequestsAssociatedWithNeighborhood + 1);
     expect(neighborhoodsRequestTitlesAfterCreation).toContain('foofoo');
+  });
+});
+
+describe('Tests for getting requests associated with a n-hood GET /requests/neighborhood/:id', () => {
+  beforeAll(async () => {
+    await seed();
+  });
+
+  test('unable to fetch data when user no token present', async () => {
+    const response: Response = await api
+      .get(`/api/requests/neighborhood/${BOBS_NHOOD_ID}`);
+
+    expect(response.status).toEqual(401);
+    expect(response.body.error).toBe('user not signed in');
+  });
+
+  test('unable to fetch data when token invalid', async () => {
+    const response: Response = await api
+      .get(`/api/requests/neighborhood/${BOBS_NHOOD_ID}`)
+      .set('Authorization', 'invalid-token');
+
+    expect(response.status).toEqual(401);
+    expect(response.body.error).toBe('user not signed in');
+  });
+
+  test('unable to fetch data when user not a member of neighborhood', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const response: Response = await api
+      .get(`/api/requests/neighborhood/${ANTONINAS_NHOOD_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toEqual('user is not a member of the neighborhood');
+  });
+
+  test('able to fetch data with valid data', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const requestsWithNeighborhoodInDb = await testHelpers
+      .getRequestsAssociatedWithNeighborhood(BOBS_NHOOD_ID);
+
+    const response: Response = await api
+      .get(`/api/requests/neighborhood/${BOBS_NHOOD_ID}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response.body.length).toBe(requestsWithNeighborhoodInDb.length);
+    expect(response.body[0].neighborhood_id).toBe(BOBS_NHOOD_ID);
+  });
+});
+
+describe('Test for getting a single request at GET /request/:id/neighborhood/:id', () => {
+  beforeAll(async () => {
+    await seed();
+  });
+
+  test('GET /requests/:id fails when no authorization header present', async () => {
+    const getResponse: Response = await api.get('/api/requests/1/neighborhood/1');
+
+    expect(getResponse.status).toEqual(401);
+    expect(getResponse.body.error).toEqual('user not signed in');
   });
 });

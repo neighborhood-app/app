@@ -1,2 +1,2 @@
-GET http://localhost:3001/api/neighborhoods/1/requests
+GET http://localhost:3001/api/requests/neighborhood/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjg2MzM3MzQwLCJleHAiOjE2ODk5MzczNDB9.12Id9Lqbm5mJavkrVqO-4PsgXnl5Y3HNuymILFejoJk

@@ -105,22 +105,4 @@ neighborhoodsRouter.post('/:id/join', middleware.userIdExtractorAndLoginValidato
   return res.status(201).send({ success: 'You have joined the neighborhood' });
 }));
 
-neighborhoodsRouter.get('/:id/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-  const neighborhoodID = Number(req.params.id);
-  // LoginValidator ensures that loggedUserId is present
-  const loggedUserID = req.loggedUserId as number;
-
-  const isUserMemberOfNeighborhood: boolean = await neighborhoodServices
-    .isUserMemberOfNeighborhood(loggedUserID, neighborhoodID);
-
-  if (!isUserMemberOfNeighborhood) {
-    return res.status(400).send({ error: 'user is not a member of the neighborhood' });
-  }
-
-  const requests: RequestInDB[] = await neighborhoodServices
-    .getRequestsAssociatedWithNeighborhood(neighborhoodID);
-
-  res.status(200).send(requests);
-}));
-
 export default neighborhoodsRouter;
