@@ -51,7 +51,7 @@ const getAllNeighborhoods = async (): Promise<Array<Neighborhood>> => {
  * @returns Promise resolving to true if user if part of neighborhood, false otherwise
  */
 const isUserMemberOfNeighborhood = async (loggedUserID: number, neighborhoodID: number)
-  : Promise<boolean> => {
+: Promise<boolean> => {
   const neighborhood: NeighborhoodWithRelatedFields | null = await prismaClient
     .neighborhood.findUnique({
       where: {
@@ -81,7 +81,7 @@ const isUserMemberOfNeighborhood = async (loggedUserID: number, neighborhoodID: 
  * @returns Promise resolving to neighborhood details without admin_id
  */
 const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number)
-  : Promise<NeighborhoodDetailsForNonMembers> => {
+: Promise<NeighborhoodDetailsForNonMembers> => {
   const FIELDS_TO_SELECT_FOR_NON_MEMBERS = {
     id: true,
     name: true,
@@ -107,7 +107,7 @@ const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number)
  * @returns neighborhood details with admin, users and requests
  */
 const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
-  : Promise<NeighborhoodDetailsForMembers> => {
+: Promise<NeighborhoodDetailsForMembers> => {
   const FIELDS_TO_INCLUDE_FOR_MEMBERS = {
     admin: true,
     users: true,
@@ -133,7 +133,7 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
  * @returns true if user is admin, false otherwise
  */
 const isUserAdminOfNeighborhood = async (userID: number, neighborhoodID: number):
-  Promise<boolean> => {
+Promise<boolean> => {
   const neighborhood: Neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
     where: {
       id: neighborhoodID,
@@ -252,7 +252,7 @@ const getRequestsAssociatedWithNeighborhood = async (nhoodId: number): Promise<R
 };
 
 const isRequestAssociatedWithNeighborhood = async (reqId: number, nhoodId: number)
-  : Promise<boolean> => {
+: Promise<boolean> => {
   const associatedRequests = await getRequestsAssociatedWithNeighborhood(nhoodId);
   const associatedRequestIds = associatedRequests.map(req => req.id);
 

@@ -1,13 +1,20 @@
-/* eslint-disable import/no-anonymous-default-export */
 import axios from "axios";
-import { LoginData } from "../types";
+import { LoginData, StorageWithUser, UserInfo } from "../types";
 
-const baseURL = '/api/login'
+const baseURL = '/api/login';
 
 async function login(loginData: LoginData) {
-  const { username, password } = loginData;
-  const response = await axios.post(baseURL, { username, password });
+  const headers: { authorization?: string } = {};
+  let { user }: { user?: string } = localStorage as StorageWithUser;
+  
+  if (user) {
+    const userObj: UserInfo = JSON.parse(user);
+    headers.authorization = `Bearer ${userObj.token}`;
+  }
+
+  const response = await axios.post(baseURL, loginData, { headers });
+
   return response.data;
 }
 
-export default { login };
+export default login;

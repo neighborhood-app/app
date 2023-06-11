@@ -48,11 +48,11 @@ const usersInDb = async (): Promise<User[]> => {
 
 /**
  * Uses prisma client to find all neighborhoods in the db
- * @returns Promise resolved to an array consisting all users in db
+ * @returns Promise resolving to an array consisting all users in db
  */
 const neighborhoodsInDb = async (): Promise<Neighborhood[]> => {
   const neighborhoods = await prismaClient.neighborhood.findMany({});
-  return Promise.resolve(neighborhoods);
+  return neighborhoods;
 };
 
 /**
@@ -69,7 +69,7 @@ const seedUser = async (createUserData: CreateUserData) => {
 };
 
 const getUsersAssociatedWithNeighborhood = async (neighborhoodId: number):
-  Promise<User[] | null> => {
+Promise<void | User[]> => {
   const neighborhood = await prismaClient
     .neighborhood.findFirst({
       where: {
@@ -84,7 +84,7 @@ const getUsersAssociatedWithNeighborhood = async (neighborhoodId: number):
     throw new Error('neighborhood does not exist');
   } else {
     const { users } = neighborhood;
-    return Promise.resolve(users);
+    return users;
   }
 };
 

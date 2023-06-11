@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Prisma } from '@prisma/client';
-import jsonwebtoken, { JwtPayload } from 'jsonwebtoken';
+import jsonwebtoken, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 import logger from './logger';
 import config from './config';
 import { RequestWithAuthentication } from '../types';
@@ -28,7 +28,9 @@ const unknownEndpoint = (_request: Request, response: Response): void => {
 };
 
 const errorHandler = (error: Error, _req: Request, response: Response, _next: NextFunction)
-  : void => {
+: void => {
+  logger.error(error.message);
+
   if (error.name === 'UserDataError') {
     response.status(400).send({ error: error.message });
   } else if (error.name === 'InvalidUserameOrPasswordError') {
@@ -52,8 +54,7 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
   } else if (error instanceof Prisma.PrismaClientValidationError) {
     response.status(400).send({ error: error.message });
   } else {
-    logger.error(error.message);
-    response.status(500).send({ error: 'Oops! An error happened' });
+    response.status(400).send({ error: error.message });
   }
 };
 
@@ -65,7 +66,7 @@ and the token that was saved by the client on user login
 'token' property on the request object.
  */
 const tokenExtractor = (req: RequestWithAuthentication, _res: Response, next: NextFunction)
-  : void => {
+: void => {
   const authorization = req.get('authorization');
   if (authorization && authorization.startsWith('Bearer ')) {
     req.token = authorization.replace('Bearer ', '');
@@ -75,10 +76,10 @@ const tokenExtractor = (req: RequestWithAuthentication, _res: Response, next: Ne
 
 /**
  * if request has valid token, extracts userId and adds it to the request
- * else if , request has invalid token ends the request with 401
+ * else if request has invalid token ends the request with 401
  * else if request has no token, does nothing
  */
-const userIdExtractor = catchError(async (
+const extractUserId = async (
   req: RequestWithAuthentication,
   res: Response,
   next: NextFunction,
@@ -96,6 +97,32 @@ const userIdExtractor = catchError(async (
   }
 
   next();
+};
+
+/**
+ * Same functionality as above but wrapped in `catchError` module
+ */
+const userIdExtractor = catchError(extractUserId);
+
+/**
+ * Middleware used to disallow logging in while a user is logged in.
+ * if request has valid token, extracts userId and adds it to the request
+ * else if the token has expired, moves on to the next middleware
+ * else if request has no token, moves on to the next middleware
+ * else if request has invalid token, ends the request with 401
+ */
+const isUserLoggedIn = catchError(async (
+  req: RequestWithAuthentication,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    return await extractUserId(req, res, next);
+  } catch (error: unknown) {
+    if (error instanceof TokenExpiredError) return next();
+
+    throw error;
+  }
 });
 
 /**
@@ -125,4 +152,5 @@ export default {
   tokenExtractor,
   userIdExtractor,
   userIdExtractorAndLoginValidator,
+  isUserLoggedIn,
 };

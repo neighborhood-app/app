@@ -29,6 +29,7 @@ const parseLoginData = async (body: unknown): Promise<LoginData> => {
 
     return loginData;
   }
+
   const error = new Error('unable to parse data');
   error.name = 'InvalidInputError';
   throw error;
@@ -48,9 +49,8 @@ const findUserByUsername = async (username: string): Promise<User> => {
     },
   });
 
-  if (user) {
-    return user;
-  }
+  if (user) return user;
+
   const error = new Error('invalid username or password');
   error.name = 'InvalidUserameOrPasswordError';
   throw error;
@@ -63,7 +63,7 @@ const findUserByUsername = async (username: string): Promise<User> => {
  * @returns true if password matches
  */
 const isPasswordCorrect = async (password: string, password_hash: string)
-  : Promise<Boolean> => bcrypt.compare(password, password_hash);
+: Promise<Boolean> => bcrypt.compare(password, password_hash);
 
 /**
  * generates a json web token valid for 1 hour corresponding to userName and id

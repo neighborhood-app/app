@@ -23,7 +23,7 @@ const ANTONINA_LOGIN_DATA: LoginData = {
 };
 
 const BOBS_NHOOD_ID = 1;
-const BOBS_USER_ID = 1;
+// const BOBS_USER_ID = 1;
 const ANTONINAS_NHOOD_ID = 2;
 
 const loginUser = async (loginData: LoginData) => {
@@ -579,7 +579,6 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
 
   test('when user logged in and non-existend neighborhood ID, error occurs', async () => {
     const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
-
     const INVALID_NHOOD_ID = 100000;
     await api.post(`/api/neighborhoods/${INVALID_NHOOD_ID}/join`)
       .set('Authorization', `Bearer ${token}`)
@@ -587,7 +586,6 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
       .expect('Content-Type', /application\/json/);
 
     const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
-
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 

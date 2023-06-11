@@ -8,7 +8,7 @@ const SAMPLE_PASSWORD = 'secret';
  * @param userId
  * @param neighborhoodId
  */
-const connectUsertoNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
+const connectUserToNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
   await prismaClient.neighborhood.update({
     where: { id: neighborhoodId },
     data: {
@@ -86,8 +86,8 @@ async function main() {
     },
   });
 
-  await connectUsertoNeighborhood(bob.id, bobNeighborhood.id);
-  await connectUsertoNeighborhood(mike.id, bobNeighborhood.id);
+  await connectUserToNeighborhood(bob.id, bobNeighborhood.id);
+  await connectUserToNeighborhood(mike.id, bobNeighborhood.id);
 
   // The variable will be used in the future when we add responses.
   // eslint-disable-next-line
@@ -109,9 +109,9 @@ async function main() {
     },
   });
 
-  await connectUsertoNeighborhood(antonina.id, antoninaNeighborhood.id);
-  await connectUsertoNeighborhood(radu.id, antoninaNeighborhood.id);
-  await connectUsertoNeighborhood(maria.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(antonina.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(radu.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(maria.id, antoninaNeighborhood.id);
 
   // The variable will be used in the future when we add responses.
   // eslint-disable-next-line
@@ -146,7 +146,7 @@ async function main() {
     },
   });
 
-  await connectUsertoNeighborhood(shwetank.id, shwetankNeighborhood.id);
+  await connectUserToNeighborhood(shwetank.id, shwetankNeighborhood.id);
 }
 
 export default main;

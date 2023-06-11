@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Response } from 'express';
 import { Request as RequestData } from '@prisma/client';
 import catchError from '../utils/catchError';
 import middleware from '../utils/middleware';
@@ -32,7 +32,7 @@ requestsRouter.get('/neighborhood/:id', middleware.userIdExtractorAndLoginValida
   const requests: RequestData[] = await neighborhoodServices
     .getRequestsAssociatedWithNeighborhood(neighborhoodID);
 
-  res.status(200).send(requests);
+  return res.status(200).send(requests);
 }));
 
 requestsRouter.get('/:requestId/neighborhood/:neighborhoodId', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
@@ -55,7 +55,7 @@ requestsRouter.get('/:requestId/neighborhood/:neighborhoodId', middleware.userId
   }
 
   const request: RequestData = await requestServices.getRequestById(requestId);
-  res.status(200).send(request);
+  return res.status(200).send(request);
 }));
 
 export default requestsRouter;
