@@ -96,7 +96,24 @@ const createRequest = async (requestData: CreateRequestData, userId: number): Pr
   return request;
 };
 
+/**
+ * - fetches request from db
+ * - throws error if request not found
+ * @param requestId
+ * @returns
+ */
+const getRequestById = async (requestId: number): Promise<Request> => {
+  const request: Request = await prismaClient.request.findUniqueOrThrow({
+    where: {
+      id: requestId,
+    },
+  });
+
+  return request;
+};
+
 export default {
   parseCreateRequestData,
   createRequest,
+  getRequestById,
 };

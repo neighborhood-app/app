@@ -21,6 +21,9 @@ const BOBS_NHOOD_ID = 1;
 const BOBS_USER_ID = 1;
 const ANTONINAS_NHOOD_ID = 2;
 const INVALID_NHOOD_ID = 12345;
+const MIKES_REQUEST_ID = 1;
+const MIKES_USER_ID = 5;
+const MIKES_REQUEST_TITLE = 'Help moving furniture in apartment';
 
 const loginUser = async (loginData: LoginData) => {
   const loginResponse = await api
@@ -276,10 +279,58 @@ describe('Test for getting a single request at GET /request/:id/neighborhood/:id
     await seed();
   });
 
-  test('GET /requests/:id fails when no authorization header present', async () => {
-    const getResponse: Response = await api.get('/api/requests/1/neighborhood/1');
+  test('GET /requests/:requestId/neighborhood/:neighborhoodId fails when no authorization header present', async () => {
+    const getResponse: Response = await api.get(`/api/requests/${MIKES_REQUEST_ID}/neighborhood/${BOBS_NHOOD_ID}`);
 
     expect(getResponse.status).toEqual(401);
     expect(getResponse.body.error).toEqual('user not signed in');
+  });
+
+  test('GET /requests/:requestId/neighborhood/:neighborhoodId fails when user not a member of neighborhood', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const getResponse: Response = await api
+      .get(`/api/requests/${MIKES_REQUEST_ID}/neighborhood/2`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(getResponse.status).toEqual(401);
+    expect(getResponse.body.error).toEqual('user not a member of neighborhood');
+  });
+
+  test('GET /requests/:requestId/neighborhood/:neighborhoodId fails when neighborhoodId invalid', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const getResponse: Response = await api
+      .get(`/api/requests/${MIKES_REQUEST_ID}/neighborhood/foo`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(getResponse.status).toEqual(400);
+  });
+
+  test('GET /requests/:requestId/neighborhood/:neighborhoodId fails when request is not associated with nhood', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const getResponse: Response = await api
+      .get(`/api/requests/2/neighborhood/${BOBS_NHOOD_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(getResponse.status).toEqual(400);
+    expect(getResponse.body.error).toEqual('request not associated with the neighborhood');
+  });
+
+  test('GET /requests/:requestId/neighborhood/:neighborhoodId fails works with valid data', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const getResponse: Response = await api
+      .get(`/api/requests/${MIKES_REQUEST_ID}/neighborhood/${BOBS_NHOOD_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(getResponse.status).toEqual(200);
+    expect(getResponse.body.user_id).toBe(MIKES_USER_ID);
+    expect(getResponse.body.title).toBe(MIKES_REQUEST_TITLE);
   });
 });

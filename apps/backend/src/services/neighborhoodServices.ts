@@ -251,6 +251,14 @@ const getRequestsAssociatedWithNeighborhood = async (nhoodId: number): Promise<R
   return requests;
 };
 
+const isRequestAssociatedWithNeighborhood = async (reqId: number, nhoodId: number)
+  : Promise<boolean> => {
+  const associatedRequests = await getRequestsAssociatedWithNeighborhood(nhoodId);
+  const associatedRequestIds = associatedRequests.map(req => req.id);
+
+  return associatedRequestIds.includes(reqId);
+};
+
 export default {
   getAllNeighborhoods,
   isUserMemberOfNeighborhood,
@@ -262,4 +270,5 @@ export default {
   createNeighborhood,
   connectUserToNeighborhood,
   getRequestsAssociatedWithNeighborhood,
+  isRequestAssociatedWithNeighborhood,
 };
