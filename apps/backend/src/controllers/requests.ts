@@ -8,15 +8,6 @@ import neighborhoodServices from '../services/neighborhoodServices';
 
 const requestsRouter = express.Router();
 
-requestsRouter.post('/', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-  const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
-  const userId: number = Number(req.loggedUserId);
-
-  const request: RequestData = await requestServices.createRequest(postData, userId);
-
-  res.status(201).send(request);
-}));
-
 requestsRouter.put('/:id/close', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
   const requestId: number = Number(req.params.id);
   const loggedUserID: number = req.loggedUserId as number;

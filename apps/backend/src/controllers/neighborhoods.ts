@@ -8,6 +8,7 @@ import {
   NeighborhoodDetailsForMembers,
   NeighborhoodDetailsForNonMembers,
   NeighborhoodWithRelatedFields, RequestWithAuthentication,
+  CreateRequestData2,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
 import requestServices from '../services/requestServices';
@@ -145,6 +146,18 @@ neighborhoodsRouter.get('/:neighborhoodId/requests/:requestId', middleware.userI
 
   const request: RequestData = await requestServices.getRequestById(requestId);
   return res.status(200).send(request);
+}));
+
+neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
+  const postData: CreateRequestData2 = await requestServices.parseCreateRequestData2(req.body);
+
+  const loggedUserId: number = req.loggedUserId as number;
+  const neighborhoodId: number = Number(req.params.neighborhoodId) as number;
+
+  const request: RequestData = await neighborhoodServices
+    .createRequest(postData, loggedUserId, neighborhoodId);
+
+  return res.status(201).send(request);
 }));
 
 export default neighborhoodsRouter;

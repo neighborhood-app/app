@@ -72,6 +72,11 @@ export type CreateRequestData = {
   content: string
 };
 
+export type CreateRequestData2 = {
+  title: string,
+  content: string
+};
+
 /**
  * format of neighborhood data, with all related fields, for members
  */

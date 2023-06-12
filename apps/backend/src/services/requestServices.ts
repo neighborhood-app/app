@@ -1,6 +1,6 @@
 import { Request } from '@prisma/client';
 // import { request } from 'express';
-import { CreateRequestData, NeighborhoodWithUsers } from '../types';
+import { CreateRequestData, NeighborhoodWithUsers, CreateRequestData2 } from '../types';
 import prismaClient from '../../prismaClient';
 
 /**
@@ -71,6 +71,34 @@ const parseCreateRequestData = async (body: unknown): Promise<CreateRequestData>
   }
 
   const error = new Error('neighborhood_id, title or content missing or invalid');
+  error.name = 'InvalidInputError';
+  throw error;
+};
+
+/**
+ * - parses data sent to POST /request
+ * - must contain neighborhood_id, title and content
+ * @param body req.body
+ * @returns Promise which resolves to parsed create request data
+ */
+const parseCreateRequestData2 = async (body: unknown): Promise<CreateRequestData2> => {
+  if (!body || typeof body !== 'object') {
+    const error = new Error('unable to parse data');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+
+  if ('title' in body && typeof body.title === 'string'
+    && 'content' in body && typeof body.content === 'string') {
+    const requestData: CreateRequestData2 = {
+      title: body.title,
+      content: body.content,
+    };
+
+    return requestData;
+  }
+
+  const error = new Error('title or content missing or invalid');
   error.name = 'InvalidInputError';
   throw error;
 };
@@ -164,4 +192,5 @@ export default {
   parseCloseRequestData,
   hasUserCreatedRequest,
   closeRequest,
+  parseCreateRequestData2,
 };
