@@ -17,45 +17,19 @@ requestsRouter.post('/', middleware.userIdExtractorAndLoginValidator, catchError
   res.status(201).send(request);
 }));
 
-requestsRouter.get('/neighborhood/:id', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-  const neighborhoodID = Number(req.params.id);
-  // LoginValidator ensures that loggedUserId is present
-  const loggedUserID = req.loggedUserId as number;
+requestsRouter.put('/:id/close', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
+  const requestId: number = Number(req.params.id);
+  const loggedUserID: number = req.loggedUserId as number;
 
-  const isUserMemberOfNeighborhood: boolean = await neighborhoodServices
-    .isUserMemberOfNeighborhood(loggedUserID, neighborhoodID);
+  const hasUserCreatedRequest: boolean = await requestServices
+    .hasUserCreatedRequest(requestId, loggedUserID);
 
-  if (!isUserMemberOfNeighborhood) {
-    return res.status(400).send({ error: 'user is not a member of the neighborhood' });
+  if (!hasUserCreatedRequest) {
+    res.status(400).send({ error: 'user has not created the request' });
   }
 
-  const requests: RequestData[] = await neighborhoodServices
-    .getRequestsAssociatedWithNeighborhood(neighborhoodID);
-
-  return res.status(200).send(requests);
-}));
-
-requestsRouter.get('/:requestId/neighborhood/:neighborhoodId', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-  const requestId = Number(req.params.requestId);
-  const neighborhoodId = Number(req.params.neighborhoodId);
-  const loggedUserId = req.loggedUserId as number;
-
-  const isUserMemberOfNeighborhood = await neighborhoodServices
-    .isUserMemberOfNeighborhood(loggedUserId, neighborhoodId);
-
-  if (!isUserMemberOfNeighborhood) {
-    return res.status(401).send({ error: 'user not a member of neighborhood' });
-  }
-
-  const isRequestAssociatedWithNeighborhood = await neighborhoodServices
-    .isRequestAssociatedWithNeighborhood(requestId, neighborhoodId);
-
-  if (!isRequestAssociatedWithNeighborhood) {
-    return res.status(400).send({ error: 'request not associated with the neighborhood' });
-  }
-
-  const request: RequestData = await requestServices.getRequestById(requestId);
-  return res.status(200).send(request);
+  const closedRequest: RequestData = await requestServices.closeRequest(requestId);
+  return res.status(200).send(closedRequest);
 }));
 
 export default requestsRouter;

@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/requests/1/close
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pa2UiLCJpZCI6NSwiaWF0IjoxNjg2NTE3MzI5LCJleHAiOjE2OTAxMTczMjl9.UMXw1NXbcRaZcxOSwpDRJ6gFhjcBLk417PtMKCtXlp0
+
+###
+PUT http://localhost:3001/api/requests/1/close
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjg2NTMwNzEwLCJleHAiOjE2OTAxMzA3MTB9.iLTLreh72Nf4LARbiioY7_BU6hfnD2u-nWMJ3YcZ4LU
+Content-Type: application/json

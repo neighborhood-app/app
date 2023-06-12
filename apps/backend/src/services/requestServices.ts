@@ -1,4 +1,5 @@
 import { Request } from '@prisma/client';
+// import { request } from 'express';
 import { CreateRequestData, NeighborhoodWithUsers } from '../types';
 import prismaClient from '../../prismaClient';
 
@@ -112,8 +113,55 @@ const getRequestById = async (requestId: number): Promise<Request> => {
   return request;
 };
 
+const parseCloseRequestData = async (body: unknown): Promise<number> => {
+  if (!body || typeof body !== 'object') {
+    const error = new Error('unable to parse data');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+
+  if ('neighborhood_id' in body
+    && typeof body.neighborhood_id === 'number'
+    && !Number.isNaN(body.neighborhood_id)) {
+    return body.neighborhood_id;
+  }
+
+  const error = new Error('neighborhood_id missing or invalid');
+  error.name = 'InvalidInputError';
+  throw error;
+};
+
+/**
+ * - checks whether user created the request
+ * - throws error if request with requestId is not found
+ * @param requestId
+ * @param userId
+ * @returns true if request.requestId === userId
+ */
+const hasUserCreatedRequest = async (requestId: number, userId: number): Promise<boolean> => {
+  const request: Request = await getRequestById(requestId);
+
+  return request.user_id === userId;
+};
+
+const closeRequest = async (requestId: number): Promise<Request> => {
+  const closedRequest: Request = await prismaClient.request.update({
+    where: {
+      id: requestId,
+    },
+    data: {
+      status: 'CLOSED',
+    },
+  });
+
+  return closedRequest;
+};
+
 export default {
   parseCreateRequestData,
   createRequest,
   getRequestById,
+  parseCloseRequestData,
+  hasUserCreatedRequest,
+  closeRequest,
 };
