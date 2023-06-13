@@ -1,0 +1,8 @@
+PUT http://localhost:3001/api/requests/4/neighborhoods/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjg2NTY5MjI0LCJleHAiOjE2OTAxNjkyMjR9.bO8YPMAURruoVs5rvACI0VC2Fw-qIrbnXVwGrM_0Zp4
+Content-Type: application/json
+
+{
+  "title": "foo",
+  "content": "new content"
+}

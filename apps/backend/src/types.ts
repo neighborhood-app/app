@@ -1,4 +1,6 @@
-import { Neighborhood, Prisma, User } from '@prisma/client';
+import {
+  Neighborhood, Prisma, Status, User,
+} from '@prisma/client';
 import { Request } from 'express';
 
 /**
@@ -66,11 +68,17 @@ const neighborhoodDetailsForMembers = Prisma.validator<Prisma.NeighborhoodArgs>(
   },
 });
 
-export type CreateRequestData = {
+export interface CreateRequestData {
   neighborhood_id: number,
   title: string,
   content: string
-};
+}
+
+export interface UpdateRequestData {
+  title?: string,
+  content?: string,
+  status?: Status
+}
 
 /**
  * format of neighborhood data, with all related fields, for members
