@@ -8,7 +8,7 @@ import {
   NeighborhoodDetailsForMembers,
   NeighborhoodDetailsForNonMembers,
   NeighborhoodWithRelatedFields, RequestWithAuthentication,
-  CreateRequestData2,
+  CreateRequestData,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
 import requestServices from '../services/requestServices';
@@ -29,9 +29,9 @@ neighborhoodsRouter.get('/:id', middleware.userIdExtractor, catchError(async (re
     : await neighborhoodServices.isUserMemberOfNeighborhood(loggedUserId, neighborhoodID);
 
   const neighborhood: NeighborhoodDetailsForMembers |
-    NeighborhoodDetailsForNonMembers = isUserLoggedInAndMemberOfNeighborhood
-      ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
-      : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
+  NeighborhoodDetailsForNonMembers = isUserLoggedInAndMemberOfNeighborhood
+    ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
+    : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
   res.status(200).send(neighborhood);
 }));
@@ -149,7 +149,7 @@ neighborhoodsRouter.get('/:neighborhoodId/requests/:requestId', middleware.userI
 }));
 
 neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-  const postData: CreateRequestData2 = await requestServices.parseCreateRequestData2(req.body);
+  const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
 
   const loggedUserId: number = req.loggedUserId as number;
   const neighborhoodId: number = Number(req.params.neighborhoodId) as number;

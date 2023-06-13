@@ -4,7 +4,7 @@ import { Response } from 'supertest';
 import app from '../app';
 // import prismaClient from '../../prismaClient';
 import seed from './seed';
-import testHelpers from './testHelpers';
+// import testHelpers from './testHelpers';
 import { LoginData } from '../types';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -17,15 +17,15 @@ const BOBS_LOGIN_DATA: LoginData = {
   password: 'secret',
 };
 
-const MIKES_LOGIN_DATA: LoginData = {
-  username: 'mike',
-  password: 'secret',
-};
+// const MIKES_LOGIN_DATA: LoginData = {
+//   username: 'mike',
+//   password: 'secret',
+// };
 
-const BOBS_NHOOD_ID = 1;
-const BOBS_USER_ID = 1;
-const ANTONINAS_NHOOD_ID = 2;
-const INVALID_NHOOD_ID = 12345;
+// const BOBS_NHOOD_ID = 1;
+// const BOBS_USER_ID = 1;
+// const ANTONINAS_NHOOD_ID = 2;
+// const INVALID_NHOOD_ID = 12345;
 const MIKES_REQUEST_ID = 1;
 
 const loginUser = async (loginData: LoginData) => {

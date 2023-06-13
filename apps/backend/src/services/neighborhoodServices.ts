@@ -2,7 +2,7 @@ import { Neighborhood, Request } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
   NeighborhoodWithRelatedFields, CreateNeighborhoodData,
-  NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers, CreateRequestData2,
+  NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers, CreateRequestData,
   NeighborhoodWithUsers,
 } from '../types';
 
@@ -84,7 +84,7 @@ const isUserMemberOfNeighborhood = async (
  * @returns Promise resolving to neighborhood details without admin_id
  */
 const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number)
-  : Promise<NeighborhoodDetailsForNonMembers> => {
+: Promise<NeighborhoodDetailsForNonMembers> => {
   const FIELDS_TO_SELECT_FOR_NON_MEMBERS = {
     id: true,
     name: true,
@@ -110,7 +110,7 @@ const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number)
  * @returns neighborhood details with admin, users and requests
  */
 const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
-  : Promise<NeighborhoodDetailsForMembers> => {
+: Promise<NeighborhoodDetailsForMembers> => {
   const FIELDS_TO_INCLUDE_FOR_MEMBERS = {
     admin: true,
     users: true,
@@ -136,7 +136,7 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
  * @returns true if user is admin, false otherwise
  */
 const isUserAdminOfNeighborhood = async (userID: number, neighborhoodID: number):
-  Promise<boolean> => {
+Promise<boolean> => {
   const neighborhood: Neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
     where: {
       id: neighborhoodID,
@@ -255,7 +255,7 @@ const getRequestsAssociatedWithNeighborhood = async (nhoodId: number): Promise<R
 };
 
 const isRequestAssociatedWithNeighborhood = async (reqId: number, nhoodId: number)
-  : Promise<boolean> => {
+: Promise<boolean> => {
   const associatedRequests = await getRequestsAssociatedWithNeighborhood(nhoodId);
   const associatedRequestIds = associatedRequests.map(req => req.id);
 
@@ -272,7 +272,7 @@ const isRequestAssociatedWithNeighborhood = async (reqId: number, nhoodId: numbe
  * @param neighborhoodId
  */
 const validateCreateRequestData = async (
-  requestData: CreateRequestData2,
+  requestData: CreateRequestData,
   userId: number,
   neighborhoodId: number,
 ): Promise<void> => {
@@ -317,7 +317,7 @@ const validateCreateRequestData = async (
  * @returns - Promise resolving to newly created request
  */
 const createRequest = async (
-  requestData: CreateRequestData2,
+  requestData: CreateRequestData,
   userId: number,
   neighborhoodId: number,
 ): Promise<Request> => {
