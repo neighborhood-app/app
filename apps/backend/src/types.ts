@@ -68,12 +68,6 @@ const neighborhoodDetailsForMembers = Prisma.validator<Prisma.NeighborhoodArgs>(
   },
 });
 
-export interface UpdateRequestData {
-  title?: string,
-  content?: string,
-  status?: Status
-}
-
 /**
  * format of neighborhood data, with all related fields, for members
  */
@@ -111,3 +105,12 @@ export type CreateRequestData = {
   title: string,
   content: string
 };
+
+/**
+   * PUT data for updating a request
+*/
+export interface UpdateRequestData {
+  title?: string,
+  content?: string,
+  status?: Status
+}

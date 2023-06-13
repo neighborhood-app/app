@@ -4,8 +4,6 @@ import catchError from '../utils/catchError';
 import middleware from '../utils/middleware';
 import { RequestWithAuthentication } from '../types';
 import requestServices from '../services/requestServices';
-// import neighborhoodServices from '../services/neighborhoodServices';
-import prismaClient from '../../prismaClient';
 
 const requestsRouter = express.Router();
 
@@ -29,14 +27,17 @@ requestsRouter.put(
   '/:requestId/neighborhoods/:neighborhoodId',
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const data = req.body;
     const userId = Number(req.loggedUserId);
+    // try using spread syntax
     const requestId = Number(req.params.requestId);
+    const neighborhoodId = Number(req.params.neighborhoodId);
 
-    const updatedRequest: RequestData = await prismaClient.request.update({
-      where: { id: requestId },
-      data,
-    });
+    const updatedRequest: RequestData = await requestServices.updateRequest(
+      req.body,
+      requestId,
+      userId,
+      neighborhoodId,
+    );
 
     res.status(200).json(updatedRequest);
   }),

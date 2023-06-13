@@ -1,6 +1,7 @@
 import { Request } from '@prisma/client';
 import { CreateRequestData, UpdateRequestData } from '../types';
 import prismaClient from '../../prismaClient';
+import middleware from '../utils/middleware';
 
 /**
  * performs narrowing on object `obj`
@@ -10,8 +11,7 @@ import prismaClient from '../../prismaClient';
  * @returns - type predicate (boolean)
  */
 const isCreateRequestData = (obj: object): obj is CreateRequestData => (
-  'neighborhood_id' in obj && typeof obj.neighborhood_id === 'number'
-  && 'title' in obj && typeof obj.title === 'string'
+  'title' in obj && typeof obj.title === 'string'
   && 'content' in obj && typeof obj.content === 'string'
 );
 
@@ -22,15 +22,13 @@ const isCreateRequestData = (obj: object): obj is CreateRequestData => (
  * @returns Promise which resolves to parsed create request data
  */
 const parseCreateRequestData = async (body: unknown): Promise<CreateRequestData> => {
-  // Extract to middleware `isObject`
-  if (!body || typeof body !== 'object') {
+  if (!middleware.isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
   }
 
-  if ('title' in body && typeof body.title === 'string'
-    && 'content' in body && typeof body.content === 'string') {
+  if (isCreateRequestData(body)) {
     const requestData: CreateRequestData = {
       title: body.title,
       content: body.content,
@@ -61,7 +59,7 @@ const getRequestById = async (requestId: number): Promise<Request> => {
 };
 
 const parseCloseRequestData = async (body: unknown): Promise<number> => {
-  if (!body || typeof body !== 'object') {
+  if (!middleware.isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
@@ -125,7 +123,7 @@ const validateUpdateData = async (
   userId: number,
   neighborhoodId: number,
 ): Promise<UpdateRequestData> => {
-  if (!data || typeof data !== 'object') {
+  if (!middleware.isObject(data)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
@@ -172,18 +170,12 @@ const updateRequest = async (
   userId: number,
   neighborhoodId: number,
 ): Promise<Request> => {
-  if (!body || typeof body !== 'object') {
+  if (!middleware.isObject(body)) {
+    console.log(body);
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
   }
-
-  await validateUpdateData(
-    body,
-    requestId,
-    userId,
-    neighborhoodId,
-  );
 
   await prismaClient.request.findFirstOrThrow({
     where: {
@@ -196,14 +188,14 @@ const updateRequest = async (
   // validate update data
   //  data must contain at least one of: title, content, status
   if (!isUpdateRequestData(body)) {
-    const error = new Error('Title or content or status missing or invalid');
+    const error = new Error('Title, content and/or status missing or invalid');
     error.name = 'InvalidInputError';
     throw error;
   }
 
   const updatedRequest: Request = await prismaClient.request.update({
     where: { id: requestId },
-    body,
+    data: { ...body },
   });
 
   return updatedRequest;
