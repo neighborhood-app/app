@@ -1,2 +1,2 @@
-GET http://localhost:3001/api/neighborhoods/1/requests
+DELETE http://localhost:3001/api/neighborhoods/1/requests/5
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjg2NzUxMDM3LCJleHAiOjE2OTAzNTEwMzd9.eohJmSkgucwCKC-jXeM_UU8EPJ4BAjSQbTXuWLh4RXA

@@ -125,14 +125,12 @@ const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
  * - updates a request
  * @param requestData - should contain title, content and neighborhoodId
  * @param requestId - (number) must be an existing request id
- * @param userId - (number) user must be the creator of the request
  * @param neighborhoodId - (number) neighborhood must match the neighborhood the request exists in
  * @returns - Promise resolving to updated request
  */
 const updateRequest = async (
   body: unknown,
   requestId: number,
-  userId: number,
   neighborhoodId: number,
 ): Promise<Request> => {
   if (!middleware.isObject(body)) {
@@ -143,12 +141,10 @@ const updateRequest = async (
 
   // fetch request
   // if it doesn't exist
-  //  or user_id doesn't match userId,
   //  or neighborhood_id doesn't match neighborhoodId, throw error
   await prismaClient.request.findFirstOrThrow({
     where: {
       id: requestId,
-      user_id: userId,
       neighborhood_id: neighborhoodId,
     },
   });
@@ -167,6 +163,31 @@ const updateRequest = async (
   return updatedRequest;
 };
 
+/**
+ * - delete a request
+ * @param requestId - (number) must be an existing request id
+ * @param neighborhoodId - (number) neighborhood must match the neighborhood the request exists in
+ * @returns - Promise resolving to updated request
+ */
+const deleteRequest = async (
+  requestId: number,
+  neighborhoodId: number,
+) => {
+  // fetch request
+  // if it doesn't exist
+  //  or neighborhood_id doesn't match neighborhoodId, throw error
+  await prismaClient.request.findFirstOrThrow({
+    where: {
+      id: requestId,
+      neighborhood_id: neighborhoodId,
+    },
+  });
+
+  await prismaClient.request.delete({
+    where: { id: requestId },
+  });
+};
+
 export default {
   getRequestById,
   parseCloseRequestData,
@@ -174,4 +195,5 @@ export default {
   closeRequest,
   parseCreateRequestData,
   updateRequest,
+  deleteRequest,
 };

@@ -171,31 +171,38 @@ neighborhoodsRouter.put(
     const userId = Number(req.loggedUserId);
     const { requestId, neighborhoodId } = req.params;
 
+    const isOwnerUser = await requestServices.hasUserCreatedRequest(+requestId, userId);
+    if (!isOwnerUser) {
+      return res.sendStatus(401);
+    }
+
     const updatedRequest: RequestData = await requestServices.updateRequest(
       req.body,
       +requestId,
-      userId,
       +neighborhoodId,
     );
 
-    res.status(200).json(updatedRequest);
+    return res.status(200).json(updatedRequest);
   }),
 );
 
-// Mark request as 'CLOSED'
-// neighborhoodsRouter.put('/:neighborhoodId/requests/:requestId/close', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-//   const requestId: number = Number(req.params.requestId);
-//   const loggedUserID: number = req.loggedUserId as number;
+// Delete request
+neighborhoodsRouter.delete(
+  '/:neighborhoodId/requests/:requestId',
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const loggedUserId = req.loggedUserId as number;
+    const { requestId, neighborhoodId } = req.params;
 
-//   const hasUserCreatedRequest: boolean = await requestServices
-//     .hasUserCreatedRequest(requestId, loggedUserID);
+    const isOwnerUser = await requestServices.hasUserCreatedRequest(+requestId, loggedUserId);
+    if (!isOwnerUser) {
+      return res.sendStatus(401);
+    }
 
-//   if (!hasUserCreatedRequest) {
-//     res.status(400).send({ error: 'user has not created the request' });
-//   }
+    await requestServices.deleteRequest(+requestId, +neighborhoodId);
 
-//   const closedRequest: RequestData = await requestServices.closeRequest(requestId);
-//   return res.status(200).send(closedRequest);
-// }));
+    return res.sendStatus(204);
+  }),
+);
 
 export default neighborhoodsRouter;
