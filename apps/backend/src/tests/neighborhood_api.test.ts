@@ -5,7 +5,7 @@ import app from '../app';
 import prismaClient from '../../prismaClient';
 import seed from './seed';
 import testHelpers from './testHelpers';
-import { LoginData, NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers } from '../types';
+import { LoginData, NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers, UpdateRequestData } from '../types';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
@@ -19,6 +19,11 @@ const BOBS_LOGIN_DATA: LoginData = {
 
 const ANTONINA_LOGIN_DATA: LoginData = {
   username: 'antonina',
+  password: 'secret',
+};
+
+const MIKES_LOGIN_DATA: LoginData = {
+  username: 'mike',
   password: 'secret',
 };
 
@@ -151,18 +156,25 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
 describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', () => {
   let initialNeighborhoods: Array<Neighborhood>;
   let numInitialNeighborhoods: number;
+
   beforeAll(async () => {
     await seed();
   });
+
   beforeEach(async () => {
     initialNeighborhoods = await testHelpers.neighborhoodsInDb();
     numInitialNeighborhoods = initialNeighborhoods.length;
   });
+
+  // This test case failed once - adding logs to track down the bug
+  // error was 'socket hang up'
   test('when user not logged in, unable to create neighborhood', async () => {
     const postResponse: Response = await api.post('/api/neighborhoods');
+    console.log(postResponse?.body);
 
     const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
     const numCurrentNeighborhoods = currentNeighborhoods.length;
+    console.log(currentNeighborhoods);
 
     expect(postResponse.status).toEqual(401);
     expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods);
@@ -659,7 +671,7 @@ describe('Tests for getting requests associated with a n-hood GET /neighborhoods
   });
 });
 
-describe('Test for getting a single request at GET /neighborhooda/:id/requests/:id', () => {
+describe('Test for getting a single request at GET /neighborhoods/:id/requests/:id', () => {
   beforeAll(async () => {
     await seed();
   });
@@ -891,5 +903,154 @@ describe('Tests for creating a new request at POST /requests', () => {
     expect(numberOfFinalRequestsAssociatedWithNeighborhood)
       .toEqual(numInitialRequestsAssociatedWithNeighborhood + 1);
     expect(neighborhoodsRequestTitlesAfterCreation).toContain('foofoo');
+  });
+});
+
+describe('Tests for updating a request: PUT /neighborhoods/:nId/requests/:rId', () => {
+  let token: string;
+
+  beforeAll(async () => {
+    await seed();
+
+    const loginResponse: Response = await loginUser(MIKES_LOGIN_DATA);
+    token = loginResponse.body.token;
+  });
+
+  afterEach(async () => {
+    await seed();
+  });
+
+  test('Update a request\'s title, content and status fields', async () => {
+    const newData: UpdateRequestData = {
+      title: 'Test',
+      content: 'Test',
+      status: 'CLOSED',
+    };
+
+    const response: Response = await api
+      .put(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(newData);
+
+    const updatedRequest: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.body).toEqual(updatedRequest.body);
+    expect(response.status).toEqual(200);
+  });
+
+  test.only('Empty input doesn\'t change anything on the server', async () => {
+    const requestBeforeUpdate: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    const response: Response = await api
+      .put(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({});
+
+    const request: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(request.body).toEqual(requestBeforeUpdate.body);
+    expect(response.status).toEqual(200);
+  });
+
+  test('User cannot update request if they don\'t own it', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const bobToken = loginResponse.body.token;
+
+    const newData: UpdateRequestData = { title: 'Test' };
+    const response: Response = await api
+      .put(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${bobToken}`)
+      .send(newData);
+
+    // Bob is admin of current neighborhood, therefore can fetch the request
+    const request: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${bobToken}`);
+
+    expect(response.status).toBe(404);
+    expect(request.body!.title).not.toBe(newData.title);
+  });
+
+  test('User cannot update request if they aren\'t logged in', async () => {
+    const newData: UpdateRequestData = { title: 'Test' };
+    const response: Response = await api
+      .put(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .send(newData);
+
+    const request: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(401);
+    expect(request.body?.title).not.toBe(newData.title);
+  });
+
+  test('Update with invalid properties raises an error', async () => {
+    const invalidData = { invalid: 'Test' };
+    const response: Response = await api
+      .put(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(invalidData);
+
+    const request: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(request.body).not.toHaveProperty('invalid');
+  });
+
+  test('Update with invalid values raises an error', async () => {
+    const invalidData = {
+      title: null,
+      content: 2,
+      status: 'random string',
+    };
+
+    const requestBeforeUpdate: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    const response: Response = await api
+      .put(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(invalidData);
+
+    const request: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(request?.body).toEqual(requestBeforeUpdate?.body);
+  });
+
+  test('Id, user_id, neighborhood_id and time_created props cannot be edited', async () => {
+    const data = {
+      id: 10,
+      user_id: BOBS_USER_ID,
+      time_created: new Date(),
+    };
+
+    const requestBeforeUpdate: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    const response: Response = await api
+      .put(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(data);
+
+    const request: Response = await api
+      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(request?.body).toEqual(requestBeforeUpdate?.body);
   });
 });

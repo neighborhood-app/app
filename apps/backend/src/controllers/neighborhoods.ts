@@ -107,6 +107,7 @@ neighborhoodsRouter.post('/:id/join', middleware.userIdExtractorAndLoginValidato
   return res.status(201).send({ success: 'You have joined the neighborhood' });
 }));
 
+// Get a neighborhood's requests
 neighborhoodsRouter.get('/:id/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
   const neighborhoodID = Number(req.params.id);
   // LoginValidator ensures that loggedUserId is present
@@ -125,6 +126,7 @@ neighborhoodsRouter.get('/:id/requests', middleware.userIdExtractorAndLoginValid
   return res.status(200).send(requests);
 }));
 
+// Get a single request
 neighborhoodsRouter.get('/:neighborhoodId/requests/:requestId', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
   const requestId = Number(req.params.requestId);
   const neighborhoodId = Number(req.params.neighborhoodId);
@@ -148,6 +150,7 @@ neighborhoodsRouter.get('/:neighborhoodId/requests/:requestId', middleware.userI
   return res.status(200).send(request);
 }));
 
+// Create request
 neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
   const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
 
@@ -159,5 +162,40 @@ neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractor
 
   return res.status(201).send(request);
 }));
+
+// Update request
+neighborhoodsRouter.put(
+  '/:neighborhoodId/requests/:requestId/',
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const userId = Number(req.loggedUserId);
+    const { requestId, neighborhoodId } = req.params;
+
+    const updatedRequest: RequestData = await requestServices.updateRequest(
+      req.body,
+      +requestId,
+      userId,
+      +neighborhoodId,
+    );
+
+    res.status(200).json(updatedRequest);
+  }),
+);
+
+// Mark request as 'CLOSED'
+// neighborhoodsRouter.put('/:neighborhoodId/requests/:requestId/close', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
+//   const requestId: number = Number(req.params.requestId);
+//   const loggedUserID: number = req.loggedUserId as number;
+
+//   const hasUserCreatedRequest: boolean = await requestServices
+//     .hasUserCreatedRequest(requestId, loggedUserID);
+
+//   if (!hasUserCreatedRequest) {
+//     res.status(400).send({ error: 'user has not created the request' });
+//   }
+
+//   const closedRequest: RequestData = await requestServices.closeRequest(requestId);
+//   return res.status(200).send(closedRequest);
+// }));
 
 export default neighborhoodsRouter;

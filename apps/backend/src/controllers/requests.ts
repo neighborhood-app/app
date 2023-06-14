@@ -22,25 +22,4 @@ requestsRouter.put('/:id/close', middleware.userIdExtractorAndLoginValidator, ca
   return res.status(200).send(closedRequest);
 }));
 
-// Update request
-requestsRouter.put(
-  '/:requestId/neighborhoods/:neighborhoodId',
-  middleware.userIdExtractorAndLoginValidator,
-  catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const userId = Number(req.loggedUserId);
-    // try using spread syntax
-    const requestId = Number(req.params.requestId);
-    const neighborhoodId = Number(req.params.neighborhoodId);
-
-    const updatedRequest: RequestData = await requestServices.updateRequest(
-      req.body,
-      requestId,
-      userId,
-      neighborhoodId,
-    );
-
-    res.status(200).json(updatedRequest);
-  }),
-);
-
 export default requestsRouter;
