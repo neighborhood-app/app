@@ -102,9 +102,13 @@ const closeRequest = async (requestId: number): Promise<Request> => {
   return closedRequest;
 };
 
-// check for each valid property that IF it exists, it has a valid data type
-// the object shoudn't have any other properties
-// it could be empty
+/**
+ * check for each valid property that IF it exists, it has a valid data type
+ * `obj` shoudn't have any other properties
+ * it could be an empty object
+ * @param obj - (object) the request's body
+ * @returns - (boolean) type predicate for UpdateRequestData
+ */
 const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
   const VALID_PROPS = ['title', 'content', 'status'];
   const props = Object.keys(obj);
@@ -117,13 +121,21 @@ const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
   return true;
 };
 
-const validateUpdateData = async (
-  data: unknown,
+/**
+ * - updates a request
+ * @param requestData - should contain title, content and neighborhoodId
+ * @param requestId - (number) must be an existing request id
+ * @param userId - (number) user must be the creator of the request
+ * @param neighborhoodId - (number) neighborhood must match the neighborhood the request exists in
+ * @returns - Promise resolving to updated request
+ */
+const updateRequest = async (
+  body: unknown,
   requestId: number,
   userId: number,
   neighborhoodId: number,
-): Promise<UpdateRequestData> => {
-  if (!middleware.isObject(data)) {
+): Promise<Request> => {
+  if (!middleware.isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
@@ -141,52 +153,6 @@ const validateUpdateData = async (
     },
   });
 
-  // validate update data
-  //  data must contain at least one of: title, content, status
-  if (!isUpdateRequestData(data)) {
-    const error = new Error('Title or content or status missing or invalid');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-
-  if ('title' in data && typeof data.title === 'string' && data.title.length < 4) {
-    const error = new Error('Title or content or status missing or invalid');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-
-  return data;
-};
-
-/**
- * - creates a new request in the database
- * @param requestData - should contain title, content and neighborhoodId
- * @param userId - user must be a member of the neighborhood
- * @returns - Promise resolving to newly created request
- */
-const updateRequest = async (
-  body: unknown,
-  requestId: number,
-  userId: number,
-  neighborhoodId: number,
-): Promise<Request> => {
-  if (!middleware.isObject(body)) {
-    console.log(body);
-    const error = new Error('unable to parse data');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-
-  await prismaClient.request.findFirstOrThrow({
-    where: {
-      id: requestId,
-      user_id: userId,
-      neighborhood_id: neighborhoodId,
-    },
-  });
-
-  // validate update data
-  //  data must contain at least one of: title, content, status
   if (!isUpdateRequestData(body)) {
     const error = new Error('Title, content and/or status missing or invalid');
     error.name = 'InvalidInputError';
