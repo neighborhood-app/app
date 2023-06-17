@@ -6,7 +6,7 @@ import prismaClient from '../../prismaClient';
 import seed from './seed';
 import testHelpers from './testHelpers';
 import {
-  LoginData, NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers, UpdateRequestData,
+  LoginData, NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers,
 } from '../types';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -919,7 +919,7 @@ describe('Tests for deleting a request: DELETE /neighborhoods/:nId/requests/:rId
     await seed();
   });
 
-  test('Delete an existing request', async () => {
+  test('Delete an existing request as the creator', async () => {
     const response: Response = await api
       .delete(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
       .set('Authorization', `Bearer ${token}`);
@@ -932,13 +932,29 @@ describe('Tests for deleting a request: DELETE /neighborhoods/:nId/requests/:rId
     expect(deleted).toBe(null);
   });
 
-  test('User cannot delete request if not its creator', async () => {
+  test('Delete an existing request as admin of neighborhood', async () => {
     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
     const bobToken: string = loginResponse.body.token;
 
     const response: Response = await api
       .delete(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
       .set('Authorization', `Bearer ${bobToken}`);
+
+    const deleted = await prismaClient.request.findUnique({
+      where: { id: MIKES_REQUEST_ID },
+    });
+
+    expect(response.status).toEqual(204);
+    expect(deleted).toBe(null);
+  });
+
+  test('User cannot delete request if not its creator or admin', async () => {
+    const loginResponse = await loginUser(ANTONINA_LOGIN_DATA);
+    const antoninaToken: string = loginResponse.body.token;
+
+    const response: Response = await api
+      .delete(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${antoninaToken}`);
 
     const request = await prismaClient.request.findUnique({
       where: { id: MIKES_REQUEST_ID },
@@ -958,13 +974,32 @@ describe('Tests for deleting a request: DELETE /neighborhoods/:nId/requests/:rId
     expect(response.body.error).toBe('No Request found');
   });
 
+  test('Invalid requestId fails the deletion', async () => {
+    const response: Response = await api
+      .delete(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}foo`)
+      .set('Authorization', `Bearer ${token}`);
+
+    const request = await prismaClient.request.findUnique({
+      where: { id: MIKES_REQUEST_ID },
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('unable to parse data');
+    expect(request).not.toBe(null);
+  });
+
   test('Wrong neighborhoodId fails the deletion', async () => {
     const response: Response = await api
-      .delete(`/api/neighborhoods/${INVALID_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+      .delete(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
       .set('Authorization', `Bearer ${token}`);
+
+    const request = await prismaClient.request.findUnique({
+      where: { id: MIKES_REQUEST_ID },
+    });
 
     expect(response.status).toBe(404);
     expect(response.body.error).toBe('No Request found');
+    expect(request).not.toBe(null);
   });
 
   test('User cannot delete request if they aren\'t logged in', async () => {

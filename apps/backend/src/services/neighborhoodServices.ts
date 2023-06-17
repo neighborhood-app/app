@@ -142,6 +142,7 @@ Promise<boolean> => {
       id: neighborhoodID,
     },
   });
+
   return (neighborhood.admin_id === userID);
 };
 

@@ -27,19 +27,24 @@ requestsRouter.put(
   }),
 );
 
-requestsRouter.put('/:id/close', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-  const requestId: number = Number(req.params.id);
-  const loggedUserID: number = req.loggedUserId as number;
+requestsRouter.put(
+  '/:id/close',
+  middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const requestId: number = Number(req.params.id);
+    const loggedUserID: number = req.loggedUserId as number;
 
-  const hasUserCreatedRequest: boolean = await requestServices
-    .hasUserCreatedRequest(requestId, loggedUserID);
+    const hasUserCreatedRequest: boolean = await requestServices
+      .hasUserCreatedRequest(requestId, loggedUserID);
 
-  if (!hasUserCreatedRequest) {
-    res.status(400).send({ error: 'user has not created the request' });
-  }
+    if (!hasUserCreatedRequest) {
+      res.status(400).send({ error: 'user has not created the request' });
+    }
 
-  const closedRequest: RequestData = await requestServices.closeRequest(requestId);
-  return res.status(200).send(closedRequest);
-}));
+    const closedRequest: RequestData = await requestServices.closeRequest(requestId);
+    return res.status(200).send(closedRequest);
+  }),
+);
 
 export default requestsRouter;
