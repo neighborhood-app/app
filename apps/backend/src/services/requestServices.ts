@@ -138,9 +138,6 @@ const updateRequest = async (
     throw error;
   }
 
-  // ensures that the request exists
-  // await getRequestById(requestId);
-
   if (!isUpdateRequestData(body)) {
     const error = new Error('Title, content and/or status missing or invalid');
     error.name = 'InvalidInputError';
