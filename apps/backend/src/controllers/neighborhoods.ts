@@ -163,28 +163,28 @@ neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractor
   return res.status(201).send(request);
 }));
 
-// Update request
-neighborhoodsRouter.put(
-  '/:neighborhoodId/requests/:requestId/',
-  middleware.userIdExtractorAndLoginValidator,
-  catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const userId = Number(req.loggedUserId);
-    const { requestId, neighborhoodId } = req.params;
+// // Update request
+// neighborhoodsRouter.put(
+//   '/:neighborhoodId/requests/:requestId/',
+//   middleware.userIdExtractorAndLoginValidator,
+//   catchError(async (req: RequestWithAuthentication, res: Response) => {
+//     const userId = Number(req.loggedUserId);
+//     const { requestId, neighborhoodId } = req.params;
 
-    const isOwnerUser = await requestServices.hasUserCreatedRequest(+requestId, userId);
-    if (!isOwnerUser) {
-      return res.sendStatus(401);
-    }
+//     const isOwnerUser = await requestServices.hasUserCreatedRequest(+requestId, userId);
+//     if (!isOwnerUser) {
+//       return res.sendStatus(401);
+//     }
 
-    const updatedRequest: RequestData = await requestServices.updateRequest(
-      req.body,
-      +requestId,
-      +neighborhoodId,
-    );
+//     const updatedRequest: RequestData = await requestServices.updateRequest(
+//       req.body,
+//       +requestId,
+//       +neighborhoodId,
+//     );
 
-    return res.status(200).json(updatedRequest);
-  }),
-);
+//     return res.status(200).json(updatedRequest);
+//   }),
+// );
 
 // Delete request
 neighborhoodsRouter.delete(

@@ -7,6 +7,26 @@ import requestServices from '../services/requestServices';
 
 const requestsRouter = express.Router();
 
+// Update request
+requestsRouter.put(
+  '/:id',
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const userId = Number(req.loggedUserId);
+    const requestId = Number(req.params.id);
+
+    const isOwnerUser = await requestServices.hasUserCreatedRequest(requestId, userId);
+    if (!isOwnerUser) return res.sendStatus(401);
+
+    const updatedRequest: RequestData = await requestServices.updateRequest(
+      req.body,
+      requestId,
+    );
+
+    return res.status(200).json(updatedRequest);
+  }),
+);
+
 requestsRouter.put('/:id/close', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
   const requestId: number = Number(req.params.id);
   const loggedUserID: number = req.loggedUserId as number;

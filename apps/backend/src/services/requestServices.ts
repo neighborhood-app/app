@@ -131,7 +131,6 @@ const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
 const updateRequest = async (
   body: unknown,
   requestId: number,
-  neighborhoodId: number,
 ): Promise<Request> => {
   if (!middleware.isObject(body)) {
     const error = new Error('unable to parse data');
@@ -139,15 +138,8 @@ const updateRequest = async (
     throw error;
   }
 
-  // fetch request
-  // if it doesn't exist
-  //  or neighborhood_id doesn't match neighborhoodId, throw error
-  await prismaClient.request.findFirstOrThrow({
-    where: {
-      id: requestId,
-      neighborhood_id: neighborhoodId,
-    },
-  });
+  // ensures that the request exists
+  // await getRequestById(requestId);
 
   if (!isUpdateRequestData(body)) {
     const error = new Error('Title, content and/or status missing or invalid');
