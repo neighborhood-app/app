@@ -2,7 +2,7 @@
 // import { Neighborhood, User } from '@prisma/client';
 import { Response } from 'supertest';
 import app from '../app';
-// import prismaClient from '../../prismaClient';
+import prismaClient from '../../prismaClient';
 import seed from './seed';
 // import testHelpers from './testHelpers';
 import { LoginData, UpdateRequestData } from '../types';
@@ -19,6 +19,11 @@ const BOBS_LOGIN_DATA: LoginData = {
 
 const MIKES_LOGIN_DATA: LoginData = {
   username: 'mike',
+  password: 'secret',
+};
+
+const ANTONINA_LOGIN_DATA: LoginData = {
+  username: 'antonina',
   password: 'secret',
 };
 
@@ -40,7 +45,7 @@ beforeAll(async () => {
   await seed();
 });
 
-describe('Tests for updating a request: PUT /neighborhoods/:nId/requests/:rId', () => {
+describe('Tests for updating a request: PUT /requests/:rId', () => {
   let token: string;
 
   beforeAll(async () => {
@@ -184,6 +189,101 @@ describe('Tests for updating a request: PUT /neighborhoods/:nId/requests/:rId', 
 
     expect(response.status).toBe(400);
     expect(request?.body).toEqual(requestBeforeUpdate?.body);
+  });
+});
+
+describe('Tests for deleting a request: DELETE /requests/:rId', () => {
+  let token: string;
+
+  beforeAll(async () => {
+    const loginResponse: Response = await loginUser(MIKES_LOGIN_DATA);
+    token = loginResponse.body.token;
+  });
+
+  beforeEach(async () => {
+    await seed();
+  });
+
+  test('Delete an existing request as the creator', async () => {
+    const response: Response = await api
+      .delete(`/api/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    const deleted = await prismaClient.request.findUnique({
+      where: { id: MIKES_REQUEST_ID },
+    });
+
+    expect(response.status).toEqual(204);
+    expect(deleted).toBe(null);
+  });
+
+  test('Delete an existing request as admin of neighborhood', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const bobToken: string = loginResponse.body.token;
+
+    const response: Response = await api
+      .delete(`/api/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${bobToken}`);
+
+    const deleted = await prismaClient.request.findUnique({
+      where: { id: MIKES_REQUEST_ID },
+    });
+
+    expect(response.status).toEqual(204);
+    expect(deleted).toBe(null);
+  });
+
+  test('User cannot delete request if not its creator or admin', async () => {
+    const loginResponse = await loginUser(ANTONINA_LOGIN_DATA);
+    const antoninaToken: string = loginResponse.body.token;
+
+    const response: Response = await api
+      .delete(`/api/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${antoninaToken}`);
+
+    const request = await prismaClient.request.findUnique({
+      where: { id: MIKES_REQUEST_ID },
+    });
+
+    expect(response.status).toEqual(401);
+    expect(request).not.toBe(null);
+  });
+
+  test('Delete non-existent request fails', async () => {
+    const NON_EXISTENT_ID = 1000;
+    const response: Response = await api
+      .delete(`/api/requests/${NON_EXISTENT_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe('No Request found');
+  });
+
+  test('Invalid requestId fails the deletion', async () => {
+    const response: Response = await api
+      .delete(`/api/requests/${MIKES_REQUEST_ID}foo`)
+      .set('Authorization', `Bearer ${token}`);
+
+    const request = await prismaClient.request.findUnique({
+      where: { id: MIKES_REQUEST_ID },
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('unable to parse data');
+    expect(request).not.toBe(null);
+  });
+
+  test('User cannot delete request if they aren\'t logged in', async () => {
+    const response: Response = await api
+      .delete(`/api/requests/${MIKES_REQUEST_ID}`);
+
+    const request = await prismaClient.request.findUnique({
+      where: { id: MIKES_REQUEST_ID },
+    });
+
+    expect(response.status).toEqual(401);
+    expect(response.body.error).toBe('user not signed in');
+    expect(request).not.toBe(null);
   });
 });
 

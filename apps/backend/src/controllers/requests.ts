@@ -4,6 +4,7 @@ import catchError from '../utils/catchError';
 import middleware from '../utils/middleware';
 import { RequestWithAuthentication } from '../types';
 import requestServices from '../services/requestServices';
+import neighborhoodServices from '../services/neighborhoodServices';
 
 const requestsRouter = express.Router();
 
@@ -24,6 +25,29 @@ requestsRouter.put(
     );
 
     return res.status(200).json(updatedRequest);
+  }),
+);
+
+// Delete request
+requestsRouter.delete(
+  '/:id',
+  middleware.validateURLParams,
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const loggedUserId = req.loggedUserId as number;
+    const requestId = Number(req.params.id);
+
+    const isOwnerUser = await requestServices.hasUserCreatedRequest(+requestId, loggedUserId);
+    if (!isOwnerUser) {
+      const request = await requestServices.getRequestById(requestId);
+      const isAdminOfNeighborhood = await neighborhoodServices
+        .isUserAdminOfNeighborhood(loggedUserId, request.neighborhood_id);
+
+      if (!isAdminOfNeighborhood) return res.sendStatus(401);
+    }
+
+    await requestServices.deleteRequest(+requestId);
+    return res.sendStatus(204);
   }),
 );
 

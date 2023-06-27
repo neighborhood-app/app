@@ -164,25 +164,25 @@ neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractor
 }));
 
 // Delete request
-neighborhoodsRouter.delete(
-  '/:neighborhoodId/requests/:requestId',
-  middleware.validateURLParams,
-  middleware.userIdExtractorAndLoginValidator,
-  catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const loggedUserId = req.loggedUserId as number;
-    const { requestId, neighborhoodId } = req.params;
+// neighborhoodsRouter.delete(
+//   '/:neighborhoodId/requests/:requestId',
+//   middleware.validateURLParams,
+//   middleware.userIdExtractorAndLoginValidator,
+//   catchError(async (req: RequestWithAuthentication, res: Response) => {
+//     const loggedUserId = req.loggedUserId as number;
+//     const { requestId, neighborhoodId } = req.params;
 
-    const isOwnerUser = await requestServices.hasUserCreatedRequest(+requestId, loggedUserId);
-    const isAdminOfNeighborhood = await neighborhoodServices
-      .isUserAdminOfNeighborhood(loggedUserId, +neighborhoodId);
+//     const isOwnerUser = await requestServices.hasUserCreatedRequest(+requestId, loggedUserId);
+//     const isAdminOfNeighborhood = await neighborhoodServices
+//       .isUserAdminOfNeighborhood(loggedUserId, +neighborhoodId);
 
-    if (!isOwnerUser && !isAdminOfNeighborhood) {
-      return res.sendStatus(401);
-    }
+//     if (!isOwnerUser && !isAdminOfNeighborhood) {
+//       return res.sendStatus(401);
+//     }
 
-    await requestServices.deleteRequest(+requestId, +neighborhoodId);
-    return res.sendStatus(204);
-  }),
-);
+//     await requestServices.deleteRequest(+requestId, +neighborhoodId);
+//     return res.sendStatus(204);
+//   }),
+// );
 
 export default neighborhoodsRouter;

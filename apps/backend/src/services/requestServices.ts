@@ -160,17 +160,17 @@ const updateRequest = async (
  */
 const deleteRequest = async (
   requestId: number,
-  neighborhoodId: number,
+  // neighborhoodId: number,
 ) => {
   // fetch request
   // if it doesn't exist
   //  or neighborhood_id doesn't match neighborhoodId, throw error
-  await prismaClient.request.findFirstOrThrow({
-    where: {
-      id: requestId,
-      neighborhood_id: neighborhoodId,
-    },
-  });
+  // await prismaClient.request.findFirstOrThrow({
+  //   where: {
+  //     id: requestId,
+  //     neighborhood_id: neighborhoodId,
+  //   },
+  // });
 
   await prismaClient.request.delete({
     where: { id: requestId },
