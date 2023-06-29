@@ -71,4 +71,46 @@ requestsRouter.put(
   }),
 );
 
+requestsRouter.get(
+  '/:id',
+  middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const requestId: number = Number(req.params.id);
+    const loggedUserId: number = req.loggedUserId as number;
+
+    const hasUserAccessToRequest = await requestServices
+      .hasUserAccessToRequest(loggedUserId, requestId);
+
+    if (!hasUserAccessToRequest) {
+      return res.status(401).send({ error: 'user does not have access to the neighborhood' });
+    }
+
+    const requestData: RequestData = await requestServices
+      .getRequestById(requestId);
+    return res.status(200).send(requestData);
+  }),
+);
+
+// const requestId = Number(req.params.requestId);
+// const neighborhoodId = Number(req.params.neighborhoodId);
+// const loggedUserId = req.loggedUserId as number;
+
+// const isUserMemberOfNeighborhood = await neighborhoodServices
+//   .isUserMemberOfNeighborhood(loggedUserId, neighborhoodId);
+
+// if (!isUserMemberOfNeighborhood) {
+//   return res.status(401).send({ error: 'user not a member of neighborhood' });
+// }
+
+// const isRequestAssociatedWithNeighborhood = await neighborhoodServices
+//   .isRequestAssociatedWithNeighborhood(requestId, neighborhoodId);
+
+// if (!isRequestAssociatedWithNeighborhood) {
+//   return res.status(400).send({ error: 'request not associated with the neighborhood' });
+// }
+
+// const request: RequestData = await requestServices.getRequestById(requestId);
+// return res.status(200).send(request);
+
 export default requestsRouter;

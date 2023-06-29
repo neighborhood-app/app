@@ -2,6 +2,7 @@ import { Request } from '@prisma/client';
 import { CreateRequestData, UpdateRequestData } from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
+import neighborhoodServices from './neighborhoodServices';
 
 /**
  * performs narrowing on object `obj`
@@ -177,6 +178,24 @@ const deleteRequest = async (
   });
 };
 
+/**
+ * - returns true if user is a member of request's neighborhood
+ * - throws an error if requestId is invalid or request not found
+ * @param userId
+ * @param requestId
+ * @returns Promise resolving to boolean
+ */
+const hasUserAccessToRequest = async (userId: number, requestId: number): Promise<boolean> => {
+  const request: Request = await getRequestById(requestId);
+
+  const neighborhoodId = request.neighborhood_id;
+
+  const isUserMemberOfRequestsNeighborhood = await neighborhoodServices
+    .isUserMemberOfNeighborhood(userId, neighborhoodId);
+
+  return isUserMemberOfRequestsNeighborhood;
+};
+
 export default {
   getRequestById,
   parseCloseRequestData,
@@ -185,4 +204,5 @@ export default {
   parseCreateRequestData,
   updateRequest,
   deleteRequest,
+  hasUserAccessToRequest,
 };

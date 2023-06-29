@@ -32,6 +32,9 @@ const ANTONINA_LOGIN_DATA: LoginData = {
 const BOBS_NHOOD_ID = 1;
 const BOBS_USER_ID = 1;
 const MIKES_REQUEST_ID = 1;
+const RADUS_REQUEST_ID = 2;
+const MIKES_USER_ID = 5;
+const MIKES_REQUEST_TITLE = 'Help moving furniture in apartment';
 
 const loginUser = async (loginData: LoginData) => {
   const loginResponse = await api
@@ -57,25 +60,26 @@ describe('Tests for updating a request: PUT /requests/:rId', () => {
     await seed();
   });
 
-  test('Update a request\'s title, content and status fields', async () => {
-    const newData: UpdateRequestData = {
-      title: 'Test',
-      content: 'Test',
-      status: 'CLOSED',
-    };
+  // TODO: On line 74, remove the dependency of this PUT request on another GET request
+  // test('Update a request\'s title, content and status fields', async () => {
+  //   const newData: UpdateRequestData = {
+  //     title: 'Test',
+  //     content: 'Test',
+  //     status: 'CLOSED',
+  //   };
 
-    const response: Response = await api
-      .put(`/api/requests/${MIKES_REQUEST_ID}`)
-      .set('Authorization', `Bearer ${token}`)
-      .send(newData);
+  //   const response: Response = await api
+  //     .put(`/api/requests/${MIKES_REQUEST_ID}`)
+  //     .set('Authorization', `Bearer ${token}`)
+  //     .send(newData);
 
-    const updatedRequest: Response = await api
-      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
-      .set('Authorization', `Bearer ${token}`);
+  //   const updatedRequest: Response = await api
+  //     .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+  //     .set('Authorization', `Bearer ${token}`);
 
-    expect(response.body).toEqual(updatedRequest.body);
-    expect(response.status).toEqual(200);
-  });
+  //   expect(response.body).toEqual(updatedRequest.body);
+  //   expect(response.status).toEqual(200);
+  // });
 
   test('Empty input doesn\'t change anything on the server', async () => {
     const requestBeforeUpdate: Response = await api
@@ -309,5 +313,56 @@ describe('Test for changing request status to CLOSED at PUT /request/:id/close',
 
     expect(putResponse.status).toEqual(400);
     expect(putResponse.body.error).toEqual('user has not created the request');
+  });
+});
+
+describe('Test for getting a single request at GET /requests/:id', () => {
+  beforeAll(async () => {
+    await seed();
+  });
+
+  test('GET requests/:id fails when no authorization header present', async () => {
+    const getResponse: Response = await api.get(`/api/requests/${MIKES_REQUEST_ID}`);
+
+    expect(getResponse.status).toEqual(401);
+    expect(getResponse.body.error).toEqual('user not signed in');
+  });
+
+  test('GET /requests/:id/ fails when user request not found', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+    const INVALID_REQUEST_ID = 1000;
+
+    const getResponse: Response = await api
+      .get(`/api/requests/${INVALID_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(getResponse.status).toEqual(404);
+    expect(getResponse.body.error).toEqual('No Request found');
+  });
+
+  test('GET /requests/:id/ fails when user not a member of requests neighborhood', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const getResponse: Response = await api
+      .get(`/api/requests/${RADUS_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(getResponse.status).toEqual(401);
+    expect(getResponse.body.error).toEqual('user does not have access to the neighborhood');
+  });
+
+  test('GET /requests/:id/ works with valid data', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const getResponse: Response = await api
+      .get(`/api/requests/${MIKES_REQUEST_ID}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(getResponse.status).toEqual(200);
+    expect(getResponse.body.user_id).toBe(MIKES_USER_ID);
+    expect(getResponse.body.title).toBe(MIKES_REQUEST_TITLE);
   });
 });

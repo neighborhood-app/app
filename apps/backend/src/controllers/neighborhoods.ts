@@ -29,9 +29,9 @@ neighborhoodsRouter.get('/:id', middleware.userIdExtractor, catchError(async (re
     : await neighborhoodServices.isUserMemberOfNeighborhood(loggedUserId, neighborhoodID);
 
   const neighborhood: NeighborhoodDetailsForMembers |
-  NeighborhoodDetailsForNonMembers = isUserLoggedInAndMemberOfNeighborhood
-    ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
-    : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
+    NeighborhoodDetailsForNonMembers = isUserLoggedInAndMemberOfNeighborhood
+      ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
+      : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
   res.status(200).send(neighborhood);
 }));
@@ -127,28 +127,28 @@ neighborhoodsRouter.get('/:id/requests', middleware.userIdExtractorAndLoginValid
 }));
 
 // Get a single request
-neighborhoodsRouter.get('/:neighborhoodId/requests/:requestId', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-  const requestId = Number(req.params.requestId);
-  const neighborhoodId = Number(req.params.neighborhoodId);
-  const loggedUserId = req.loggedUserId as number;
+// neighborhoodsRouter.get('/:neighborhoodId/requests/:requestId', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
+//   const requestId = Number(req.params.requestId);
+//   const neighborhoodId = Number(req.params.neighborhoodId);
+//   const loggedUserId = req.loggedUserId as number;
 
-  const isUserMemberOfNeighborhood = await neighborhoodServices
-    .isUserMemberOfNeighborhood(loggedUserId, neighborhoodId);
+//   const isUserMemberOfNeighborhood = await neighborhoodServices
+//     .isUserMemberOfNeighborhood(loggedUserId, neighborhoodId);
 
-  if (!isUserMemberOfNeighborhood) {
-    return res.status(401).send({ error: 'user not a member of neighborhood' });
-  }
+//   if (!isUserMemberOfNeighborhood) {
+//     return res.status(401).send({ error: 'user not a member of neighborhood' });
+//   }
 
-  const isRequestAssociatedWithNeighborhood = await neighborhoodServices
-    .isRequestAssociatedWithNeighborhood(requestId, neighborhoodId);
+//   const isRequestAssociatedWithNeighborhood = await neighborhoodServices
+//     .isRequestAssociatedWithNeighborhood(requestId, neighborhoodId);
 
-  if (!isRequestAssociatedWithNeighborhood) {
-    return res.status(400).send({ error: 'request not associated with the neighborhood' });
-  }
+//   if (!isRequestAssociatedWithNeighborhood) {
+//     return res.status(400).send({ error: 'request not associated with the neighborhood' });
+//   }
 
-  const request: RequestData = await requestServices.getRequestById(requestId);
-  return res.status(200).send(request);
-}));
+//   const request: RequestData = await requestServices.getRequestById(requestId);
+//   return res.status(200).send(request);
+// }));
 
 // Create request
 neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {

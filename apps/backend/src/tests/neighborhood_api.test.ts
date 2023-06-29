@@ -32,9 +32,6 @@ const ANTONINA_LOGIN_DATA: LoginData = {
 const BOBS_NHOOD_ID = 1;
 const BOBS_USER_ID = 1;
 const ANTONINAS_NHOOD_ID = 2;
-const MIKES_REQUEST_ID = 1;
-const MIKES_USER_ID = 5;
-const MIKES_REQUEST_TITLE = 'Help moving furniture in apartment';
 const INVALID_NHOOD_ID = 12345;
 
 const loginUser = async (loginData: LoginData): Promise<Response> => {
@@ -168,11 +165,11 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
   // error was 'socket hang up'
   test('when user not logged in, unable to create neighborhood', async () => {
     const postResponse: Response = await api.post('/api/neighborhoods');
-    console.log(postResponse?.body);
+    // console.log(postResponse?.body);
 
     const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
     const numCurrentNeighborhoods = currentNeighborhoods.length;
-    console.log(currentNeighborhoods);
+    // console.log(currentNeighborhoods);
 
     expect(postResponse.status).toEqual(401);
     expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods);
@@ -670,67 +667,67 @@ describe('Tests for getting requests associated with a n-hood GET /neighborhoods
   });
 });
 
-describe('Test for getting a single request at GET /neighborhoods/:id/requests/:id', () => {
-  beforeAll(async () => {
-    await seed();
-  });
+// describe('Test for getting a single request at GET /neighborhoods/:id/requests/:id', () => {
+//   beforeAll(async () => {
+//     await seed();
+//   });
 
-  test('GET /neighborhoods/:nId/requests/:rId fails when no authorization header present', async () => {
-    const getResponse: Response = await api.get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`);
+//   test('GET /neighborhoods/:nId/requests/:rId fails when no authorization header present', async () => {
+//     const getResponse: Response = await api.get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`);
 
-    expect(getResponse.status).toEqual(401);
-    expect(getResponse.body.error).toEqual('user not signed in');
-  });
+//     expect(getResponse.status).toEqual(401);
+//     expect(getResponse.body.error).toEqual('user not signed in');
+//   });
 
-  test('GET /neighborhoods/:nId/requests/:rId/ fails when user not a member of neighborhood', async () => {
-    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-    const { token } = loginResponse.body;
+//   test('GET /neighborhoods/:nId/requests/:rId/ fails when user not a member of neighborhood', async () => {
+//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+//     const { token } = loginResponse.body;
 
-    const getResponse: Response = await api
-      .get(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
-      .set('Authorization', `Bearer ${token}`);
+//     const getResponse: Response = await api
+//       .get(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+//       .set('Authorization', `Bearer ${token}`);
 
-    expect(getResponse.status).toEqual(401);
-    expect(getResponse.body.error).toEqual('user not a member of neighborhood');
-  });
+//     expect(getResponse.status).toEqual(401);
+//     expect(getResponse.body.error).toEqual('user not a member of neighborhood');
+//   });
 
-  test('GET /neighborhood/:nId/requests/:rId fails when neighborhoodId invalid', async () => {
-    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-    const { token } = loginResponse.body;
+//   test('GET /neighborhood/:nId/requests/:rId fails when neighborhoodId invalid', async () => {
+//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+//     const { token } = loginResponse.body;
 
-    const getResponse: Response = await api
-      .get(`/api/neighborhoods/foo/requests/${MIKES_REQUEST_ID}`)
-      .set('Authorization', `Bearer ${token}`);
+//     const getResponse: Response = await api
+//       .get(`/api/neighborhoods/foo/requests/${MIKES_REQUEST_ID}`)
+//       .set('Authorization', `Bearer ${token}`);
 
-    expect(getResponse.status).toEqual(400);
-  });
+//     expect(getResponse.status).toEqual(400);
+//   });
 
-  test('GET /neighborhood/:nId/requests/:rId fails when request is not associated with nhood', async () => {
-    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-    const { token } = loginResponse.body;
+//   test('GET /neighborhood/:nId/requests/:rId fails when request is not associated with nhood', async () => {
+//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+//     const { token } = loginResponse.body;
 
-    const NOT_MIKES_REQUEST_ID = 2;
-    const getResponse: Response = await api
-      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${NOT_MIKES_REQUEST_ID}`)
-      .set('Authorization', `Bearer ${token}`);
+//     const NOT_MIKES_REQUEST_ID = 2;
+//     const getResponse: Response = await api
+//       .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${NOT_MIKES_REQUEST_ID}`)
+//       .set('Authorization', `Bearer ${token}`);
 
-    expect(getResponse.status).toEqual(400);
-    expect(getResponse.body.error).toEqual('request not associated with the neighborhood');
-  });
+//     expect(getResponse.status).toEqual(400);
+//     expect(getResponse.body.error).toEqual('request not associated with the neighborhood');
+//   });
 
-  test('GET /neighborhoods/:nId/requests/:rId/ fails works with valid data', async () => {
-    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-    const { token } = loginResponse.body;
+//   test('GET /neighborhoods/:nId/requests/:rId/ fails works with valid data', async () => {
+//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+//     const { token } = loginResponse.body;
 
-    const getResponse: Response = await api
-      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
-      .set('Authorization', `Bearer ${token}`);
+//     const getResponse: Response = await api
+//       .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
+//       .set('Authorization', `Bearer ${token}`);
 
-    expect(getResponse.status).toEqual(200);
-    expect(getResponse.body.user_id).toBe(MIKES_USER_ID);
-    expect(getResponse.body.title).toBe(MIKES_REQUEST_TITLE);
-  });
-});
+//     expect(getResponse.status).toEqual(200);
+//     expect(getResponse.body.user_id).toBe(MIKES_USER_ID);
+//     expect(getResponse.body.title).toBe(MIKES_REQUEST_TITLE);
+//   });
+// });
 
 describe('Tests for creating a new request at POST /requests', () => {
   beforeEach(async () => {
