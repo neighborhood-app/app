@@ -126,17 +126,4 @@ neighborhoodsRouter.get('/:id/requests', middleware.userIdExtractorAndLoginValid
   return res.status(200).send(requests);
 }));
 
-// Create request
-// neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-//   const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
-
-//   const loggedUserId: number = req.loggedUserId as number;
-//   const neighborhoodId: number = Number(req.params.neighborhoodId) as number;
-
-//   const request: RequestData = await neighborhoodServices
-//     .createRequest(postData, loggedUserId, neighborhoodId);
-
-//   return res.status(201).send(request);
-// }));
-
 export default neighborhoodsRouter;

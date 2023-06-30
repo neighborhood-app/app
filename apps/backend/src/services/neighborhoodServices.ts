@@ -84,7 +84,7 @@ const isUserMemberOfNeighborhood = async (
  * @returns Promise resolving to neighborhood details without admin_id
  */
 const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number)
-: Promise<NeighborhoodDetailsForNonMembers> => {
+  : Promise<NeighborhoodDetailsForNonMembers> => {
   const FIELDS_TO_SELECT_FOR_NON_MEMBERS = {
     id: true,
     name: true,
@@ -110,7 +110,7 @@ const getNeighborhoodDetailsForNonMembers = async (neighborhoodId: number)
  * @returns neighborhood details with admin, users and requests
  */
 const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
-: Promise<NeighborhoodDetailsForMembers> => {
+  : Promise<NeighborhoodDetailsForMembers> => {
   const FIELDS_TO_INCLUDE_FOR_MEMBERS = {
     admin: true,
     users: true,
@@ -136,7 +136,7 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
  * @returns true if user is admin, false otherwise
  */
 const isUserAdminOfNeighborhood = async (userID: number, neighborhoodID: number):
-Promise<boolean> => {
+  Promise<boolean> => {
   const neighborhood: Neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
     where: {
       id: neighborhoodID,
@@ -255,88 +255,6 @@ const getRequestsAssociatedWithNeighborhood = async (nhoodId: number): Promise<R
   return requests;
 };
 
-const isRequestAssociatedWithNeighborhood = async (reqId: number, nhoodId: number)
-: Promise<boolean> => {
-  const associatedRequests = await getRequestsAssociatedWithNeighborhood(nhoodId);
-  const associatedRequestIds = associatedRequests.map(req => req.id);
-
-  return associatedRequestIds.includes(reqId);
-};
-
-/**
- * - validates data for creating new request in the db
- * - title length should be >= 4,
- * - and user must be a member of that neighborhood
- * - throws Error if data is not valid
- * @param requestData parsed request data sent to POST /requests
- * @param userId should be a member of neighborhood
- * @param neighborhoodId
- */
-const validateCreateRequestData = async (
-  requestData: CreateRequestData,
-  userId: number,
-  neighborhoodId: number,
-): Promise<void> => {
-  const neighborhood: NeighborhoodWithUsers | null = await prismaClient
-    .neighborhood.findUnique({
-      where: {
-        id: neighborhoodId,
-      },
-      include: {
-        users: true,
-      },
-    });
-
-  const MINIMUM_TITLE_LENGTH = 4;
-
-  if (!neighborhood) {
-    const error = new Error('Neighborhood does not exist');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-
-  if (requestData.title.trim().length < MINIMUM_TITLE_LENGTH) {
-    const error = new Error('Invalid title');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-
-  const neighborhoodsUsersIds = neighborhood.users.map(u => u.id);
-
-  if (!neighborhoodsUsersIds.includes(userId)) {
-    const error = new Error('User is not a member of neighborhood');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-};
-
-/**
- * - creates a new request in the database
- * @param requestData - should contain title and content
- * @param userId - user must be a member of the neighborhood
- * @param neighborhoodId - user must be a member of this neighborhood
- * @returns - Promise resolving to newly created request
- */
-const createRequest = async (
-  requestData: CreateRequestData,
-  userId: number,
-  neighborhoodId: number,
-): Promise<Request> => {
-  await validateCreateRequestData(requestData, userId, neighborhoodId);
-
-  const request: Request = await prismaClient.request.create({
-    data: {
-      neighborhood_id: neighborhoodId,
-      user_id: userId,
-      title: requestData.title,
-      content: requestData.content,
-      status: 'OPEN',
-    },
-  });
-
-  return request;
-};
-
 export default {
   getAllNeighborhoods,
   isUserMemberOfNeighborhood,
@@ -348,6 +266,4 @@ export default {
   createNeighborhood,
   connectUserToNeighborhood,
   getRequestsAssociatedWithNeighborhood,
-  isRequestAssociatedWithNeighborhood,
-  createRequest,
 };
