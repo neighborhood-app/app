@@ -1,0 +1,109 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1.7fr 1fr;
+  grid-template-rows: 1fr;
+  /* justify-items: center; */
+}
+
+.column {
+  box-sizing: border-box;
+  /* border: 1px solid white; */
+  border-radius: 10px;
+  padding: 10px;
+  margin: 0 30px;
+  max-height: 70vh;
+  overflow: auto;
+  background-color: #F6BA6F;
+  
+}
+
+.header {
+  grid-column: 1 / 4;
+  text-align: center;
+  justify-self: center;
+}
+
+.memberColumn {
+  grid-column: 3 / 4;
+  display: flex;
+  flex-direction: column;
+}
+
+.pHeader {
+  margin: 10px 0 10px 0;
+}
+
+.list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.formGroup {
+  margin: 10px;
+}
+
+.radio {
+  margin-bottom: 8px;
+}
+
+.radioContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.requestBox {
+  display: flex;
+  flex-direction: column;
+  background-color: #FFEBEB;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.requestHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.helpButton {
+  background-color: #6DA9E4;
+  width: 100px;
+  border: 0px solid;
+  align-self: center;
+  margin-bottom: 20px;
+}
+
+.helpButton:hover {
+  background-color: #ADE4DB;
+}
+
+.leaveButton {
+  background-color: #6DA9E4;
+  width: 150px;
+  border: 0px solid;
+  align-self: center;
+  margin: 10px;
+  justify-self: center;
+}
+
+.leaveButton:hover {
+  background-color: #ADE4DB;
+}
+
+.addRequestButton {
+  background-color: #6DA9E4;
+  width: 150px;
+  border: 0px solid;
+  align-self: center;
+  margin: 20px;
+  justify-self: center;
+}
+
+.addRequestButton:hover {
+  background-color: #ADE4DB;
+}
+
+.author {
+  text-decoration: underline;
+  font-weight: bolder;
+}
