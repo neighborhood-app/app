@@ -126,63 +126,17 @@ neighborhoodsRouter.get('/:id/requests', middleware.userIdExtractorAndLoginValid
   return res.status(200).send(requests);
 }));
 
-// Get a single request
-// neighborhoodsRouter.get('/:neighborhoodId/requests/:requestId', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-//   const requestId = Number(req.params.requestId);
-//   const neighborhoodId = Number(req.params.neighborhoodId);
-//   const loggedUserId = req.loggedUserId as number;
-
-//   const isUserMemberOfNeighborhood = await neighborhoodServices
-//     .isUserMemberOfNeighborhood(loggedUserId, neighborhoodId);
-
-//   if (!isUserMemberOfNeighborhood) {
-//     return res.status(401).send({ error: 'user not a member of neighborhood' });
-//   }
-
-//   const isRequestAssociatedWithNeighborhood = await neighborhoodServices
-//     .isRequestAssociatedWithNeighborhood(requestId, neighborhoodId);
-
-//   if (!isRequestAssociatedWithNeighborhood) {
-//     return res.status(400).send({ error: 'request not associated with the neighborhood' });
-//   }
-
-//   const request: RequestData = await requestServices.getRequestById(requestId);
-//   return res.status(200).send(request);
-// }));
-
 // Create request
-neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
-  const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
+// neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
+//   const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
 
-  const loggedUserId: number = req.loggedUserId as number;
-  const neighborhoodId: number = Number(req.params.neighborhoodId) as number;
+//   const loggedUserId: number = req.loggedUserId as number;
+//   const neighborhoodId: number = Number(req.params.neighborhoodId) as number;
 
-  const request: RequestData = await neighborhoodServices
-    .createRequest(postData, loggedUserId, neighborhoodId);
+//   const request: RequestData = await neighborhoodServices
+//     .createRequest(postData, loggedUserId, neighborhoodId);
 
-  return res.status(201).send(request);
-}));
-
-// Delete request
-// neighborhoodsRouter.delete(
-//   '/:neighborhoodId/requests/:requestId',
-//   middleware.validateURLParams,
-//   middleware.userIdExtractorAndLoginValidator,
-//   catchError(async (req: RequestWithAuthentication, res: Response) => {
-//     const loggedUserId = req.loggedUserId as number;
-//     const { requestId, neighborhoodId } = req.params;
-
-//     const isOwnerUser = await requestServices.hasUserCreatedRequest(+requestId, loggedUserId);
-//     const isAdminOfNeighborhood = await neighborhoodServices
-//       .isUserAdminOfNeighborhood(loggedUserId, +neighborhoodId);
-
-//     if (!isOwnerUser && !isAdminOfNeighborhood) {
-//       return res.sendStatus(401);
-//     }
-
-//     await requestServices.deleteRequest(+requestId, +neighborhoodId);
-//     return res.sendStatus(204);
-//   }),
-// );
+//   return res.status(201).send(request);
+// }));
 
 export default neighborhoodsRouter;

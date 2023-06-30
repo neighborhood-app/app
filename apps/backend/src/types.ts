@@ -103,7 +103,8 @@ export type UserWithRequests = Prisma
    */
 export type CreateRequestData = {
   title: string,
-  content: string
+  content: string,
+  neighborhoodId: number
 };
 
 /**

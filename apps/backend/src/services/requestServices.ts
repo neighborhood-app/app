@@ -1,5 +1,5 @@
 import { Request } from '@prisma/client';
-import { CreateRequestData, UpdateRequestData } from '../types';
+import { CreateRequestData, UpdateRequestData, NeighborhoodWithUsers } from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import neighborhoodServices from './neighborhoodServices';
@@ -14,6 +14,7 @@ import neighborhoodServices from './neighborhoodServices';
 const isCreateRequestData = (obj: object): obj is CreateRequestData => (
   'title' in obj && typeof obj.title === 'string'
   && 'content' in obj && typeof obj.content === 'string'
+  && 'neighborhoodId' in obj && typeof obj.neighborhoodId === 'number'
 );
 
 /**
@@ -33,12 +34,13 @@ const parseCreateRequestData = async (body: unknown): Promise<CreateRequestData>
     const requestData: CreateRequestData = {
       title: body.title,
       content: body.content,
+      neighborhoodId: body.neighborhoodId,
     };
 
     return requestData;
   }
 
-  const error = new Error('title or content missing or invalid');
+  const error = new Error('title, content or neighborhoodId missing or invalid');
   error.name = 'InvalidInputError';
   throw error;
 };
@@ -196,6 +198,79 @@ const hasUserAccessToRequest = async (userId: number, requestId: number): Promis
   return isUserMemberOfRequestsNeighborhood;
 };
 
+/**
+ * - validates data for creating new request in the db
+ * - title length should be >= 4,
+ * - and user must be a member of that neighborhood
+ * - throws Error if data is not valid
+ * @param requestData parsed request data sent to POST /requests
+ * @param userId should be a member of neighborhood
+ * @param neighborhoodId
+ */
+const validateCreateRequestData = async (
+  requestData: CreateRequestData,
+  userId: number,
+  neighborhoodId: number,
+): Promise<void> => {
+  const neighborhood: NeighborhoodWithUsers | null = await prismaClient
+    .neighborhood.findUnique({
+      where: {
+        id: neighborhoodId,
+      },
+      include: {
+        users: true,
+      },
+    });
+
+  const MINIMUM_TITLE_LENGTH = 4;
+
+  if (!neighborhood) {
+    const error = new Error('Neighborhood does not exist');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+
+  if (requestData.title.trim().length < MINIMUM_TITLE_LENGTH) {
+    const error = new Error('Invalid title');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+
+  const neighborhoodsUsersIds = neighborhood.users.map(u => u.id);
+
+  if (!neighborhoodsUsersIds.includes(userId)) {
+    const error = new Error('User is not a member of neighborhood');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+};
+
+/**
+ * - creates a new request in the database
+ * @param requestData - should contain title, content and neighborhoodId
+ * @param userId - user must be a member of the neighborhood of the neighborhoodId
+ * @returns - Promise resolving to newly created request
+ */
+const createRequest = async (
+  requestData: CreateRequestData,
+  userId: number,
+): Promise<Request> => {
+  const { neighborhoodId } = requestData;
+  await validateCreateRequestData(requestData, userId, Number(neighborhoodId));
+
+  const request: Request = await prismaClient.request.create({
+    data: {
+      neighborhood_id: Number(neighborhoodId),
+      user_id: userId,
+      title: requestData.title,
+      content: requestData.content,
+      status: 'OPEN',
+    },
+  });
+
+  return request;
+};
+
 export default {
   getRequestById,
   parseCloseRequestData,
@@ -205,4 +280,5 @@ export default {
   updateRequest,
   deleteRequest,
   hasUserAccessToRequest,
+  createRequest,
 };

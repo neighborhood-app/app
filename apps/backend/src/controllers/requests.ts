@@ -2,7 +2,7 @@ import express, { Response } from 'express';
 import { Request as RequestData } from '@prisma/client';
 import catchError from '../utils/catchError';
 import middleware from '../utils/middleware';
-import { RequestWithAuthentication } from '../types';
+import { CreateRequestData, RequestWithAuthentication } from '../types';
 import requestServices from '../services/requestServices';
 import neighborhoodServices from '../services/neighborhoodServices';
 
@@ -51,6 +51,7 @@ requestsRouter.delete(
   }),
 );
 
+// update request
 requestsRouter.put(
   '/:id/close',
   middleware.userIdExtractorAndLoginValidator,
@@ -71,6 +72,7 @@ requestsRouter.put(
   }),
 );
 
+// get a single request
 requestsRouter.get(
   '/:id',
   middleware.userIdExtractorAndLoginValidator,
@@ -92,25 +94,31 @@ requestsRouter.get(
   }),
 );
 
-// const requestId = Number(req.params.requestId);
-// const neighborhoodId = Number(req.params.neighborhoodId);
-// const loggedUserId = req.loggedUserId as number;
+// create request
+requestsRouter.post(
+  '/',
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const loggedUserId: number = req.loggedUserId as number;
+    const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
 
-// const isUserMemberOfNeighborhood = await neighborhoodServices
-//   .isUserMemberOfNeighborhood(loggedUserId, neighborhoodId);
+    const request: RequestData = await requestServices
+      .createRequest(postData, loggedUserId);
 
-// if (!isUserMemberOfNeighborhood) {
-//   return res.status(401).send({ error: 'user not a member of neighborhood' });
-// }
+    return res.status(201).send(request);
+  }),
+);
 
-// const isRequestAssociatedWithNeighborhood = await neighborhoodServices
-//   .isRequestAssociatedWithNeighborhood(requestId, neighborhoodId);
+// neighborhoodsRouter.post('/:neighborhoodId/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
+//   const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
 
-// if (!isRequestAssociatedWithNeighborhood) {
-//   return res.status(400).send({ error: 'request not associated with the neighborhood' });
-// }
+//   const loggedUserId: number = req.loggedUserId as number;
+//   const neighborhoodId: number = Number(req.params.neighborhoodId) as number;
 
-// const request: RequestData = await requestServices.getRequestById(requestId);
-// return res.status(200).send(request);
+//   const request: RequestData = await neighborhoodServices
+//     .createRequest(postData, loggedUserId, neighborhoodId);
+
+//   return res.status(201).send(request);
+// }));
 
 export default requestsRouter;
