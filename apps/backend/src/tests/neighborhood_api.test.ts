@@ -30,7 +30,6 @@ const ANTONINA_LOGIN_DATA: LoginData = {
 // };
 
 const BOBS_NHOOD_ID = 1;
-const BOBS_USER_ID = 1;
 const ANTONINAS_NHOOD_ID = 2;
 const INVALID_NHOOD_ID = 12345;
 

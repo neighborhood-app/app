@@ -201,7 +201,7 @@ const hasUserAccessToRequest = async (userId: number, requestId: number): Promis
 /**
  * - validates data for creating new request in the db
  * - title length should be >= 4,
- * - and user must be a member of that neighborhood
+ * - user must be a member of the neighborhood represented by neighborhoodId
  * - throws Error if data is not valid
  * @param requestData parsed request data sent to POST /requests
  * @param userId should be a member of neighborhood
@@ -248,7 +248,7 @@ const validateCreateRequestData = async (
 /**
  * - creates a new request in the database
  * @param requestData - should contain title, content and neighborhoodId
- * @param userId - user must be a member of the neighborhood of the neighborhoodId
+ * @param userId - user must be a member of the neighborhood represented by neighborhoodId
  * @returns - Promise resolving to newly created request
  */
 const createRequest = async (

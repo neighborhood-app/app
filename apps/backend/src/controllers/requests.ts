@@ -51,7 +51,7 @@ requestsRouter.delete(
   }),
 );
 
-// update request
+// update request to close a request
 requestsRouter.put(
   '/:id/close',
   middleware.userIdExtractorAndLoginValidator,

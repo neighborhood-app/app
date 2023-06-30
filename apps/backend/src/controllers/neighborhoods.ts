@@ -8,10 +8,8 @@ import {
   NeighborhoodDetailsForMembers,
   NeighborhoodDetailsForNonMembers,
   NeighborhoodWithRelatedFields, RequestWithAuthentication,
-  CreateRequestData,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
-import requestServices from '../services/requestServices';
 
 const neighborhoodsRouter = express.Router();
 
@@ -29,9 +27,9 @@ neighborhoodsRouter.get('/:id', middleware.userIdExtractor, catchError(async (re
     : await neighborhoodServices.isUserMemberOfNeighborhood(loggedUserId, neighborhoodID);
 
   const neighborhood: NeighborhoodDetailsForMembers |
-    NeighborhoodDetailsForNonMembers = isUserLoggedInAndMemberOfNeighborhood
-      ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
-      : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
+  NeighborhoodDetailsForNonMembers = isUserLoggedInAndMemberOfNeighborhood
+    ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
+    : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
   res.status(200).send(neighborhood);
 }));
