@@ -1,7 +1,7 @@
-import bcrypt from "bcrypt";
-import { Neighborhood, User, Request } from "@prisma/client";
-import { UserWithoutId, CreateUserData, UserWithRequests } from "../types";
-import prismaClient from "../../prismaClient";
+import bcrypt from 'bcrypt';
+import { Neighborhood, User, Request } from '@prisma/client';
+import { UserWithoutId, CreateUserData, UserWithRequests } from '../types';
+import prismaClient from '../../prismaClient';
 
 /**
  * Generates a password hash using bcrypt library and 10 salt rounds
@@ -23,7 +23,7 @@ const getPasswordHash = async (password: string) => {
  * @returns Promise resolved to an object with user fields without id
  */
 const generateUserData = async (
-  createUserData: CreateUserData
+  createUserData: CreateUserData,
 ): Promise<UserWithoutId> => {
   const { username, password } = createUserData;
   const user: UserWithoutId = {
@@ -71,7 +71,7 @@ const seedUser = async (createUserData: CreateUserData) => {
 };
 
 const getUsersAssociatedWithNeighborhood = async (
-  neighborhoodId: number
+  neighborhoodId: number,
 ): Promise<void | User[]> => {
   const neighborhood = await prismaClient.neighborhood.findFirst({
     where: {
@@ -83,7 +83,7 @@ const getUsersAssociatedWithNeighborhood = async (
   });
 
   if (!neighborhood) {
-    throw new Error("neighborhood does not exist");
+    throw new Error('neighborhood does not exist');
   } else {
     const { users } = neighborhood;
     return users;
@@ -103,7 +103,7 @@ const getNumberOfRequests = async (): Promise<number> => {
  * @returns a Promise resolving to Requests associated with User
  */
 const getRequestsAssociatedWithUser = async (
-  userID: number
+  userID: number,
 ): Promise<Request[]> => {
   const user: UserWithRequests = (await prismaClient.user.findUnique({
     where: {
@@ -122,7 +122,7 @@ const getRequestsAssociatedWithUser = async (
  * @returns Returns a Promise resolving to Requests associated with a neighborhood
  */
 const getRequestsAssociatedWithNeighborhood = async (
-  neighborhoodId: number
+  neighborhoodId: number,
 ) => {
   const neighborhood = await prismaClient.neighborhood.findUnique({
     where: {
