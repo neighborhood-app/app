@@ -1,8 +1,12 @@
-import { Request } from '@prisma/client';
-import { CreateRequestData, UpdateRequestData, NeighborhoodWithUsers } from '../types';
-import prismaClient from '../../prismaClient';
-import middleware from '../utils/middleware';
-import neighborhoodServices from './neighborhoodServices';
+import { Request } from "@prisma/client";
+import {
+  CreateRequestData,
+  UpdateRequestData,
+  NeighborhoodWithUsers,
+} from "../types";
+import prismaClient from "../../prismaClient";
+import middleware from "../utils/middleware";
+import neighborhoodServices from "./neighborhoodServices";
 
 /**
  * performs narrowing on object `obj`
@@ -11,11 +15,13 @@ import neighborhoodServices from './neighborhoodServices';
  * @param obj - request.body
  * @returns - type predicate (boolean)
  */
-const isCreateRequestData = (obj: object): obj is CreateRequestData => (
-  'title' in obj && typeof obj.title === 'string'
-  && 'content' in obj && typeof obj.content === 'string'
-  && 'neighborhoodId' in obj && typeof obj.neighborhoodId === 'number'
-);
+const isCreateRequestData = (obj: object): obj is CreateRequestData =>
+  "title" in obj &&
+  typeof obj.title === "string" &&
+  "content" in obj &&
+  typeof obj.content === "string" &&
+  "neighborhoodId" in obj &&
+  typeof obj.neighborhoodId === "number";
 
 /**
  * - parses data sent to POST /requests
@@ -23,10 +29,12 @@ const isCreateRequestData = (obj: object): obj is CreateRequestData => (
  * @param body req.body
  * @returns Promise which resolves to parsed create request data
  */
-const parseCreateRequestData = async (body: unknown): Promise<CreateRequestData> => {
+const parseCreateRequestData = async (
+  body: unknown
+): Promise<CreateRequestData> => {
   if (!middleware.isObject(body)) {
-    const error = new Error('unable to parse data');
-    error.name = 'InvalidInputError';
+    const error = new Error("unable to parse data");
+    error.name = "InvalidInputError";
     throw error;
   }
 
@@ -40,8 +48,10 @@ const parseCreateRequestData = async (body: unknown): Promise<CreateRequestData>
     return requestData;
   }
 
-  const error = new Error('title, content or neighborhoodId missing or invalid');
-  error.name = 'InvalidInputError';
+  const error = new Error(
+    "title, content or neighborhoodId missing or invalid"
+  );
+  error.name = "InvalidInputError";
   throw error;
 };
 
@@ -63,19 +73,21 @@ const getRequestById = async (requestId: number): Promise<Request> => {
 
 const parseCloseRequestData = async (body: unknown): Promise<number> => {
   if (!middleware.isObject(body)) {
-    const error = new Error('unable to parse data');
-    error.name = 'InvalidInputError';
+    const error = new Error("unable to parse data");
+    error.name = "InvalidInputError";
     throw error;
   }
 
-  if ('neighborhood_id' in body
-    && typeof body.neighborhood_id === 'number'
-    && !Number.isNaN(body.neighborhood_id)) {
+  if (
+    "neighborhood_id" in body &&
+    typeof body.neighborhood_id === "number" &&
+    !Number.isNaN(body.neighborhood_id)
+  ) {
     return body.neighborhood_id;
   }
 
-  const error = new Error('neighborhood_id missing or invalid');
-  error.name = 'InvalidInputError';
+  const error = new Error("neighborhood_id missing or invalid");
+  error.name = "InvalidInputError";
   throw error;
 };
 
@@ -86,23 +98,13 @@ const parseCloseRequestData = async (body: unknown): Promise<number> => {
  * @param userId
  * @returns true if request.requestId === userId
  */
-const hasUserCreatedRequest = async (requestId: number, userId: number): Promise<boolean> => {
+const hasUserCreatedRequest = async (
+  requestId: number,
+  userId: number
+): Promise<boolean> => {
   const request: Request = await getRequestById(requestId);
 
   return request.user_id === userId;
-};
-
-const closeRequest = async (requestId: number): Promise<Request> => {
-  const closedRequest: Request = await prismaClient.request.update({
-    where: {
-      id: requestId,
-    },
-    data: {
-      status: 'CLOSED',
-    },
-  });
-
-  return closedRequest;
 };
 
 /**
@@ -113,13 +115,15 @@ const closeRequest = async (requestId: number): Promise<Request> => {
  * @returns - (boolean) type predicate for UpdateRequestData
  */
 const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
-  const VALID_PROPS = ['title', 'content', 'status'];
+  const VALID_PROPS = ["title", "content", "status"];
   const props = Object.keys(obj);
 
-  if (props.some(prop => !VALID_PROPS.includes(prop))) return false;
-  if ('title' in obj && typeof obj.title !== 'string') return false;
-  if ('content' in obj && typeof obj.content !== 'string') return false;
-  if ('status' in obj && obj.status !== 'OPEN' && obj.status !== 'CLOSED') return false;
+  if (props.some((prop) => !VALID_PROPS.includes(prop))) return false;
+  if ("title" in obj && typeof obj.title !== "string") return false;
+  if ("content" in obj && typeof obj.content !== "string") return false;
+  if ("status" in obj && obj.status !== "OPEN" && obj.status !== "CLOSED") {
+    return false;
+  }
 
   return true;
 };
@@ -133,17 +137,17 @@ const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
  */
 const updateRequest = async (
   body: unknown,
-  requestId: number,
+  requestId: number
 ): Promise<Request> => {
   if (!middleware.isObject(body)) {
-    const error = new Error('unable to parse data');
-    error.name = 'InvalidInputError';
+    const error = new Error("unable to parse data");
+    error.name = "InvalidInputError";
     throw error;
   }
 
   if (!isUpdateRequestData(body)) {
-    const error = new Error('Title, content and/or status missing or invalid');
-    error.name = 'InvalidInputError';
+    const error = new Error("Title, content and/or status missing or invalid");
+    error.name = "InvalidInputError";
     throw error;
   }
 
@@ -162,7 +166,7 @@ const updateRequest = async (
  * @returns - Promise resolving to updated request
  */
 const deleteRequest = async (
-  requestId: number,
+  requestId: number
   // neighborhoodId: number,
 ) => {
   // fetch request
@@ -187,13 +191,19 @@ const deleteRequest = async (
  * @param requestId
  * @returns Promise resolving to boolean
  */
-const hasUserAccessToRequest = async (userId: number, requestId: number): Promise<boolean> => {
+const hasUserAccessToRequest = async (
+  userId: number,
+  requestId: number
+): Promise<boolean> => {
   const request: Request = await getRequestById(requestId);
 
   const neighborhoodId = request.neighborhood_id;
 
-  const isUserMemberOfRequestsNeighborhood = await neighborhoodServices
-    .isUserMemberOfNeighborhood(userId, neighborhoodId);
+  const isUserMemberOfRequestsNeighborhood =
+    await neighborhoodServices.isUserMemberOfNeighborhood(
+      userId,
+      neighborhoodId
+    );
 
   return isUserMemberOfRequestsNeighborhood;
 };
@@ -210,10 +220,10 @@ const hasUserAccessToRequest = async (userId: number, requestId: number): Promis
 const validateCreateRequestData = async (
   requestData: CreateRequestData,
   userId: number,
-  neighborhoodId: number,
+  neighborhoodId: number
 ): Promise<void> => {
-  const neighborhood: NeighborhoodWithUsers | null = await prismaClient
-    .neighborhood.findUnique({
+  const neighborhood: NeighborhoodWithUsers | null =
+    await prismaClient.neighborhood.findUnique({
       where: {
         id: neighborhoodId,
       },
@@ -225,22 +235,22 @@ const validateCreateRequestData = async (
   const MINIMUM_TITLE_LENGTH = 4;
 
   if (!neighborhood) {
-    const error = new Error('Neighborhood does not exist');
-    error.name = 'InvalidInputError';
+    const error = new Error("Neighborhood does not exist");
+    error.name = "InvalidInputError";
     throw error;
   }
 
   if (requestData.title.trim().length < MINIMUM_TITLE_LENGTH) {
-    const error = new Error('Invalid title');
-    error.name = 'InvalidInputError';
+    const error = new Error("Invalid title");
+    error.name = "InvalidInputError";
     throw error;
   }
 
-  const neighborhoodsUsersIds = neighborhood.users.map(u => u.id);
+  const neighborhoodsUsersIds = neighborhood.users.map((u) => u.id);
 
   if (!neighborhoodsUsersIds.includes(userId)) {
-    const error = new Error('User is not a member of neighborhood');
-    error.name = 'InvalidInputError';
+    const error = new Error("User is not a member of neighborhood");
+    error.name = "InvalidInputError";
     throw error;
   }
 };
@@ -253,7 +263,7 @@ const validateCreateRequestData = async (
  */
 const createRequest = async (
   requestData: CreateRequestData,
-  userId: number,
+  userId: number
 ): Promise<Request> => {
   const { neighborhoodId } = requestData;
   await validateCreateRequestData(requestData, userId, Number(neighborhoodId));
@@ -264,7 +274,7 @@ const createRequest = async (
       user_id: userId,
       title: requestData.title,
       content: requestData.content,
-      status: 'OPEN',
+      status: "OPEN",
     },
   });
 
@@ -275,7 +285,6 @@ export default {
   getRequestById,
   parseCloseRequestData,
   hasUserCreatedRequest,
-  closeRequest,
   parseCreateRequestData,
   updateRequest,
   deleteRequest,
