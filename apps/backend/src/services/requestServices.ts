@@ -70,26 +70,6 @@ const getRequestById = async (requestId: number): Promise<Request> => {
   return request;
 };
 
-const parseCloseRequestData = async (body: unknown): Promise<number> => {
-  if (!middleware.isObject(body)) {
-    const error = new Error('unable to parse data');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-
-  if (
-    'neighborhood_id' in body
-    && typeof body.neighborhood_id === 'number'
-    && !Number.isNaN(body.neighborhood_id)
-  ) {
-    return body.neighborhood_id;
-  }
-
-  const error = new Error('neighborhood_id missing or invalid');
-  error.name = 'InvalidInputError';
-  throw error;
-};
-
 /**
  * - checks whether user created the request
  * - throws error if request with requestId is not found
@@ -267,7 +247,6 @@ const createRequest = async (
 
 export default {
   getRequestById,
-  parseCloseRequestData,
   hasUserCreatedRequest,
   parseCreateRequestData,
   updateRequest,
