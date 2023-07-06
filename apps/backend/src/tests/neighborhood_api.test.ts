@@ -543,7 +543,7 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
 
   test('able to join user to neighborhood with valid data', async () => {
     // we are trying to join Bob to Antonina's neighborhood
-    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
     const numInitialUsers = initialUsers?.length as number; // We are passing a valid n_hood id
 
     await api.post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join`)
@@ -551,7 +551,7 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const finalUsersInDb = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    const finalUsersInDb = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
     expect(finalUsersInDb?.length).toBe(numInitialUsers + 1);
 
     const finalUserNamesInDb = finalUsersInDb?.map(u => u.user_name);
@@ -559,51 +559,51 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
   });
 
   test('when user not logged in, error occurs', async () => {
-    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
 
     const joinResponse = await api.post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join`);
 
     expect(joinResponse.status).toEqual(401);
 
-    const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    const finalUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
 
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 
   test('when user logged in and invalid neighborhood ID, error occurs', async () => {
-    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
 
     await api.post('/api/neighborhoods/xyz/join')
       .set('Authorization', `Bearer ${token}`)
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    const finalUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
 
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 
   test('when user logged in and non-existend neighborhood ID, error occurs', async () => {
-    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
     await api.post(`/api/neighborhoods/${INVALID_NHOOD_ID}/join`)
       .set('Authorization', `Bearer ${token}`)
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(ANTONINAS_NHOOD_ID);
+    const finalUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 
   test('when user logged in and user already added to the neighborhood, error occurs', async () => {
     // we are trying to add Bob to Bob's neighborhood
-    const initialUsers = await testHelpers.getUsersAssociatedWithNeighborhood(BOBS_NHOOD_ID);
+    const initialUsers = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
 
     await api.post(`/api/neighborhoods/${BOBS_NHOOD_ID}/join`)
       .set('Authorization', `Bearer ${token}`)
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    const finalUsers = await testHelpers.getUsersAssociatedWithNeighborhood(BOBS_NHOOD_ID);
+    const finalUsers = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
 
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
@@ -647,8 +647,7 @@ describe('Tests for getting requests associated with a n-hood GET /neighborhoods
     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
     const { token } = loginResponse.body;
 
-    const requestsWithNeighborhoodInDb = await testHelpers
-      .getRequestsAssociatedWithNeighborhood(BOBS_NHOOD_ID);
+    const requestsWithNeighborhoodInDb = await testHelpers.getNeighborhoodRequests(BOBS_NHOOD_ID);
 
     const response: Response = await api
       .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests`)

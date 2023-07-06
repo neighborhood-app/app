@@ -70,10 +70,6 @@ describe('Tests for updating a request: PUT /requests/:id', () => {
   // functionality within source code and use test helpers instead.
 
   test("Update a request's title, content and status fields", async () => {
-    // The documentation for requestService/updateRequest.ts says that requestData
-    // should contain title, content and neighborhoodId. Here it seems that the
-    // neighborhoodId is not required
-    // TODO: ensure that neighborhoodId is present and valid
     const newData: UpdateRequestData = {
       title: 'Test',
       content: 'Test',
@@ -88,43 +84,32 @@ describe('Tests for updating a request: PUT /requests/:id', () => {
 
     // tests for correctness of response
     expect(response.status).toEqual(200);
-    expect(response.body.id).toEqual(MIKES_REQUEST_ID);
-    expect(response.body.title).toEqual(newData.title);
-    expect(response.body.content).toEqual(newData.content);
-    expect(response.body.status).toEqual(newData.status);
+    expect(response.body).toEqual({
+      ...initialRequest,
+      ...newData,
+      time_created: initialRequest.time_created.toJSON(),
+    });
 
     // tests for correctness of database update
-    const updatedRequest = await testHelpers.getSingleRequest(MIKES_REQUEST_ID);
-
-    expect(updatedRequest.id).toEqual(MIKES_REQUEST_ID);
-    expect(updatedRequest.title).toEqual(newData.title);
-    expect(updatedRequest.content).toEqual(newData.content);
-    expect(updatedRequest.status).toEqual(newData.status);
-
     // fields that were not updated should remain the same
-    expect(updatedRequest.time_created).toEqual(initialRequest.time_created);
-    expect(updatedRequest.neighborhood_id).toEqual(
-      initialRequest.neighborhood_id,
-    );
-    expect(updatedRequest.user_id).toEqual(initialRequest.user_id);
+    const updatedRequest = await testHelpers.getSingleRequest(MIKES_REQUEST_ID);
+    expect(updatedRequest).toEqual({
+      ...initialRequest,
+      ...newData,
+    });
   });
 
-  // TODO: Remove dependence on non-existent routes, use getSingleRequest() instead
   test("Empty input doesn't change anything on the server", async () => {
-    const requestBeforeUpdate: Response = await api
-      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
-      .set('Authorization', `Bearer ${token}`);
+    const requestBeforeUpdate = await testHelpers.getSingleRequest(MIKES_REQUEST_ID);
 
     const response: Response = await api
       .put(`/api/requests/${MIKES_REQUEST_ID}`)
       .set('Authorization', `Bearer ${token}`)
       .send({});
 
-    const request: Response = await api
-      .get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests/${MIKES_REQUEST_ID}`)
-      .set('Authorization', `Bearer ${token}`);
+    const request = await testHelpers.getSingleRequest(MIKES_REQUEST_ID);
 
-    expect(request.body).toEqual(requestBeforeUpdate.body);
+    expect(request).toEqual(requestBeforeUpdate);
     expect(response.status).toEqual(200);
   });
 
@@ -201,10 +186,6 @@ describe('Tests for updating a request: PUT /requests/:id', () => {
     expect(requestInDbAfterUpdate).toEqual(requestInDbBeforeUpdate);
   });
 
-  // Since the sanctity of the internal fields of a Requests are important
-  // I am gonna write short separate tests for each field
-  // There is an additional concern regarding what data we are sending
-  //  which I have elaborated in the next test
   test('Id, user_id, neighborhood_id and time_created props cannot be edited', async () => {
     const requestInDbBeforeUpdate = await testHelpers.getSingleRequest(
       MIKES_REQUEST_ID,
@@ -248,14 +229,6 @@ describe('Tests for updating a request: PUT /requests/:id', () => {
     expect(requestInDbAfterUpdate).toEqual(requestInDbBeforeUpdate);
   });
 
-  // This works even though the update data passed does not have
-  // title, content and neighborhood_id field as mentioned in
-  // the docs of the function updateRequest() innservices/requestServices.ts
-
-  // I am not sure why we need to pass all those things. Person who created the request
-  // should be able to edit it - except the request's internal fields like the various ids
-
-  // TODO : Make the tests and docs consistent with each other
   test('Able to change to status of request to CLOSED', async () => {
     const initialRequest = await testHelpers.getSingleRequest(MIKES_REQUEST_ID);
     expect(initialRequest.status).toBe('OPEN');
@@ -580,13 +553,13 @@ describe('Tests for creating a new request at POST /requests', () => {
     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
     const { token } = loginResponse.body;
 
-    const numberOfInitialRequests = await testHelpers.getNumberOfRequests();
+    const numOfInitialRequests = await testHelpers.getNumberOfRequests();
 
-    const initialRequestsAssociatedWithBob = await testHelpers.getRequestsAssociatedWithUser(BOBS_USER_ID);
-    const numberOfInitialRequestsAssociatedWithBob = initialRequestsAssociatedWithBob.length;
+    const bobsInitalRequests = await testHelpers.getRequestsOfUser(BOBS_USER_ID);
+    const initialNumOfBobsRequests = bobsInitalRequests.length;
 
-    const initialRequestsAssociatedWithNeighborhood = await testHelpers.getRequestsAssociatedWithNeighborhood(BOBS_NHOOD_ID);
-    const numInitialRequestsAssociatedWithNeighborhood = initialRequestsAssociatedWithNeighborhood.length;
+    const initialNeighborhoodRequests = await testHelpers.getNeighborhoodRequests(BOBS_NHOOD_ID);
+    const numOfInitialNeighborhoodReuqests = initialNeighborhoodRequests.length;
 
     const response = await api
       .post('/api/requests')
@@ -599,17 +572,14 @@ describe('Tests for creating a new request at POST /requests', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const numberOfFinalRequests = await testHelpers.getNumberOfRequests();
+    const numOfFinalRequests = await testHelpers.getNumberOfRequests();
+    const bobsFinalRequests = await testHelpers.getRequestsOfUser(BOBS_USER_ID);
+    const finalNumOfBobsRequests = bobsFinalRequests.length;
+    const bobsRequestContentsAfterCreation = bobsFinalRequests.map((req) => req.content);
 
-    const finalRequestsAssociatedWithBob = await testHelpers.getRequestsAssociatedWithUser(BOBS_USER_ID);
-    const numberOfFinalRequestsAssociatedWithBob = finalRequestsAssociatedWithBob.length;
-    const bobsRequestContentsAfterCreation = finalRequestsAssociatedWithBob.map(
-      (r) => r.content,
-    );
-
-    const finalRequestsAssociatedWithNeighborhood = await testHelpers.getRequestsAssociatedWithNeighborhood(BOBS_NHOOD_ID);
-    const numberOfFinalRequestsAssociatedWithNeighborhood = finalRequestsAssociatedWithNeighborhood.length;
-    const neighborhoodsRequestTitlesAfterCreation = finalRequestsAssociatedWithNeighborhood.map((r) => r.title);
+    const finalNeighborhoodRequests = await testHelpers.getNeighborhoodRequests(BOBS_NHOOD_ID);
+    const numOfFinalNeighborhoodRequests = finalNeighborhoodRequests.length;
+    const neighborhoodsReqTitlesAfterCreation = finalNeighborhoodRequests.map((req) => req.title);
 
     expect(response.body.neighborhood_id).toEqual(BOBS_NHOOD_ID);
     expect(response.body.user_id).toEqual(BOBS_USER_ID);
@@ -618,16 +588,13 @@ describe('Tests for creating a new request at POST /requests', () => {
     expect(response.body.status).toEqual('OPEN');
     expect(response.body.time_created).toBeDefined();
 
-    expect(numberOfFinalRequests).toEqual(numberOfInitialRequests + 1);
-
-    expect(numberOfFinalRequestsAssociatedWithBob).toEqual(
-      numberOfInitialRequestsAssociatedWithBob + 1,
-    );
+    expect(numOfFinalRequests).toEqual(numOfInitialRequests + 1);
+    expect(finalNumOfBobsRequests).toEqual(initialNumOfBobsRequests + 1);
     expect(bobsRequestContentsAfterCreation).toContain('barbar');
 
-    expect(numberOfFinalRequestsAssociatedWithNeighborhood).toEqual(
-      numInitialRequestsAssociatedWithNeighborhood + 1,
+    expect(numOfFinalNeighborhoodRequests).toEqual(
+      numOfInitialNeighborhoodReuqests + 1,
     );
-    expect(neighborhoodsRequestTitlesAfterCreation).toContain('foofoo');
+    expect(neighborhoodsReqTitlesAfterCreation).toContain('foofoo');
   });
 });

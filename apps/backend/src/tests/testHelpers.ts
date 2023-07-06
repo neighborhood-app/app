@@ -70,7 +70,7 @@ const seedUser = async (createUserData: CreateUserData) => {
   });
 };
 
-const getUsersAssociatedWithNeighborhood = async (
+const getNeighborhoodUsers = async (
   neighborhoodId: number,
 ): Promise<void | User[]> => {
   const neighborhood = await prismaClient.neighborhood.findFirst({
@@ -102,7 +102,7 @@ const getNumberOfRequests = async (): Promise<number> => {
  * @param userID
  * @returns a Promise resolving to Requests associated with User
  */
-const getRequestsAssociatedWithUser = async (
+const getRequestsOfUser = async (
   userID: number,
 ): Promise<Request[]> => {
   const user: UserWithRequests = (await prismaClient.user.findUnique({
@@ -121,7 +121,7 @@ const getRequestsAssociatedWithUser = async (
  * @param neighborhoodId
  * @returns Returns a Promise resolving to Requests associated with a neighborhood
  */
-const getRequestsAssociatedWithNeighborhood = async (
+const getNeighborhoodRequests = async (
   neighborhoodId: number,
 ) => {
   const neighborhood = await prismaClient.neighborhood.findUnique({
@@ -174,9 +174,9 @@ export default {
   seedUser,
   getPasswordHash,
   removeAllData,
-  getUsersAssociatedWithNeighborhood,
+  getNeighborhoodUsers,
   getNumberOfRequests,
-  getRequestsAssociatedWithUser,
-  getRequestsAssociatedWithNeighborhood,
+  getRequestsOfUser,
+  getNeighborhoodRequests,
   getSingleRequest,
 };

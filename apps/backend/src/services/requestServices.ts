@@ -129,9 +129,8 @@ const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
 
 /**
  * - updates a request
- * @param requestData - should contain title, content and neighborhoodId
+ * @param body - may contain title, content, and/or status
  * @param requestId - (number) must be an existing request id
- * @param neighborhoodId - (number) neighborhood must match the neighborhood the request exists in
  * @returns - Promise resolving to updated request
  */
 const updateRequest = async (
@@ -161,23 +160,11 @@ const updateRequest = async (
 /**
  * - delete a request
  * @param requestId - (number) must be an existing request id
- * @param neighborhoodId - (number) neighborhood must match the neighborhood the request exists in
  * @returns - Promise resolving to updated request
  */
 const deleteRequest = async (
   requestId: number,
-  // neighborhoodId: number,
 ) => {
-  // fetch request
-  // if it doesn't exist
-  //  or neighborhood_id doesn't match neighborhoodId, throw error
-  // await prismaClient.request.findFirstOrThrow({
-  //   where: {
-  //     id: requestId,
-  //     neighborhood_id: neighborhoodId,
-  //   },
-  // });
-
   await prismaClient.request.delete({
     where: { id: requestId },
   });
