@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import { Neighborhood, User } from '@prisma/client';
-import { UserWithoutId, CreateUserData } from '../types';
+import { Neighborhood, User, Request } from '@prisma/client';
+import { UserWithoutId, CreateUserData, UserWithRequests } from '../types';
 import prismaClient from '../../prismaClient';
 
 /**
@@ -22,7 +22,9 @@ const getPasswordHash = async (password: string) => {
  * @param password required to populate password_hash field in users table
  * @returns Promise resolved to an object with user fields without id
  */
-const generateUserData = async (createUserData: CreateUserData): Promise<UserWithoutId> => {
+const generateUserData = async (
+  createUserData: CreateUserData,
+): Promise<UserWithoutId> => {
   const { username, password } = createUserData;
   const user: UserWithoutId = {
     user_name: username,
@@ -68,17 +70,17 @@ const seedUser = async (createUserData: CreateUserData) => {
   });
 };
 
-const getUsersAssociatedWithNeighborhood = async (neighborhoodId: number):
-Promise<void | User[]> => {
-  const neighborhood = await prismaClient
-    .neighborhood.findFirst({
-      where: {
-        id: neighborhoodId,
-      },
-      select: {
-        users: true,
-      },
-    });
+const getNeighborhoodUsers = async (
+  neighborhoodId: number,
+): Promise<void | User[]> => {
+  const neighborhood = await prismaClient.neighborhood.findFirst({
+    where: {
+      id: neighborhoodId,
+    },
+    select: {
+      users: true,
+    },
+  });
 
   if (!neighborhood) {
     throw new Error('neighborhood does not exist');
@@ -86,6 +88,70 @@ Promise<void | User[]> => {
     const { users } = neighborhood;
     return users;
   }
+};
+
+/**
+ * @returns number of requests present in the db
+ */
+const getNumberOfRequests = async (): Promise<number> => {
+  const requests = await prismaClient.request.findMany({});
+  return requests.length;
+};
+
+/**
+ * @param userID
+ * @returns a Promise resolving to Requests associated with User
+ */
+const getRequestsOfUser = async (
+  userID: number,
+): Promise<Request[]> => {
+  const user: UserWithRequests = (await prismaClient.user.findUnique({
+    where: {
+      id: userID,
+    },
+    include: {
+      requests: true,
+    },
+  })) as UserWithRequests;
+
+  return user.requests;
+};
+
+/**
+ * @param neighborhoodId
+ * @returns Returns a Promise resolving to Requests associated with a neighborhood
+ */
+const getNeighborhoodRequests = async (
+  neighborhoodId: number,
+) => {
+  const neighborhood = await prismaClient.neighborhood.findUnique({
+    where: {
+      id: neighborhoodId,
+    },
+    include: {
+      requests: true,
+    },
+  });
+
+  const requests: Request[] = neighborhood?.requests as Request[];
+
+  return requests;
+};
+
+/**
+ * - fetches request from the db
+ * - throws Error if request not found
+ * @param id request_id
+ * @returns
+ */
+const getSingleRequest = async (id: number): Promise<Request> => {
+  const request = await prismaClient.request.findFirstOrThrow({
+    where: {
+      id,
+    },
+  });
+
+  return request;
 };
 
 const removeAllData = async () => {
@@ -108,5 +174,9 @@ export default {
   seedUser,
   getPasswordHash,
   removeAllData,
-  getUsersAssociatedWithNeighborhood,
+  getNeighborhoodUsers,
+  getNumberOfRequests,
+  getRequestsOfUser,
+  getNeighborhoodRequests,
+  getSingleRequest,
 };
