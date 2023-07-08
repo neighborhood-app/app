@@ -1,4 +1,4 @@
-import { Neighborhood } from '@prisma/client';
+import { Neighborhood, Request } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
   NeighborhoodWithRelatedFields, CreateNeighborhoodData,
@@ -50,8 +50,10 @@ const getAllNeighborhoods = async (): Promise<Array<Neighborhood>> => {
  * @param neighborhoodID
  * @returns Promise resolving to true if user if part of neighborhood, false otherwise
  */
-const isUserMemberOfNeighborhood = async (loggedUserID: number, neighborhoodID: number)
-:Promise<boolean> => {
+const isUserMemberOfNeighborhood = async (
+  loggedUserID: number,
+  neighborhoodID: number,
+): Promise<boolean> => {
   const neighborhood: NeighborhoodWithRelatedFields | null = await prismaClient
     .neighborhood.findUnique({
       where: {
@@ -139,6 +141,7 @@ Promise<boolean> => {
       id: neighborhoodID,
     },
   });
+
   return (neighborhood.admin_id === userID);
 };
 
@@ -164,7 +167,7 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
   }
 
   if ('admin_id' in object && typeof object.admin_id === 'number'
-      && 'name' in object && typeof object.name === 'string') {
+    && 'name' in object && typeof object.name === 'string') {
     const neighborhoodData: CreateNeighborhoodData = {
       admin_id: object.admin_id,
       name: object.name,
@@ -230,6 +233,27 @@ const createNeighborhood = async (data: CreateNeighborhoodData): Promise<Neighbo
   }
 };
 
+const getRequestsAssociatedWithNeighborhood = async (nhoodId: number): Promise<Request[]> => {
+  const neighborhood: NeighborhoodWithRelatedFields | null = await prismaClient
+    .neighborhood.findUnique({
+      where: {
+        id: nhoodId,
+      },
+      include: {
+        requests: true,
+        users: true,
+      },
+    });
+
+  if (!neighborhood) {
+    const error = new Error('Neighborhood does not exist');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+  const { requests } = neighborhood;
+  return requests;
+};
+
 export default {
   getAllNeighborhoods,
   isUserMemberOfNeighborhood,
@@ -240,4 +264,5 @@ export default {
   parseCreateNeighborhoodData,
   createNeighborhood,
   connectUserToNeighborhood,
+  getRequestsAssociatedWithNeighborhood,
 };

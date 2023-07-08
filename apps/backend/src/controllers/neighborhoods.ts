@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Neighborhood } from '@prisma/client';
+import { Neighborhood, Request as RequestData } from '@prisma/client';
 import catchError from '../utils/catchError';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
@@ -103,6 +103,25 @@ neighborhoodsRouter.post('/:id/join', middleware.userIdExtractorAndLoginValidato
 
   await neighborhoodServices.connectUserToNeighborhood(loggedUserId, neighborhoodId);
   return res.status(201).send({ success: 'You have joined the neighborhood' });
+}));
+
+// Get a neighborhood's requests
+neighborhoodsRouter.get('/:id/requests', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
+  const neighborhoodID = Number(req.params.id);
+  // LoginValidator ensures that loggedUserId is present
+  const loggedUserID = req.loggedUserId as number;
+
+  const isUserMemberOfNeighborhood: boolean = await neighborhoodServices
+    .isUserMemberOfNeighborhood(loggedUserID, neighborhoodID);
+
+  if (!isUserMemberOfNeighborhood) {
+    return res.status(400).send({ error: 'user is not a member of the neighborhood' });
+  }
+
+  const requests: RequestData[] = await neighborhoodServices
+    .getRequestsAssociatedWithNeighborhood(neighborhoodID);
+
+  return res.status(200).send(requests);
 }));
 
 export default neighborhoodsRouter;

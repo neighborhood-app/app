@@ -1,4 +1,6 @@
-import { Neighborhood, Prisma, User } from '@prisma/client';
+import {
+  Neighborhood, Prisma, Status, User,
+} from '@prisma/client';
 import { Request } from 'express';
 
 /**
@@ -71,3 +73,45 @@ const neighborhoodDetailsForMembers = Prisma.validator<Prisma.NeighborhoodArgs>(
  */
 export type NeighborhoodDetailsForMembers = Prisma
   .NeighborhoodGetPayload<typeof neighborhoodDetailsForMembers>;
+
+const neighborhoodWithUsers = Prisma.validator<Prisma.NeighborhoodArgs>()({
+  include: {
+    users: true,
+  },
+});
+
+/**
+ * Neighborhood data with users
+ */
+export type NeighborhoodWithUsers = Prisma
+  .NeighborhoodGetPayload<typeof neighborhoodWithUsers>;
+
+const userWithRequests = Prisma.validator<Prisma.UserArgs>()({
+  include: {
+    requests: true,
+  },
+});
+
+/**
+ * User data with requests
+ */
+export type UserWithRequests = Prisma
+  .UserGetPayload<typeof userWithRequests>;
+
+/**
+   * post data for creating requests
+   */
+export type CreateRequestData = {
+  title: string,
+  content: string,
+  neighborhoodId: number
+};
+
+/**
+   * PUT data for updating a request
+*/
+export interface UpdateRequestData {
+  title?: string,
+  content?: string,
+  status?: Status
+}

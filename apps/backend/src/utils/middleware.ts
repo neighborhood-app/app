@@ -23,6 +23,12 @@ const requestLogger = (request: Request, _response: Response, next: NextFunction
   next();
 };
 
+/**
+ * @param input - (unknown)
+ * @returns - type predicate (boolean) indicating whether input is of type `object`
+ */
+const isObject = (input: unknown): input is Object => !!input && (typeof input === 'object');
+
 const unknownEndpoint = (_request: Request, response: Response): void => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
@@ -35,8 +41,8 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
     response.status(400).send({ error: error.message });
   } else if (error.name === 'InvalidUserameOrPasswordError') {
     response.status(401).send({ error: error.message });
-  // } else if (error.name === 'NeighborhoodDataError') {
-  //   response.status(400).send({ error: error.message });
+    // } else if (error.name === 'NeighborhoodDataError') {
+    //   response.status(400).send({ error: error.message });
   } else if (error.name === 'InvalidInputError') {
     response.status(400).send({ error: error.message });
   } else if (error.name === 'ResourceDoesNotExistError') {
@@ -56,6 +62,28 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
   } else {
     response.status(400).send({ error: error.message });
   }
+};
+
+/**
+ * check if there are any URL params
+ * if yes, convert them to numbers and check that they are NOT NaNs
+ * calls next or throws InvalidInputError depending on outcome
+ */
+const validateURLParams = (
+  req: RequestWithAuthentication,
+  _res: Response,
+  next: NextFunction,
+) => {
+  const params = Object.keys(req.params);
+  if (params.length === 0) return next();
+
+  const values = Object.values(req.params);
+  const valid = values.map(Number).every(val => !Number.isNaN(val));
+  if (valid) return next();
+
+  const error = new Error('unable to parse data');
+  error.name = 'InvalidInputError';
+  throw error;
 };
 
 /**
@@ -126,10 +154,10 @@ const isUserLoggedIn = catchError(async (
 });
 
 /**
- * Ensures that unauthenticated requests are ended immediately
- * if request has valid token, extracts userId and adds it to the request
- * else if , request has invalid token, ends the request with 401
- * else if request has no token, ends the request with 401
+ * - Ensures that unauthenticated requests are ended immediately
+ * - if request has valid token, extracts userId and adds it to the request
+ * - else if , request has invalid token, ends the request with 401
+ * - else if request has no token, ends the request with 401
  */
 const userIdExtractorAndLoginValidator = catchError(async (
   req: RequestWithAuthentication,
@@ -147,6 +175,8 @@ const userIdExtractorAndLoginValidator = catchError(async (
 
 export default {
   requestLogger,
+  validateURLParams,
+  isObject,
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
