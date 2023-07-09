@@ -2,7 +2,8 @@
   display: grid;
   grid-template-columns: 1fr 1.7fr 1fr;
   grid-template-rows: 1fr;
-  /* justify-items: center; */
+  row-gap: 10px;
+  margin: 10px;
 }
 
 .column {
@@ -14,7 +15,6 @@
   max-height: 70vh;
   overflow: auto;
   background-color: #F6BA6F;
-  
 }
 
 .header {
@@ -29,6 +29,21 @@
   flex-direction: column;
 }
 
+.filterColumn {
+  grid-column: 1 / 4;
+  display: flex;
+  flex-direction: row;
+}
+
+.requestColumn {
+  grid-column: 1 / 4;
+}
+
+.form {
+  display: flex;
+  flex-direction: row;
+}
+
 .pHeader {
   margin: 10px 0 10px 0;
 }
@@ -36,6 +51,8 @@
 .list {
   list-style: none;
   padding-left: 0;
+  display: flex;
+  flex-direction: row;
 }
 
 .formGroup {
@@ -58,6 +75,10 @@
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
+}
+
+.aboutBox {
+  grid-column: 1 / 3;
 }
 
 .requestHeader {

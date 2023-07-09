@@ -5,11 +5,32 @@ import styles from "./neighborhood.module.css"
 export default function Neighborhood() {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.header}>
+      <div className={`${styles.column} ${styles.aboutBox}`}>
         <h1>PARADISE PARK</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit fugit reprehenderit blanditiis, iusto, harum consectetur necessitatibus delectus dolores optio nam enim exercitationem impedit inventore nihil beatae sint officia? Veritatis numquam, illum excepturi ab ex accusantium eum maxime consequatur modi placeat perferendis quod ipsum consectetur corporis aperiam doloremque in provident delectus.</p>
+      </div>
+      <div className={`${styles.column} ${styles.memberColumn}`}>
+        <p><strong><u>Admin</u></strong></p>
+        <p>Mike Miller</p>
+        <p><strong><u>Members</u></strong></p>
+        <ul className={styles.list}>
+          <li>
+            Sonia
+          </li>
+          <li>
+            Maria
+          </li>
+          <li>
+            John
+          </li>
+          <li>
+            Radu
+          </li>
+        </ul>
+        <Button className={styles.leaveButton}>Leave Neighborhood</Button>
       </div>
       <div className={`${styles.column} ${styles.filterColumn}`}>
-        <Form>
+        <Form className={styles.form}>
           <Form.Group>
             <Form.Control type="text" placeholder="Search requests"></Form.Control>
           </Form.Group>
@@ -31,7 +52,7 @@ export default function Neighborhood() {
           </div>
         </Form>
       </div>
-      <div className={styles.column}>
+      <div className={`${styles.column} ${styles.requestColumn}`}>
         <div className={styles.requestBox}>
           <div className={styles.requestHeader}>
             <p className={styles.author}>John Smith</p>
@@ -57,28 +78,7 @@ export default function Neighborhood() {
           <Button className={styles.helpButton}>Offer help</Button>
         </div>
       </div>
-      <div className={`${styles.column} ${styles.memberColumn}`}>
-        <h3>About neighborhood</h3>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit fugit reprehenderit blanditiis, iusto, harum consectetur necessitatibus delectus dolores optio nam enim exercitationem impedit inventore nihil beatae sint officia? Veritatis numquam, illum excepturi ab ex accusantium eum maxime consequatur modi placeat perferendis quod ipsum consectetur corporis aperiam doloremque in provident delectus.</p>
-        <p><strong><u>Admin</u></strong></p>
-        <p>Mike Miller</p>
-        <p><strong><u>Members</u></strong></p>
-        <ul className={styles.list}>
-          <li>
-            Sonia
-          </li>
-          <li>
-            Maria
-          </li>
-          <li>
-            John
-          </li>
-          <li>
-            Radu
-          </li>
-        </ul>
-        <Button className={styles.leaveButton}>Leave Neighborhood</Button>
-      </div>
+      
     </div>
   )
 }
