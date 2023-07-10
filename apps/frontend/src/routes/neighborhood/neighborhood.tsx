@@ -1,14 +1,13 @@
-import { Form, Button } from "react-bootstrap"
+import { Button } from "react-bootstrap"
+import SearchFilterForm from "../../components/SearchFilterForm/SearchFilterForm";
+import DescriptionBox from "../../components/DescriptionBox/DescriptionBox";
 
 import styles from "./neighborhood.module.css"
 
 export default function Neighborhood() {
   return (
     <div className={styles.wrapper}>
-      <div className={`${styles.column} ${styles.aboutBox}`}>
-        <h1>PARADISE PARK</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit fugit reprehenderit blanditiis, iusto, harum consectetur necessitatibus delectus dolores optio nam enim exercitationem impedit inventore nihil beatae sint officia? Veritatis numquam, illum excepturi ab ex accusantium eum maxime consequatur modi placeat perferendis quod ipsum consectetur corporis aperiam doloremque in provident delectus.</p>
-      </div>
+      <DescriptionBox />
       <div className={`${styles.column} ${styles.memberColumn}`}>
         <p><strong><u>Admin</u></strong></p>
         <p>Mike Miller</p>
@@ -29,29 +28,7 @@ export default function Neighborhood() {
         </ul>
         <Button className={styles.leaveButton}>Leave Neighborhood</Button>
       </div>
-      <div className={`${styles.column} ${styles.filterColumn}`}>
-        <Form className={styles.form}>
-          <Form.Group>
-            <Form.Control type="text" placeholder="Search requests"></Form.Control>
-          </Form.Group>
-          <p className={styles.pHeader}><strong>Show</strong></p>
-          <div className={styles.radioContainer}>
-            <div className={styles.radio}>
-              <input type="radio" id="openRequests" name="requests" />
-              <label>Open Requests</label>
-            </div>
-            <div className={styles.radio}>
-              <input type="radio" id="closedRequests" name="requests" />
-              <label>Closed Requests</label>
-            </div>
-            <div className={styles.radio}>
-              <input type="radio" id="allRequests" name="requests" />
-              <label>All Requests</label>
-            </div>
-            <Button className={styles.addRequestButton}>Add Request</Button>
-          </div>
-        </Form>
-      </div>
+      <SearchFilterForm />
       <div className={`${styles.column} ${styles.requestColumn}`}>
         <div className={styles.requestBox}>
           <div className={styles.requestHeader}>
