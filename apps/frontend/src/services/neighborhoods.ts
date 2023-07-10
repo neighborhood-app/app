@@ -8,4 +8,9 @@ async function getAllNeighborhoods() {
   return response.data;
 }
 
-export default { getAllNeighborhoods };
+async function getSingleNeighborhood(id: Number) {
+  const response = await axios.get(`${baseURL}/${id}`);
+  return response.data;
+}
+
+export default { getAllNeighborhoods, getSingleNeighborhood };
