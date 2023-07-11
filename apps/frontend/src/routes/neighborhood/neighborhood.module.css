@@ -24,13 +24,6 @@
   justify-self: center;
 }
 
-.memberColumn {
-  grid-column: 3 / 4;
-  grid-row: 1 / 3;
-  display: flex;
-  flex-direction: column;
-}
-
 .filterColumn {
   grid-column: 1 / 4;
   display: flex;
@@ -42,13 +35,6 @@
 }
 
 .form {
-  display: flex;
-  flex-direction: row;
-}
-
-.list {
-  list-style: none;
-  padding-left: 0;
   display: flex;
   flex-direction: row;
 }

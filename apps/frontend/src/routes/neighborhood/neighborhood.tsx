@@ -1,11 +1,11 @@
-import { Button } from "react-bootstrap"
 import SearchFilterForm from "../../components/SearchFilterForm/SearchFilterForm";
 import DescriptionBox from "../../components/DescriptionBox/DescriptionBox";
+import MemberBox from "../../components/MemberBox/MemberBox";
 import neighborhoodsService from '../../services/neighborhoods';
 import { LoaderFunctionArgs, useLoaderData } from "react-router";
-
+import { Button } from "react-bootstrap"
 import styles from "./neighborhood.module.css"
-import { NeighborhoodType} from "../../types";
+import { NeighborhoodDetailsForMembers} from "../../types";
 
 export async function loader({params}: LoaderFunctionArgs) {
   const { id } = params;
@@ -14,31 +14,12 @@ export async function loader({params}: LoaderFunctionArgs) {
 }
 
 export default function Neighborhood() {
-  const neighborhood = useLoaderData() as NeighborhoodType;
+  const neighborhood = useLoaderData() as NeighborhoodDetailsForMembers;
   
   return (
     <div className={styles.wrapper}>
       <DescriptionBox details={neighborhood}/>
-      <div className={`${styles.column} ${styles.memberColumn}`}>
-        <p><strong><u>Admin</u></strong></p>
-        <p>Mike Miller</p>
-        <p><strong><u>Members</u></strong></p>
-        <ul className={styles.list}>
-          <li>
-            Sonia
-          </li>
-          <li>
-            Maria
-          </li>
-          <li>
-            John
-          </li>
-          <li>
-            Radu
-          </li>
-        </ul>
-        <Button className={styles.leaveButton}>Leave Neighborhood</Button>
-      </div>
+      <MemberBox admin={neighborhood.admin} users={neighborhood.users}/>
       <SearchFilterForm />
       <div className={`${styles.column} ${styles.requestColumn}`}>
         <div className={styles.requestBox}>
