@@ -10,7 +10,7 @@ import {
 } from 'react-router-dom';
 import MainLayout from './components/MainLayout/MainLayout';
 import Neighborhoods, {loader as neighborhoodsLoader} from './routes/neighborhoods/neighborhoods';
-import Neighborhood, {loader as neighborhoodLoader} from './routes/neighborhood/neighborhood';
+import Neighborhood, {loader as neighborhoodLoader} from './routes/individual_neighborhood/neighborhood';
 
 const router = createBrowserRouter([
   {
