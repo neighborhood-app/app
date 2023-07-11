@@ -5,7 +5,7 @@ import neighborhoodsService from '../../services/neighborhoods';
 import { LoaderFunctionArgs, useLoaderData } from "react-router";
 import { Button } from "react-bootstrap"
 import styles from "./neighborhood.module.css"
-import { NeighborhoodDetailsForMembers} from "../../types";
+import { NeighborhoodDetailsForMembers, NeighborhoodDetailsForNonMembers } from "../../types";
 
 export async function loader({params}: LoaderFunctionArgs) {
   const { id } = params;
@@ -14,11 +14,11 @@ export async function loader({params}: LoaderFunctionArgs) {
 }
 
 export default function Neighborhood() {
-  const neighborhood = useLoaderData() as NeighborhoodDetailsForMembers;
+  const neighborhood = useLoaderData() as NeighborhoodDetailsForNonMembers | NeighborhoodDetailsForMembers;
   
   return (
     <div className={styles.wrapper}>
-      <DescriptionBox details={neighborhood}/>
+      <DescriptionBox name={neighborhood.name} description={neighborhood.description ? neighborhood.description : ''}/>
       <MemberBox admin={neighborhood.admin} users={neighborhood.users}/>
       <SearchFilterForm />
       <div className={`${styles.column} ${styles.requestColumn}`}>

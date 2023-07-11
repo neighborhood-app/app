@@ -2,11 +2,16 @@ import { NeighborhoodType } from '../../types';
 import styles from './DescriptionBox.module.css';
 import { Button } from "react-bootstrap"
 
-export default function DescriptionBox({details} : {details: NeighborhoodType}) {
+interface Props {
+  name: string,
+  description: string
+}
+
+export default function DescriptionBox({name, description}: Props) {
   return (
     <div className={styles.column}>
-      <h1>{details.name}</h1>
-      <p>{details.description}</p>
+      <h1>{name}</h1>
+      <p>{description}</p>
       <Button className={styles.button}>Join Neighborhood</Button>
     </div>
   )

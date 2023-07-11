@@ -31,6 +31,13 @@ export type NeighborhoodDetailsForMembers = {
   requests: Array<string> | null,
 }
 
+export type NeighborhoodDetailsForNonMembers = {
+  id: number;
+  name: string;
+  description: string | null;
+  location: string | null;
+}
+
 export type User = {
   id: number
   user_name: string

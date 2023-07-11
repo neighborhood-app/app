@@ -2,8 +2,12 @@ import styles from './MemberBox.module.css';
 import { Button } from "react-bootstrap"
 import type { User } from '../../types';
 
-//@ts-ignore
-export default function MemberBox({admin, users}) {
+interface Props {
+    admin: User,
+    users: Array<User>
+}
+
+export default function MemberBox({ admin, users }: Props) {
     //@ts-ignore
     const userNames = users.map(user => {
         return (
