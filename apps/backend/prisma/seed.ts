@@ -91,6 +91,7 @@ async function main() {
     data: {
       admin_id: bob.id,
       name: "Bob's Neighborhood",
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit fugit reprehenderit blanditiis, iusto, harum consectetur necessitatibus.',
     },
   });
 
