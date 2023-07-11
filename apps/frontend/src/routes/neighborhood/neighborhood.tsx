@@ -2,22 +2,23 @@ import { Button } from "react-bootstrap"
 import SearchFilterForm from "../../components/SearchFilterForm/SearchFilterForm";
 import DescriptionBox from "../../components/DescriptionBox/DescriptionBox";
 import neighborhoodsService from '../../services/neighborhoods';
-import { useLoaderData } from "react-router";
+import { LoaderFunctionArgs, useLoaderData } from "react-router";
 
 import styles from "./neighborhood.module.css"
+import { NeighborhoodType} from "../../types";
 
-//@ts-ignore
-export async function loader({ params }) {
-  const neighborhoods = await neighborhoodsService.getSingleNeighborhood(params.id);
+export async function loader({params}: LoaderFunctionArgs) {
+  const { id } = params;
+  const neighborhoods = await neighborhoodsService.getSingleNeighborhood(Number(id));
   return neighborhoods;
 }
 
 export default function Neighborhood() {
-  const neighborhood = useLoaderData();
-  console.log(neighborhood)
+  const neighborhood = useLoaderData() as NeighborhoodType;
+  
   return (
     <div className={styles.wrapper}>
-      <DescriptionBox />
+      <DescriptionBox details={neighborhood}/>
       <div className={`${styles.column} ${styles.memberColumn}`}>
         <p><strong><u>Admin</u></strong></p>
         <p>Mike Miller</p>
@@ -65,7 +66,6 @@ export default function Neighborhood() {
           <Button className={styles.helpButton}>Offer help</Button>
         </div>
       </div>
-
     </div>
   )
 }
