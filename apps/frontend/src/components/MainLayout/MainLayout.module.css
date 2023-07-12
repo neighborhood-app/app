@@ -1,12 +1,10 @@
 .main {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content:space-between;
+  /* height: 85.8vh; */
+  /* overflow: auto; */
 }
 
 .nav {
-  height: 8vh;
+  height: 6vh;
   background-color: #6DA9E4;
   display: flex;
   align-items: center;
@@ -31,11 +29,16 @@
 
 .footer {
   width: 100vw;
-  height: 8vh;
+  height: 6vh;
   background-color: #6DA9E4;
-  /* position: absolute; */
-  /* bottom: 0; */
+  /* position: absolute;
+  bottom: 0; */
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: auto;
+}
+
+.paragraph {
+  margin: 0;
 }

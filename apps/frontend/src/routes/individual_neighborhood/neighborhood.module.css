@@ -19,7 +19,6 @@
   flex-direction: row;
 }
 
-
 .form {
   display: flex;
   flex-direction: row;
@@ -27,18 +26,6 @@
 
 .formGroup {
   margin: 10px;
-}
-
-.helpButton {
-  background-color: #6DA9E4;
-  width: 100px;
-  border: 0px solid;
-  align-self: center;
-  margin-bottom: 20px;
-}
-
-.helpButton:hover {
-  background-color: #ADE4DB;
 }
 
 .leaveButton {
