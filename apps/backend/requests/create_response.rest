@@ -1,10 +1,9 @@
-# Bob's Neighborhood Id is 1
-POST http://localhost:3001/api/requests
+
+POST http://localhost:3001/api/responses
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjg5MTYxMzMyLCJleHAiOjE2OTI3NjEzMzJ9.x99fIlmlTMUh0OTcFH9HjfRfSetcsBKCWIbBZohX6pQ
 
 {
-  "title": "foofoo",
   "content": "barbar",
-  "neighborhoodId": 1
+  "request_id": 4
 }

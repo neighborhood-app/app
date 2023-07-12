@@ -8,6 +8,23 @@ import neighborhoodServices from '../services/neighborhoodServices';
 
 const requestsRouter = express.Router();
 
+// Create request
+requestsRouter.post(
+  '/',
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const loggedUserId: number = req.loggedUserId as number;
+    const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
+
+    const request: RequestData = await requestServices.createRequest(
+      postData,
+      loggedUserId,
+    );
+
+    return res.status(201).send(request);
+  }),
+);
+
 // Update request
 requestsRouter.put(
   '/:id',
@@ -83,23 +100,6 @@ requestsRouter.get(
       requestId,
     );
     return res.status(200).send(requestData);
-  }),
-);
-
-// create request
-requestsRouter.post(
-  '/',
-  middleware.userIdExtractorAndLoginValidator,
-  catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const loggedUserId: number = req.loggedUserId as number;
-    const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
-
-    const request: RequestData = await requestServices.createRequest(
-      postData,
-      loggedUserId,
-    );
-
-    return res.status(201).send(request);
   }),
 );
 

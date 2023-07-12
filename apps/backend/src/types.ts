@@ -1,5 +1,5 @@
 import {
-  Neighborhood, Prisma, Status, User,
+  Neighborhood, Prisma, Status, User, Response,
 } from '@prisma/client';
 import { Request } from 'express';
 
@@ -107,6 +107,8 @@ export type CreateRequestData = {
   neighborhoodId: number
 };
 
+// export type CreateRequestData = Pick<Request, 'title' | 'content' | 'neighborhoodId'>;
+
 /**
    * PUT data for updating a request
 */
@@ -115,3 +117,9 @@ export interface UpdateRequestData {
   content?: string,
   status?: Status
 }
+
+/**
+ * format of the Response data, only with the required `content` property
+ * to create a Response
+ */
+export type ResponseData = Pick<Response, 'content' | 'request_id'>;
