@@ -1,5 +1,5 @@
 import {
-  Neighborhood, Prisma, Status, User,
+  Neighborhood, Prisma, Status, User
 } from '@prisma/client';
 import { Request } from 'express';
 

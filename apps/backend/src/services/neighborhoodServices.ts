@@ -113,7 +113,11 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
   const FIELDS_TO_INCLUDE_FOR_MEMBERS = {
     admin: true,
     users: true,
-    requests: true,
+    requests: {
+      include: {
+        user: true,
+      },
+    },
   };
 
   const neighborhood: NeighborhoodDetailsForMembers = await prismaClient

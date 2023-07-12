@@ -48,3 +48,14 @@ export type User = {
   gender_id: number | null
   bio: string | null
 }
+
+export type Request = {
+  id: number;
+  neighborhood_id: number;
+  user_id: number;
+  title: string;
+  content: string;
+  status: string;
+  time_created: Date;
+  user: User
+}

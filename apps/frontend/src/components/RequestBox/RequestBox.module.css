@@ -1,0 +1,27 @@
+.requestColumn {
+  grid-column: 1 / 4;
+}
+
+.requestBox {
+  display: flex;
+  flex-direction: column;
+  background-color: #FFEBEB;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.requestHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column {
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 0 20px;
+  max-height: 70vh;
+  overflow: auto;
+  background-color: #F6BA6F;
+}

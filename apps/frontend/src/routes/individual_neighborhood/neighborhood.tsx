@@ -1,52 +1,26 @@
-import SearchFilterForm from "../../components/SearchFilterForm/SearchFilterForm";
 import DescriptionBox from "../../components/DescriptionBox/DescriptionBox";
 import MemberBox from "../../components/MemberBox/MemberBox";
+import RequestBox from "../../components/RequestBox/RequestBox";
 import neighborhoodsService from '../../services/neighborhoods';
 import { LoaderFunctionArgs, useLoaderData } from "react-router";
-import { Button } from "react-bootstrap"
-import styles from "./neighborhood.module.css"
-import { NeighborhoodDetailsForMembers, NeighborhoodDetailsForNonMembers } from "../../types";
 
-export async function loader({params}: LoaderFunctionArgs) {
+import styles from "./neighborhood.module.css"
+import { NeighborhoodDetailsForMembers, User } from "../../types";
+
+export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
   const neighborhoods = await neighborhoodsService.getSingleNeighborhood(Number(id));
   return neighborhoods;
 }
 
 export default function Neighborhood() {
-  const neighborhood = useLoaderData() as NeighborhoodDetailsForNonMembers | NeighborhoodDetailsForMembers;
-  
+  const neighborhood = useLoaderData() as NeighborhoodDetailsForMembers;
+
   return (
     <div className={styles.wrapper}>
-      <DescriptionBox name={neighborhood.name} description={neighborhood.description ? neighborhood.description : ''}/>
-      <MemberBox admin={neighborhood.admin} users={neighborhood.users}/>
-      <SearchFilterForm />
-      <div className={`${styles.column} ${styles.requestColumn}`}>
-        <div className={styles.requestBox}>
-          <div className={styles.requestHeader}>
-            <p className={styles.author}>John Smith</p>
-            <p>16.03.2023</p>
-          </div>
-          <p>I need help finding my cat</p>
-          <Button className={styles.helpButton}>Offer help</Button>
-        </div>
-        <div className={styles.requestBox}>
-          <div className={styles.requestHeader}>
-            <p className={styles.author}>Sonny Crocket</p>
-            <p>15.03.2023</p>
-          </div>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad incidunt dignissimos praesentium obcaecati rerum ducimus laudantium exercitationem distinctio atque quaerat?</p>
-          <Button className={styles.helpButton}>Offer help</Button>
-        </div>
-        <div className={styles.requestBox}>
-          <div className={styles.requestHeader}>
-            <p className={styles.author}>Gandalf the Grey</p>
-            <p>04.03.2023</p>
-          </div>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, corporis!</p>
-          <Button className={styles.helpButton}>Offer help</Button>
-        </div>
-      </div>
+      <DescriptionBox name={neighborhood.name} description={neighborhood.description ? neighborhood.description : ''} />
+      <MemberBox admin={neighborhood.admin as unknown as User} users={neighborhood.users as unknown as Array<User>} />
+      <RequestBox requests={neighborhood.requests}/>
     </div>
   )
 }

@@ -8,7 +8,6 @@ interface Props {
 }
 
 export default function MemberBox({ admin, users }: Props) {
-    //@ts-ignore
     const userNames = users.map(user => {
         return (
             <li className={styles.liElement}>{user.user_name}</li>
@@ -23,7 +22,7 @@ export default function MemberBox({ admin, users }: Props) {
             <ul className={styles.list}>
                 {userNames}
             </ul>
-            <Button className={styles.leaveButton}>Leave Neighborhood</Button>
+            <Button className={styles.button}>Leave Neighborhood</Button>
         </div>
     )
 }

@@ -7,17 +7,6 @@
   row-gap: 10px;
 }
 
-.column {
-  box-sizing: border-box;
-  /* border: 1px solid white; */
-  border-radius: 10px;
-  padding: 10px;
-  margin: 0 20px;
-  max-height: 70vh;
-  overflow: auto;
-  background-color: #F6BA6F;
-}
-
 .header {
   grid-column: 1 / 4;
   text-align: center;
@@ -30,9 +19,6 @@
   flex-direction: row;
 }
 
-.requestColumn {
-  grid-column: 1 / 4;
-}
 
 .form {
   display: flex;
@@ -41,20 +27,6 @@
 
 .formGroup {
   margin: 10px;
-}
-
-.requestBox {
-  display: flex;
-  flex-direction: column;
-  background-color: #FFEBEB;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.requestHeader {
-  display: flex;
-  justify-content: space-between;
 }
 
 .helpButton {
