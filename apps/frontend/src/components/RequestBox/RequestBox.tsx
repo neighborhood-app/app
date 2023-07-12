@@ -20,7 +20,7 @@ export default function RequestBox({ requests}) {
   })
 
   return (
-    <div className={`${styles.column} ${styles.requestColumn}`}>
+    <div className={`${styles.column}`}>
       <SearchFilterForm />
       {requestBoxes}
     </div>

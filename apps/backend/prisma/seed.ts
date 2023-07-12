@@ -108,6 +108,33 @@ async function main() {
       content: 'I need help moving my furniture this Saturday',
     },
   });
+
+  await prismaClient.request.create({
+    data: {
+      neighborhood_id: bobNeighborhood.id,
+      user_id: mike.id,
+      title: 'Help moving furniture in apartment',
+      content: 'I need help moving my furniture this Saturday',
+    },
+  });
+
+  await prismaClient.request.create({
+    data: {
+      neighborhood_id: bobNeighborhood.id,
+      user_id: mike.id,
+      title: 'Help moving furniture in apartment',
+      content: 'I need help moving my furniture this Saturday',
+    },
+  });
+
+  await prismaClient.request.create({
+    data: {
+      neighborhood_id: bobNeighborhood.id,
+      user_id: mike.id,
+      title: 'Help moving furniture in apartment',
+      content: 'I need help moving my furniture this Saturday',
+    },
+  });
   //---------------------------------------------------------
 
   // Antonina's Neighborhood
