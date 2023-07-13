@@ -2,7 +2,18 @@ import { Response } from '@prisma/client';
 import { ResponseData } from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
-// import neighborhoodServices from './neighborhoodServices';
+
+/**
+ * performs narrowing on object `obj`
+ * returns `true` if `obj` contains required properties for
+ * `ResponseData` type
+ * @param obj - request.body
+ * @returns - type predicate (boolean)
+ */
+const isResponseData = (obj: object): obj is ResponseData => (
+  'content' in obj && typeof obj.content === 'string'
+    && 'request_id' in obj && typeof obj.request_id === 'number'
+);
 
 /**
  * - parses data sent to POST /responses
@@ -19,9 +30,8 @@ const parseCreateResponseData = async (
     throw error;
   }
 
-  if ('content' in body && typeof body.content === 'string'
-    && 'request_id' in body && typeof body.request_id === 'number') {
-    const responseData = {
+  if (isResponseData(body)) {
+    const responseData: ResponseData = {
       content: body.content,
       request_id: body.request_id,
     };
