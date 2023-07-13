@@ -107,6 +107,7 @@ export type CreateRequestData = {
   neighborhoodId: number
 };
 
+// replace above type with this
 // export type CreateRequestData = Pick<Request, 'title' | 'content' | 'neighborhoodId'>;
 
 /**
@@ -119,7 +120,12 @@ export interface UpdateRequestData {
 }
 
 /**
- * format of the Response data, only with the required `content` property
+ * shape of the Response data, only with the required `content` property
  * to create a Response
  */
 export type ResponseData = Pick<Response, 'content' | 'request_id'>;
+
+/**
+  * shape of data for updating a Response
+*/
+export type UpdateResponseData = Pick<Partial<Response>, 'content' | 'status'>;

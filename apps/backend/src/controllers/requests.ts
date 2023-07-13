@@ -28,6 +28,7 @@ requestsRouter.post(
 // Update request
 requestsRouter.put(
   '/:id',
+  middleware.validateURLParams,
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const userId = Number(req.loggedUserId);

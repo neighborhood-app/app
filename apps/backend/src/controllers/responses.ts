@@ -60,6 +60,24 @@ responsesRouter.get(
   }),
 );
 
+// Update response
+responsesRouter.put(
+  '/:id',
+  middleware.validateURLParams,
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const userId = Number(req.loggedUserId);
+    const responseId = Number(req.params.id);
+
+    const isOwnerUser = await responseServices.isUserResponseCreator(responseId, userId);
+    if (!isOwnerUser) return res.status(401).send('User does not have edit rights.');
+
+    const updatedResponse = await responseServices.updateResponse(req.body, responseId);
+
+    return res.status(200).json(updatedResponse);
+  }),
+);
+
 // Delete request
 responsesRouter.delete(
   '/:id',
@@ -79,6 +97,7 @@ responsesRouter.delete(
     }
 
     await responseServices.deleteResponse(responseId);
+
     return res.sendStatus(204);
   }),
 );

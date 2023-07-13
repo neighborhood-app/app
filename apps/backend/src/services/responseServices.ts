@@ -1,5 +1,5 @@
 import { Response } from '@prisma/client';
-import { ResponseData } from '../types';
+import { ResponseData, UpdateResponseData } from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import requestServices from './requestServices';
@@ -86,6 +86,67 @@ const getResponseById = async (responseId: number): Promise<Response> => {
 };
 
 /**
+ * - checks whether user created the response
+ * - throws error if response with responseId is not found
+ * @param responseId - (number) id of the response
+ * @param userId - (number) id of the user
+ * @returns - Promise resolving to a boolean
+ */
+const isUserResponseCreator = async (
+  responseId: number,
+  userId: number,
+): Promise<boolean> => {
+  const response = await getResponseById(responseId);
+  return response.user_id === userId;
+};
+
+// obj might be empty
+// if it has a content prop, it must be a string
+// if it has a status prop, it must be of ResponseStatus type
+const isUpdateResponseData = (obj: object): obj is UpdateResponseData => {
+  const VALID_PROPS = ['content', 'status'];
+  const props = Object.keys(obj);
+
+  if (props.some((prop) => !VALID_PROPS.includes(prop))) return false;
+  if ('content' in obj && typeof obj.content !== 'string') return false;
+  if ('status' in obj && obj.status !== 'PENDING' && obj.status !== 'ACCEPTED') {
+    return false;
+  }
+
+  return true;
+};
+
+/**
+ * - updates a response
+ * @param body - may contain content and/or status
+ * @param responseId - (number) must be an existing response id
+ * @returns - Promise resolving to updated response
+ */
+const updateResponse = async (
+  body: unknown,
+  responseId: number,
+): Promise<Response> => {
+  if (!middleware.isObject(body)) {
+    const error = new Error('unable to parse data');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+
+  if (!isUpdateResponseData(body)) {
+    const error = new Error('Content and/or status value is invalid.');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+
+  const updatedResponse = await prismaClient.response.update({
+    where: { id: responseId },
+    data: { ...body },
+  });
+
+  return updatedResponse;
+};
+
+/**
  * checks if logged-in user has access to delete response
  * returns true if he user has created the response
  * or has created the associated request
@@ -128,6 +189,8 @@ export default {
   parseCreateResponseData,
   createResponse,
   getResponseById,
+  updateResponse,
+  isUserResponseCreator,
   hasUserDeleteRights,
   deleteResponse,
 };

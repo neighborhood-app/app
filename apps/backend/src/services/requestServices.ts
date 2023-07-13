@@ -124,7 +124,7 @@ const updateRequest = async (
   }
 
   if (!isUpdateRequestData(body)) {
-    const error = new Error('Title, content and/or status missing or invalid');
+    const error = new Error('Title, content and/or status value is invalid');
     error.name = 'InvalidInputError';
     throw error;
   }
