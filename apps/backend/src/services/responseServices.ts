@@ -149,7 +149,6 @@ const updateResponse = async (
 /**
  * checks if logged-in user has access to delete response
  * returns true if he user has created the response
- * or has created the associated request
  * or is admin of the associated neighborhood
  * @param responseId - (number) id of the response
  * @param userId - (number) id of the user
@@ -163,8 +162,6 @@ const hasUserDeleteRights = async (
   if (response.user_id === userId) return true;
 
   const request = await requestServices.getRequestById(response.request_id);
-  if (request.user_id === userId) return true;
-
   const isAdmin = await neighborhoodServices.isUserAdminOfNeighborhood(
     userId,
     request.neighborhood_id,
