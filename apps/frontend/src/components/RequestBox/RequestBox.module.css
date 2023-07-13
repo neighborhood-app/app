@@ -21,16 +21,17 @@
   max-height: 58vh;
   overflow: auto;
   background-color: #F6BA6F;
+  box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1);
 }
 
-.helpButton {
+.button {
   background-color: #6DA9E4;
-  width: 100px;
+  width: 120px;
   border: 0px solid;
   align-self: center;
   margin-bottom: 20px;
 }
 
-.helpButton:hover {
+.button:hover {
   background-color: #ADE4DB;
 }

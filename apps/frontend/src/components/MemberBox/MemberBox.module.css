@@ -8,6 +8,7 @@
     background-color: #F6BA6F;
     display: flex;
     flex-direction: column;
+    box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1);
   }
   
   .list {
