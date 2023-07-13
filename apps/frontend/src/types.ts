@@ -49,13 +49,13 @@ export type User = {
   bio: string | null
 }
 
-export type Request = {
+export type RequestType = {
   id: number;
   neighborhood_id: number;
   user_id: number;
   title: string;
   content: string;
   status: string;
-  time_created: Date;
+  time_created: string;
   user: User
 }

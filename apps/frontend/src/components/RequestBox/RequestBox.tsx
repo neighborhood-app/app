@@ -1,23 +1,31 @@
 import SearchFilterForm from "../SearchFilterForm/SearchFilterForm";
+import Request from "../Request/Request";
 import styles from './RequestBox.module.css';
-import { Button } from "react-bootstrap";
+import { useState } from "react";
 
 //@ts-ignore
-export default function RequestBox({ requests}) {
-  //@ts-ignore
-  const requestBoxes = requests.map(request => {
-    const date = request.time_created.split('T')[0];
+export default function RequestBox({ requests }) {
+  const [requestsType, setRequestsType] = useState('closed');
 
-      return (
-        <div className={styles.requestBox}>
-          <div className={styles.requestHeader}>
-            <p className={styles.author}>{request.user.user_name}</p>
-            <p>{date}</p>
-          </div>
-          <p>{request.title}</p>
-          <Button className={styles.button}>Show Details</Button>
-        </div>
-      )
+  let requestSelection;
+  if (requestsType === 'open') {
+    //@ts-ignore
+    requestSelection = requests.filter(request => {
+      return request.status === 'OPEN';
+    })
+  } else if (requestsType === 'closed') {
+    //@ts-ignore
+    requestSelection = requests.filter(request => {
+      return request.status === 'CLOSED';
+    })
+  } else {
+    requestSelection = requests;
+  }
+  //@ts-ignore
+  const requestBoxes = requestSelection.map(request => {
+    return (
+      <Request requestObj={request}></Request>
+    )
   })
 
   return (
