@@ -60,4 +60,27 @@ responsesRouter.get(
   }),
 );
 
+// Delete request
+responsesRouter.delete(
+  '/:id',
+  middleware.validateURLParams,
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const loggedUserId = req.loggedUserId as number;
+    const responseId = Number(req.params.id);
+
+    const userHasDeleteRights = await responseServices.hasUserDeleteRights(
+      responseId,
+      loggedUserId,
+    );
+
+    if (!userHasDeleteRights) {
+      return res.status(401).send('User doesn\'t have delete rights for this response.');
+    }
+
+    await responseServices.deleteResponse(responseId);
+    return res.sendStatus(204);
+  }),
+);
+
 export default responsesRouter;

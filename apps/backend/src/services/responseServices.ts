@@ -2,6 +2,8 @@ import { Response } from '@prisma/client';
 import { ResponseData } from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
+import requestServices from './requestServices';
+import neighborhoodServices from './neighborhoodServices';
 
 /**
  * performs narrowing on object `obj`
@@ -16,8 +18,8 @@ const isResponseData = (obj: object): obj is ResponseData => (
 );
 
 /**
- * - parses data sent to POST /responses
- * - must contain content and requestId
+ * parses data sent to POST /responses
+ * must contain content and requestId
  * @param body req.body
  * @returns Promise which resolves to parsed create response data
  */
@@ -47,7 +49,7 @@ const parseCreateResponseData = async (
 };
 
 /**
- * - creates a new request in the database
+ * creates a new request in the database
  * @param responseData - should contain content and request_id
  * @param userId - numeric id of user creating the response
  * @returns - Promise resolving to newly created response
@@ -68,8 +70,8 @@ const createResponse = async (
 };
 
 /**
- * - fetches response from db
- * - throws error if response is not found
+ * fetches response from db
+ * throws error if response is not found
  * @param responseId - (number) id of the response
  * @returns - Promise resolving to the found response
  */
@@ -83,8 +85,49 @@ const getResponseById = async (responseId: number): Promise<Response> => {
   return response;
 };
 
+/**
+ * checks if logged-in user has access to delete response
+ * returns true if he user has created the response
+ * or has created the associated request
+ * or is admin of the associated neighborhood
+ * @param responseId - (number) id of the response
+ * @param userId - (number) id of the user
+ * @returns - Promise resolving to boolean
+ */
+const hasUserDeleteRights = async (
+  responseId: number,
+  userId: number,
+): Promise<boolean> => {
+  const response = await getResponseById(responseId);
+  if (response.user_id === userId) return true;
+
+  const request = await requestServices.getRequestById(response.request_id);
+  if (request.user_id === userId) return true;
+
+  const isAdmin = await neighborhoodServices.isUserAdminOfNeighborhood(
+    userId,
+    request.neighborhood_id,
+  );
+
+  return isAdmin;
+};
+
+/**
+ * delete a response
+ * @param responseId - (number) must be an existing response id
+ */
+const deleteResponse = async (
+  responseId: number,
+) => {
+  await prismaClient.response.delete({
+    where: { id: responseId },
+  });
+};
+
 export default {
   parseCreateResponseData,
   createResponse,
   getResponseById,
+  hasUserDeleteRights,
+  deleteResponse,
 };

@@ -140,7 +140,6 @@ const updateRequest = async (
 /**
  * - delete a request
  * @param requestId - (number) must be an existing request id
- * @returns - Promise resolving to updated request
  */
 const deleteRequest = async (
   requestId: number,

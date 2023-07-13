@@ -58,7 +58,7 @@ requestsRouter.delete(
     const requestId = Number(req.params.id);
 
     const isOwnerUser = await requestServices.hasUserCreatedRequest(
-      +requestId,
+      requestId,
       loggedUserId,
     );
     if (!isOwnerUser) {
@@ -71,7 +71,7 @@ requestsRouter.delete(
       if (!isAdminOfNeighborhood) return res.sendStatus(401);
     }
 
-    await requestServices.deleteRequest(+requestId);
+    await requestServices.deleteRequest(requestId);
     return res.sendStatus(204);
   }),
 );
