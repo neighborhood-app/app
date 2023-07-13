@@ -115,6 +115,7 @@ async function main() {
       user_id: mike.id,
       title: 'Help moving furniture in apartment',
       content: 'I need help moving my furniture this Saturday',
+      status: 'CLOSED',
     },
   });
 
