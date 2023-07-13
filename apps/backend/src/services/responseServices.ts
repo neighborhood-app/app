@@ -67,7 +67,24 @@ const createResponse = async (
   return response;
 };
 
+/**
+ * - fetches response from db
+ * - throws error if response is not found
+ * @param responseId - (number) id of the response
+ * @returns - Promise resolving to the found response
+ */
+const getResponseById = async (responseId: number): Promise<Response> => {
+  const response = await prismaClient.response.findUniqueOrThrow({
+    where: {
+      id: responseId,
+    },
+  });
+
+  return response;
+};
+
 export default {
   parseCreateResponseData,
   createResponse,
+  getResponseById,
 };

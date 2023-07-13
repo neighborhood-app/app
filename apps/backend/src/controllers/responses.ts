@@ -35,4 +35,29 @@ responsesRouter.post(
   }),
 );
 
+// Get a single response
+responsesRouter.get(
+  '/:id',
+  middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const responseId: number = Number(req.params.id);
+    const loggedUserId = req.loggedUserId as number;
+
+    const response = await responseServices.getResponseById(responseId);
+    const request = await requestServices.getRequestById(response.request_id);
+
+    const isUserMemberOfNeighborhood = await neighborhoodServices.isUserMemberOfNeighborhood(
+      loggedUserId,
+      request.neighborhood_id,
+    );
+
+    if (!isUserMemberOfNeighborhood) {
+      return res.status(401).send('User is not part of neighborhood.');
+    }
+
+    return res.status(200).send(response);
+  }),
+);
+
 export default responsesRouter;

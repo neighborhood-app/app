@@ -1,7 +1,7 @@
 
 POST http://localhost:3001/api/responses
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudG9uaW5hIiwiaWQiOjIsImlhdCI6MTY4OTI0MzY0NCwiZXhwIjoxNjkyODQzNjQ0fQ.N7RTVH8RmIsD8I4ar6JXeJXMcYIu4jfBHe8tVt8ul8A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjg5MjU4MTg5LCJleHAiOjE2OTI4NTgxODl9.cxkbQV6lRghicFOkKLwmEHFhVG_GA-lre_SHVv5pL08
 
 {
   "content": "barbar",

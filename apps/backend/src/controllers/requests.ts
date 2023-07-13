@@ -76,7 +76,7 @@ requestsRouter.delete(
   }),
 );
 
-// get a single request
+// Get a single request
 requestsRouter.get(
   '/:id',
   middleware.userIdExtractorAndLoginValidator,
