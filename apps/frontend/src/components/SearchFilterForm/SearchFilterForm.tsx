@@ -1,9 +1,13 @@
-import { Form } from "react-bootstrap"
+import { Form } from "react-bootstrap";
 
-import styles from './SearchFilterForm.module.css'
+import styles from './SearchFilterForm.module.css';
 
-//@ts-ignore
-export default function SearchFilterForm({ filterStatus, setFilterStatus }) {
+interface Props {
+  filterStatus: string,
+  setFilterStatus: Function,
+}
+
+export default function SearchFilterForm({ filterStatus, setFilterStatus }: Props) {
   return (
     <div className={`${styles.column} ${styles.filterColumn}`}>
       <Form className={styles.form}>
