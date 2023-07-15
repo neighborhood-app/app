@@ -1,14 +1,17 @@
-import prismaClient from '../../prismaClient';
-import testHelpers from './testHelpers';
+import prismaClient from "../../prismaClient";
+import testHelpers from "./testHelpers";
 
-const SAMPLE_PASSWORD = 'secret';
+const SAMPLE_PASSWORD = "secret";
 
 /**
  * connects user to neighborhood in the db
  * @param userId
  * @param neighborhoodId
  */
-const connectUserToNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
+const connectUserToNeighborhood = async (
+  userId: number,
+  neighborhoodId: number
+): Promise<void> => {
   await prismaClient.neighborhood.update({
     where: { id: neighborhoodId },
     data: {
@@ -20,16 +23,16 @@ const connectUserToNeighborhood = async (userId: number, neighborhoodId: number)
 };
 
 async function main() {
-// clearing the existing db
+  // clearing the existing db
   await testHelpers.removeAllData();
 
   await prismaClient.gender.createMany({
     data: [
       {
-        name: 'male',
+        name: "male",
       },
       {
-        name: 'female',
+        name: "female",
       },
     ],
   });
@@ -37,42 +40,42 @@ async function main() {
   // Create users
   const bob = await prismaClient.user.create({
     data: {
-      user_name: 'bob1234',
+      user_name: "bob1234",
       password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const antonina = await prismaClient.user.create({
     data: {
-      user_name: 'antonina',
+      user_name: "antonina",
       password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const shwetank = await prismaClient.user.create({
     data: {
-      user_name: 'shwetank',
+      user_name: "shwetank",
       password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const radu = await prismaClient.user.create({
     data: {
-      user_name: 'radu',
+      user_name: "radu",
       password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const mike = await prismaClient.user.create({
     data: {
-      user_name: 'mike',
+      user_name: "mike",
       password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const maria = await prismaClient.user.create({
     data: {
-      user_name: 'maria',
+      user_name: "maria",
       password_hash: await testHelpers.getPasswordHash(SAMPLE_PASSWORD),
     },
   });
@@ -95,8 +98,8 @@ async function main() {
     data: {
       neighborhood_id: bobNeighborhood.id,
       user_id: mike.id,
-      title: 'Help moving furniture in apartment',
-      content: 'I need help moving my furniture this Saturday',
+      title: "Help moving furniture in apartment",
+      content: "I need help moving my furniture this Saturday",
     },
   });
   //---------------------------------------------------------
@@ -119,8 +122,9 @@ async function main() {
     data: {
       neighborhood_id: antoninaNeighborhood.id,
       user_id: radu.id,
-      title: 'Plant trees',
-      content: 'I want to plant some trees in the rezidential area this Sunday. Who wants to help?',
+      title: "Plant trees",
+      content:
+        "I want to plant some trees in the rezidential area this Sunday. Who wants to help?",
     },
   });
 
@@ -130,8 +134,26 @@ async function main() {
     data: {
       neighborhood_id: antoninaNeighborhood.id,
       user_id: maria.id,
-      title: 'Install washing machine',
-      content: 'Can anyone help me install a washing machine?',
+      title: "Install washing machine",
+      content: "Can anyone help me install a washing machine?",
+    },
+  });
+
+  await prismaClient.response.create({
+    data: {
+      request_id: raduRequest.id,
+      user_id: antonina.id,
+      content: "I can help out",
+      status: "PENDING",
+    },
+  });
+
+  await prismaClient.response.create({
+    data: {
+      request_id: raduRequest.id,
+      user_id: leia.id,
+      content: "I can also help out",
+      status: "PENDING",
     },
   });
   //---------------------------------------------------------
