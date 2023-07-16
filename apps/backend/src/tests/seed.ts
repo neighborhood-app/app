@@ -147,15 +147,6 @@ async function main() {
       status: "PENDING",
     },
   });
-
-  await prismaClient.response.create({
-    data: {
-      request_id: raduRequest.id,
-      user_id: leia.id,
-      content: "I can also help out",
-      status: "PENDING",
-    },
-  });
   //---------------------------------------------------------
 
   // The variable will be used in the future when we add responses.
