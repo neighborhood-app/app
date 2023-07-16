@@ -37,12 +37,12 @@ beforeAll(async () => {
   await seed();
 });
 
-// In the test seed file, we have ANTONINA's (user_id = 2) respone (httpResponse = 1)
-// The httpResponse is to request with id = 2, created by the user RADU (user_id = 4)
-// Radu's request is in ANTONINA's NEIGHBORHOOD (neighborhood_id = 2, admin_id = 2)
-// We will write test according to the above data
+// We have ANTONINAS_RESPONSE (Antonina's user_id = 2, response_id = 1)
+// The response is associated with RADUS_REQUEST (request_id = 2
+// created by the user RADU, user_id = 4)
+// RADUS_REQUEST is in ANTONINAS_NEIGHBORHOOD (neighborhood_id = 2, admin_id = 2)
 
-describe("Tests for updating a request: PUT /requests/:id", () => {
+describe("Tests for updating a request: PUT /responses/:id", () => {
   let token: string;
 
   beforeAll(async () => {
@@ -171,21 +171,24 @@ describe("Tests for updating a request: PUT /requests/:id", () => {
   });
 
   test("id, user_id, request_id and time_created fields cannot be edited", async () => {
-    const requestInDbBeforeUpdate = await testHelpers.getSingleResponse(
+    const responseInDbBeforeUpdate = await testHelpers.getSingleResponse(
       ANTONINAS_RESPONSE_ID
     );
 
     // Cheking for failure to update id
     const response1 = await api
-      .put(`/api/responses/${ANTONINAS_NHOOD_ID}`)
+      .put(`/api/responses/${ANTONINAS_RESPONSE_ID}`)
       .set("Authorization", `Bearer ${token}`)
       .send({ id: 1000 });
 
-    expect(response1.status).toBe(404);
+    expect(response1.status).toBe(400);
+    expect(response1.body.error).toBe(
+      "Content and/or status value is invalid."
+    );
 
     // Checking for failure to update user_id
     const response2 = await api
-      .put(`/api/responses/${ANTONINAS_RESPONSE_ID}}`)
+      .put(`/api/responses/${ANTONINAS_RESPONSE_ID}`)
       .set("Authorization", `Bearer ${token}`)
       .send({ user_id: 1000 });
 
@@ -207,7 +210,7 @@ describe("Tests for updating a request: PUT /requests/:id", () => {
 
     // Checking for failure to update time_created
     const response4 = await api
-      .put(`/api/responses/${ANTONINAS_NHOOD_ID}`)
+      .put(`/api/responses/${ANTONINAS_RESPONSE_ID}`)
       .set("Authorization", `Bearer ${token}`)
       .send({ time_created: new Date() });
 
@@ -286,25 +289,80 @@ describe("Tests for updating a request: PUT /requests/:id", () => {
   });
 });
 
-describe("Tests for deleting a request: DELETE /requests/:rId", () => {
-  // let token: string;
-  // beforeAll(async () => {
-  //   const loginResponse: Response = await loginUser(MIKES_LOGIN_DATA);
-  //   token = loginResponse.body.token;
-  // });
-  // beforeEach(async () => {
-  //   await seed();
-  // });
-  // test("Delete an existing request as the creator", async () => {
-  //   const httpResponse: Response = await api
-  //     .delete(`/api/requests/${MIKES_REQUEST_ID}`)
-  //     .set("Authorization", `Bearer ${token}`);
-  //   const deleted = await prismaClient.request.findUnique({
-  //     where: { id: MIKES_REQUEST_ID },
-  //   });
-  //   expect(httpResponse.status).toEqual(204);
-  //   expect(deleted).toBe(null);
-  // });
+describe("Tests for deleting a request: DELETE /responses/:id", () => {
+  let token: string;
+
+  beforeAll(async () => {
+    const loginResponse: Response = await loginUser(ANTONINAS_LOGIN_DATA);
+    token = loginResponse.body.token;
+  });
+
+  beforeEach(async () => {
+    await seed();
+  });
+
+  test("User cannot delete request if they aren't logged in", async () => {
+    const httpResponse: Response = await api.delete(
+      `/api/responses/${ANTONINAS_RESPONSE_ID}`
+    );
+
+    const responseInDb = await testHelpers.getSingleResponse(
+      ANTONINAS_RESPONSE_ID
+    );
+
+    expect(httpResponse.status).toEqual(401);
+    expect(httpResponse.body.error).toBe("user not signed in");
+    expect(responseInDb).not.toBe(null);
+  });
+
+  test("Delete non-existent request fails", async () => {
+    const NON_EXISTENT_ID = 1000;
+
+    const httpResponse: Response = await api
+      .delete(`/api/responses/${NON_EXISTENT_ID}`)
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(httpResponse.status).toBe(404);
+    expect(httpResponse.body.error).toBe("No Response found");
+  });
+
+  test("User cannot delete request if not its creator or admin", async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const bobsToken: string = loginResponse.body.token;
+
+    const httpResponse: Response = await api
+      .delete(`/api/responses/${ANTONINAS_RESPONSE_ID}`)
+      .set("Authorization", `Bearer ${bobsToken}`);
+
+    const responseInDb = await testHelpers.getSingleResponse(
+      ANTONINAS_RESPONSE_ID
+    );
+
+    expect(httpResponse.status).toEqual(401);
+    expect(responseInDb).not.toBe(null);
+  });
+
+  test("Delete an existing response as the creator", async () => {
+    const httpResponse: Response = await api
+      .delete(`/api/responses/${ANTONINAS_RESPONSE_ID}`)
+      .set("Authorization", `Bearer ${token}`);
+
+    let deleted;
+    try {
+      deleted = await testHelpers.getSingleResponse(ANTONINAS_RESPONSE_ID);
+    } catch (error) {
+      console.log(error);
+      deleted = null;
+    }
+
+    expect(httpResponse.status).toEqual(204);
+    expect(deleted).toBe(null);
+  });
+
+  // In the Test Data, The Creator of the Response and Admin of neighborhood
+  // are same. Hence test for deleting as admin does not make sense.
+  // We are not testing for deleting response as adming of neighborhood.
+
   // test("Delete an existing request as admin of neighborhood", async () => {
   //   const loginResponse = await loginUser(BOBS_LOGIN_DATA);
   //   const bobToken: string = loginResponse.body.token;
@@ -316,48 +374,6 @@ describe("Tests for deleting a request: DELETE /requests/:rId", () => {
   //   });
   //   expect(httpResponse.status).toEqual(204);
   //   expect(deleted).toBe(null);
-  // });
-  // test("User cannot delete request if not its creator or admin", async () => {
-  //   const loginResponse = await loginUser(ANTONINA_LOGIN_DATA);
-  //   const antoninaToken: string = loginResponse.body.token;
-  //   const httpResponse: Response = await api
-  //     .delete(`/api/requests/${MIKES_REQUEST_ID}`)
-  //     .set("Authorization", `Bearer ${antoninaToken}`);
-  //   const request = await prismaClient.request.findUnique({
-  //     where: { id: MIKES_REQUEST_ID },
-  //   });
-  //   expect(httpResponse.status).toEqual(401);
-  //   expect(request).not.toBe(null);
-  // });
-  // test("Delete non-existent request fails", async () => {
-  //   const NON_EXISTENT_ID = 1000;
-  //   const httpResponse: Response = await api
-  //     .delete(`/api/requests/${NON_EXISTENT_ID}`)
-  //     .set("Authorization", `Bearer ${token}`);
-  //   expect(httpResponse.status).toBe(404);
-  //   expect(httpResponse.body.error).toBe("No Request found");
-  // });
-  // test("Invalid requestId fails the deletion", async () => {
-  //   const httpResponse: Response = await api
-  //     .delete(`/api/requests/${MIKES_REQUEST_ID}foo`)
-  //     .set("Authorization", `Bearer ${token}`);
-  //   const request = await prismaClient.request.findUnique({
-  //     where: { id: MIKES_REQUEST_ID },
-  //   });
-  //   expect(httpResponse.status).toBe(400);
-  //   expect(httpResponse.body.error).toBe("unable to parse data");
-  //   expect(request).not.toBe(null);
-  // });
-  // test("User cannot delete request if they aren't logged in", async () => {
-  //   const httpResponse: Response = await api.delete(
-  //     `/api/requests/${MIKES_REQUEST_ID}`
-  //   );
-  //   const request = await prismaClient.request.findUnique({
-  //     where: { id: MIKES_REQUEST_ID },
-  //   });
-  //   expect(httpResponse.status).toEqual(401);
-  //   expect(httpResponse.body.error).toBe("user not signed in");
-  //   expect(request).not.toBe(null);
   // });
 });
 
