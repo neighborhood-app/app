@@ -166,6 +166,14 @@ const getSingleResponse = async (id: number): Promise<Response> => {
   return response;
 };
 
+/**
+ * @returns number of requests present in the db
+ */
+const getNumberOfResponses = async (): Promise<number> => {
+  const responses = await prismaClient.response.findMany({});
+  return responses.length;
+};
+
 const removeAllData = async () => {
   await prismaClient.response.deleteMany({});
   await prismaClient.request.deleteMany({});
@@ -192,4 +200,5 @@ export default {
   getNeighborhoodRequests,
   getSingleRequest,
   getSingleResponse,
+  getNumberOfResponses,
 };

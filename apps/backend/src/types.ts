@@ -1,78 +1,80 @@
-import {
-  Neighborhood, Prisma, Status, User, Response,
-} from '@prisma/client';
-import { Request } from 'express';
+import { Neighborhood, Prisma, Status, User, Response } from "@prisma/client";
+import { Request } from "express";
 
 /**
  * format of the user data, without password hash, which is send in response
  */
-export type UserWithoutPasswordHash = Omit<User, 'password_hash'>;
+export type UserWithoutPasswordHash = Omit<User, "password_hash">;
 
 /**
  * format of user data, without id, to create entry in users table
  */
-export type UserWithoutId = Omit<User, 'id'>;
+export type UserWithoutId = Omit<User, "id">;
 
 /**
  * format of the data sent to `POST /login` to login user
  */
 export interface LoginData {
-  username: string,
-  password: string
+  username: string;
+  password: string;
 }
 
 /**
  * format of the data sent to `POST /user` to create user
  */
 export interface CreateUserData {
-  username: string,
-  password: string
+  username: string;
+  password: string;
 }
 
 /**
  * Format of data sent to POST /api/neighborhood to create new neighborhood
  */
 export interface CreateNeighborhoodData {
-  admin_id: number,
-  name: string
+  admin_id: number;
+  name: string;
 }
 
 /**
  * Request with token for authentication
  */
 export interface RequestWithAuthentication extends Request {
-  token?: string,
-  loggedUserId?: number
+  token?: string;
+  loggedUserId?: number;
 }
 
-const neighborhoodWithRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>()({
-  include: {
-    users: true,
-    requests: true,
-  },
-});
+const neighborhoodWithRelatedFields =
+  Prisma.validator<Prisma.NeighborhoodArgs>()({
+    include: {
+      users: true,
+      requests: true,
+    },
+  });
 
-export type NeighborhoodWithRelatedFields = Prisma
-  .NeighborhoodGetPayload<typeof neighborhoodWithRelatedFields>;
+export type NeighborhoodWithRelatedFields = Prisma.NeighborhoodGetPayload<
+  typeof neighborhoodWithRelatedFields
+>;
 
 /**
  * format of the neighborhood data, without admin_id, to be displayed for non members
  */
-export type NeighborhoodDetailsForNonMembers = Omit<Neighborhood, 'admin_id'>;
+export type NeighborhoodDetailsForNonMembers = Omit<Neighborhood, "admin_id">;
 
-const neighborhoodDetailsForMembers = Prisma.validator<Prisma.NeighborhoodArgs>()({
-  include: {
-    admin: true,
-    users: true,
-    requests: true,
-  },
-});
+const neighborhoodDetailsForMembers =
+  Prisma.validator<Prisma.NeighborhoodArgs>()({
+    include: {
+      admin: true,
+      users: true,
+      requests: true,
+    },
+  });
 
 /**
  * format of neighborhood data, with all related fields, for members
  */
-export type NeighborhoodDetailsForMembers = Prisma
-  .NeighborhoodGetPayload<typeof neighborhoodDetailsForMembers>;
+export type NeighborhoodDetailsForMembers = Prisma.NeighborhoodGetPayload<
+  typeof neighborhoodDetailsForMembers
+>;
 
 const neighborhoodWithUsers = Prisma.validator<Prisma.NeighborhoodArgs>()({
   include: {
@@ -83,8 +85,9 @@ const neighborhoodWithUsers = Prisma.validator<Prisma.NeighborhoodArgs>()({
 /**
  * Neighborhood data with users
  */
-export type NeighborhoodWithUsers = Prisma
-  .NeighborhoodGetPayload<typeof neighborhoodWithUsers>;
+export type NeighborhoodWithUsers = Prisma.NeighborhoodGetPayload<
+  typeof neighborhoodWithUsers
+>;
 
 const userWithRequests = Prisma.validator<Prisma.UserArgs>()({
   include: {
@@ -95,37 +98,36 @@ const userWithRequests = Prisma.validator<Prisma.UserArgs>()({
 /**
  * User data with requests
  */
-export type UserWithRequests = Prisma
-  .UserGetPayload<typeof userWithRequests>;
+export type UserWithRequests = Prisma.UserGetPayload<typeof userWithRequests>;
 
 /**
-   * post data for creating requests
-   */
+ * post data for creating requests
+ */
 export type CreateRequestData = {
-  title: string,
-  content: string,
-  neighborhoodId: number
+  title: string;
+  content: string;
+  neighborhoodId: number;
 };
 
 // replace above type with this
 // export type CreateRequestData = Pick<Request, 'title' | 'content' | 'neighborhoodId'>;
 
 /**
-   * PUT data for updating a request
-*/
+ * PUT data for updating a request
+ */
 export interface UpdateRequestData {
-  title?: string,
-  content?: string,
-  status?: Status
+  title?: string;
+  content?: string;
+  status?: Status;
 }
 
 /**
  * shape of the Response data, only with the required `content` property
  * to create a Response
  */
-export type ResponseData = Pick<Response, 'content' | 'request_id'>;
+export type ResponseData = Pick<Response, "content" | "request_id">;
 
 /**
-  * shape of data for updating a Response
-*/
-export type UpdateResponseData = Pick<Partial<Response>, 'content' | 'status'>;
+ * shape of data for updating a Response
+ */
+export type UpdateResponseData = Pick<Partial<Response>, "content" | "status">;

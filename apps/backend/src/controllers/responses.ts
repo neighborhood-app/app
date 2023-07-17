@@ -25,7 +25,9 @@ responsesRouter.post(
       );
 
     if (!isUserMemberOfNeighborhood) {
-      return res.status(401).send("User is not authorized to respond.");
+      return res
+        .status(401)
+        .send({ error: "User is not authorized to respond." });
     }
 
     const response = await responseServices.createResponse(
@@ -56,7 +58,9 @@ responsesRouter.get(
       );
 
     if (!isUserMemberOfNeighborhood) {
-      return res.status(401).send("User is not part of neighborhood.");
+      return res
+        .status(401)
+        .send({ error: "User is not part of neighborhood." });
     }
 
     return res.status(200).send(response);

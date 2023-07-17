@@ -26,6 +26,7 @@ const ANTONINAS_NHOOD_ID = 2;
 const INVALID_NHOOD_ID = 12345;
 const RADUS_REQUEST_ID = 2;
 const ANTONINAS_RESPONSE_ID = 1;
+const ANTONINAS_USER_ID = 2;
 
 const loginUser = async (loginData: LoginData) => {
   const loginResponse = await api.post("/api/login").send(loginData);
@@ -351,7 +352,6 @@ describe("Tests for deleting a request: DELETE /responses/:id", () => {
     try {
       deleted = await testHelpers.getSingleResponse(ANTONINAS_RESPONSE_ID);
     } catch (error) {
-      console.log(error);
       deleted = null;
     }
 
@@ -377,264 +377,185 @@ describe("Tests for deleting a request: DELETE /responses/:id", () => {
   // });
 });
 
-// describe("Test for getting a single request at GET /requests/:id", () => {
-//   beforeAll(async () => {
-//     await seed();
-//   });
+describe("Test for getting a single response at GET /responses/:id", () => {
+  let token: string;
 
-//   test("GET requests/:id fails when no authorization header present", async () => {
-//     const getResponse: Response = await api.get(
-//       `/api/requests/${MIKES_REQUEST_ID}`
-//     );
+  beforeAll(async () => {
+    await seed();
+    const loginResponse: Response = await loginUser(ANTONINAS_LOGIN_DATA);
+    token = loginResponse.body.token;
+  });
 
-//     expect(getResponse.status).toEqual(401);
-//     expect(getResponse.body.error).toEqual("user not signed in");
-//   });
+  test("GET responses/:id fails when no authorization header present", async () => {
+    const getResponse: Response = await api.get(
+      `/api/responses/${ANTONINAS_RESPONSE_ID}`
+    );
 
-//   test("GET /requests/:id/ fails when user request not found", async () => {
-//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-//     const { token } = loginResponse.body;
-//     const INVALID_REQUEST_ID = 1000;
+    expect(getResponse.status).toEqual(401);
+    expect(getResponse.body.error).toEqual("user not signed in");
+  });
 
-//     const getResponse: Response = await api
-//       .get(`/api/requests/${INVALID_REQUEST_ID}`)
-//       .set("Authorization", `Bearer ${token}`);
+  test("GET /responses/:id/ fails when user request not found", async () => {
+    const INVALID_RESPONSE_ID = 1000;
 
-//     expect(getResponse.status).toEqual(404);
-//     expect(getResponse.body.error).toEqual("No Request found");
-//   });
+    const getResponse: Response = await api
+      .get(`/api/responses/${INVALID_RESPONSE_ID}`)
+      .set("Authorization", `Bearer ${token}`);
 
-//   test("GET /requests/:id/ fails when user not a member of requests neighborhood", async () => {
-//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-//     const { token } = loginResponse.body;
+    expect(getResponse.status).toEqual(404);
+    expect(getResponse.body.error).toEqual("No Response found");
+  });
 
-//     const getResponse: Response = await api
-//       .get(`/api/requests/${RADUS_REQUEST_ID}`)
-//       .set("Authorization", `Bearer ${token}`);
+  test("GET /responses/:id/ fails when user not the member of neighborhood", async () => {
+    const loginResponse: Response = await loginUser(BOBS_LOGIN_DATA);
+    const bobToken: string = loginResponse.body.token;
 
-//     expect(getResponse.status).toEqual(401);
-//     expect(getResponse.body.error).toEqual(
-//       "user does not have access to the neighborhood"
-//     );
-//   });
+    const getResponse: Response = await api
+      .get(`/api/responses/${ANTONINAS_RESPONSE_ID}`)
+      .set("Authorization", `Bearer ${bobToken}`);
 
-//   test("GET /requests/:id/ works with valid data", async () => {
-//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-//     const { token } = loginResponse.body;
+    expect(getResponse.status).toEqual(401);
+    expect(getResponse.body.error).toEqual("User is not part of neighborhood.");
+  });
 
-//     const getResponse: Response = await api
-//       .get(`/api/requests/${MIKES_REQUEST_ID}`)
-//       .set("Authorization", `Bearer ${token}`);
+  test("GET /responses/:id/ works when user is creator", async () => {
+    const getResponse: Response = await api
+      .get(`/api/responses/${ANTONINAS_RESPONSE_ID}`)
+      .set("Authorization", `Bearer ${token}`);
 
-//     expect(getResponse.status).toEqual(200);
-//     expect(getResponse.body.user_id).toBe(MIKES_USER_ID);
-//     expect(getResponse.body.title).toBe(MIKES_REQUEST_TITLE);
-//   });
-// });
+    expect(getResponse.status).toEqual(200);
+    expect(getResponse.body.id).toBe(ANTONINAS_RESPONSE_ID);
+    expect(getResponse.body.user_id).toBe(ANTONINAS_USER_ID);
+    expect(getResponse.body.request_id).toBe(RADUS_REQUEST_ID);
+  });
+});
 
-// describe("Tests for creating a new request at POST /requests", () => {
-//   beforeEach(async () => {
-//     await seed();
-//   });
+describe("Tests for creating a new response at POST /responses", () => {
+  let token: string;
 
-//   test("POST /requests fails when no token exists", async () => {
-//     const numberOfInitialRequests = await testHelpers.getNumberOfRequests();
+  beforeAll(async () => {
+    const loginResponse: Response = await loginUser(ANTONINAS_LOGIN_DATA);
+    token = loginResponse.body.token;
+  });
 
-//     const postResponse: Response = await api.post("/api/requests");
+  beforeEach(async () => {
+    await seed();
+  });
 
-//     const numberOfFinalRequests = await testHelpers.getNumberOfRequests();
+  test("POST /responses fails when no token exists", async () => {
+    const numberOfInitialResponses = await testHelpers.getNumberOfResponses();
 
-//     expect(postResponse.status).toEqual(401);
-//     expect(postResponse.body.error).toEqual("user not signed in");
+    const httpResponse: Response = await api.post("/api/responses");
 
-//     expect(numberOfInitialRequests).toEqual(numberOfFinalRequests);
-//   });
+    const numberOfFinalResponses = await testHelpers.getNumberOfResponses();
 
-//   test("POST /requests fails when token invalid", async () => {
-//     const numberOfInitialRequests = await testHelpers.getNumberOfRequests();
+    expect(httpResponse.status).toEqual(401);
+    expect(httpResponse.body.error).toEqual("user not signed in");
+    expect(numberOfInitialResponses).toEqual(numberOfFinalResponses);
+  });
 
-//     const postResponse: Response = await api
-//       .post("/api/requests")
-//       .set("Authorization", "WrongToken");
+  test("POST /responses fails when data missing", async () => {
+    const numberOfInitialResponses = await testHelpers.getNumberOfResponses();
 
-//     const numberOfFinalRequests = await testHelpers.getNumberOfRequests();
+    // no content
+    const httpResponse1 = await api
+      .post("/api/responses")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        request_id: RADUS_REQUEST_ID,
+      })
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
 
-//     expect(postResponse.status).toEqual(401);
-//     expect(postResponse.body.error).toEqual("user not signed in");
-//     expect(numberOfInitialRequests).toEqual(numberOfFinalRequests);
-//   });
+    expect(httpResponse1.body.error).toEqual(
+      "Content property missing or invalid"
+    );
 
-//   test("POST /requests fails when data missing", async () => {
-//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-//     const { token } = loginResponse.body;
+    // no request_id
+    const httpResponse2 = await api
+      .post("/api/responses")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ content: "test content" })
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
 
-//     const numberOfInitialRequests = await testHelpers.getNumberOfRequests();
+    expect(httpResponse2.body.error).toBe(
+      "Content property missing or invalid"
+    );
 
-//     // no content
-//     const response1 = await api
-//       .post("/api/requests")
-//       .set("Authorization", `Bearer ${token}`)
-//       .send({ title: "foo", neighborhoodId: BOBS_NHOOD_ID })
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/);
+    const numberOfCurrentResponses = await testHelpers.getNumberOfResponses();
+    expect(numberOfCurrentResponses).toEqual(numberOfCurrentResponses);
+  });
 
-//     let numberOfCurrentRequests = await testHelpers.getNumberOfRequests();
-//     expect(numberOfCurrentRequests).toEqual(numberOfInitialRequests);
-//     expect(response1.body.error).toEqual(
-//       "title, content or neighborhoodId missing or invalid"
-//     );
+  test("POST /responses fails when request does not exist", async () => {
+    const numberOfInitialResponses = await testHelpers.getNumberOfResponses();
 
-//     // no title
-//     const response2 = await api
-//       .post("/api/requests")
-//       .set("Authorization", `Bearer ${token}`)
-//       .send({ neighborhoodId: BOBS_NHOOD_ID, content: "foo" })
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/);
+    const httpResponse = await api
+      .post("/api/responses")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        content: "test content",
+        request_id: 10000, // Invalid Request Id
+        neighborhood_id: ANTONINAS_NHOOD_ID,
+      })
+      .expect(404)
+      .expect("Content-Type", /application\/json/);
 
-//     numberOfCurrentRequests = await testHelpers.getNumberOfRequests();
-//     expect(numberOfCurrentRequests).toEqual(numberOfInitialRequests);
-//     expect(response2.body.error).toEqual(
-//       "title, content or neighborhoodId missing or invalid"
-//     );
+    const numberOfFinalResponses = await testHelpers.getNumberOfResponses();
+    expect(numberOfFinalResponses).toEqual(numberOfInitialResponses);
+    expect(httpResponse.body.error).toBe("No Request found");
+  });
 
-//     // no neighborhoodId
-//     const httpResponse = await api
-//       .post("/api/requests")
-//       .set("Authorization", `Bearer ${token}`)
-//       .send({ title: "foofoo", content: "barbar" })
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/);
+  test("POST /request fails when user not member of neighborhood", async () => {
+    const loginResponse: Response = await loginUser(BOBS_LOGIN_DATA);
+    const bobsToken: string = loginResponse.body.token;
 
-//     numberOfCurrentRequests = await testHelpers.getNumberOfRequests();
-//     expect(numberOfCurrentRequests).toEqual(numberOfInitialRequests);
-//     expect(httpResponse.body.error).toBe(
-//       "title, content or neighborhoodId missing or invalid"
-//     );
-//   });
+    const numberOfInitialResponses = await testHelpers.getNumberOfResponses();
 
-//   test("POST /requests fails when neighborhood does not exist", async () => {
-//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-//     const { token } = loginResponse.body;
+    const httpResponse = await api
+      .post("/api/responses")
+      .set("Authorization", `Bearer ${bobsToken}`)
+      .send({
+        content: "test content",
+        request_id: RADUS_REQUEST_ID,
+        neighborhood_id: ANTONINAS_NHOOD_ID,
+      })
+      .expect(401)
+      .expect("Content-Type", /application\/json/);
 
-//     const numberOfInitialRequests = await testHelpers.getNumberOfRequests();
+    const numberOfCurrentResponses = await testHelpers.getNumberOfResponses();
+    expect(numberOfCurrentResponses).toEqual(numberOfInitialResponses);
+    expect(httpResponse.body.error).toBe("User is not authorized to respond.");
+  });
 
-//     const httpResponse = await api
-//       .post("/api/requests")
-//       .set("Authorization", `Bearer ${token}`)
-//       .send({
-//         title: "foofoo",
-//         content: "barbar",
-//         neighborhoodId: INVALID_NHOOD_ID,
-//       })
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/);
+  test("POST /responses succeeds with valid data", async () => {
+    const numOfInitialResponses = await testHelpers.getNumberOfResponses();
 
-//     const numberOfFinalRequests = await testHelpers.getNumberOfRequests();
-//     expect(numberOfFinalRequests).toEqual(numberOfInitialRequests);
-//     expect(httpResponse.body.error).toBe("Neighborhood does not exist");
-//   });
+    const httpResponse = await api
+      .post("/api/responses")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        content: "test content",
+        request_id: RADUS_REQUEST_ID,
+      })
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
 
-//   test("POST /request fails when content invalid", async () => {
-//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-//     const { token } = loginResponse.body;
+    const newResponseId = httpResponse.body.id;
+    expect(newResponseId).toBeDefined();
+    expect(httpResponse.body.request_id).toBe(RADUS_REQUEST_ID);
+    expect(httpResponse.body.user_id).toBe(ANTONINAS_USER_ID);
+    expect(httpResponse.body.content).toBe("test content");
+    expect(httpResponse.body.status).toBe("PENDING");
 
-//     const numberOfInitialRequests = await testHelpers.getNumberOfRequests();
+    const numOfFinalResponses = await testHelpers.getNumberOfResponses();
+    expect(numOfFinalResponses).toBe(numOfInitialResponses + 1);
 
-//     const INVALID_TITLE = "foo";
-//     const httpResponse = await api
-//       .post("/api/requests")
-//       .set("Authorization", `Bearer ${token}`)
-//       .send({
-//         title: INVALID_TITLE,
-//         content: "barbar",
-//         neighborhoodId: BOBS_NHOOD_ID,
-//       })
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/);
+    const newResponseInDb = await testHelpers.getSingleResponse(newResponseId);
 
-//     const numberOfFinalRequests = await testHelpers.getNumberOfRequests();
-//     expect(numberOfFinalRequests).toEqual(numberOfInitialRequests);
-//     expect(httpResponse.body.error).toBe("Invalid title");
-//   });
-
-//   test("POST /request fails when user not a member of the neighborhood", async () => {
-//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-//     const { token } = loginResponse.body;
-
-//     const numberOfInitialRequests = await testHelpers.getNumberOfRequests();
-
-//     const httpResponse = await api
-//       .post("/api/requests")
-//       .set("Authorization", `Bearer ${token}`)
-//       .send({
-//         title: "foofoo",
-//         content: "barbar",
-//         neighborhoodId: ANTONINAS_NHOOD_ID,
-//       })
-//       .expect(400)
-//       .expect("Content-Type", /application\/json/);
-
-//     const numberOfCurrentRequests = await testHelpers.getNumberOfRequests();
-//     expect(numberOfCurrentRequests).toEqual(numberOfInitialRequests);
-//     expect(httpResponse.body.error).toBe("User is not a member of neighborhood");
-//   });
-
-//   test("POST /request succeeds with valid data", async () => {
-//     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
-//     const { token } = loginResponse.body;
-
-//     const numOfInitialRequests = await testHelpers.getNumberOfRequests();
-
-//     const bobsInitalRequests = await testHelpers.getRequestsOfUser(
-//       BOBS_USER_ID
-//     );
-//     const initialNumOfBobsRequests = bobsInitalRequests.length;
-
-//     const initialNeighborhoodRequests =
-//       await testHelpers.getNeighborhoodRequests(BOBS_NHOOD_ID);
-//     const numOfInitialNeighborhoodReuqests = initialNeighborhoodRequests.length;
-
-//     const httpResponse = await api
-//       .post("/api/requests")
-//       .set("Authorization", `Bearer ${token}`)
-//       .send({
-//         title: "foofoo",
-//         content: "barbar",
-//         neighborhoodId: BOBS_NHOOD_ID,
-//       })
-//       .expect(201)
-//       .expect("Content-Type", /application\/json/);
-
-//     const numOfFinalRequests = await testHelpers.getNumberOfRequests();
-//     const bobsFinalRequests = await testHelpers.getRequestsOfUser(BOBS_USER_ID);
-//     const finalNumOfBobsRequests = bobsFinalRequests.length;
-//     const bobsRequestContentsAfterCreation = bobsFinalRequests.map(
-//       (req) => req.content
-//     );
-
-//     const finalNeighborhoodRequests = await testHelpers.getNeighborhoodRequests(
-//       BOBS_NHOOD_ID
-//     );
-//     const numOfFinalNeighborhoodRequests = finalNeighborhoodRequests.length;
-//     const neighborhoodsReqTitlesAfterCreation = finalNeighborhoodRequests.map(
-//       (req) => req.title
-//     );
-
-//     expect(httpResponse.body.neighborhood_id).toEqual(BOBS_NHOOD_ID);
-//     expect(httpResponse.body.user_id).toEqual(BOBS_USER_ID);
-//     expect(httpResponse.body.title).toEqual("foofoo");
-//     expect(httpResponse.body.content).toEqual("barbar");
-//     expect(httpResponse.body.status).toEqual("OPEN");
-//     expect(httpResponse.body.time_created).toBeDefined();
-
-//     expect(numOfFinalRequests).toEqual(numOfInitialRequests + 1);
-//     expect(finalNumOfBobsRequests).toEqual(initialNumOfBobsRequests + 1);
-//     expect(bobsRequestContentsAfterCreation).toContain("barbar");
-
-//     expect(numOfFinalNeighborhoodRequests).toEqual(
-//       numOfInitialNeighborhoodReuqests + 1
-//     );
-//     expect(neighborhoodsReqTitlesAfterCreation).toContain("foofoo");
-//   });
-// });
+    expect(newResponseInDb.request_id).toBe(RADUS_REQUEST_ID);
+    expect(newResponseInDb.user_id).toBe(ANTONINAS_USER_ID);
+    expect(newResponseInDb.content).toBe("test content");
+    expect(newResponseInDb.status).toBe("PENDING");
+  });
+});
