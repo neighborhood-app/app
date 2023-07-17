@@ -1,15 +1,17 @@
-import { Neighborhood, Prisma, Status, User, Response } from "@prisma/client";
-import { Request } from "express";
+import {
+  Neighborhood, Prisma, Status, User, Response,
+} from '@prisma/client';
+import { Request } from 'express';
 
 /**
  * format of the user data, without password hash, which is send in response
  */
-export type UserWithoutPasswordHash = Omit<User, "password_hash">;
+export type UserWithoutPasswordHash = Omit<User, 'password_hash'>;
 
 /**
  * format of user data, without id, to create entry in users table
  */
-export type UserWithoutId = Omit<User, "id">;
+export type UserWithoutId = Omit<User, 'id'>;
 
 /**
  * format of the data sent to `POST /login` to login user
@@ -43,13 +45,12 @@ export interface RequestWithAuthentication extends Request {
   loggedUserId?: number;
 }
 
-const neighborhoodWithRelatedFields =
-  Prisma.validator<Prisma.NeighborhoodArgs>()({
-    include: {
-      users: true,
-      requests: true,
-    },
-  });
+const neighborhoodWithRelatedFields = Prisma.validator<Prisma.NeighborhoodArgs>()({
+  include: {
+    users: true,
+    requests: true,
+  },
+});
 
 export type NeighborhoodWithRelatedFields = Prisma.NeighborhoodGetPayload<
   typeof neighborhoodWithRelatedFields
@@ -58,16 +59,15 @@ export type NeighborhoodWithRelatedFields = Prisma.NeighborhoodGetPayload<
 /**
  * format of the neighborhood data, without admin_id, to be displayed for non members
  */
-export type NeighborhoodDetailsForNonMembers = Omit<Neighborhood, "admin_id">;
+export type NeighborhoodDetailsForNonMembers = Omit<Neighborhood, 'admin_id'>;
 
-const neighborhoodDetailsForMembers =
-  Prisma.validator<Prisma.NeighborhoodArgs>()({
-    include: {
-      admin: true,
-      users: true,
-      requests: true,
-    },
-  });
+const neighborhoodDetailsForMembers = Prisma.validator<Prisma.NeighborhoodArgs>()({
+  include: {
+    admin: true,
+    users: true,
+    requests: true,
+  },
+});
 
 /**
  * format of neighborhood data, with all related fields, for members
@@ -125,9 +125,9 @@ export interface UpdateRequestData {
  * shape of the Response data, only with the required `content` property
  * to create a Response
  */
-export type ResponseData = Pick<Response, "content" | "request_id">;
+export type ResponseData = Pick<Response, 'content' | 'request_id'>;
 
 /**
  * shape of data for updating a Response
  */
-export type UpdateResponseData = Pick<Partial<Response>, "content" | "status">;
+export type UpdateResponseData = Pick<Partial<Response>, 'content' | 'status'>;

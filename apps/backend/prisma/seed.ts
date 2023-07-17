@@ -1,7 +1,7 @@
-import bcrypt from "bcrypt";
-import prismaClient from "../prismaClient";
+import bcrypt from 'bcrypt';
+import prismaClient from '../prismaClient';
 
-const SAMPLE_PASSWORD = "secret";
+const SAMPLE_PASSWORD = 'secret';
 
 /**
  * Generates a password hash using bcrypt library and 10 salt rounds
@@ -21,7 +21,7 @@ const getPasswordHash = async (password: string): Promise<string> => {
  */
 const connectUsertoNeighborhood = async (
   userId: number,
-  neighborhoodId: number
+  neighborhoodId: number,
 ): Promise<void> => {
   await prismaClient.neighborhood.update({
     where: { id: neighborhoodId },
@@ -37,10 +37,10 @@ async function main() {
   await prismaClient.gender.createMany({
     data: [
       {
-        name: "male",
+        name: 'male',
       },
       {
-        name: "female",
+        name: 'female',
       },
     ],
   });
@@ -48,49 +48,49 @@ async function main() {
   // Create users
   const bob = await prismaClient.user.create({
     data: {
-      user_name: "bob1234",
+      user_name: 'bob1234',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const antonina = await prismaClient.user.create({
     data: {
-      user_name: "antonina",
+      user_name: 'antonina',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const shwetank = await prismaClient.user.create({
     data: {
-      user_name: "shwetank",
+      user_name: 'shwetank',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const radu = await prismaClient.user.create({
     data: {
-      user_name: "radu",
+      user_name: 'radu',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const mike = await prismaClient.user.create({
     data: {
-      user_name: "mike",
+      user_name: 'mike',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const maria = await prismaClient.user.create({
     data: {
-      user_name: "maria",
+      user_name: 'maria',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const leia = await prismaClient.user.create({
     data: {
-      user_name: "leia",
+      user_name: 'leia',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
@@ -113,8 +113,8 @@ async function main() {
     data: {
       neighborhood_id: bobNeighborhood.id,
       user_id: mike.id,
-      title: "Help moving furniture in apartment",
-      content: "I need help moving my furniture this Saturday",
+      title: 'Help moving furniture in apartment',
+      content: 'I need help moving my furniture this Saturday',
     },
   });
   //---------------------------------------------------------
@@ -138,9 +138,9 @@ async function main() {
     data: {
       neighborhood_id: antoninaNeighborhood.id,
       user_id: radu.id,
-      title: "Plant trees",
+      title: 'Plant trees',
       content:
-        "I want to plant some trees in the rezidential area this Sunday. Who wants to help?",
+        'I want to plant some trees in the rezidential area this Sunday. Who wants to help?',
     },
   });
 
@@ -150,8 +150,8 @@ async function main() {
     data: {
       neighborhood_id: antoninaNeighborhood.id,
       user_id: maria.id,
-      title: "Install washing machine",
-      content: "Can anyone help me install a washing machine?",
+      title: 'Install washing machine',
+      content: 'Can anyone help me install a washing machine?',
     },
   });
 
@@ -159,8 +159,8 @@ async function main() {
     data: {
       request_id: raduRequest.id,
       user_id: antonina.id,
-      content: "I can help out",
-      status: "PENDING",
+      content: 'I can help out',
+      status: 'PENDING',
     },
   });
 
@@ -168,8 +168,8 @@ async function main() {
     data: {
       request_id: raduRequest.id,
       user_id: leia.id,
-      content: "I can also help out",
-      status: "PENDING",
+      content: 'I can also help out',
+      status: 'PENDING',
     },
   });
   //---------------------------------------------------------

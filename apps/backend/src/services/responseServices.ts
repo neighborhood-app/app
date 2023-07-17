@@ -1,9 +1,9 @@
-import { Response } from "@prisma/client";
-import { ResponseData, UpdateResponseData } from "../types";
-import prismaClient from "../../prismaClient";
-import middleware from "../utils/middleware";
-import requestServices from "./requestServices";
-import neighborhoodServices from "./neighborhoodServices";
+import { Response } from '@prisma/client';
+import { ResponseData, UpdateResponseData } from '../types';
+import prismaClient from '../../prismaClient';
+import middleware from '../utils/middleware';
+import requestServices from './requestServices';
+import neighborhoodServices from './neighborhoodServices';
 
 /**
  * performs narrowing on object `obj`
@@ -12,11 +12,10 @@ import neighborhoodServices from "./neighborhoodServices";
  * @param obj - request.body
  * @returns - type predicate (boolean)
  */
-const isResponseData = (obj: object): obj is ResponseData =>
-  "content" in obj &&
-  typeof obj.content === "string" &&
-  "request_id" in obj &&
-  typeof obj.request_id === "number";
+const isResponseData = (obj: object): obj is ResponseData => 'content' in obj
+  && typeof obj.content === 'string'
+  && 'request_id' in obj
+  && typeof obj.request_id === 'number';
 // add neighborhood_id
 
 /**
@@ -26,11 +25,11 @@ const isResponseData = (obj: object): obj is ResponseData =>
  * @returns Promise which resolves to parsed create response data
  */
 const parseCreateResponseData = async (
-  body: unknown
+  body: unknown,
 ): Promise<ResponseData> => {
   if (!middleware.isObject(body)) {
-    const error = new Error("unable to parse data");
-    error.name = "InvalidInputError";
+    const error = new Error('unable to parse data');
+    error.name = 'InvalidInputError';
     throw error;
   }
 
@@ -44,8 +43,8 @@ const parseCreateResponseData = async (
     return responseData;
   }
 
-  const error = new Error("Content property missing or invalid");
-  error.name = "InvalidInputError";
+  const error = new Error('Content property missing or invalid');
+  error.name = 'InvalidInputError';
   throw error;
 };
 
@@ -57,7 +56,7 @@ const parseCreateResponseData = async (
  */
 const createResponse = async (
   responseData: ResponseData,
-  userId: number
+  userId: number,
 ): Promise<Response> => {
   const response: Response = await prismaClient.response.create({
     data: {
@@ -95,7 +94,7 @@ const getResponseById = async (responseId: number): Promise<Response> => {
  */
 const isUserResponseCreator = async (
   responseId: number,
-  userId: number
+  userId: number,
 ): Promise<boolean> => {
   const response = await getResponseById(responseId);
   return response.user_id === userId;
@@ -105,15 +104,15 @@ const isUserResponseCreator = async (
 // if it has a content prop, it must be a string
 // if it has a status prop, it must be of ResponseStatus type
 const isUpdateResponseData = (obj: object): obj is UpdateResponseData => {
-  const VALID_PROPS = ["content", "status"];
+  const VALID_PROPS = ['content', 'status'];
   const props = Object.keys(obj);
 
   if (props.some((prop) => !VALID_PROPS.includes(prop))) return false;
-  if ("content" in obj && typeof obj.content !== "string") return false;
+  if ('content' in obj && typeof obj.content !== 'string') return false;
   if (
-    "status" in obj &&
-    obj.status !== "PENDING" &&
-    obj.status !== "ACCEPTED"
+    'status' in obj
+    && obj.status !== 'PENDING'
+    && obj.status !== 'ACCEPTED'
   ) {
     return false;
   }
@@ -129,17 +128,17 @@ const isUpdateResponseData = (obj: object): obj is UpdateResponseData => {
  */
 const updateResponse = async (
   body: unknown,
-  responseId: number
+  responseId: number,
 ): Promise<Response> => {
   if (!middleware.isObject(body)) {
-    const error = new Error("unable to parse data");
-    error.name = "InvalidInputError";
+    const error = new Error('unable to parse data');
+    error.name = 'InvalidInputError';
     throw error;
   }
 
   if (!isUpdateResponseData(body)) {
-    const error = new Error("Content and/or status value is invalid.");
-    error.name = "InvalidInputError";
+    const error = new Error('Content and/or status value is invalid.');
+    error.name = 'InvalidInputError';
     throw error;
   }
 
@@ -161,7 +160,7 @@ const updateResponse = async (
  */
 const hasUserDeleteRights = async (
   responseId: number,
-  userId: number
+  userId: number,
 ): Promise<boolean> => {
   const response = await getResponseById(responseId);
   if (response.user_id === userId) return true;
@@ -169,7 +168,7 @@ const hasUserDeleteRights = async (
   const request = await requestServices.getRequestById(response.request_id);
   const isAdmin = await neighborhoodServices.isUserAdminOfNeighborhood(
     userId,
-    request.neighborhood_id
+    request.neighborhood_id,
   );
 
   return isAdmin;
