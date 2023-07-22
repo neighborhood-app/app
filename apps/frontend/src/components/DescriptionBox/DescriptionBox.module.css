@@ -17,3 +17,7 @@
   border: 0px solid;
   place-self: center;
 }
+
+.button:hover {
+  background: #ADE4DB;
+}
