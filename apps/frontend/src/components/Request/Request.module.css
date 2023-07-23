@@ -1,10 +1,11 @@
 .container {
   display: flex;
   flex-direction: column;
-  background-color: #FFEBEB;
+  background-color: white;
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
+  border: 1px solid;
 }
 
 .requestHeader {
@@ -13,7 +14,8 @@
 }
 
 .button {
-  background-color: #6DA9E4;
+  color: black;
+  background-color: #C1EFFF;
   width: 120px;
   border: 0px solid;
   align-self: center;
@@ -21,7 +23,8 @@
 }
 
 .button:hover {
-  background-color: #ADE4DB;
+  color: black;
+  background-color: #FFDBA4;
 }
 
 .buttonsContainer {

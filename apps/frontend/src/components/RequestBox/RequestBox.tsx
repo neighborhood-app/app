@@ -6,7 +6,6 @@ import { useState } from "react";
 //@ts-ignore
 export default function RequestBox({ requests }) {
   const [requestsType, setRequestsType] = useState('closed');
-  console.log(requestsType)
   let requestSelection;
   if (requestsType === 'open') {
     //@ts-ignore
@@ -24,7 +23,7 @@ export default function RequestBox({ requests }) {
   //@ts-ignore
   const requestBoxes = requestSelection.map(request => {
     return (
-      <Request requestObj={request}></Request>
+      <Request requestObj={request} key={request.id}></Request>
     )
   })
 

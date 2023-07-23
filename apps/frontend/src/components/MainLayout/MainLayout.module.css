@@ -5,9 +5,10 @@
 
 .nav {
   height: 6vh;
-  background-color: #6DA9E4;
+  background-color: white;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid black;
 }
 
 .navLeft {
@@ -25,18 +26,20 @@
 .link {
   padding: 15px;
   color: black;
+  text-decoration: none;
 }
 
 .footer {
   width: 100vw;
   height: 6vh;
-  background-color: #6DA9E4;
+  background-color: white;
   /* position: absolute;
   bottom: 0; */
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: auto;
+  border-top: 1px solid black;
 }
 
 .paragraph {

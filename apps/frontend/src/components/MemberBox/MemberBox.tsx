@@ -8,11 +8,11 @@ interface Props {
 }
 
 export default function MemberBox({ admin, users }: Props) {
-    const userNames = users.map(user => {
+    const userNames = users ? users.map(user => {
         return (
-            <li className={styles.liElement}>{user.user_name}</li>
+            <li className={styles.liElement} key={user.id}>{user.user_name}</li>
         )
-    })
+    }) : 'There are currently no members of this neighborhood.'
 
     return (
         <div className={`${styles.column} ${styles.memberColumn}`}>

@@ -5,7 +5,7 @@
     margin: 0 20px;
     max-height: 70vh;
     overflow: auto;
-    background-color: #F6BA6F;
+    background-color: white;
     display: flex;
     flex-direction: column;
     box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1);
@@ -23,12 +23,14 @@
   }
 
   .button {
-    background-color: #6DA9E4;
+    color: black;
+    background-color: #C1EFFF;
     width: fit-content;
     border: 0px solid;
     place-self: center;
   }
 
   .button:hover {
-    background: #ADE4DB;
+    color: black;
+    background: #FFDBA4;
   }

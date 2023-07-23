@@ -15,6 +15,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 export default function Neighborhood() {
   const neighborhood = useLoaderData() as NeighborhoodDetailsForMembers;
+  //Ask how to represent two types???
 
   return (
     <div className={styles.wrapper}>
