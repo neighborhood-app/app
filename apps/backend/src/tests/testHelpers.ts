@@ -1,9 +1,7 @@
-import bcrypt from 'bcrypt';
-import {
-  Neighborhood, User, Request, Response,
-} from '@prisma/client';
-import { UserWithoutId, CreateUserData, UserWithRequests } from '../types';
-import prismaClient from '../../prismaClient';
+import bcrypt from "bcrypt";
+import { Neighborhood, User, Request, Response } from "@prisma/client";
+import { UserWithoutId, CreateUserData, UserWithRequests } from "../types";
+import prismaClient from "../../prismaClient";
 
 /**
  * Generates a password hash using bcrypt library and 10 salt rounds
@@ -25,7 +23,7 @@ const getPasswordHash = async (password: string) => {
  * @returns Promise resolved to an object with user fields without id
  */
 const generateUserData = async (
-  createUserData: CreateUserData,
+  createUserData: CreateUserData
 ): Promise<UserWithoutId> => {
   const { username, password } = createUserData;
   const user: UserWithoutId = {
@@ -73,7 +71,7 @@ const seedUser = async (createUserData: CreateUserData) => {
 };
 
 const getNeighborhoodUsers = async (
-  neighborhoodId: number,
+  neighborhoodId: number
 ): Promise<void | User[]> => {
   const neighborhood = await prismaClient.neighborhood.findFirst({
     where: {
@@ -85,7 +83,7 @@ const getNeighborhoodUsers = async (
   });
 
   if (!neighborhood) {
-    throw new Error('neighborhood does not exist');
+    throw new Error("neighborhood does not exist");
   } else {
     const { users } = neighborhood;
     return users;
@@ -176,6 +174,30 @@ const getNumberOfResponses = async (): Promise<number> => {
   return responses.length;
 };
 
+/**
+ * - Creates a new response
+ * - assumes that requestId and userId are consistent, throws error otherwise
+ * @param requestId
+ * @param userId
+ * @param content
+ * @returns the newly created response
+ */
+const createResponse = async (
+  requestId: number,
+  userId: number,
+  content: string
+): Promise<Response> => {
+  const response: Response = await prismaClient.response.create({
+    data: {
+      user_id: userId,
+      request_id: requestId,
+      content,
+    },
+  });
+
+  return response;
+};
+
 const removeAllData = async () => {
   await prismaClient.response.deleteMany({});
   await prismaClient.request.deleteMany({});
@@ -203,4 +225,5 @@ export default {
   getSingleRequest,
   getSingleResponse,
   getNumberOfResponses,
+  createResponse,
 };
