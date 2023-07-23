@@ -26,7 +26,7 @@ export default function Neighborhood() {
     <div className={styles.wrapper}>
       <DescriptionBox name={neighborhood.name} description={neighborhood.description ? neighborhood.description : ''} />
       <MemberBox admin={neighborhood.admin as unknown as User} users={neighborhood.users as unknown as Array<User>} />
-      <RequestBox requests={neighborhood.requests}/>
+      <RequestBox requests={neighborhood.requests} />
     </div>
   )
 }
