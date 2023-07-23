@@ -1,13 +1,16 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useOutletContext } from 'react-router-dom';
+import React from 'react';
 
-const PrivateRoutes = () => {
+const PrivateRoutes = () => {  
   //@ts-ignore
   let auth = JSON.parse(window.localStorage.getItem('user'));
+  const [userContext, setUserContext] = React.useState(auth);
   if (auth) {
-    return (
-    //@ts-ignore
-      auth.token ? <Outlet/> : <Navigate to='/login'/>
-    )
+      if (auth.token) {
+        return <Outlet context={[userContext, setUserContext]}/>;
+      } else {
+        return (<Navigate to='/login'/>)
+      }
   }
   return <Navigate to='/login' />
 }

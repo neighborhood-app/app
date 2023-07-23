@@ -14,7 +14,7 @@ export default function MainLayout() {
         </div>
       </nav>
       <main className={styles.main}>
-        <Outlet />
+        <Outlet/>
       </main>
       <footer className={styles.footer}>
         <p className={styles.paragraph}><strong>PLACEHOLDER</strong></p>
