@@ -1,11 +1,12 @@
 import SearchFilterForm from "../SearchFilterForm/SearchFilterForm";
 import Request from "../Request/Request";
 import styles from './RequestBox.module.css';
+import { Button } from "react-bootstrap";
 import { useState } from "react";
 
 //@ts-ignore
 export default function RequestBox({ requests }) {
-  const [requestsType, setRequestsType] = useState('closed');
+  const [requestsType, setRequestsType] = useState('open');
   let requestSelection;
   if (requestsType === 'open') {
     //@ts-ignore
@@ -28,8 +29,9 @@ export default function RequestBox({ requests }) {
   })
 
   return (
-    <div className={`${styles.column}`}>
+    <div className={styles.column}>
       <SearchFilterForm filterStatus={ requestsType } setFilterStatus={ setRequestsType }/>
+      <Button className={styles.button}>Create request</Button>
       {requestBoxes}
     </div>
   )

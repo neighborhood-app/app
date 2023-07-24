@@ -1,4 +1,6 @@
 .column {
+  display: flex;
+  flex-direction: column;
   grid-column: 1 / 4;
   box-sizing: border-box;
   border-radius: 10px;
@@ -8,4 +10,18 @@
   overflow: auto;
   background-color: white;
   box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1);
+}
+
+.button {
+  align-self: center;
+  margin-bottom: 15px;
+  color: black;
+  background-color: #FFDBA4;
+  width: 200px;
+  border: 0px solid;
+}
+
+.button:hover {
+  background: #C1EFFF;
+  color: black;
 }
