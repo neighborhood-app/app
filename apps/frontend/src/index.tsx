@@ -2,15 +2,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Login, { action as loginAction } from './routes/login/login';
-import TestRoute from './routes/test/test';
-import PrivateRoutes from './routes/private_routes/privateRoutes';
+import Login, { action as loginAction } from './pages/login/login';
+import TestRoute from './pages/test/test';
+import PrivateRoutes from './pages/private_routes/privateRoutes';
 import {
   createBrowserRouter, RouterProvider
 } from 'react-router-dom';
 import App from './App';
-import Neighborhoods, {loader as neighborhoodsLoader} from './routes/neighborhoods/neighborhoods';
-import Neighborhood, {loader as neighborhoodLoader} from './routes/individual_neighborhood/neighborhood';
+import Neighborhoods, {loader as neighborhoodsLoader} from './pages/neighborhoods/neighborhoods';
+import Neighborhood, {loader as neighborhoodLoader} from './pages/individual_neighborhood/neighborhood';
 
 const router = createBrowserRouter([
   {

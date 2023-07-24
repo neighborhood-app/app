@@ -6,11 +6,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  color: white;
   border: 1px black;
   border-radius: 15px;
   box-shadow: 15px 12px 12px 0px rgba(0,0,0,0.1);
-  background: #6DA9E4;
+  background: white;
   padding: 15px;
 }
 
@@ -35,12 +34,11 @@
 
 .input {
   padding: 5px;
-  border: 2px solid #ccc;
+  border: 2px solid black;
   border-radius: 5px;
   width: 100%;
   box-sizing: border-box;
   outline: none;
-  border: none;
 }
 
 .submit {

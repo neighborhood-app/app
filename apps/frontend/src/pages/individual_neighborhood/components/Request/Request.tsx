@@ -1,6 +1,6 @@
 import { Button } from "react-bootstrap";
 import styles from './Request.module.css';
-import { RequestType } from "../../types";
+import { RequestType } from "../../../../types";
 import { useState } from "react";
 
 export default function Request({ requestObj }: {requestObj: RequestType}) {

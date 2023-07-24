@@ -1,13 +1,14 @@
 import styles from './MemberBox.module.css';
 import { Button } from "react-bootstrap"
-import type { User } from '../../types';
+import type { User } from '../../../../types';
 
 interface Props {
+    showLeaveBtn: boolean,
     admin: User,
     users: Array<User>
 }
 
-export default function MemberBox({ admin, users }: Props) {
+export default function MemberBox({ showLeaveBtn, admin, users }: Props) {
     const userNames = users ? users.map(user => {
         return (
             <li className={styles.liElement} key={user.id}>{user.user_name}</li>
@@ -22,7 +23,7 @@ export default function MemberBox({ admin, users }: Props) {
             <ul className={styles.list}>
                 {userNames}
             </ul>
-            <Button className={styles.button}>Leave Neighborhood</Button>
+            {showLeaveBtn ? <Button className={styles.button}>Leave Neighborhood</Button> : null}
         </div>
     )
 }

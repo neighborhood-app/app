@@ -1,4 +1,4 @@
-import LoginForm from "../../components/LoginForm/LoginForm";
+import LoginForm from "./components/LoginForm/LoginForm";
 import styles from './login.module.css'
 import login from "../../services/login";
 import { LoginData, UserInfo } from "../../types";

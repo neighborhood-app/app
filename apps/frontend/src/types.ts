@@ -12,13 +12,7 @@ export interface UserInfo {
   token: string
 };
 
-export type NeighborhoodType = {
-  id: number
-  admin_id: number
-  name: string
-  description: string | null
-  location: string | null
-}
+
 
 export type NeighborhoodDetailsForMembers = {
   id: number
@@ -37,6 +31,8 @@ export type NeighborhoodDetailsForNonMembers = {
   description: string | null;
   location: string | null;
 }
+
+export type NeighborhoodType = NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers;
 
 export type User = {
   id: number
