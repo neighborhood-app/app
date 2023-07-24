@@ -30,29 +30,29 @@ model Neighborhood {
 }
 
 model Request {
-  id              Int          @id @default(autoincrement())
+  id              Int           @id @default(autoincrement())
   neighborhood_id Int
   user_id         Int
-  title           String       @db.VarChar(50)
-  content         String       @db.VarChar(1000)
-  status          Status       @default(OPEN)
-  time_created    DateTime     @default(now()) @db.Timestamptz(6)
-  neighborhood    Neighborhood @relation(fields: [neighborhood_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user            User         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  title           String        @db.VarChar(50)
+  content         String        @db.VarChar(1000)
+  status          RequestStatus @default(OPEN)
+  time_created    DateTime      @default(now()) @db.Timestamptz(6)
+  neighborhood    Neighborhood  @relation(fields: [neighborhood_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user            User          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   responses       Response[]
 
   @@map("requests")
 }
 
 model Response {
-  id           Int       @id @default(autoincrement())
+  id           Int              @id @default(autoincrement())
   request_id   Int
   user_id      Int
-  content      String?   @db.VarChar(1000)
-  status       Int?
-  time_created DateTime? @db.Timestamptz(6)
-  request      Request   @relation(fields: [request_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user         User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  content      String           @db.VarChar(1000)
+  status       ResponseStatus   @default(PENDING)
+  time_created DateTime         @default(now()) @db.Timestamptz(6)
+  request      Request          @relation(fields: [request_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user         User             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("responses")
 }
@@ -75,7 +75,12 @@ model User {
   @@map("users")
 }
 
-enum Status {
+enum RequestStatus {
   OPEN
   CLOSED
+}
+
+enum ResponseStatus {
+  PENDING
+  ACCEPTED
 }

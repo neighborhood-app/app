@@ -19,7 +19,10 @@ const getPasswordHash = async (password: string): Promise<string> => {
  * @param userId
  * @param neighborhoodId
  */
-const connectUsertoNeighborhood = async (userId: number, neighborhoodId: number): Promise<void> => {
+const connectUsertoNeighborhood = async (
+  userId: number,
+  neighborhoodId: number,
+): Promise<void> => {
   await prismaClient.neighborhood.update({
     where: { id: neighborhoodId },
     data: {
@@ -84,6 +87,13 @@ async function main() {
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
+
+  const leia = await prismaClient.user.create({
+    data: {
+      user_name: 'leia',
+      password_hash: await getPasswordHash(SAMPLE_PASSWORD),
+    },
+  });
   //---------------------------------------------------------
 
   // Bob's Neighborhood
@@ -120,6 +130,7 @@ async function main() {
   await connectUsertoNeighborhood(antonina.id, antoninaNeighborhood.id);
   await connectUsertoNeighborhood(radu.id, antoninaNeighborhood.id);
   await connectUsertoNeighborhood(maria.id, antoninaNeighborhood.id);
+  await connectUsertoNeighborhood(leia.id, antoninaNeighborhood.id);
 
   // The variable will be used in the future when we add responses.
   // eslint-disable-next-line
@@ -128,7 +139,8 @@ async function main() {
       neighborhood_id: antoninaNeighborhood.id,
       user_id: radu.id,
       title: 'Plant trees',
-      content: 'I want to plant some trees in the rezidential area this Sunday. Who wants to help?',
+      content:
+        'I want to plant some trees in the rezidential area this Sunday. Who wants to help?',
     },
   });
 
@@ -140,6 +152,24 @@ async function main() {
       user_id: maria.id,
       title: 'Install washing machine',
       content: 'Can anyone help me install a washing machine?',
+    },
+  });
+
+  await prismaClient.response.create({
+    data: {
+      request_id: raduRequest.id,
+      user_id: antonina.id,
+      content: 'I can help out',
+      status: 'PENDING',
+    },
+  });
+
+  await prismaClient.response.create({
+    data: {
+      request_id: raduRequest.id,
+      user_id: leia.id,
+      content: 'I can also help out',
+      status: 'PENDING',
     },
   });
   //---------------------------------------------------------
