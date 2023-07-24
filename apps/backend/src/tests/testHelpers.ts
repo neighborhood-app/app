@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
-import { Neighborhood, User, Request } from '@prisma/client';
+import {
+  Neighborhood, User, Request, Response,
+} from '@prisma/client';
 import { UserWithoutId, CreateUserData, UserWithRequests } from '../types';
 import prismaClient from '../../prismaClient';
 
@@ -102,9 +104,7 @@ const getNumberOfRequests = async (): Promise<number> => {
  * @param userID
  * @returns a Promise resolving to Requests associated with User
  */
-const getRequestsOfUser = async (
-  userID: number,
-): Promise<Request[]> => {
+const getRequestsOfUser = async (userID: number): Promise<Request[]> => {
   const user: UserWithRequests = (await prismaClient.user.findUnique({
     where: {
       id: userID,
@@ -121,9 +121,7 @@ const getRequestsOfUser = async (
  * @param neighborhoodId
  * @returns Returns a Promise resolving to Requests associated with a neighborhood
  */
-const getNeighborhoodRequests = async (
-  neighborhoodId: number,
-) => {
+const getNeighborhoodRequests = async (neighborhoodId: number) => {
   const neighborhood = await prismaClient.neighborhood.findUnique({
     where: {
       id: neighborhoodId,
@@ -154,6 +152,54 @@ const getSingleRequest = async (id: number): Promise<Request> => {
   return request;
 };
 
+/**
+ * - fetches response from the db
+ * - throws Error if response not found
+ * @param id response_id
+ * @returns
+ */
+const getSingleResponse = async (id: number): Promise<Response> => {
+  const response = await prismaClient.response.findFirstOrThrow({
+    where: {
+      id,
+    },
+  });
+
+  return response;
+};
+
+/**
+ * @returns number of requests present in the db
+ */
+const getNumberOfResponses = async (): Promise<number> => {
+  const responses = await prismaClient.response.findMany({});
+  return responses.length;
+};
+
+/**
+ * - Creates a new response
+ * - assumes that requestId and userId are consistent, throws error otherwise
+ * @param requestId
+ * @param userId
+ * @param content
+ * @returns the newly created response
+ */
+const createResponse = async (
+  requestId: number,
+  userId: number,
+  content: string,
+): Promise<Response> => {
+  const response: Response = await prismaClient.response.create({
+    data: {
+      user_id: userId,
+      request_id: requestId,
+      content,
+    },
+  });
+
+  return response;
+};
+
 const removeAllData = async () => {
   await prismaClient.response.deleteMany({});
   await prismaClient.request.deleteMany({});
@@ -179,4 +225,7 @@ export default {
   getRequestsOfUser,
   getNeighborhoodRequests,
   getSingleRequest,
+  getSingleResponse,
+  getNumberOfResponses,
+  createResponse,
 };

@@ -134,19 +134,19 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
 /**
  * checks if the user is admin of the neighborhood
  * throws error if neighborhoodId is invalid
- * @param userID
- * @param neighborhoodID
+ * @param userId
+ * @param neighborhoodId
  * @returns true if user is admin, false otherwise
  */
-const isUserAdminOfNeighborhood = async (userID: number, neighborhoodID: number):
+const isUserAdminOfNeighborhood = async (userId: number, neighborhoodId: number):
 Promise<boolean> => {
   const neighborhood: Neighborhood = await prismaClient.neighborhood.findFirstOrThrow({
     where: {
-      id: neighborhoodID,
+      id: neighborhoodId,
     },
   });
 
-  return (neighborhood.admin_id === userID);
+  return (neighborhood.admin_id === userId);
 };
 
 const deleteNeighborhood = async (neighborhoodId: number) => {

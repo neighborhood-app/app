@@ -8,9 +8,27 @@ import neighborhoodServices from '../services/neighborhoodServices';
 
 const requestsRouter = express.Router();
 
+// Create request
+requestsRouter.post(
+  '/',
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const loggedUserId: number = req.loggedUserId as number;
+    const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
+
+    const request: RequestData = await requestServices.createRequest(
+      postData,
+      loggedUserId,
+    );
+
+    return res.status(201).send(request);
+  }),
+);
+
 // Update request
 requestsRouter.put(
   '/:id',
+  middleware.validateURLParams,
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const userId = Number(req.loggedUserId);
@@ -41,7 +59,7 @@ requestsRouter.delete(
     const requestId = Number(req.params.id);
 
     const isOwnerUser = await requestServices.hasUserCreatedRequest(
-      +requestId,
+      requestId,
       loggedUserId,
     );
     if (!isOwnerUser) {
@@ -54,12 +72,12 @@ requestsRouter.delete(
       if (!isAdminOfNeighborhood) return res.sendStatus(401);
     }
 
-    await requestServices.deleteRequest(+requestId);
+    await requestServices.deleteRequest(requestId);
     return res.sendStatus(204);
   }),
 );
 
-// get a single request
+// Get a single request
 requestsRouter.get(
   '/:id',
   middleware.userIdExtractorAndLoginValidator,
@@ -83,23 +101,6 @@ requestsRouter.get(
       requestId,
     );
     return res.status(200).send(requestData);
-  }),
-);
-
-// create request
-requestsRouter.post(
-  '/',
-  middleware.userIdExtractorAndLoginValidator,
-  catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const loggedUserId: number = req.loggedUserId as number;
-    const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
-
-    const request: RequestData = await requestServices.createRequest(
-      postData,
-      loggedUserId,
-    );
-
-    return res.status(201).send(request);
   }),
 );
 

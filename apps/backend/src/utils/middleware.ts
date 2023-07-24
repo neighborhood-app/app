@@ -25,7 +25,7 @@ const requestLogger = (request: Request, _response: Response, next: NextFunction
 
 /**
  * @param input - (unknown)
- * @returns - type predicate (boolean) indicating whether input is of type `object`
+ * @returns - type predicate (boolean) indicating whether input is of type `Object`
  */
 const isObject = (input: unknown): input is Object => !!input && (typeof input === 'object');
 

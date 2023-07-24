@@ -3,6 +3,7 @@ import neighborhoodsRouter from './controllers/neighborhoods';
 import usersRouter from './controllers/users';
 import loginRouter from './controllers/login';
 import requestsRouter from './controllers/requests';
+import responsesRouter from './controllers/responses';
 import middleware from './utils/middleware';
 
 const cors = require('cors');
@@ -20,6 +21,7 @@ app.use('/api/neighborhoods', neighborhoodsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/requests', requestsRouter);
+app.use('/api/responses', responsesRouter);
 
 // error handler and unknown endpoint
 app.use(middleware.unknownEndpoint);

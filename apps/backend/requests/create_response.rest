@@ -1,0 +1,8 @@
+POST http://localhost:3001/api/responses
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFudG9uaW5hIiwiaWQiOjIsImlhdCI6MTY4OTYxOTk0NCwiZXhwIjoxNjkzMjE5OTQ0fQ.s9k-dkUJMxclttXICN8wLBlhRYqFXBDGOqGgRXsrljQ
+
+{
+  "content": "test content",
+  "request_id": 2
+}
