@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
-import styles from "./MainLayout.module.css";
+import styles from "./App.module.css";
 
-export default function MainLayout() {
+export default function App() {
   return (
     <>
       <nav className={styles.nav}>

@@ -8,14 +8,14 @@ import PrivateRoutes from './routes/private_routes/privateRoutes';
 import {
   createBrowserRouter, RouterProvider
 } from 'react-router-dom';
-import MainLayout from './components/MainLayout/MainLayout';
+import App from './App';
 import Neighborhoods, {loader as neighborhoodsLoader} from './routes/neighborhoods/neighborhoods';
 import Neighborhood, {loader as neighborhoodLoader} from './routes/individual_neighborhood/neighborhood';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: <App />,
     children: [
       {
         path: "/login",
