@@ -20,7 +20,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 export default function Neighborhood() {
   let neighborhood = useLoaderData() as NeighborhoodType;
-  //Ask how to represent two types???
   //@ts-ignore  
   const [userContext, setUserContext] = useOutletContext();
 
