@@ -11,6 +11,7 @@ import {
 import App from './App';
 import Neighborhoods, {loader as neighborhoodsLoader} from './pages/neighborhoods/neighborhoods';
 import Neighborhood, {loader as neighborhoodLoader} from './pages/individual_neighborhood/neighborhood';
+import {action as requestAction} from './pages/individual_neighborhood/components/RequestBox/RequestBox'
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
           {
             path: "/neighborhoods/:id",
             loader: neighborhoodLoader,
+            action: requestAction,
             element: <Neighborhood />
           }
         ]

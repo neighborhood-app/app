@@ -18,6 +18,8 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return neighborhoods;
 }
 
+
+
 export default function Neighborhood() {
   let neighborhood = useLoaderData() as NeighborhoodType;
   //@ts-ignore  

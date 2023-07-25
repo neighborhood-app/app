@@ -4,6 +4,11 @@ import styles from './RequestBox.module.css';
 import { Button, Modal, Form } from "react-bootstrap";
 import { useState } from "react";
 
+export async function action({ request }: {request: Request}) {
+  const formData = await request.formData();
+  console.log(formData);
+}
+
 // @ts-ignore
 export default function RequestBox({ requests }) {
   const [show, setShow] = useState(false);
@@ -42,29 +47,25 @@ export default function RequestBox({ requests }) {
           <Modal.Title>Create a request</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form method='post' action='/api/requests'>
             <Form.Group className="mb-3" controlId="formTitle">
               <Form.Label>Title</Form.Label>
               <Form.Control type="text" placeholder="Title of your request" />
             </Form.Group>
-
             <Form.Group className="mb-3" controlId="formContent">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="text" placeholder="Content of your request" />
+              <Form.Label>Content</Form.Label>
+              <Form.Control as="textarea" rows={4} placeholder="Content of your request" />
             </Form.Group>
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
+            <div className={styles.buttonsContainer}>
+              <Button className={styles.formButton} variant="primary" type="submit">
+                Submit
+              </Button>
+              <Button className={styles.formButton} variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+            </div> 
           </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
       </Modal>
       {requestBoxes}
     </div>

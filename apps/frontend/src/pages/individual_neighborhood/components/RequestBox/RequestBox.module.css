@@ -25,3 +25,12 @@
   background: #C1EFFF;
   color: black;
 }
+
+.formButton {
+  margin: 0 10px;
+}
+
+.buttonsContainer {
+  display: flex;
+  justify-content: center;
+}
