@@ -3,9 +3,10 @@ import MemberBox from "./components/MemberBox/MemberBox";
 import RequestBox from "./components/RequestBox/RequestBox";
 import neighborhoodsService from '../../services/neighborhoods';
 import { LoaderFunctionArgs, useLoaderData, useOutletContext } from "react-router";
-
+import createRequest from "../../services/requests";
 import styles from "./neighborhood.module.css"
 import { NeighborhoodDetailsForMembers, NeighborhoodDetailsForNonMembers, NeighborhoodType, User } from "../../types";
+
 
 function checkForNeighborhoodDetails(neighborhood: NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers): 
   neighborhood is NeighborhoodDetailsForMembers {
@@ -18,7 +19,16 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return neighborhoods;
 }
 
-
+//@ts-ignore
+export async function action({ params, request }) {
+  const formData = await request.formData();
+  let requestData = Object.fromEntries(formData);
+  requestData.neighborhoodId = Number(params.id);
+  console.log(requestData);
+  //@ts-ignore
+  await createRequest(requestData);
+  return null;
+}
 
 export default function Neighborhood() {
   let neighborhood = useLoaderData() as NeighborhoodType;

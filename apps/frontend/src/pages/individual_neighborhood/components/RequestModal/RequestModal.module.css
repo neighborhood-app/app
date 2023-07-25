@@ -1,0 +1,48 @@
+.form {
+  height: 50vh;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  grid-template-rows: 0.5fr 3fr 1fr;
+  grid-gap: 10px;
+}
+
+.label {
+  text-align: left;
+  font-weight: bold;
+  align-self: center;
+}
+
+.input {
+  padding: 5px;
+  border: 2px solid black;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.textarea {
+  padding: 5px;
+  border: 2px solid black;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  resize: none;
+}
+
+.submit {
+  background-color: #F6BA6F;
+  color: white;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  max-width: 50%;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  justify-self: center;
+  align-self: center;
+  grid-column: 1 / span 2;
+}

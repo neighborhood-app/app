@@ -3,6 +3,16 @@ export interface LoginData {
   password: string
 };
 
+export interface RequestData {
+  title: string,
+  content: string,
+  neighborhoodId: string
+};
+
+export interface RouteIdParameter {
+  id: string
+};
+
 export interface StorageWithUser extends Storage {
   user?: string
 };
@@ -11,8 +21,6 @@ export interface UserInfo {
   username: string,
   token: string
 };
-
-
 
 export type NeighborhoodDetailsForMembers = {
   id: number
