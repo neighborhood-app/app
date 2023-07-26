@@ -16,12 +16,12 @@ export default function RequestModal({ show, handleClose }: Props) {
       <Modal.Body>
         <Form method='post' className={styles.form} name='new-request-form'>
           <label className={styles.label} htmlFor='title'>Title:</label>
-          <input className={styles.input} type='text' name='title' id='title' required></input>
+          <input className={styles.input} type='text' name='title' id='title' required minLength={4}></input>
 
           <label className={styles.label} htmlFor='content'>Content:</label>
           <textarea className={styles.textarea} name='content' id='content' required></textarea>
 
-          <input className={styles.submit} type='submit' value='Submit'></input>
+          <input className={styles.submit} type='submit' value='Submit' onSubmit={() => handleClose()}></input>
         </Form>
       </Modal.Body>
     </Modal>

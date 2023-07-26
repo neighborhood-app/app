@@ -24,10 +24,9 @@ export async function action({ params, request }) {
   const formData = await request.formData();
   let requestData = Object.fromEntries(formData);
   requestData.neighborhoodId = Number(params.id);
-  console.log(requestData);
   //@ts-ignore
-  await createRequest(requestData);
-  return null;
+  const response = await createRequest(requestData);
+  return response;
 }
 
 export default function Neighborhood() {
