@@ -6,7 +6,7 @@ export interface LoginData {
 export interface RequestData {
   title: string,
   content: string,
-  neighborhoodId: string
+  neighborhoodId?: number
 };
 
 export interface RouteIdParameter {
@@ -62,4 +62,8 @@ export type RequestType = {
   status: string;
   time_created: string;
   user: User
+}
+
+export interface URLParameterID {
+  id: string,
 }
