@@ -32,6 +32,12 @@
   resize: none;
 }
 
+.buttonContainer {
+  grid-column: 1 / span 2;
+  justify-self: center;
+  align-self: center;
+}
+
 .submit {
   background-color: #F6BA6F;
   color: white;
@@ -42,7 +48,17 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  justify-self: center;
-  align-self: center;
-  grid-column: 1 / span 2;
+  margin-right: 10px;
+}
+
+.button {
+  background-color: #F6BA6F;
+  color: white;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  max-width: 50%;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

@@ -9,7 +9,7 @@ interface Props {
 
 export default function RequestModal({ show, handleClose }: Props) {
   return (
-    <Modal show={show} onHide={handleClose} animation={true} centered>
+    <Modal show={show} onHide={handleClose} animation={true} backdrop="static" centered>
       <Modal.Header closeButton>
         <Modal.Title>Create a request</Modal.Title>
       </Modal.Header>
@@ -21,7 +21,20 @@ export default function RequestModal({ show, handleClose }: Props) {
           <label className={styles.label} htmlFor='content'>Content:</label>
           <textarea className={styles.textarea} name='content' id='content' required></textarea>
 
-          <input className={styles.submit} type='submit' value='Submit' onSubmit={() => handleClose()}></input>
+          <div className={styles.buttonContainer}>
+            <input className={styles.submit} type='submit' value='Submit' onSubmit={() => handleClose()}></input>
+            <button
+              className={styles.button}
+              onClick={
+                (event) => {
+                  event.preventDefault();
+                  handleClose()
+                }
+              }>
+              Cancel
+            </button>
+          </div>
+
         </Form>
       </Modal.Body>
     </Modal>
