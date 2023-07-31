@@ -2,11 +2,10 @@ import DescriptionBox from "./components/DescriptionBox/DescriptionBox";
 import MemberBox from "./components/MemberBox/MemberBox";
 import RequestBox from "./components/RequestBox/RequestBox";
 import neighborhoodsService from '../../services/neighborhoods';
-import { LoaderFunctionArgs, useLoaderData, useOutletContext } from "react-router";
+import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData, useOutletContext } from "react-router";
 import createRequest from "../../services/requests";
 import styles from "./neighborhood.module.css"
-import { NeighborhoodDetailsForMembers, NeighborhoodDetailsForNonMembers, NeighborhoodType, User } from "../../types";
-
+import { NeighborhoodDetailsForMembers, NeighborhoodDetailsForNonMembers, NeighborhoodType, User, RequestData } from "../../types";
 
 function checkForNeighborhoodDetails(neighborhood: NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers): 
   neighborhood is NeighborhoodDetailsForMembers {
@@ -19,12 +18,11 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return neighborhoods;
 }
 
-//@ts-ignore
-export async function action({ params, request }) {
+export async function action({ params, request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  let requestData = Object.fromEntries(formData);
+  const requestData = Object.fromEntries(formData) as unknown as RequestData;
   requestData.neighborhoodId = Number(params.id);
-  //@ts-ignore
+
   const response = await createRequest(requestData);
   return response;
 }
