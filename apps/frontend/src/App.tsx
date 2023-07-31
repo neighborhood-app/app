@@ -9,6 +9,7 @@ import PrivateRoutes from "./pages/private_routes/privateRoutes";
 import Neighborhoods, {
   loader as neighborhoodsLoader,
 } from "./pages/neighborhoods/neighborhoods";
+
 import Neighborhood, {
   loader as neighborhoodLoader,
 } from "./pages/individual_neighborhood/neighborhood";
@@ -33,8 +34,8 @@ const router = createBrowserRouter([
           },
           {
             path: "/neighborhoods",
-            loader: neighborhoodsLoader,
             element: <Neighborhoods />,
+            loader: neighborhoodsLoader,
           },
           {
             path: "/neighborhoods/:id",
