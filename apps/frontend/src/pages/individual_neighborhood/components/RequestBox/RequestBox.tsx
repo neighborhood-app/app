@@ -6,7 +6,6 @@ import { Button } from "react-bootstrap";
 import { RequestType } from "../../../../types";
 import { useState } from "react";
 
-
 //@ts-ignore
 export default function RequestBox({ requests }) {
   const [show, setShow] = useState(false);
@@ -15,7 +14,11 @@ export default function RequestBox({ requests }) {
   const handleShow = () => setShow(true);
 
   const [requestsType, setRequestsType] = useState('open');
-  let requestSelection; 
+  const [requestSearchValue, setRequestSearchValue] = useState('');
+
+  let requestSelection;
+
+
   if (requestsType === 'open') {
     requestSelection = requests.filter((request: RequestType) => {
       return request.status === 'OPEN';
@@ -24,23 +27,29 @@ export default function RequestBox({ requests }) {
     requestSelection = requests.filter((request: RequestType) => {
       return request.status === 'CLOSED';
     })
-  } else {
+  } else if (requestsType === 'all') {
     requestSelection = requests;
+  };
+
+  if (requestSearchValue !== '') {
+    requestSelection = requestSelection.filter((request: RequestType) => {
+      return request.title.includes(requestSearchValue);
+    })
   }
 
-  const requestBoxes = requestSelection.map((request: RequestType) => {
-    return (
-      <Request requestObj={request} key={request.id}></Request>
-    )
-  })
+    const requestBoxes = requestSelection.map((request: RequestType) => {
+      return (
+        <Request requestObj={request} key={request.id}></Request>
+      )
+    })
 
-  return (
-    <div className={styles.column}>
-      <SearchFilterForm filterStatus={requestsType} setFilterStatus={setRequestsType} />
-      <Button className={styles.button} onClick={handleShow}>Create request</Button>
-      <RequestModal show={show} handleClose={handleClose}/>
-      {requestBoxes}
-    </div>
-  )
-}
+    return (
+      <div className={styles.column}>
+        <SearchFilterForm filterStatus={requestsType} setFilterStatus={setRequestsType} requestSearchValue={requestSearchValue} setRequestSearchValue={setRequestSearchValue} />
+        <Button className={styles.button} onClick={handleShow}>Create request</Button>
+        <RequestModal show={show} handleClose={handleClose} />
+        {requestBoxes}
+      </div>
+    )
+  }
 

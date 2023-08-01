@@ -8,6 +8,11 @@ interface Props {
 }
 
 export default function RequestModal({ show, handleClose }: Props) {
+  function handleSubmit() {
+    console.log('test');
+    handleClose()
+  }
+
   return (
     <Modal show={show} onHide={handleClose} animation={true} backdrop="static" centered>
       <Modal.Header closeButton>
@@ -22,7 +27,8 @@ export default function RequestModal({ show, handleClose }: Props) {
           <textarea className={styles.textarea} name='content' id='content' required></textarea>
 
           <div className={styles.buttonContainer}>
-            <input className={styles.submit} type='submit' value='Submit' onSubmit={() => handleClose()}></input>
+            <input className={styles.submit} type='submit' value='Submit' 
+            onSubmit={handleSubmit}></input>
             <button
               className={styles.button}
               onClick={

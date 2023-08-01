@@ -5,14 +5,16 @@ import styles from './SearchFilterForm.module.css';
 interface Props {
   filterStatus: string,
   setFilterStatus: Function,
+  requestSearchValue: string,
+  setRequestSearchValue: Function,
 }
 
-export default function SearchFilterForm({ filterStatus, setFilterStatus }: Props) {
+export default function SearchFilterForm({ filterStatus, setFilterStatus, requestSearchValue, setRequestSearchValue }: Props) {
   return (
     <div className={`${styles.column} ${styles.filterColumn}`}>
       <Form className={styles.form}>
         <Form.Group>
-          <Form.Control type="text" placeholder="Search requests"></Form.Control>
+          <Form.Control type="text" placeholder="Search requests" value={requestSearchValue} onChange={event => setRequestSearchValue((event.target).value)}></Form.Control>
         </Form.Group>
         <div className={styles.inputGroup}>
           <p className={styles.pHeader}><strong>Filter by:</strong></p>
