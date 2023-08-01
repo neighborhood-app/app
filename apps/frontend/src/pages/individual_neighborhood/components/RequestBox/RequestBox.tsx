@@ -1,11 +1,13 @@
 import SearchFilterForm from "../SearchFilterForm/SearchFilterForm";
 import Request from "../Request/Request";
-import RequestModal from '../RequestModal/RequestModal'
+import RequestModal from '../RequestModal/RequestModal';
 import styles from './RequestBox.module.css';
 import { Button } from "react-bootstrap";
+import { RequestType } from "../../../../types";
 import { useState } from "react";
 
-// @ts-ignore
+
+//@ts-ignore
 export default function RequestBox({ requests }) {
   const [show, setShow] = useState(false);
 
@@ -13,22 +15,20 @@ export default function RequestBox({ requests }) {
   const handleShow = () => setShow(true);
 
   const [requestsType, setRequestsType] = useState('open');
-  let requestSelection;
+  let requestSelection; 
   if (requestsType === 'open') {
-    //@ts-ignore
-    requestSelection = requests.filter(request => {
+    requestSelection = requests.filter((request: RequestType) => {
       return request.status === 'OPEN';
     })
   } else if (requestsType === 'closed') {
-    //@ts-ignore
-    requestSelection = requests.filter(request => {
+    requestSelection = requests.filter((request: RequestType) => {
       return request.status === 'CLOSED';
     })
   } else {
     requestSelection = requests;
   }
-  //@ts-ignore
-  const requestBoxes = requestSelection.map(request => {
+
+  const requestBoxes = requestSelection.map((request: RequestType) => {
     return (
       <Request requestObj={request} key={request.id}></Request>
     )
