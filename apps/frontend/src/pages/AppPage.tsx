@@ -1,5 +1,6 @@
 import { Outlet } from "react-router";
 import styles from "./AppPage.module.css";
+import { Link } from "react-router-dom";
 
 const AppPage = () => {
   return (
@@ -14,9 +15,9 @@ const AppPage = () => {
           <a href="#" className={styles.link}>
             <strong>PROFILE</strong>
           </a>
-          <a href="#" className={styles.link}>
+          <Link to="/logout" className={styles.link}>
             <strong>SIGN OUT</strong>
-          </a>
+          </Link>
         </div>
       </nav>
       <main className={styles.main}>

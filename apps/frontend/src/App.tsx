@@ -13,7 +13,7 @@ import Neighborhood, {
   loader as neighborhoodLoader,
 } from "./pages/individual_neighborhood/neighborhood";
 import { action as requestAction } from "./pages/individual_neighborhood/neighborhood";
-
+import { loader as logoutLoader } from "./pages/Logout";
 import { checkAuthLoader } from "./utils/auth";
 
 const router = createBrowserRouter([
@@ -29,17 +29,18 @@ const router = createBrowserRouter([
       {
         loader: checkAuthLoader,
         children: [
+          { path: "logout", loader: logoutLoader },
           {
-            path: "/test",
+            path: "test",
             element: <TestRoute />,
           },
           {
-            path: "/neighborhoods",
+            path: "neighborhoods",
             element: <Neighborhoods />,
             loader: neighborhoodsLoader,
           },
           {
-            path: "/neighborhoods/:id",
+            path: "neighborhoods/:id",
             loader: neighborhoodLoader,
             action: requestAction,
             element: <Neighborhood />,

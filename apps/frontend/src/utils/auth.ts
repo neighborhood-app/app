@@ -1,6 +1,8 @@
 import { redirect } from "react-router-dom";
 import { StoredUserData } from "../types";
 
+const STORAGE_KEY = "user";
+
 /**
  * - fetches user data from local storage
  * - NOTE : Checks only for the existence of user,
@@ -10,13 +12,23 @@ import { StoredUserData } from "../types";
  * - else returns null
  */
 export function getStoredUser(): StoredUserData | null {
-  const user = window.localStorage.getItem("user");
+  const user = window.localStorage.getItem(STORAGE_KEY);
 
   if (user) {
     return JSON.parse(user);
   } else {
     return null;
   }
+}
+
+/**
+ * If user present in local storage, deletes the user
+ * else, does nothing
+ * @returns null
+ */
+export function deleteStoredUser(): null {
+  localStorage.removeItem(STORAGE_KEY);
+  return null;
 }
 
 // export function tokenLoader() {
