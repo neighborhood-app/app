@@ -4,7 +4,6 @@ import AppPage from "./pages/AppPage";
 import Login, { action as loginAction } from "./pages/login/login";
 
 import TestRoute from "./pages/test/test";
-import PrivateRoutes from "./pages/private_routes/privateRoutes";
 
 import Neighborhoods, {
   loader as neighborhoodsLoader,
@@ -15,18 +14,20 @@ import Neighborhood, {
 } from "./pages/individual_neighborhood/neighborhood";
 import { action as requestAction } from "./pages/individual_neighborhood/neighborhood";
 
+import { checkAuthLoader } from "./utils/auth";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <AppPage />,
     children: [
       {
-        path: "login", // No need to give absolute path to children elements
+        path: "/login", // No need to give absolute path to children elements
         element: <Login />,
         action: loginAction,
       },
       {
-        element: <PrivateRoutes />,
+        loader: checkAuthLoader,
         children: [
           {
             path: "/test",
