@@ -1,6 +1,6 @@
-import DescriptionBox from "./components/DescriptionBox/DescriptionBox";
-import MemberBox from "./components/MemberBox/MemberBox";
-import RequestBox from "./components/RequestBox/RequestBox";
+import DescriptionBox from "../../components/DescriptionBox/DescriptionBox";
+import MemberBox from "../../components/MemberBox/MemberBox";
+import RequestBox from "../../components/RequestBox/RequestBox";
 import neighborhoodsService from "../../services/neighborhoods";
 import {
   ActionFunctionArgs,
@@ -8,7 +8,7 @@ import {
   useLoaderData,
 } from "react-router";
 import createRequest from "../../services/requests";
-import styles from "./neighborhood.module.css";
+import styles from "./SingleNeighborhoodPage.module.css";
 import {
   NeighborhoodDetailsForMembers,
   NeighborhoodDetailsForNonMembers,
@@ -41,7 +41,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   return response;
 }
 
-export default function Neighborhood() {
+export default function SingleNeighborhood() {
   let user = useLoggedUser();
   console.log(user);
   let neighborhood = useLoaderData() as NeighborhoodType;

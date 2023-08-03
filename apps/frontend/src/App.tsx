@@ -1,19 +1,20 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import RootLayout from "./pages/RootLayout/RootLayout";
-import Login, { action as loginAction } from "./pages/login/login";
+import LoginPage, { action as loginAction } from "./pages/LoginPage/LoginPage";
 
-import TestRoute from "./pages/test/test";
+import TestPage from "./pages/Test/TestPage";
 
-import Neighborhoods, {
+import NeighborhoodsPage, {
   loader as neighborhoodsLoader,
-} from "./pages/neighborhoods/neighborhoods";
+} from "./pages/NeighborhoodsPage/NeighborhoodsPage";
 
-import Neighborhood, {
+import SingleNeighborhoodPage, {
   loader as neighborhoodLoader,
-} from "./pages/individual_neighborhood/neighborhood";
-import { action as requestAction } from "./pages/individual_neighborhood/neighborhood";
-import { loader as logoutLoader } from "./pages/Logout";
+  action as requestAction,
+} from "./pages/SingleNeighborhoodPage/SingleNeighborhoodPage";
+
+import { loader as logoutLoader } from "./pages/LogoutPage/LogoutPage";
 import { checkAuthLoader } from "./utils/auth";
 
 const router = createBrowserRouter([
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/login", // No need to give absolute path to children elements
-        element: <Login />,
+        element: <LoginPage />,
         action: loginAction,
       },
       {
@@ -32,18 +33,18 @@ const router = createBrowserRouter([
           { path: "logout", loader: logoutLoader },
           {
             path: "test",
-            element: <TestRoute />,
+            element: <TestPage />,
           },
           {
             path: "neighborhoods",
-            element: <Neighborhoods />,
+            element: <NeighborhoodsPage />,
             loader: neighborhoodsLoader,
           },
           {
             path: "neighborhoods/:id",
             loader: neighborhoodLoader,
             action: requestAction,
-            element: <Neighborhood />,
+            element: <SingleNeighborhoodPage />,
           },
         ],
       },
