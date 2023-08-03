@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import AppPage from "./pages/AppPage";
+import RootLayout from "./pages/RootLayout/RootLayout";
 import Login, { action as loginAction } from "./pages/login/login";
 
 import TestRoute from "./pages/test/test";
@@ -19,7 +19,7 @@ import { checkAuthLoader } from "./utils/auth";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AppPage />,
+    element: <RootLayout />,
     children: [
       {
         path: "/login", // No need to give absolute path to children elements

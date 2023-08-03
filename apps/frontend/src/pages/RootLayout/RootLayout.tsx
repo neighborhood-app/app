@@ -1,10 +1,10 @@
 import { Outlet } from "react-router";
-import styles from "./AppPage.module.css";
+import styles from "./RootLayout.module.css";
 import { Link } from "react-router-dom";
-import { UserContext } from "../utils/contexts";
-import { getStoredUser } from "../utils/auth";
+import { UserContext } from "../../utils/contexts";
+import { getStoredUser } from "../../utils/auth";
 
-const AppPage = () => {
+const RootLayout = () => {
   const user = getStoredUser();
 
   return (
@@ -37,4 +37,4 @@ const AppPage = () => {
   );
 };
 
-export default AppPage;
+export default RootLayout;
