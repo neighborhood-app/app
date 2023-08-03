@@ -1,10 +1,16 @@
 import { Outlet } from "react-router";
 import styles from "./AppPage.module.css";
 import { Link } from "react-router-dom";
+import { UserContext } from "../utils/contexts";
+import { useState } from "react";
+import { getStoredUser } from "../utils/auth";
 
 const AppPage = () => {
+  const user = getStoredUser();
+
   return (
-    <>
+    //@ts-ignore
+    <UserContext.Provider value={{ user }}>
       <nav className={styles.nav}>
         <div className={styles.navLeft}>
           <a href="#" className={styles.link}>
@@ -28,7 +34,7 @@ const AppPage = () => {
           <strong>PLACEHOLDER</strong>
         </p>
       </footer>
-    </>
+    </UserContext.Provider>
   );
 };
 

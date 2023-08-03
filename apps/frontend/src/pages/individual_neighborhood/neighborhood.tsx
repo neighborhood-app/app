@@ -6,7 +6,6 @@ import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   useLoaderData,
-  useOutletContext,
 } from "react-router";
 import createRequest from "../../services/requests";
 import styles from "./neighborhood.module.css";
@@ -18,6 +17,7 @@ import {
   RequestData,
 } from "../../types";
 import { useContext } from "react";
+import { UserContext } from "../../utils/contexts";
 import { getStoredUser } from "../../utils/auth";
 
 function checkForNeighborhoodDetails(
@@ -44,6 +44,8 @@ export async function action({ params, request }: ActionFunctionArgs) {
 }
 
 export default function Neighborhood() {
+  let user = useContext(UserContext);
+  console.log(user);
   let neighborhood = useLoaderData() as NeighborhoodType;
   // We can get stored user through util/auth.js instead of useContext
   // const user = getStoredUser()
