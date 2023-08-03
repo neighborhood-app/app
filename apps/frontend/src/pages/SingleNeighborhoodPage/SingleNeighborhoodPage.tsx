@@ -9,6 +9,7 @@ import {
 } from "react-router";
 import createRequest from "../../services/requests";
 import styles from "./SingleNeighborhoodPage.module.css";
+import { useUser } from "../../store/user-context";
 import {
   NeighborhoodDetailsForMembers,
   NeighborhoodDetailsForNonMembers,
@@ -16,7 +17,6 @@ import {
   User,
   RequestData,
 } from "../../types";
-import { useLoggedUser } from "../../utils/hooks";
 
 function checkForNeighborhoodDetails(
   neighborhood: NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers
@@ -42,8 +42,9 @@ export async function action({ params, request }: ActionFunctionArgs) {
 }
 
 export default function SingleNeighborhood() {
-  let user = useLoggedUser();
+  const user = useUser();
   console.log(user);
+
   let neighborhood = useLoaderData() as NeighborhoodType;
   // We can get stored user through util/auth.js instead of useContext
   // const user = getStoredUser()

@@ -1,15 +1,10 @@
 import { Outlet } from "react-router";
 import styles from "./RootLayout.module.css";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../utils/contexts";
-import { getStoredUser } from "../../utils/auth";
 
 const RootLayout = () => {
-  const user = getStoredUser();
-
   return (
-    //@ts-ignore
-    <UserContext.Provider value={{ user }}>
+    <>
       <nav className={styles.nav}>
         <div className={styles.navLeft}>
           <a href="#" className={styles.link}>
@@ -33,7 +28,7 @@ const RootLayout = () => {
           <strong>PLACEHOLDER</strong>
         </p>
       </footer>
-    </UserContext.Provider>
+    </>
   );
 };
 
