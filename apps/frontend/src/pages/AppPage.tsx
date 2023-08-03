@@ -2,7 +2,6 @@ import { Outlet } from "react-router";
 import styles from "./AppPage.module.css";
 import { Link } from "react-router-dom";
 import { UserContext } from "../utils/contexts";
-import { useState } from "react";
 import { getStoredUser } from "../utils/auth";
 
 const AppPage = () => {

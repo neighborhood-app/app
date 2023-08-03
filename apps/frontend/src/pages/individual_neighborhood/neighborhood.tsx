@@ -18,7 +18,6 @@ import {
 } from "../../types";
 import { useContext } from "react";
 import { UserContext } from "../../utils/contexts";
-import { getStoredUser } from "../../utils/auth";
 
 function checkForNeighborhoodDetails(
   neighborhood: NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers
@@ -45,7 +44,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
 export default function Neighborhood() {
   let user = useContext(UserContext);
-  console.log(user);
+
   let neighborhood = useLoaderData() as NeighborhoodType;
   // We can get stored user through util/auth.js instead of useContext
   // const user = getStoredUser()

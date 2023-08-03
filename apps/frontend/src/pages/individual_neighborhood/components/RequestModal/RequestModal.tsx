@@ -9,8 +9,7 @@ interface Props {
 
 export default function RequestModal({ show, handleClose }: Props) {
   function handleSubmit() {
-    console.log('test');
-    handleClose()
+    handleClose();
   }
 
   return (
@@ -28,7 +27,7 @@ export default function RequestModal({ show, handleClose }: Props) {
 
           <div className={styles.buttonContainer}>
             <input className={styles.submit} type='submit' value='Submit' 
-            onSubmit={handleSubmit}></input>
+            onClick={handleSubmit}></input>
             <button
               className={styles.button}
               onClick={
