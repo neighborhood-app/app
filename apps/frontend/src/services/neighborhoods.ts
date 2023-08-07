@@ -1,16 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
+import { getStoredUser } from "../utils/auth";
 import axios from "axios";
 
 const baseURL = '/api/neighborhoods'
-let user = localStorage.getItem('user');
-//@ts-ignore
-user = JSON.parse(user);
-//@ts-ignore
-let token;
-if (user) {
-  //@ts-ignore
-  token = user.token;
-}
+let userData = getStoredUser();
 
 async function getAllNeighborhoods() {
   const response = await axios.get(baseURL);
@@ -18,9 +11,10 @@ async function getAllNeighborhoods() {
 }
 
 async function getSingleNeighborhood(id: Number) {
-  //@ts-ignore
-  const response = await axios.get(`${baseURL}/${id}`, {headers: {'Authorization': `Bearer ${token}`}});
-  return response.data;
+  if (userData) {
+    const response = await axios.get(`${baseURL}/${id}`, {headers: {'Authorization': `Bearer ${userData.token}`}});
+    return response.data;
+  }
 }
 
 export default { getAllNeighborhoods, getSingleNeighborhood };
