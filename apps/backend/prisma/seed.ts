@@ -101,6 +101,7 @@ async function main() {
     data: {
       admin_id: bob.id,
       name: "Bob's Neighborhood",
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
     },
   });
 
@@ -110,6 +111,34 @@ async function main() {
   // The variable will be used in the future when we add responses.
   // eslint-disable-next-line
   const mikeRequest = await prismaClient.request.create({
+    data: {
+      neighborhood_id: bobNeighborhood.id,
+      user_id: mike.id,
+      title: 'Help moving furniture in apartment',
+      content: 'I need help moving my furniture this Saturday',
+    },
+  });
+
+  await prismaClient.request.create({
+    data: {
+      neighborhood_id: bobNeighborhood.id,
+      user_id: mike.id,
+      title: 'Help moving furniture in apartment',
+      content: 'I need help moving my furniture this Saturday',
+      status: 'CLOSED',
+    },
+  });
+
+  await prismaClient.request.create({
+    data: {
+      neighborhood_id: bobNeighborhood.id,
+      user_id: mike.id,
+      title: 'Help moving furniture in apartment',
+      content: 'I need help moving my furniture this Saturday',
+    },
+  });
+
+  await prismaClient.request.create({
     data: {
       neighborhood_id: bobNeighborhood.id,
       user_id: mike.id,

@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid;
+}
+
+.requestHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  color: black;
+  background-color: #C1EFFF;
+  width: 120px;
+  border: 0px solid;
+  align-self: center;
+  margin: 0 10px 20px 0;
+}
+
+.button:hover {
+  color: black;
+  background-color: #FFDBA4;
+}
+
+.buttonsContainer {
+  display: flex;
+  justify-content: center;
+}

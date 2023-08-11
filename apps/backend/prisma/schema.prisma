@@ -20,7 +20,7 @@ model Neighborhood {
   id          Int       @id @default(autoincrement())
   admin_id    Int
   name        String    @unique @db.VarChar(50)
-  description String?   @db.VarChar(50)
+  description String?   @db.VarChar(400)
   location    String?   @db.VarChar(50)
   admin       User      @relation("admin", fields: [admin_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   users       User[]

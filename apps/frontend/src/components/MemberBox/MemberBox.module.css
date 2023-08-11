@@ -1,0 +1,36 @@
+.column {
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0 20px;
+    max-height: 70vh;
+    overflow: auto;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1);
+  }
+  
+  .list {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .liElement {
+    padding-left: 5px;
+  }
+
+  .button {
+    color: black;
+    background-color: #C1EFFF;
+    width: fit-content;
+    border: 0px solid;
+    place-self: center;
+  }
+
+  .button:hover {
+    color: black;
+    background: #FFDBA4;
+  }

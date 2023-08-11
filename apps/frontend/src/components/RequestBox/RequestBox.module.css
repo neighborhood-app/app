@@ -1,0 +1,37 @@
+.column {
+  display: flex;
+  flex-direction: column;
+  grid-column: 1 / 4;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 0 20px;
+  max-height: 58vh;
+  overflow: auto;
+  background-color: white;
+  box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1);
+}
+
+.button {
+  align-self: center;
+  margin-bottom: 15px;
+  color: black;
+  background-color: #FFDBA4;
+  width: 200px;
+  border: 0px solid;
+}
+
+.button:hover {
+  background: #C1EFFF;
+  color: black;
+}
+
+.formButton {
+  margin: 0 10px;
+}
+
+.buttonsContainer {
+  display: flex;
+  justify-content: center;
+}
+

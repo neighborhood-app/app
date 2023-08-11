@@ -1,0 +1,25 @@
+.column {
+  grid-column: 1 / 3;
+  display: grid;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 0 20px;
+  max-height: 70vh;
+  overflow: auto;
+  background-color: white;
+  box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1);
+}
+
+.button {
+  color: black;
+  background-color: #C1EFFF;
+  width: fit-content;
+  border: 0px solid;
+  place-self: center;
+}
+
+.button:hover {
+  background: #FFDBA4;
+  color: black;
+}
