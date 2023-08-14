@@ -1,0 +1,25 @@
+.nav {
+  height: 6vh;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid black;
+}
+
+.navLeft {
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.navRight {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.link {
+  padding: 15px;
+  color: black;
+  text-decoration: none;
+}
