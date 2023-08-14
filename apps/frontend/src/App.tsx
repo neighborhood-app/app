@@ -14,6 +14,8 @@ import SingleNeighborhoodPage, {
   action as requestAction,
 } from "./pages/SingleNeighborhoodPage/SingleNeighborhoodPage";
 
+import ErrorPage from "./pages/ErrorPage/ErrorPage";
+
 import { loader as logoutLoader } from "./pages/LogoutPage/LogoutPage";
 import { checkAuthLoader } from "./utils/auth";
 
@@ -21,6 +23,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/login", // No need to give absolute path to children elements
