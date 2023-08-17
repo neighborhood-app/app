@@ -9,11 +9,16 @@ interface Props {
 
 export default function DescriptionBox({showJoinBtn, name, description}: Props) {
   return (
-    <div className={styles.column}>
-      <h1>{name}</h1>
-      <p>{description}</p>
-      {showJoinBtn ? <Button className={styles.button}>Join Neighborhood</Button> : null}
+    <>
+    <div className={styles.card}>
+      <img className={styles.neighborhoodImg} src={require('./palm.jpeg')} alt='Neighborhood'/>
+      <h1 className={styles.neighborhoodTitle}>{name}</h1>
+      {showJoinBtn ? <button className={styles.button}>Join Neighborhood</button> : null}
     </div>
+    <div>
+      <p>{description}</p>
+    </div>
+    </>
   )
 };
 

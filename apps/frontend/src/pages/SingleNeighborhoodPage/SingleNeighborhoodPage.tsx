@@ -57,12 +57,12 @@ export default function SingleNeighborhood() {
           name={neighborhood.name}
           description={neighborhood.description ? neighborhood.description : ""}
         />
-        <MemberBox
+        {/* <MemberBox
           showLeaveBtn={true}
           admin={neighborhood.admin as unknown as User}
           users={neighborhood.users as unknown as Array<User>}
         />
-        <RequestBox requests={neighborhood.requests} />
+        <RequestBox requests={neighborhood.requests} /> */}
       </div>
     );
   } else {
