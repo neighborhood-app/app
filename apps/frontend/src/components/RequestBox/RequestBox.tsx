@@ -42,17 +42,23 @@ export default function RequestBox({ requests }) {
 
   return (
     <div className={styles.column}>
-      <SearchFilterForm
-        filterStatus={requestsType}
-        setFilterStatus={setRequestsType}
-        requestSearchValue={requestSearchValue}
-        setRequestSearchValue={setRequestSearchValue}
-      />
+      <h2 className={styles.title}>Neighborhood Requests</h2>
       <Button className={styles.button} onClick={handleShow}>
         Create request
       </Button>
+      <div className={styles.form}>
+        <SearchFilterForm
+          filterStatus={requestsType}
+          setFilterStatus={setRequestsType}
+          requestSearchValue={requestSearchValue}
+          setRequestSearchValue={setRequestSearchValue}
+        />
+      </div>
       <RequestModal show={show} handleClose={handleClose} />
-      {requestBoxes}
+      <div className={styles.container}>
+        {requestBoxes}
+      </div>
+      
     </div>
   );
 }

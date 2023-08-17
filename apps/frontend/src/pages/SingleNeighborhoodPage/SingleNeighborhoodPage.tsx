@@ -61,8 +61,8 @@ export default function SingleNeighborhood() {
           showLeaveBtn={true}
           admin={neighborhood.admin as unknown as User}
           users={neighborhood.users as unknown as Array<User>}
-        />
-        <RequestBox requests={neighborhood.requests} /> */}
+        /> */}
+        <RequestBox requests={neighborhood.requests} />
       </div>
     );
   } else {
