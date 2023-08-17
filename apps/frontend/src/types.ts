@@ -29,7 +29,7 @@ export type NeighborhoodDetailsForMembers = {
   description: string | null;
   location: string | null;
   admin: string | null;
-  users: Array<string> | null;
+  users: Array<User> | null;
   requests: Array<string> | null;
 };
 

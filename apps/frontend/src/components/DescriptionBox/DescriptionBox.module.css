@@ -1,3 +1,7 @@
+.container {
+  max-width: 40vw;
+}
+
 .card {
   display: flex;
   align-items: center;

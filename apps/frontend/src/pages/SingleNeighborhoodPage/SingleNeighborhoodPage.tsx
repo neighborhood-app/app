@@ -42,8 +42,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 }
 
 export default function SingleNeighborhood() {
-  const user = useUser();
-  console.log(user);
+  // const user = useUser();
 
   let neighborhood = useLoaderData() as NeighborhoodType;
   // We can get stored user through util/auth.js instead of useContext
@@ -56,6 +55,7 @@ export default function SingleNeighborhood() {
           showJoinBtn={false}
           name={neighborhood.name}
           description={neighborhood.description ? neighborhood.description : ""}
+          users={neighborhood.users}
         />
         {/* <MemberBox
           showLeaveBtn={true}
