@@ -1,5 +1,4 @@
 .card {
-  /* border: 1px solid black; */
   display: flex;
   align-items: center;
 }
@@ -20,6 +19,11 @@
     /* font-family: "Poppins"; */
     font-weight: 600;
     line-height: 40px;
+}
+
+.neighborhoodDescription {
+  max-width: 40vw;
+  margin: 10px;
 }
 
 .button {

@@ -15,7 +15,7 @@ export default function DescriptionBox({showJoinBtn, name, description}: Props) 
       <h1 className={styles.neighborhoodTitle}>{name}</h1>
       {showJoinBtn ? <button className={styles.button}>Join Neighborhood</button> : null}
     </div>
-    <div>
+    <div className={styles.neighborhoodDescription}>
       <p>{description}</p>
     </div>
     </>
