@@ -43,9 +43,9 @@ export default function RequestBox({ requests }) {
   return (
     <div className={styles.column}>
       <h2 className={styles.title}>Neighborhood Requests</h2>
-      <Button className={styles.button} onClick={handleShow}>
+      <button className={styles.button} onClick={handleShow}>
         Create request
-      </Button>
+      </button>
       <div className={styles.form}>
         <SearchFilterForm
           filterStatus={requestsType}
