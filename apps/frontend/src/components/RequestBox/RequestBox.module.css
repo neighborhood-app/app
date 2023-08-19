@@ -1,14 +1,13 @@
 .column {
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 20% 20% 60%;
   grid-template-columns: 1fr 1fr 1fr;
   row-gap: 5px;
   border-radius: 10px;
   padding: 10px;
-  max-height: 70vh;
+  /* max-height: 90vh; */
   overflow: auto;
-  background-color: white;
-  box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1);
+  /* box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1); */
 }
 
 .form {
@@ -19,8 +18,9 @@
   grid-row-start: 3;
   grid-column: 1/6;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  column-gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  column-gap: 5px;
+  row-gap: 15px;
 }
 
 .button {
