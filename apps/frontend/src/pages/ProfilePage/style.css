@@ -8,6 +8,12 @@
   box-sizing: border-box;
 }
 
+body {
+  font-family: "Poppins", sans-serif;
+  padding: 40px;
+  min-height: 100vh;
+}
+
 h1 {
   font-size: 1.7rem;
   font-weight: 500;
@@ -29,11 +35,6 @@ h1 {
 
 .btn:hover {
   background-color: rgb(173, 173, 173);
-}
-
-body {
-  font-family: "Poppins", sans-serif;
-  padding: 40px;
 }
 
 /* HEADER */
