@@ -20,7 +20,7 @@
 
     <section>
       <h1>My Requests</h1>
-      <div class="search-select-request">
+      <div class="search-select-box">
         <input type="text" placeholder="Search by request title" />
         <select name="request-list" id="request-list">
           <option value="">Select request status</option>
@@ -79,13 +79,15 @@
 
     <section>
       <h1>My Responses</h1>
-      <select name="response-list" id="response-list">
-        <option value="">Select response status</option>
-        <option value="open-response">Open Responses</option>
-        <option value="closed-response">Closed Responses</option>
-        <option value="all-response">All Responses</option>
-        <option value="my-response">My Responses</option>
-      </select>
+      <div class="search-select-box">
+        <select name="response-list" id="response-list">
+          <option value="">Select response status</option>
+          <option value="open-response">Open Responses</option>
+          <option value="closed-response">Closed Responses</option>
+          <option value="all-response">All Responses</option>
+          <option value="my-response">My Responses</option>
+        </select>
+      </div>
 
       <table class="list-table">
         <thead>
