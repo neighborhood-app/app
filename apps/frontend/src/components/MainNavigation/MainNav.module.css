@@ -1,6 +1,8 @@
 .nav {
+  position: sticky;
+  top: 0;
+  left: 0;
   height: 100vh;
-  width: 4vw;
   background-color: #f0f0f0;
   display: flex;
   flex-direction: column;
@@ -48,16 +50,4 @@
   width: 29px;
   height: 36px;
   color: #030303;
-}
-
-.navLeft {
-  width: 50%;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.navRight {
-  width: 50%;
-  display: flex;
-  justify-content: flex-end;
 }

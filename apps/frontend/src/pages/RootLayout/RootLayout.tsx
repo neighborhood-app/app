@@ -7,7 +7,9 @@ import MainNav from "../../components/MainNavigation/MainNav";
 const RootLayout = () => {
   return (
     <>
-      <MainNav />
+      <header className={styles.header}>
+        <MainNav />
+      </header>
       <main className={styles.main}>
         <Outlet />
       </main>

@@ -41,7 +41,7 @@ export default function RequestBox({ requests }) {
   });
 
   return (
-    <div className={styles.column}>
+    <div className={styles.header}>
       <h2 className={styles.title}>Neighborhood Requests</h2>
       <button className={styles.button} onClick={handleShow}>
         Create request

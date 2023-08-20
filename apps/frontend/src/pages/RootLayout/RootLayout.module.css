@@ -1,7 +1,6 @@
-.main {
-  overflow: auto;
-  max-height: 100vh;
-  width: 95vw;
+.header {
+  width: 4%;
+  min-width: 50px;
 }
 
 .link {
