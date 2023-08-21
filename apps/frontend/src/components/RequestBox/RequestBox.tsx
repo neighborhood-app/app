@@ -2,7 +2,6 @@ import SearchFilterForm from "../SearchFilterForm/SearchFilterForm";
 import Request from "../Request/Request";
 import RequestModal from "../RequestModal/RequestModal";
 import styles from "./RequestBox.module.css";
-import { Button } from "react-bootstrap";
 import { RequestType } from "../../types";
 import { useState } from "react";
 

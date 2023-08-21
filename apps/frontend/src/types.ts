@@ -28,7 +28,7 @@ export type NeighborhoodDetailsForMembers = {
   name: string;
   description: string | null;
   location: string | null;
-  admin: string | null;
+  admin: User;
   users: Array<User> | null;
   requests: Array<string> | null;
 };

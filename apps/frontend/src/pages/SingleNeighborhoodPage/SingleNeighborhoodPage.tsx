@@ -24,6 +24,14 @@ function checkForNeighborhoodDetails(
   return (neighborhood as NeighborhoodDetailsForMembers).admin !== undefined;
 }
 
+function checkLoggedUserRole(userName: string, neighborhood: NeighborhoodType): 'non-member' | 'member' | 'admin' {
+  if (checkForNeighborhoodDetails(neighborhood)) {
+    return neighborhood.admin.user_name === userName ? 'admin' : 'member';
+  } else {
+    return 'non-member';
+  }
+};
+
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
   const neighborhoods = await neighborhoodsService.getSingleNeighborhood(
@@ -42,9 +50,10 @@ export async function action({ params, request }: ActionFunctionArgs) {
 }
 
 export default function SingleNeighborhood() {
-  // const user = useUser();
-
-  let neighborhood = useLoaderData() as NeighborhoodType;
+  const user = useUser();
+  const neighborhood = useLoaderData() as NeighborhoodType;
+  
+  const userRole = checkLoggedUserRole(user.username, neighborhood);
   // We can get stored user through util/auth.js instead of useContext
   // const user = getStoredUser()
 
