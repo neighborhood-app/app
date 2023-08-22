@@ -60,6 +60,7 @@ export default function SingleNeighborhood() {
         <DescriptionBox
           showJoinBtn={false}
           showEditBtn={false}
+          showLeaveBtn={true}
           name={neighborhood.name}
           description={neighborhood.description ? neighborhood.description : ""}
           users={neighborhood.users}
@@ -78,6 +79,7 @@ export default function SingleNeighborhood() {
         <DescriptionBox
           showJoinBtn={false}
           showEditBtn={true}
+          showLeaveBtn={false}
           name={neighborhood.name}
           description={neighborhood.description ? neighborhood.description : ""}
           users={neighborhood.users}
@@ -96,6 +98,7 @@ export default function SingleNeighborhood() {
         <DescriptionBox
           showJoinBtn={true}
           showEditBtn={false}
+          showLeaveBtn={false}
           name={neighborhood.name}
           description={neighborhood.description ? neighborhood.description : ""}
         />

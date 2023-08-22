@@ -4,12 +4,13 @@ import { User } from '../../types';
 interface Props {
   showJoinBtn: boolean,
   showEditBtn: boolean,
+  showLeaveBtn: boolean,
   name: string,
   description: string,
   users?: Array<User> | null
 }
 
-export default function DescriptionBox({showJoinBtn, showEditBtn, name, description, users}: Props) {
+export default function DescriptionBox({showJoinBtn, showEditBtn, showLeaveBtn, name, description, users}: Props) {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -21,6 +22,7 @@ export default function DescriptionBox({showJoinBtn, showEditBtn, name, descript
         <p>{description}</p>
         {users ? <p>{users.length} members</p> : null}
         {showEditBtn ? <button className={styles.editBtn}>Edit Neighborhood</button> : null}
+        {showLeaveBtn ? <button className={styles.leaveBtn}>Leave Neighborhood</button> : null}
       </div>
     </div>
   )
