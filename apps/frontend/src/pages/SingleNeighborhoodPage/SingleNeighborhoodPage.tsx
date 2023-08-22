@@ -14,7 +14,6 @@ import {
   NeighborhoodDetailsForMembers,
   NeighborhoodDetailsForNonMembers,
   NeighborhoodType,
-  User,
   RequestData,
 } from "../../types";
 
@@ -34,10 +33,10 @@ function checkLoggedUserRole(userName: string, neighborhood: NeighborhoodType): 
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
-  const neighborhoods = await neighborhoodsService.getSingleNeighborhood(
+  const neighborhood = await neighborhoodsService.getSingleNeighborhood(
     Number(id)
   );
-  return neighborhoods;
+  return neighborhood;
 }
 
 export async function action({ params, request }: ActionFunctionArgs) {
@@ -52,16 +51,33 @@ export async function action({ params, request }: ActionFunctionArgs) {
 export default function SingleNeighborhood() {
   const user = useUser();
   const neighborhood = useLoaderData() as NeighborhoodType;
-  
-  const userRole = checkLoggedUserRole(user.username, neighborhood);
-  // We can get stored user through util/auth.js instead of useContext
-  // const user = getStoredUser()
 
-  if (checkForNeighborhoodDetails(neighborhood)) {
+  const userRole = checkLoggedUserRole(user.username, neighborhood);
+
+  if ((userRole === 'member') && checkForNeighborhoodDetails(neighborhood)) {
     return (
       <div className={styles.wrapper}>
         <DescriptionBox
           showJoinBtn={false}
+          showEditBtn={false}
+          name={neighborhood.name}
+          description={neighborhood.description ? neighborhood.description : ""}
+          users={neighborhood.users}
+        />
+        {/* <MemberBox
+          showLeaveBtn={true}
+          admin={neighborhood.admin as unknown as User}
+          users={neighborhood.users as unknown as Array<User>}
+        /> */}
+        <RequestBox requests={neighborhood.requests} />
+      </div>
+    );
+  } else if ((userRole === 'admin') && checkForNeighborhoodDetails(neighborhood)) {
+    return (
+      <div className={styles.wrapper}>
+        <DescriptionBox
+          showJoinBtn={false}
+          showEditBtn={true}
           name={neighborhood.name}
           description={neighborhood.description ? neighborhood.description : ""}
           users={neighborhood.users}
@@ -79,6 +95,7 @@ export default function SingleNeighborhood() {
       <div className={styles.wrapper}>
         <DescriptionBox
           showJoinBtn={true}
+          showEditBtn={false}
           name={neighborhood.name}
           description={neighborhood.description ? neighborhood.description : ""}
         />
