@@ -1,13 +1,13 @@
 .formContainer {
   margin: 0 auto;
-  width: 20vw;
+  width: 30vw;
   min-height: 65vh;
   min-width: min-content;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   border: 1px black;
-  border-radius: 15px;
+  border-radius: 2px;
   box-shadow: 15px 12px 12px 0px rgba(0,0,0,0.1);
   background: white;
   padding: 15px;
@@ -18,30 +18,35 @@
   font-size: 20px;
 }
 
-.form {
+.mainBtn {
+  background-color: black;
+  border-color: black;
+}
+
+/* .form {
   padding: 10px;
   display: grid;
   grid-template-columns: 1fr 4fr;
   grid-template-rows: 1fr 1fr 3fr;
   grid-gap: 10px;
-}
+} */
 
-.label {
+/* .label {
   text-align: left;
   font-weight: bold;
   align-self: center;
-}
+} */
 
-.input {
+/* .input {
   padding: 5px;
   border: 2px solid black;
   border-radius: 5px;
   width: 100%;
   box-sizing: border-box;
   outline: none;
-}
+} */
 
-.submit {
+/* .submit {
   background-color: #F6BA6F;
   color: white;
   padding: 10px 20px;
@@ -54,4 +59,4 @@
   justify-self: center;
   align-self: center;
   grid-column: 1 / span 2;
-}
+} */
