@@ -4,21 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <title>Home Page</title>
   </head>
   <body>
-    <header>
-      <img src="images/palm-trees.jpg" alt="my neighborhood" />
-      <div class="neighborhood-description">
-        <p>My Neighborhood</p>
-        <h1>Palm Springs</h1>
-        <p>You can always join new neighborhoods!</p>
-        <button>Explore</button>
+    <section>
+      <h1>My Neighborhoods</h1>
+      <div class="all-neighborhoods">
+        <figure class="card" style="--image-src: url(images/palm-tree.jpeg)">
+          <figcaption>
+            <span class="info">
+              <h2>Palm Springs <span>(Admin)</span></h2>
+              <p>You can join other neighborhoods!</p>
+            </span>
+            <button class="explore-neighborhood">Explore</button>
+          </figcaption>
+        </figure>
+
+        <figure class="card" style="--image-src: url(images/up-north.jpg)">
+          <figcaption>
+            <span class="info">
+              <h2>Up North <span>(Member)</span></h2>
+              <p>You can join other neighborhoods!</p>
+            </span>
+            <button class="explore-neighborhood">Explore</button>
+          </figcaption>
+        </figure>
       </div>
-    </header>
+    </section>
 
     <section>
-      <h2>My active requests</h2>
+      <h1>My active requests</h1>
       <div class="all-active-requests">
         <div class="request-card">
           <img
@@ -47,7 +65,7 @@
     </section>
 
     <section>
-      <h2>Requests I've responded to</h2>
+      <h1>Requests I've responded to</h1>
       <div class="all-responded-requests">
         <div class="responded-request-card">
           <div class="profile-info">
