@@ -14,8 +14,12 @@ loginRouter.post('/', middleware.isUserLoggedIn, catchError(async (request: Requ
   const loginData: LoginData = await loginServices.parseLoginData(request.body);
   const userInDb: User = await loginServices.findUserByUsername(loginData.username);
 
+  console.log('login data from backend', loginData);
+
   const isPasswordCorrect = await loginServices
     .isPasswordCorrect(loginData.password, userInDb.password_hash);
+
+  console.log({ isPasswordCorrect });
 
   if (!isPasswordCorrect) {
     return response.status(401).json({ error: 'invalid username or password' });
@@ -26,6 +30,8 @@ loginRouter.post('/', middleware.isUserLoggedIn, catchError(async (request: Requ
     username: userInDb.user_name,
     token,
   };
+
+  console.log(responseData);
 
   return response.status(200).json(responseData);
 }));
