@@ -1,4 +1,8 @@
-.formContainer {
+.navigation {
+  display: none;
+}
+
+/* .formContainer {
   margin: 0 auto;
   width: 30vw;
   min-height: 65vh;
@@ -11,11 +15,30 @@
   box-shadow: 15px 12px 12px 0px rgba(0,0,0,0.1);
   background: white;
   padding: 15px;
+} */
+
+/* neighborhoodImg {
+  top: 160px;
+  left: 154px;
+  width: 412px;
+  height: 412px;
+} */
+
+h1 {
+  color: #030303;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 38px;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
 }
 
-.logoContainer {
-  text-align: center;
-  font-size: 20px;
+h2 {
+  color: #1e1f26;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 38px;
 }
 
 .mainBtn {

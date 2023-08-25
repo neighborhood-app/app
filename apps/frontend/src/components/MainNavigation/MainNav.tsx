@@ -2,7 +2,7 @@ import styles from "./MainNav.module.css";
 
 const MainNav = () => {
   return (
-    <header>
+    <header className="navigation">
       <nav className={styles.nav}>
         <div className={styles.link}>
           <img className={styles.profilePicture} src={require('./profile_placeholder.png')} alt="User's profile"/>
