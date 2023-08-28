@@ -31,7 +31,7 @@ export default function RequestBox({ requests }) {
 
   if (requestSearchValue !== "") {
     requestSelection = requestSelection.filter((request: RequestType) => {
-      return request.title.includes(requestSearchValue);
+      return request.title.toLowerCase().includes(requestSearchValue.toLowerCase());
     });
   }
 
