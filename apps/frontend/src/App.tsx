@@ -18,6 +18,7 @@ import ErrorPage from "./pages/ErrorPage/ErrorPage";
 
 import { loader as logoutLoader } from "./pages/LogoutPage/LogoutPage";
 import { checkAuthLoader } from "./utils/auth";
+import HomePage from "./pages/HomePage/HomePage";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
             action: requestAction,
             element: <SingleNeighborhoodPage />,
           },
+          {
+            path: "home",
+            element: <HomePage />
+          }
         ],
       },
     ],
