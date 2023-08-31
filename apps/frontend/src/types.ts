@@ -74,3 +74,9 @@ export interface StoredUserData {
   username: string;
   token: string;
 }
+
+export enum UserRole {
+  "NON-MEMBER" = "NON-MEMBER",
+  "MEMBER" = "MEMBER",
+  "ADMIN" = "ADMIN",
+}
