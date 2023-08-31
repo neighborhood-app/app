@@ -6,16 +6,14 @@ export default function LoginForm() {
     return (
       <>
       <h1>Neighborhood</h1>
-      <Container fluid>
-        <Row>
-        <Col>
-          <Container>
+      <Container className={styles.wrapperContainer} fluid>
+        <Row className={styles.customRow}>
+        <Col md className={`${styles.customCol} ${styles.imgCol}`}>
           <Image className={styles.neighborhoodImg} src={require('../../assets/neighborhood2.jpeg')} rounded fluid></Image>
-          <h2>Welcome!</h2>
-          <p>Connect with your neigbors. Share resources. Build a strong community.</p>
-          </Container>
+          <h2 className={styles.welcomeHeading}>Welcome!</h2>
+          <p>Connect with your neighbors. Share resources. Build a strong community.</p>
         </Col>
-        <Col>
+        <Col className={styles.customCol}>
           <Container>
             <h2>Log In</h2>
             <FormRouter method='post'>
