@@ -50,7 +50,9 @@ export async function action({ params, request }: ActionFunctionArgs) {
 export default function SingleNeighborhood() {
   // I have moved the function `checkLoggedUserRole` inside the component
   // to make the component self-contained
-  // Please see if we can make this helper function uncluttered
+  // Please see if we can make this helper function uncluttered.
+  // Now we are planning to save userId in the localStorage. That is required to get userData from the backend.
+  // I think checking whether user is admin or not can be slighly easier if we have access to userId.
   // We just want to check the role and not do type-narrowing for Neighborhood
   function checkLoggedUserRole(
     userName: string,
@@ -78,9 +80,12 @@ export default function SingleNeighborhood() {
   // context seems to be overengineered solution to a simple problem
   const user = useUser();
 
-  const neighborhood = useLoaderData() as NeighborhoodType;
+  const neighborhoodData = useLoaderData() as NeighborhoodType;
 
-  const userRole: UserRole = checkLoggedUserRole(user.username, neighborhood);
+  const userRole: UserRole = checkLoggedUserRole(
+    user.username,
+    neighborhoodData
+  );
 
   // We are type-converting while passing `neighborhood` as argument
   // as `userRole` uniquely determines the type of `neighborhood`
@@ -88,16 +93,16 @@ export default function SingleNeighborhood() {
   if (userRole === UserRole.MEMBER) {
     return (
       <NeighborhoodPageForMembers
-        neighborhood={neighborhood as NeighborhoodDetailsForMembers}
+        neighborhood={neighborhoodData as NeighborhoodDetailsForMembers}
       />
     );
   } else if (userRole === UserRole.ADMIN) {
     return (
       <NeighborhoodPageForAdmin
-        neighborhood={neighborhood as NeighborhoodDetailsForMembers}
+        neighborhood={neighborhoodData as NeighborhoodDetailsForMembers}
       />
     );
   } else {
-    return <NeighborhoodPageForNonMembers neighborhood={neighborhood} />;
+    return <NeighborhoodPageForNonMembers neighborhood={neighborhoodData} />;
   }
 }
