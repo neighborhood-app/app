@@ -1,7 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 
+body {
+  color: #1d1d1f;
+}
+
 h1, h2, h3 {
+  color: #030303;
   font-family: 'Poppins', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 38px;
 }
 
 .wrapperContainer {
@@ -21,30 +29,18 @@ h1, h2, h3 {
 .imgCol {
   background-color: #F0F0F0;
   text-align: center;
+  padding-top: 62px;
+  padding-bottom: 3px;
 }
 
 .welcomeHeading {
   color: #030303;
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 38px;
   margin: 1em 0 0.5em;
   text-align: center;
 }
-/* .formContainer {
-  margin: 0 auto;
-  width: 30vw;
-  min-height: 65vh;
-  min-width: min-content;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  border: 1px black;
-  border-radius: 2px;
-  box-shadow: 15px 12px 12px 0px rgba(0,0,0,0.1);
-  background: white;
-  padding: 15px;
-} */
+.formWrapper {
+  padding: 1.6em 5.3em;
+}
 
 .neighborhoodImg {
   margin: 1em auto;
@@ -52,9 +48,6 @@ h1, h2, h3 {
 }
 
 h1 {
-  color: #030303;
-  font-size: 34px;
-  font-weight: 700;
   line-height: 38px;
   position: absolute;
   top: 2rem;
@@ -63,14 +56,26 @@ h1 {
 
 h2 {
   color: #1e1f26;
-  font-size: 30px;
   font-weight: 700;
-  line-height: 38px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #545459;
 }
 
 .mainBtn {
   background-color: black;
   border-color: black;
+}
+
+.checkboxLinkWrapper {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* .form {
