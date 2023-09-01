@@ -1,8 +1,38 @@
-.loginContainer {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+body {
+  color: #1d1d1f;
+}
+
+h1, h2, h3 {
+  color: #030303;
+  font-family: 'Poppins', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 38px;
+}
+
+.wrapperContainer {
   height: 100%;
-  display: flex; 
-  /* align-items: center; */
-  position:absolute;
-  top: 0; bottom: 0; left: 0; right: 0;
-  margin: auto;
+  width: 100%;
+}
+
+.customCol {
+  align-content: center;
+  display: grid;
+}
+
+.customRow {
+  height: 100vh;
+}
+
+.formWrapper {
+  padding: 1.6em 5.3em;
+}
+
+.imgCol {
+  background-color: #F0F0F0;
+  text-align: center;
+  padding-top: 62px;
+  padding-bottom: 3px;
 }
