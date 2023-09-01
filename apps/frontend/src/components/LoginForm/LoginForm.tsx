@@ -6,7 +6,7 @@ export default function LoginForm({ className }: {className: string}) {
     return (
       <Col className={className}>
         <h2>Log In</h2>
-        <FormRouter method='post'>
+        <FormRouter method='post' role='form'>
           <Form.Group className='mb-3' controlId='username'>
             <Form.Label>Username</Form.Label>
             <Form.Control type='text' name='username' placeholder='Your username' required />
