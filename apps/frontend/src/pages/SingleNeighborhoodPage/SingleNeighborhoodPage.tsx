@@ -1,6 +1,3 @@
-import DescriptionBox from "../../components/DescriptionBox/DescriptionBox";
-import MemberBox from "../../components/MemberBox/MemberBox";
-import RequestBox from "../../components/RequestBox/RequestBox";
 import neighborhoodsService from "../../services/neighborhoods";
 import {
   ActionFunctionArgs,
@@ -8,28 +5,33 @@ import {
   useLoaderData,
 } from "react-router";
 import createRequest from "../../services/requests";
-import styles from "./SingleNeighborhoodPage.module.css";
 import { useUser } from "../../store/user-context";
 import {
   NeighborhoodDetailsForMembers,
   NeighborhoodDetailsForNonMembers,
   NeighborhoodType,
-  User,
   RequestData,
+  UserRole,
 } from "../../types";
-
-function checkForNeighborhoodDetails(
-  neighborhood: NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers
-): neighborhood is NeighborhoodDetailsForMembers {
-  return (neighborhood as NeighborhoodDetailsForMembers).admin !== undefined;
-}
+import NeighborhoodPageForMembers from "./NeighborhoodPageForMembers";
+import NeighborhoodPageForAdmin from "./NeighborhoodPageForAdmin";
+import NeighborhoodPageForNonMembers from "./NeighborhoodPageForNonMembers";
 
 export async function loader({ params }: LoaderFunctionArgs) {
+  // TODO: If unable to login because of token invalid or otherwise
+  // redirect to /login
+  // We can do this by sending request within a `try` block
+  // While catching error, we can redirect
+  // We will also need to modify `neighborhoodService.getSingleNeighborhood`
+  // to throw an Error if request is unsuccessfull
+
   const { id } = params;
-  const neighborhoods = await neighborhoodsService.getSingleNeighborhood(
+  // TODO: provide type for neighborhood.
+  const neighborhood = await neighborhoodsService.getSingleNeighborhood(
     Number(id)
   );
-  return neighborhoods;
+
+  return neighborhood;
 }
 
 export async function action({ params, request }: ActionFunctionArgs) {
@@ -42,38 +44,61 @@ export async function action({ params, request }: ActionFunctionArgs) {
 }
 
 export default function SingleNeighborhood() {
+  // I have moved the function `checkLoggedUserRole` inside the component
+  // to make the component self-contained
+  // Please see if we can make this helper function uncluttered.
+  // Now we are planning to save userId in the localStorage. That is required to get userData from the backend.
+  // I think checking whether user is admin or not can be slighly easier if we have access to userId.
+  // We just want to check the role and not do type-narrowing for Neighborhood
+  function checkLoggedUserRole(
+    userName: string,
+    neighborhood: NeighborhoodType
+  ): UserRole {
+    function checkForNeighborhoodDetails(
+      neighborhood:
+        | NeighborhoodDetailsForMembers
+        | NeighborhoodDetailsForNonMembers
+    ): neighborhood is NeighborhoodDetailsForMembers {
+      return (
+        (neighborhood as NeighborhoodDetailsForMembers).admin !== undefined
+      );
+    }
+    if (checkForNeighborhoodDetails(neighborhood)) {
+      return neighborhood.admin.user_name === userName
+        ? UserRole.ADMIN
+        : UserRole.MEMBER;
+    } else {
+      return UserRole["NON-MEMBER"];
+    }
+  }
+
+  // Here we only need the username, we can easily access it from localStorage
+  // context seems to be overengineered solution to a simple problem
   const user = useUser();
-  console.log(user);
 
-  let neighborhood = useLoaderData() as NeighborhoodType;
-  // We can get stored user through util/auth.js instead of useContext
-  // const user = getStoredUser()
+  const neighborhoodData = useLoaderData() as NeighborhoodType;
 
-  if (checkForNeighborhoodDetails(neighborhood)) {
+  const userRole: UserRole = checkLoggedUserRole(
+    user.username,
+    neighborhoodData
+  );
+
+  // We are type-converting while passing `neighborhood` as argument
+  // as `userRole` uniquely determines the type of `neighborhood`
+  // I am not sure whether this is considered good practise or not
+  if (userRole === UserRole.MEMBER) {
     return (
-      <div className={styles.wrapper}>
-        <DescriptionBox
-          showJoinBtn={false}
-          name={neighborhood.name}
-          description={neighborhood.description ? neighborhood.description : ""}
-        />
-        <MemberBox
-          showLeaveBtn={true}
-          admin={neighborhood.admin as unknown as User}
-          users={neighborhood.users as unknown as Array<User>}
-        />
-        <RequestBox requests={neighborhood.requests} />
-      </div>
+      <NeighborhoodPageForMembers
+        neighborhood={neighborhoodData as NeighborhoodDetailsForMembers}
+      />
+    );
+  } else if (userRole === UserRole.ADMIN) {
+    return (
+      <NeighborhoodPageForAdmin
+        neighborhood={neighborhoodData as NeighborhoodDetailsForMembers}
+      />
     );
   } else {
-    return (
-      <div className={styles.wrapper}>
-        <DescriptionBox
-          showJoinBtn={true}
-          name={neighborhood.name}
-          description={neighborhood.description ? neighborhood.description : ""}
-        />
-      </div>
-    );
+    return <NeighborhoodPageForNonMembers neighborhood={neighborhoodData} />;
   }
 }

@@ -12,6 +12,7 @@ usersRouter.get('/', catchError(async (_req: Request, res: Response) => {
 }));
 
 usersRouter.get('/:id', catchError(async (req: Request, res: Response) => {
+  console.log(req);
   const userId: number = Number(req.params.id);
 
   const user: UserWithoutPasswordHash = await userServices.getUserById(userId);

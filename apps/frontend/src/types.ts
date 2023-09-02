@@ -28,8 +28,8 @@ export type NeighborhoodDetailsForMembers = {
   name: string;
   description: string | null;
   location: string | null;
-  admin: string | null;
-  users: Array<string> | null;
+  admin: User;
+  users: Array<User> | null;
   requests: Array<string> | null;
 };
 
@@ -73,4 +73,10 @@ export interface URLParameterID {
 export interface StoredUserData {
   username: string;
   token: string;
+}
+
+export enum UserRole {
+  "NON-MEMBER" = "NON-MEMBER",
+  "MEMBER" = "MEMBER",
+  "ADMIN" = "ADMIN",
 }
