@@ -1,6 +1,3 @@
-import DescriptionBox from "../../components/DescriptionBox/DescriptionBox";
-import MemberBox from "../../components/MemberBox/MemberBox";
-import RequestBox from "../../components/RequestBox/RequestBox";
 import neighborhoodsService from "../../services/neighborhoods";
 import {
   ActionFunctionArgs,
@@ -8,7 +5,6 @@ import {
   useLoaderData,
 } from "react-router";
 import createRequest from "../../services/requests";
-import styles from "./SingleNeighborhoodPage.module.css";
 import { useUser } from "../../store/user-context";
 import {
   NeighborhoodDetailsForMembers,
