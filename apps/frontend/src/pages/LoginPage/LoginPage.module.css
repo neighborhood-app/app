@@ -1,11 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 
-h1, h2, h3 {
-  color: #030303;
-  font-family: 'Poppins', sans-serif;
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 38px;
+.neighborhoodHeading {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
 }
 
 .wrapperContainer {
@@ -32,9 +30,3 @@ h1, h2, h3 {
   padding-top: 62px;
   padding-bottom: 3px;
 }
-
-/* @media screen and (min-width: 992px) and (max-width: 1110px) {
-  .formWrapper {
-    padding: 1.6em 6em;
-  }
-} */

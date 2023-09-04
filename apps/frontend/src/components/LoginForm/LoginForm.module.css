@@ -1,12 +1,6 @@
-form {
+.loginForm {
   margin: auto;
-  max-width: 55%;
-}
-
-h1 {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
+  min-width: 56%;
 }
 
 h2 {
@@ -27,7 +21,17 @@ a:hover {
   border-color: black;
 }
 
-.checkboxLinkWrapper {
-  display: flex;
-  justify-content: space-between;
+.checkboxCol {
+  padding-left: 0;
+}
+
+.forgotPwdCol {
+  padding: 0;
+  text-align: right;
+}
+
+@media screen and (max-width: 575px) {
+  .forgotPwdCol {
+    text-align: left;
+  }
 }
