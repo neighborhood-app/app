@@ -1,3 +1,8 @@
+form {
+  margin: auto;
+  max-width: 55%;
+}
+
 h1 {
   position: absolute;
   top: 2rem;

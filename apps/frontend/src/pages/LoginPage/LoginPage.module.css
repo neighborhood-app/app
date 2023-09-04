@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 
-body {
-  color: #1d1d1f;
-}
-
 h1, h2, h3 {
   color: #030303;
   font-family: 'Poppins', sans-serif;
@@ -27,7 +23,7 @@ h1, h2, h3 {
 }
 
 .formWrapper {
-  padding: 1.6em 5.3em;
+  padding: 1.6em 1em;
 }
 
 .imgCol {
@@ -36,3 +32,9 @@ h1, h2, h3 {
   padding-top: 62px;
   padding-bottom: 3px;
 }
+
+/* @media screen and (min-width: 992px) and (max-width: 1110px) {
+  .formWrapper {
+    padding: 1.6em 6em;
+  }
+} */
