@@ -1,8 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
-
 .neighborhoodHeading {
   position: absolute;
-  top: 2rem;
+  top: 1rem;
   right: 2rem;
 }
 
@@ -29,4 +27,10 @@
   text-align: center;
   padding-top: 62px;
   padding-bottom: 3px;
+}
+
+@media screen and (max-width: 992px) {
+  .neighborhoodHeading {
+    right: auto;
+  }
 }
