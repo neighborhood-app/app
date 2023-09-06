@@ -1,0 +1,337 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+/* DEFAULT VALUES */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button {
+  all: unset;
+  font-family: "Mulish", sans-serif;
+}
+
+section {
+  margin: 40px 50px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  color: #374151;
+  margin-bottom: 25px;
+  font-family: "Mulish", sans-serif;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+}
+
+/* ALL NEIGHBORHOODS / NEW HEADER */
+
+.all-neighborhoods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.card {
+  position: relative;
+  width: min(100%, 400px);
+  height: 240px;
+  border-radius: 10px;
+  background-image: var(--image-src);
+  background-position: 50% 50%;
+  background-size: cover;
+  transition: background 800ms ease;
+  box-shadow: 0 6.7px 5.3px rgba(0, 0, 0, 0.03),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.05), 0 100px 80px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+}
+
+.card:hover {
+  background-position: 50% 100%;
+}
+
+.card:hover > figcaption {
+  bottom: -90px;
+  transform: translateY(-90px);
+  opacity: 1;
+}
+
+figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  background: #0009;
+  width: 100%;
+  height: 90px;
+  padding: 15px 20px;
+  transition: transform 1500ms ease;
+  opacity: 0;
+}
+
+.info {
+  color: rgb(226, 226, 226);
+}
+
+.info > h2 {
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+.info > h2 > span {
+  color: #72cc60;
+  font-size: 0.8rem;
+}
+
+.info p {
+  font-size: 0.8rem;
+}
+
+.explore-neighborhood {
+  border: 1px solid #fff;
+  border-radius: 5px;
+  color: #fff;
+  opacity: 1;
+  padding: 5px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.explore-neighborhood:hover {
+  opacity: 0.7;
+  transform: translateY(-3px);
+}
+
+/* ACTIVE REQUEST */
+
+.all-active-requests {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
+}
+
+.request-card {
+  width: min(100%, 450px);
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  border: 1px solid rgb(173, 173, 173, 0.5);
+}
+
+.request-card > img {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  object-position: 50% 50%;
+  border-radius: 10px 10px 0 0;
+  filter: contrast(70%);
+  transition: all 0.6s cubic-bezier(0.43, 0.41, 0.22, 0.91);
+}
+
+.request-card > img:hover {
+  filter: contrast(100%);
+}
+
+.request-card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 15px 20px;
+}
+
+.request-card-content > p {
+  margin-bottom: 10px;
+}
+
+.request-card-content > p:nth-child(1) {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #4b5563;
+}
+
+.request-card-content > p:nth-child(2) {
+  font-size: 0.6rem;
+  font-weight: 400;
+  color: #9ca3af;
+}
+
+.request-card-content > p:nth-child(3) {
+  font-size: 0.7rem;
+  font-weight: 400;
+  margin-left: auto;
+}
+
+/* RESPONDED REQUESTS */
+
+.all-responded-requests {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
+}
+
+.responded-request-card {
+  width: min(100%, 450px);
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  border: 1px solid rgb(173, 173, 173, 0.5);
+}
+
+.responded-request-card > img {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  object-position: 50% 50%;
+  filter: contrast(70%);
+  transition: all 0.6s cubic-bezier(0.43, 0.41, 0.22, 0.91);
+}
+
+.responded-request-card > img:hover {
+  filter: contrast(100%);
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+}
+
+.profile-info > img {
+  display: block;
+  width: 30px;
+  object-fit: cover;
+  object-position: 50% 50%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.profile-info > p {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.responded-request-card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 15px 20px;
+}
+
+.responded-request-card-content > p {
+  margin-bottom: 10px;
+}
+
+.responded-request-card-content > p:nth-child(1) {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #4b5563;
+}
+
+.responded-request-card-content > p:nth-child(2) {
+  font-size: 0.6rem;
+  font-weight: 400;
+  color: #9ca3af;
+}
+
+/* MEDIA QUERIES */
+
+@media (max-width: 1200px) {
+  .all-neighborhoods {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+
+  .all-active-requests {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .all-responded-requests {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 950px) {
+  .all-active-requests {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .request-card {
+    width: min(100%, 500px);
+  }
+
+  .all-responded-requests {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .responded-request-card {
+    width: min(100%, 500px);
+  }
+}
+
+@media (max-width: 750px) {
+  .all-neighborhoods {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+  }
+
+  .all-active-requests {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .all-responded-requests {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  section {
+    margin: 40px 30px;
+  }
+
+  .all-active-requests {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .all-responded-requests {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 400px) {
+  section {
+    margin: 40px 50px;
+  }
+
+  .card:hover > figcaption {
+    bottom: -130px;
+    transform: translateY(-130px);
+  }
+
+  figcaption {
+    height: 130px;
+    padding: 15px 20px;
+  }
+
+  .all-active-requests {
+    grid-template-columns: 1fr;
+  }
+
+  .all-responded-requests {
+    grid-template-columns: 1fr;
+  }
+}
