@@ -14,10 +14,9 @@ export default function SearchFilterForm({ filterStatus, setFilterStatus, reques
     <div className={`${styles.column} ${styles.filterColumn}`}>
       <Form className={styles.form}>
         <Form.Group>
-          <Form.Control type="text" placeholder="Search requests" value={requestSearchValue} onChange={event => setRequestSearchValue((event.target).value)}></Form.Control>
+          <Form.Control type="text" placeholder="Search requests by title" value={requestSearchValue} onChange={event => setRequestSearchValue((event.target).value)}></Form.Control>
         </Form.Group>
         <div className={styles.inputGroup}>
-          <p className={styles.pHeader}><strong>Filter by:</strong></p>
           <Form.Select size='sm' className={styles.selectBox} value={filterStatus} 
           onChange={event => setFilterStatus((event.target).value)}>
             <option value='open'>Open Requests</option>

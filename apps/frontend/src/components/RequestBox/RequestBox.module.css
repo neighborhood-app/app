@@ -1,29 +1,46 @@
-.column {
-  display: flex;
-  flex-direction: column;
-  grid-column: 1 / 4;
-  box-sizing: border-box;
+.header {
+  display: grid;
+  grid-template-rows: 20% 20% 60%;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  row-gap: 5px;
+  column-gap: 10px;
   border-radius: 10px;
   padding: 10px;
-  margin: 0 20px;
-  max-height: 58vh;
+  width: 100%;
   overflow: auto;
-  background-color: white;
-  box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1);
+  /* box-shadow: 17px 17px 25px -3px rgba(0,0,0,0.1); */
+}
+
+.form {
+  grid-column: 1/3
+}
+
+.container {
+  grid-row-start: 3;
+  grid-column: 1/6;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  column-gap: 15px;
+  row-gap: 15px;
 }
 
 .button {
+  grid-column-start: 2;
   align-self: center;
-  margin-bottom: 15px;
-  color: black;
-  background-color: #FFDBA4;
-  width: 200px;
-  border: 0px solid;
-}
-
-.button:hover {
-  background: #C1EFFF;
-  color: black;
+  justify-self: center;
+  width: 188px;
+  height: 48px;
+  padding: 0px 8px;
+  margin-bottom: 10px;
+  border: 0;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background-color: #1d1d1f;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  outline: none;
 }
 
 .formButton {

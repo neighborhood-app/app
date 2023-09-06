@@ -1,26 +1,6 @@
-.main {
-  /* height: 85.8vh; */
-  /* overflow: auto; */
-}
-
-.nav {
-  height: 6vh;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid black;
-}
-
-.navLeft {
-  width: 50%;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.navRight {
-  width: 50%;
-  display: flex;
-  justify-content: flex-end;
+.header {
+  width: 4%;
+  min-width: 50px;
 }
 
 .link {

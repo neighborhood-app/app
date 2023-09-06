@@ -2,7 +2,6 @@ import SearchFilterForm from "../SearchFilterForm/SearchFilterForm";
 import Request from "../Request/Request";
 import RequestModal from "../RequestModal/RequestModal";
 import styles from "./RequestBox.module.css";
-import { Button } from "react-bootstrap";
 import { RequestType } from "../../types";
 import { useState } from "react";
 
@@ -32,7 +31,7 @@ export default function RequestBox({ requests }) {
 
   if (requestSearchValue !== "") {
     requestSelection = requestSelection.filter((request: RequestType) => {
-      return request.title.includes(requestSearchValue);
+      return request.title.toLowerCase().includes(requestSearchValue.toLowerCase());
     });
   }
 
@@ -41,18 +40,24 @@ export default function RequestBox({ requests }) {
   });
 
   return (
-    <div className={styles.column}>
-      <SearchFilterForm
-        filterStatus={requestsType}
-        setFilterStatus={setRequestsType}
-        requestSearchValue={requestSearchValue}
-        setRequestSearchValue={setRequestSearchValue}
-      />
-      <Button className={styles.button} onClick={handleShow}>
+    <div className={styles.header}>
+      <h2 className={styles.title}>Neighborhood Requests</h2>
+      <button className={styles.button} onClick={handleShow}>
         Create request
-      </Button>
+      </button>
+      <div className={styles.form}>
+        <SearchFilterForm
+          filterStatus={requestsType}
+          setFilterStatus={setRequestsType}
+          requestSearchValue={requestSearchValue}
+          setRequestSearchValue={setRequestSearchValue}
+        />
+      </div>
       <RequestModal show={show} handleClose={handleClose} />
-      {requestBoxes}
+      <div className={styles.container}>
+        {requestBoxes}
+      </div>
+      
     </div>
   );
 }

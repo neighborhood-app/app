@@ -1,16 +1,35 @@
 .container {
   display: flex;
   flex-direction: column;
-  background-color: white;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 2px solid;
+  width: 300px;
+  height: 327px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  box-sizing: border-box;
 }
 
 .requestHeader {
   display: flex;
   justify-content: space-between;
+  padding-left: 10px;
+}
+
+.requestContent {
+  padding: 10px;
+}
+
+.title {
+  color: #030303;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.date {
+  color: #545454;
+  font-size: 12px;
+  line-height: 16px;
 }
 
 .button {
@@ -30,4 +49,13 @@
 .buttonsContainer {
   display: flex;
   justify-content: center;
+}
+
+.image {
+  width: 300px;
+  height: 182px;
+  border-radius: 12px;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
