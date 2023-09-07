@@ -77,7 +77,7 @@ export default function SingleNeighborhood() {
   const user = useUser();
 
   const neighborhoodData = useLoaderData() as NeighborhoodType;
-
+  console.log(neighborhoodData);
   const userRole: UserRole = checkLoggedUserRole(
     user.username,
     neighborhoodData

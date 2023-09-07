@@ -1,13 +1,13 @@
 import { Modal } from "react-bootstrap";
 import { Form } from 'react-router-dom';
-import styles from './RequestModal.module.css';
+import styles from './CreateRequestModal.module.css';
 
 interface Props {
   show: boolean,
   handleClose: () => void,
 }
 
-export default function RequestModal({ show, handleClose }: Props) {
+export default function CreateRequestModal({ show, handleClose }: Props) {
   function handleSubmit() {
     handleClose();
   }

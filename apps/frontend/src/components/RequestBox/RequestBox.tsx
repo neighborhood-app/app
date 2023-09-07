@@ -1,6 +1,6 @@
 import SearchFilterForm from "../SearchFilterForm/SearchFilterForm";
 import Request from "../Request/Request";
-import RequestModal from "../RequestModal/RequestModal";
+import CreateRequestModal from "../CreateRequestModal/CreateRequestModal";
 import styles from "./RequestBox.module.css";
 import { RequestType } from "../../types";
 import { useState } from "react";
@@ -53,7 +53,7 @@ export default function RequestBox({ requests }) {
           setRequestSearchValue={setRequestSearchValue}
         />
       </div>
-      <RequestModal show={show} handleClose={handleClose} />
+      <CreateRequestModal show={show} handleClose={handleClose} />
       <div className={styles.container}>
         {requestBoxes}
       </div>
