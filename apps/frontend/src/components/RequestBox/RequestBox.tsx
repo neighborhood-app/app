@@ -57,7 +57,6 @@ export default function RequestBox({ requests }) {
       <div className={styles.container}>
         {requestBoxes}
       </div>
-      
     </div>
   );
 }

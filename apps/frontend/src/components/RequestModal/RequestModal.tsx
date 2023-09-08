@@ -10,8 +10,8 @@ interface Props {
 }
 
 export default function RequestModal({ show, handleClose, request }: Props) {
-  function handleCloseRequest() {
-    requestServices.closeRequest(String(request.id))
+  async function handleCloseRequest() {
+    await requestServices.closeRequest(String(request.id))
   }
 
   return (
