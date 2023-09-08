@@ -42,3 +42,27 @@ h1, h2, h3 {
   font-weight: 700;
   line-height: 38px;
 }
+
+.btn-primary {
+  --bs-btn-bg: black;
+  --bs-btn-border-color: black;
+}
+
+/* Override Bootstrap default variables */
+
+.btn-primary, .btn-outline-dark {
+  --bs-btn-hover-bg: #7f7f85;
+  --bs-btn-hover-border-color: #7f7f85;
+  --bs-btn-active-bg: #69696f;
+  --bs-btn-active-border-color: #69696f;
+}
+
+.form-check-input:checked {
+  background-color: black;
+  border-color: black;
+}
+
+.form-check-input:focus {
+  border-color: #69696f;
+  box-shadow: 0 0 0 0.25rem rgb(115 119 125 / 25%);
+}

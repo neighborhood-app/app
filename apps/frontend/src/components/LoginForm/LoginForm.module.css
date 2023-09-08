@@ -13,12 +13,7 @@ a {
 }
 
 a:hover {
-  color: #545459;
-}
-
-.mainBtn {
-  background-color: black;
-  border-color: black;
+  color: #7f7f85;
 }
 
 .checkboxCol {
