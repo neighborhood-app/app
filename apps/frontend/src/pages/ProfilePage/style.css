@@ -63,8 +63,9 @@ header {
   transition: all 0.3s ease-in-out;
 }
 
-.btn:hover {
-  background-color: rgb(173, 173, 173);
+.btn:hover,
+.btn:active {
+  background-color: #4b5563;
 }
 
 /* SEARCH & SELECT BOX */
