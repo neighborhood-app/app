@@ -18,10 +18,10 @@ export default function RequestModal({ show, handleClose, request }: Props) {
     }
   }
 
-  function isLoggedUserRequestOwner(request: RequestType) {
+  function showCloseRequestBtn(request: RequestType) {
     let user = localStorage.getItem('user');
     let username = user ? JSON.parse(user).username : null;
-    return username === request.user.user_name ? true : false;
+    return username === request.user.user_name && request.status === "OPEN" ? true : false;
   }
 
 
@@ -45,7 +45,7 @@ export default function RequestModal({ show, handleClose, request }: Props) {
               {request.content}
             </p>
             <div className={styles.buttonGroups}>
-              {isLoggedUserRequestOwner(request) ? <button className={`${styles.btn} ${styles.solvedBtn}`} onClick={handleCloseRequest}>Close request</button> : null}
+              {showCloseRequestBtn(request) ? <button className={`${styles.btn} ${styles.solvedBtn}`} onClick={handleCloseRequest}>Close request</button> : null}
             </div>
           </div>
         </section>

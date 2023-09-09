@@ -55,7 +55,7 @@ export default function RequestBox({ requests }) {
       </div>
       <CreateRequestModal show={show} handleClose={handleClose} />
       <div className={styles.container}>
-        {requestBoxes}
+        {requestBoxes.length !== 0 ? requestBoxes : 'Currently there are no requests that match your criteria!'}
       </div>
     </div>
   );
