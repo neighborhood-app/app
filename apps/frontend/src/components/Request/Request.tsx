@@ -7,7 +7,7 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
   const date = requestObj.time_created.split("T")[0];
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const handleCloseModal = () => setShow(false);
   const handleShow = () => setShow(true);
 
   return (
@@ -22,7 +22,7 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
         <p className={styles.title}>{requestObj.title}</p>
         <p className={styles.date}>Created on {date}</p>
       </div>
-      <RequestModal show={show} handleClose={handleClose} request={requestObj}/>
+      <RequestModal show={show} handleCloseModal={handleCloseModal} request={requestObj}/>
     </div>
   );
 }
