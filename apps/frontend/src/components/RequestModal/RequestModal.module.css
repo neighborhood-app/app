@@ -1,0 +1,78 @@
+.modal {
+
+}
+
+.requestImage {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  object-position: 50% 50%;
+  border-radius: 10px;
+  filter: contrast(70%);
+  transition: all 0.6s cubic-bezier(0.43, 0.41, 0.22, 0.91);
+}
+
+.requestImage:hover {
+  filter: contrast(100%);
+}
+
+.currentRequestInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.requestContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.h1 {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.p {
+  /* font-size: 0.7rem;
+  line-height: 1.4; */
+  color: #4b5563;
+}
+
+.buttonGroups {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.btn {
+  background-color: #000;
+  color: rgb(250, 246, 246);
+  padding: 10px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  /* font-size: 0.7rem; */
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn:hover,
+.btn:active {
+  background-color: #4b5563;
+}
+
+.solvedBtn{
+  background-color: #1d4ed8;
+}
+
+.solvedBtn:hover,
+.solvedBtn:active {
+  background-color: #3b82f6;
+}

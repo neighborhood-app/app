@@ -11,18 +11,45 @@ interface Props {
 
 export default function RequestModal({ show, handleClose, request }: Props) {
   async function handleCloseRequest() {
-    await requestServices.closeRequest(String(request.id))
+    try {
+      await requestServices.closeRequest(String(request.id))
+    } catch(e) {
+      console.log(e);
+    }
   }
+
+  function isLoggedUserRequestOwner(request: RequestType) {
+    let user = localStorage.getItem('user');
+    let username = user ? JSON.parse(user).username : null;
+    return username === request.user.user_name ? true : false;
+  }
+
 
   return (
     <div onClick={e => e.stopPropagation()}>
-      <Modal show={show} onHide={handleClose} animation={true} backdrop="static" centered>
+      <Modal show={show} onHide={handleClose} animation={true} backdrop="static" centered className={styles.modal} dialogClassName="modal-w200" size="xl">
         <Modal.Header closeButton>
-          <Modal.Title>{request.title}</Modal.Title>
+          {request.user.user_name}
         </Modal.Header>
         <Modal.Body>
-          {request.content}
-          <button onClick={handleCloseRequest}>Close Request</button>
+        <section className={styles.currentRequestInfo}>
+          <img
+            src={require('./images/image.jpeg')}
+            alt="active request on neighborhood app"
+            className={styles.requestImage}
+            />
+
+          <div className={styles.requestContent}>
+            <h1 className={styles.h1}>Help! My cat is drowning</h1>
+            <p className={styles.p}>
+              {request.content}
+            </p>
+            <div className={styles.buttonGroups}>
+              {isLoggedUserRequestOwner(request) ? <button className={`${styles.btn} ${styles.solvedBtn}`} onClick={handleCloseRequest}>Close request</button> : null}
+            </div>
+          </div>
+        </section>
+          
         </Modal.Body>
       </Modal>
     </div>
