@@ -15,7 +15,7 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
   return (
     <div className={styles.container}>
       <div className={styles.requestHeader}>
-        <p>{requestObj.user.user_name}</p>
+        <p>{requestObj.user.username}</p>
       </div>
       <div className={styles.requestImage}>
         <img className={styles.image} src={require('./help_wanted.jpeg')} alt='Help Wanted' />

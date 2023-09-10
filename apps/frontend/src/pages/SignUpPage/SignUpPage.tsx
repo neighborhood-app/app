@@ -1,4 +1,4 @@
-// import SignUpForm from "../../components/LoginForm/LoginForm";
+import SignUpForm from "../../components/SignUpForm/SignUpForm";
 import WelcomeImgBox from "../../components/WelcomeImgBox/WelcomeImgBox";
 import { Container, Row } from 'react-bootstrap';
 import styles from "./SignUpPage.module.css";
@@ -18,10 +18,10 @@ export async function action({ request }: { request: Request }) {
   const signUpData = Object.fromEntries(formData) as unknown as SignUpData;
   const user: UserInfo = await signUp(signUpData);
 
-  // if (user) {
-  //   window.localStorage.setItem("user", JSON.stringify(user));
-  //   return redirect("/");
-  // }
+  if (user) {
+    window.localStorage.setItem("user", JSON.stringify(user));
+    return redirect("/");
+  }
 }
 
 export default function SignUpPage() {
@@ -30,7 +30,7 @@ export default function SignUpPage() {
     <h1 className={styles.neighborhoodHeading}>Neighborhood</h1>
     <Row className={styles.customRow}>
       <WelcomeImgBox className={`${styles.customCol} ${styles.imgCol}`}></WelcomeImgBox>
-      {/* <LoginForm className={`${styles.customCol} ${styles.formWrapper}`}></LoginForm> */}
+      <SignUpForm className={`${styles.customCol} ${styles.formWrapper}`}></SignUpForm>
     </Row>
   </Container>
   );

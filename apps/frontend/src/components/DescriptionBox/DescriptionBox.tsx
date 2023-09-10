@@ -1,5 +1,5 @@
 import styles from './DescriptionBox.module.css';
-import { User } from '../../types';
+import { User } from '@prisma/client';
 
 interface Props {
   showJoinBtn: boolean,

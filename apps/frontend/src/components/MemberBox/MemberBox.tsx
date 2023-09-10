@@ -1,6 +1,6 @@
-import styles from "./MemberBox.module.css";
-import { Button } from "react-bootstrap";
-import type { User } from "../../types";
+import styles from './MemberBox.module.css';
+import { Button } from 'react-bootstrap';
+import type { User } from '@prisma/client';
 
 interface Props {
   showLeaveBtn: boolean;
@@ -13,7 +13,7 @@ export default function MemberBox({ showLeaveBtn, admin, users }: Props) {
     ? users.map((user) => {
         return (
           <li className={styles.liElement} key={user.id}>
-            {user.user_name}
+            {user.username}
           </li>
         );
       })
@@ -26,7 +26,7 @@ export default function MemberBox({ showLeaveBtn, admin, users }: Props) {
           <u>Admin</u>
         </strong>
       </p>
-      <p>{admin.user_name}</p>
+      <p>{admin.username}</p>
       <p>
         <strong>
           <u>Members</u>

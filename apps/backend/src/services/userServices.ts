@@ -1,11 +1,13 @@
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
+import middleware from '../utils/middleware';
 import { CreateUserData, UserWithoutId, UserWithoutPasswordHash } from '../types';
 import prismaClient from '../../prismaClient';
 
 const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   id: true,
-  user_name: true,
+  username: true,
+  email: true,
   first_name: true,
   last_name: true,
   dob: true,
@@ -31,9 +33,7 @@ const parseAndValidateUsername = async (username: unknown): Promise<string> => {
   }
 
   const existingUser: User | null = await prismaClient.user.findUnique({
-    where: {
-      user_name: username,
-    },
+    where: { username },
   });
 
   if (existingUser) {
@@ -67,6 +67,18 @@ const getPasswordHash = async (password: unknown): Promise<string> => {
 // user services functions
 
 /**
+ * @param obj - (object)
+ * @returns - type predicate (boolean) indicating whether obj is of type `CreateUserData`
+ */
+const isCreateUserData = (obj: object): obj is CreateUserData => (
+  'username' in obj && 'password' in obj
+      && 'email' in obj
+      && typeof obj.username === 'string'
+      && typeof obj.password === 'string'
+      && typeof obj.email === 'string'
+);
+
+/**
  * - performs type narrowing for data from req.body to POST /user
  * - if username, password present and of type string, then returns an body containing input data
  * - the mandatory fields can be changed in future
@@ -75,17 +87,16 @@ const getPasswordHash = async (password: unknown): Promise<string> => {
  * @returns Promise resolving to user input for POST /users
  */
 const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
-  if (!body || typeof body !== 'object') {
+  if (!middleware.isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
   }
 
-  if ('username' in body && 'password' in body
-      && typeof body.username === 'string'
-      && typeof body.password === 'string') {
+  if (isCreateUserData(body)) {
     const createUserData: CreateUserData = {
       username: body.username,
+      email: body.email,
       password: body.password,
     };
 
@@ -109,8 +120,9 @@ const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
 const generateUserDataWithoutId = async (createUserData: CreateUserData)
 : Promise<UserWithoutId> => {
   const userData: UserWithoutId = {
-    user_name: await parseAndValidateUsername(createUserData.username),
+    username: await parseAndValidateUsername(createUserData.username),
     password_hash: await getPasswordHash(createUserData.password),
+    email: createUserData.email,
     first_name: null,
     last_name: null,
     dob: null,
