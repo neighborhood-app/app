@@ -48,49 +48,56 @@ async function main() {
   // Create users
   const bob = await prismaClient.user.create({
     data: {
-      user_name: 'bob1234',
+      username: 'bob1234',
+      email: 'bob1234@example.com',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const antonina = await prismaClient.user.create({
     data: {
-      user_name: 'antonina',
+      username: 'antonina',
+      email: 'antonina@example.com',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const shwetank = await prismaClient.user.create({
     data: {
-      user_name: 'shwetank',
+      username: 'shwetank',
+      email: 'shwetank@example.com',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const radu = await prismaClient.user.create({
     data: {
-      user_name: 'radu',
+      username: 'radu',
+      email: 'radu@example.com',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const mike = await prismaClient.user.create({
     data: {
-      user_name: 'mike',
+      username: 'mike',
+      email: 'mike@example.com',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const maria = await prismaClient.user.create({
     data: {
-      user_name: 'maria',
+      username: 'maria',
+      email: 'maria@example.com',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
 
   const leia = await prismaClient.user.create({
     data: {
-      user_name: 'leia',
+      username: 'leia',
+      email: 'leia@example.com',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });

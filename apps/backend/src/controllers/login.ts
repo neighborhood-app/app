@@ -21,9 +21,9 @@ loginRouter.post('/', middleware.isUserLoggedIn, catchError(async (request: Requ
     return response.status(401).json({ error: 'invalid username or password' });
   }
 
-  const token: string = await loginServices.generateToken(userInDb.user_name, userInDb.id);
+  const token: string = await loginServices.generateToken(userInDb.username, userInDb.id);
   const responseData = {
-    username: userInDb.user_name,
+    username: userInDb.username,
     token,
   };
 

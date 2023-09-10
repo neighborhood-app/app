@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import RootLayout from "./pages/RootLayout/RootLayout";
 import LoginPage, { action as loginAction } from "./pages/LoginPage/LoginPage";
+import SignUpPage, { action as signUpAction } from "./pages/SignUpPage/SignUpPage";
 
 import TestPage from "./pages/Test/TestPage";
 
@@ -57,6 +58,11 @@ const router = createBrowserRouter([
     path: "/login", // No need to give absolute path to children elements
     element: <LoginPage />,
     action: loginAction,
+  },
+  {
+    path: "/signup",
+    element: <SignUpPage />,
+    action: signUpAction,
   },
 ]);
 
