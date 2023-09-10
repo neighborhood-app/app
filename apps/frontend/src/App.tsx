@@ -27,11 +27,6 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/login", // No need to give absolute path to children elements
-        element: <LoginPage />,
-        action: loginAction,
-      },
-      {
         loader: checkAuthLoader,
         children: [
           { path: "logout", loader: logoutLoader },
@@ -57,6 +52,11 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "/login", // No need to give absolute path to children elements
+    element: <LoginPage />,
+    action: loginAction,
   },
 ]);
 
