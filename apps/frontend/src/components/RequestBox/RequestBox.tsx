@@ -24,6 +24,13 @@ export default function RequestBox({ requests }) {
         return request.status === searchCriteria.status;
       })
     }
+    
+    if (searchCriteria.searchTerm !== '') {
+      filteredRequests = filteredRequests.filter((request: RequestType) => {
+        return request.title.toLowerCase().includes(searchCriteria.searchTerm.toLowerCase());
+      })
+    }
+
     setRequestList(filteredRequests);
   }, [requests, searchCriteria]);
 
@@ -32,13 +39,9 @@ export default function RequestBox({ requests }) {
   };
 
   function searchRequests(searchInput: string): void {
-    if (searchInput !== "") {
-      setRequestList(requestList.filter((request: RequestType) => {
-        return request.title.toLowerCase().includes(searchInput.toLowerCase());
-      }));
-    } else {
-      setRequestList(requests);
-    }
+    setSearchCriteria(oldCriteria => {
+      return {...oldCriteria, searchTerm: searchInput}
+    })
   }
 
   const requestBoxes = requestList.map((request: RequestType) => {
@@ -54,7 +57,8 @@ export default function RequestBox({ requests }) {
       <div className={styles.form}>
         <Form className={styles.form}>
           <Form.Group>
-            <Form.Control type="text" placeholder="Search requests by title" onChange={event => searchRequests((event.target).value)}></Form.Control>
+            <Form.Control type="text" placeholder="Search requests by title" value={searchCriteria.searchTerm} 
+            onChange={event => searchRequests((event.target).value)}></Form.Control>
           </Form.Group>
           <div className={styles.inputGroup}>
             <Form.Select size='sm' className={styles.selectBox} value={searchCriteria.status}
