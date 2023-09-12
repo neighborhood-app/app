@@ -45,7 +45,7 @@ export default function RequestBox({ requests }) {
   }
 
   const requestBoxes = requestList.map((request: RequestType) => {
-    return <Request requestObj={request} key={request.id}></Request>;
+    return <Request requestObj={request} key={request.id} updateRequestList={setRequestList}></Request>;
   });
 
   return (
