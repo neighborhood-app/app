@@ -24,6 +24,7 @@
 
 .imgCol {
   background-color: #F0F0F0;
+  background: linear-gradient(to right, #ff90b4 11%, white);
   text-align: center;
   padding-top: 62px;
   padding-bottom: 3px;

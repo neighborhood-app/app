@@ -28,7 +28,7 @@ export default function LoginForm({ className }: {className: string}) {
             </Container>
           </Form.Group>
           <div className='d-grid gap-2'>
-            <Button className={styles.mainBtn} variant='primary' type='submit'>
+            <Button variant='primary' type='submit'>
               Submit
             </Button>
             <Button variant='outline-dark' type='button' href='/signup'>

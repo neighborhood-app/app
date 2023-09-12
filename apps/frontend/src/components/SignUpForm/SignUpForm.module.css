@@ -1,0 +1,10 @@
+.signUpForm {
+  margin: auto;
+  min-width: 56%;
+}
+
+@media screen and (max-width: 500px) {
+  .signUpForm {
+    min-width: 75%;
+  }
+}

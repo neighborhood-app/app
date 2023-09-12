@@ -1,0 +1,37 @@
+.neighborhoodHeading {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+}
+
+.wrapperContainer {
+  height: 100%;
+  width: 100%;
+}
+
+.customCol {
+  align-content: center;
+  display: grid;
+}
+
+.customRow {
+  height: 100vh;
+}
+
+.formWrapper {
+  padding: 1.6em 1em;
+}
+
+.imgCol {
+  background-color: #F0F0F0;
+  background: linear-gradient(to right, #ff90b4 11%, white);
+  text-align: center;
+  padding-top: 62px;
+  padding-bottom: 3px;
+}
+
+@media screen and (max-width: 992px) {
+  .neighborhoodHeading {
+    right: auto;
+  }
+}

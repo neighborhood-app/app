@@ -7,6 +7,10 @@ export interface LoginData {
 
 export type SignUpData = LoginData & {
   email: string;
+  firstName?: string;
+  lastName?: string;
+  gender?: number;
+  dob?: string;
 }
 
 export interface RequestData {
