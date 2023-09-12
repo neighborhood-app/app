@@ -2,7 +2,7 @@ import Request from "../Request/Request";
 import CreateRequestModal from "../CreateRequestModal/CreateRequestModal";
 import styles from "./RequestBox.module.css";
 import { RequestType } from "../../types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 
 //@ts-ignore
@@ -13,20 +13,23 @@ export default function RequestBox({ requests }) {
   const handleShow = () => setShow(true);
 
   const [requestList, setRequestList] = useState(requests);
+  const [searchCriteria, setSearchCriteria] = useState({ status: 'ALL', searchTerm: '' })
+
+  useEffect(() => {
+    let filteredRequests;
+    if (searchCriteria.status === 'ALL') {
+      filteredRequests = requests;
+    } else {
+      filteredRequests = requests.filter((request: RequestType) => {
+        return request.status === searchCriteria.status;
+      })
+    }
+    setRequestList(filteredRequests);
+  }, [requests, searchCriteria]);
 
   function filterRequests(requestsType: string): void {
-    if (requestsType === "open") {
-      setRequestList(requests.filter((request: RequestType) => {
-        return request.status === "OPEN";
-      }));
-    } else if (requestsType === "closed") {
-      setRequestList(requests.filter((request: RequestType) => {
-        return request.status === "CLOSED";
-      }));
-    } else if (requestsType === "all") {
-      setRequestList(requests);
-    }
-  }
+    setSearchCriteria({status: requestsType, searchTerm: ''});
+  };
 
   function searchRequests(searchInput: string): void {
     if (searchInput !== "") {
@@ -54,11 +57,11 @@ export default function RequestBox({ requests }) {
             <Form.Control type="text" placeholder="Search requests by title" onChange={event => searchRequests((event.target).value)}></Form.Control>
           </Form.Group>
           <div className={styles.inputGroup}>
-            <Form.Select size='sm' className={styles.selectBox}
+            <Form.Select size='sm' className={styles.selectBox} value={searchCriteria.status}
               onChange={event => filterRequests((event.target).value)}>
-              <option value='open'>Open Requests</option>
-              <option value='closed'>Closed Requests</option>
-              <option value='all'>All Requests</option>
+              <option value='OPEN'>Open Requests</option>
+              <option value='CLOSED'>Closed Requests</option>
+              <option value='ALL'>All Requests</option>
             </Form.Select>
           </div>
         </Form>
