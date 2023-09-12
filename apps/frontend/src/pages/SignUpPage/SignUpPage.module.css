@@ -23,8 +23,8 @@
 }
 
 .imgCol {
-  background-color: #F0F0F0;
-  background: linear-gradient(to right, #ff90b4 11%, white);
+  background-color: #ffaec8;
+  background: linear-gradient(to right, #ffaec8 25%, white);
   text-align: center;
   padding-top: 62px;
   padding-bottom: 3px;
@@ -33,5 +33,11 @@
 @media screen and (max-width: 992px) {
   .neighborhoodHeading {
     right: auto;
+  }
+
+  .imgCol {
+    background: linear-gradient(to bottom, #ffaec8 11%, white);
+    padding: 62px 0 3px;
+    padding-left: 0px;
   }
 }

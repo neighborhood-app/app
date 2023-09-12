@@ -5,6 +5,28 @@
 
 .welcomeHeading {
   color: #030303;
-  margin: 1em 0 0.5em;
+  margin: .5em 0 .4em;
   text-align: center;
+}
+
+.img {
+  background-image: url('../../assets/neighborhood3.jpeg');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 12px;
+  height: 270px;
+  margin: auto;
+  top: 160px;
+  left: 154px;
+  width: 380px;
+}
+
+@media screen and (max-width: 992px) {
+  .img {
+    border-radius: 0;
+    height: 210px;
+    margin: 0;
+    width: 100%;
+  }
 }
