@@ -1,5 +1,5 @@
 import {
-  Neighborhood, Prisma, Status, User, Response,
+  Neighborhood, Prisma, User, Response, RequestStatus,
 } from '@prisma/client';
 import { Request } from 'express';
 
@@ -28,6 +28,8 @@ export interface CreateUserData {
   username: string;
   email: string;
   password: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 /**
@@ -119,7 +121,7 @@ export type CreateRequestData = {
 export interface UpdateRequestData {
   title?: string;
   content?: string;
-  status?: Status;
+  status?: RequestStatus;
 }
 
 /**

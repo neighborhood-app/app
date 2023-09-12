@@ -22,7 +22,6 @@ usersRouter.get('/:id', catchError(async (req: Request, res: Response) => {
 
 usersRouter.post('/', catchError(async (req: Request, res: Response) => {
   const createUserData = await userServices.parseCreateUserData(req.body);
-
   const newUser: UserWithoutPasswordHash = await userServices.createUser(createUserData);
 
   res.status(201).json(newUser);

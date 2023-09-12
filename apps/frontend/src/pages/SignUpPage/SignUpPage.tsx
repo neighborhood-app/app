@@ -2,7 +2,7 @@ import SignUpForm from "../../components/SignUpForm/SignUpForm";
 import WelcomeImgBox from "../../components/WelcomeImgBox/WelcomeImgBox";
 import { Container, Row } from 'react-bootstrap';
 import styles from "./SignUpPage.module.css";
-import { SignUpData, UserInfo } from "../../types";
+import { SignUpData } from "../../types";
 import { redirect } from "react-router";
 import signUp from "../../services/signUp";
 
@@ -11,17 +11,15 @@ export async function action({ request }: { request: Request }) {
   // get the sign up data (what do we need?)
   // if valid data
     // create a new user
+    // log the user in (call login service?)
     // redirect to home page
   // otherwise
     // display error message (flash?)
 
   const signUpData = Object.fromEntries(formData) as unknown as SignUpData;
-  const user: UserInfo = await signUp(signUpData);
+  await signUp(signUpData);
 
-  if (user) {
-    window.localStorage.setItem("user", JSON.stringify(user));
-    return redirect("/");
-  }
+  return null;
 }
 
 export default function SignUpPage() {

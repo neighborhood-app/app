@@ -1,19 +1,30 @@
-import axios from "axios";
-import { SignUpData } from "../types";
+import axios from 'axios';
+import { redirect } from 'react-router';
+import { LoginData, SignUpData, UserInfo } from '../types';
+import login from './login';
+import { UserWithoutPasswordHash } from '@neighborhood/backend/src/types';
 
-const baseURL = "/api/users";
+const baseURL = '/api/users';
 
 async function signUp(signUpData: SignUpData) {  
-  // const headers: { authorization?: string } = {};
-  // let { user }: { user?: string } = localStorage as StorageWithUser;
+  const newUser: UserWithoutPasswordHash = await axios.post(baseURL, signUpData);
+  if (newUser) {
+    const loginData: LoginData = {
+      username: signUpData.username,
+      password: signUpData.password,
+    }
 
-  // if (user) {
-  //   const userObj: UserInfo = JSON.parse(user);
-  //   headers.authorization = `Bearer ${userObj.token}`;
-  // }
+    // there is duplication from the login action
+    // is there a better way to do this?
+    const user: UserInfo = await login(loginData);
 
-  const response = await axios.post(baseURL, signUpData);
-  return response.data;
+    if (user) {
+      window.localStorage.setItem('user', JSON.stringify(user));
+      return redirect('/');
+    }
+  }
+
+  return null;
 }
 
 export default signUp;

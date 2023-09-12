@@ -68,6 +68,7 @@ const getPasswordHash = async (password: unknown): Promise<string> => {
 
 /**
  * @param obj - (object)
+ * checks if username, password and email properties are present and of type string
  * @returns - type predicate (boolean) indicating whether obj is of type `CreateUserData`
  */
 const isCreateUserData = (obj: object): obj is CreateUserData => (
@@ -79,9 +80,8 @@ const isCreateUserData = (obj: object): obj is CreateUserData => (
 );
 
 /**
- * - performs type narrowing for data from req.body to POST /user
- * - if username, password present and of type string, then returns an body containing input data
- * - the mandatory fields can be changed in future
+ * - performs type narrowing for data from req.body to POST /users
+ * - if data is valid, returns an object containing CreateUserData
  * - else throws Error
  * @param body request.body should contain username and password
  * @returns Promise resolving to user input for POST /users
@@ -98,6 +98,8 @@ const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
       username: body.username,
       email: body.email,
       password: body.password,
+      firstName: body.firstName,
+      lastName: body.lastName,
     };
 
     return createUserData;
@@ -123,8 +125,8 @@ const generateUserDataWithoutId = async (createUserData: CreateUserData)
     username: await parseAndValidateUsername(createUserData.username),
     password_hash: await getPasswordHash(createUserData.password),
     email: createUserData.email,
-    first_name: null,
-    last_name: null,
+    first_name: createUserData.firstName || null,
+    last_name: createUserData.lastName || null,
     dob: null,
     gender_id: null,
     bio: null,
@@ -166,7 +168,7 @@ const getUserById = async (userId: number): Promise<UserWithoutPasswordHash > =>
 /**
  * creates new user in db based on the userData
  * throws error if userData is invalid or new user is not created
- * @param userData must contain the required fields, currently only username and password required
+ * @param userData must contain the required fields, username, password and email are required
  * @returns Promise resolving to created new user
  */
 const createUser = async (userData: CreateUserData): Promise<UserWithoutPasswordHash> => {

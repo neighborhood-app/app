@@ -1,3 +1,4 @@
+import { CreateUserData } from '@neighborhood/backend/src/types';
 import { User } from '@prisma/client';
 
 export interface LoginData {
@@ -5,13 +6,7 @@ export interface LoginData {
   password: string;
 }
 
-export type SignUpData = LoginData & {
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  gender?: number;
-  dob?: string;
-}
+export type SignUpData = CreateUserData;
 
 export interface RequestData {
   title: string;
