@@ -22,7 +22,7 @@ export default function LoginForm({ className }: {className: string}) {
                   <Form.Check type='checkbox' label='Remember me' />
                 </Col>
                 <Col sm={7} className={styles.forgotPwdCol}>
-                  <Link to={"#"}>Forgot your password?</Link>
+                  <Link to={'#'}>Forgot your password?</Link>
                 </Col>
               </Row>
             </Container>
