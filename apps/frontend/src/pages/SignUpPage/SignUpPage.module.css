@@ -23,8 +23,9 @@
 }
 
 .imgCol {
-  background-color: #ffaec8;
-  background: linear-gradient(to right, #ffaec8 25%, white);
+  /* Comment out the following line to see alternative with solid color */
+  background: linear-gradient(to right, #ff90b4 10%, white);
+  background-color: #ff90b4;
   text-align: center;
   padding-top: 62px;
   padding-bottom: 3px;
@@ -36,8 +37,8 @@
   }
 
   .imgCol {
-    background: linear-gradient(to bottom, #ffaec8 11%, white);
+    background: #ff90b4;
+    /* background: linear-gradient(to bottom, #ff90b4 11%, white); */
     padding: 62px 0 3px;
-    padding-left: 0px;
   }
 }

@@ -3,6 +3,10 @@
   min-width: 56%;
 }
 
+.asterisk {
+  color: #EF82A5;
+}
+
 @media screen and (max-width: 500px) {
   .signUpForm {
     min-width: 75%;
