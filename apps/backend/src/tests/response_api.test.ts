@@ -4,7 +4,7 @@ import { Response } from 'supertest';
 import app from '../app';
 import seed from './seed';
 import testHelpers from './testHelpers';
-import { LoginData, UpdateRequestData, UpdateResponseData } from '../types';
+import { LoginData, UpdateResponseData } from '../types';
 
 const supertest = require("supertest"); // eslint-disable-line
 // 'require' was used because supertest does not support import
@@ -227,9 +227,7 @@ describe('Tests for updating a response: PUT /responses/:id', () => {
     );
     expect(initialResponseInDb.status).toBe('PENDING');
 
-    // Why can we not use type of `updateData` to be `UpdateRequestData` ?
-    // TS still expects `status` field to be of type `number`
-    const updateData: UpdateRequestData = {
+    const updateData: UpdateResponseData = {
       status: 'ACCEPTED',
     };
 
