@@ -21,19 +21,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
       setIsLoading(true);
       await requestServices.closeRequest(String(request.id))
       setIsLoading(false);
-      //@ts-ignore
-      // updateRequestList((oldList: RequestType[]) => {
-      //   let newList = oldList.map(oldRequest => {
-      //     if (oldRequest.id === request.id) {
-      //       return {...oldRequest, status: 'CLOSED'}
-      //     } else {
-      //       return oldRequest;
-      //     }
-      //   })
-      //   return newList;
-      // })
       handleCloseModal();
-      // navigate('.', { replace: true })
       revalidator.revalidate();
       
     } catch(e) {
@@ -62,7 +50,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
             className={styles.requestImage}
             />
           <div className={styles.requestContent}>
-            <h1 className={styles.h1}>Help! My cat is drowning</h1>
+            <h1 className={styles.h1}>{request.title}</h1>
             <p className={styles.p}>
               {request.content}
             </p>
