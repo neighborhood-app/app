@@ -4,6 +4,7 @@ import { RequestType } from "../../types";
 import requestServices from "../../services/requests";
 import { useState } from "react";
 import { useRevalidator } from "react-router";
+import Response from '../Response/Response'
 
 interface Props {
   show: boolean,
@@ -51,14 +52,15 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
             />
           <div className={styles.requestContent}>
             <h1 className={styles.h1}>{request.title}</h1>
-            <p className={styles.p}>
-              {request.content}
-            </p>
+            <p className={styles.p}>{request.content}</p>
             <div className={styles.buttonGroups}>
               {showCloseRequestBtn(request) ? <button className={`${styles.btn} ${styles.solvedBtn}`} onClick={handleCloseRequest}>Close request</button> : null}
               {loading ? <Spinner animation="border" /> : null}
             </div>
           </div>
+        </section>
+        <section className={styles.responseSection}>
+          <Response />
         </section>
         </Modal.Body>
       </Modal>

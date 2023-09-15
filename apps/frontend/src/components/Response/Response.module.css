@@ -1,0 +1,37 @@
+.responseCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+
+.profileAndDate{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.pCreatedDate {
+  font-weight: 600;
+}
+
+.createdDate {
+  font-size: 0.6rem;
+  color: #9ca3af;
+}
+
+.p {
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: #4b5563;
+}
