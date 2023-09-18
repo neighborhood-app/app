@@ -116,7 +116,11 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
     requests: {
       include: {
         user: true,
-        responses: true,
+        responses: {
+          include: {
+            user: true,
+          },
+        },
       },
     },
   };

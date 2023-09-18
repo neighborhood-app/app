@@ -1,3 +1,5 @@
+import { Response } from "@prisma/client"
+
 export interface LoginData {
   username: string;
   password: string;
@@ -64,7 +66,12 @@ export type RequestType = {
   status: string;
   time_created: string;
   user: User;
+  responses: Array<ResponseWithUser>;
 };
+
+export type ResponseWithUser = Response & {
+  user: User;
+}
 
 export interface URLParameterID {
   id: string;

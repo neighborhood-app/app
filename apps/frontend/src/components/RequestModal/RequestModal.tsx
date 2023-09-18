@@ -1,10 +1,10 @@
 import { Modal, Spinner } from "react-bootstrap";
 import styles from './RequestModal.module.css';
-import { RequestType } from "../../types";
+import { RequestType, ResponseWithUser } from "../../types";
 import requestServices from "../../services/requests";
 import { useState } from "react";
 import { useRevalidator } from "react-router";
-import Response from '../Response/Response'
+import ResponseBox from '../ResponseBox/ResponseBox'
 
 interface Props {
   show: boolean,
@@ -30,6 +30,13 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
       console.log(e);
     }
   }
+
+  const responses = request.responses.map((responseObj: ResponseWithUser)=> {
+    return (
+      <ResponseBox response={responseObj} />
+    ) 
+  })
+ 
 
   function showCloseRequestBtn(request: RequestType) {
     let user = localStorage.getItem('user');
@@ -60,7 +67,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
           </div>
         </section>
         <section className={styles.responseSection}>
-          <Response />
+          {responses}
         </section>
         </Modal.Body>
       </Modal>

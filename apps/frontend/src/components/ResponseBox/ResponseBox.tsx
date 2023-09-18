@@ -1,6 +1,14 @@
-import styles from './Response.module.css';
+import styles from './ResponseBox.module.css';
+import { ResponseWithUser } from "../../types"
 
-export default function Response() {
+type Props = {
+  response: ResponseWithUser;
+}
+
+export default function ResponseBox({ response }: Props) {
+  const date = String(response.time_created).split("T")[0];
+  const status = response.status;
+
   return (
     <div className={styles.responseCard}>
       <div className={styles.profileAndDate}>
@@ -11,13 +19,12 @@ export default function Response() {
             alt="active user on neighborhood app" />
           <p className={styles.p}>Jane Parker</p>
         </div>
-        <p className={styles.createdDate}>Created 11 Mar 2022</p>
+        <p className={styles.createdDate}>{date}</p>
       </div>
       <p className={styles.p}>
-        I can help out with your drowning cat. I've been a lifeguard for 5
-        years and I know how to save a cat.
+        {response.content}
       </p>
-      <hr className={styles.hr}/>
+      <hr className={styles.hr} />
       <div>
         <p className={styles.p}>You've accepted this offer for help.</p>
         <p className={styles.p}>Contact at: <span>jane.parker@gmail.com</span></p>
