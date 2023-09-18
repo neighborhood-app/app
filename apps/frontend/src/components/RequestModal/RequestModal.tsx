@@ -33,7 +33,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
 
   const responses = request.responses.map((responseObj: ResponseWithUser)=> {
     return (
-      <ResponseBox response={responseObj} />
+      <ResponseBox response={responseObj} key={responseObj.id}/>
     ) 
   })
  

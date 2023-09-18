@@ -7,7 +7,12 @@ type Props = {
 
 export default function ResponseBox({ response }: Props) {
   const date = String(response.time_created).split("T")[0];
-  const status = response.status;
+  const contactInfo = response.status === "ACCEPTED" ? (
+    <div>
+      <p className={styles.p}>You've accepted this offer for help.</p>
+      <p className={styles.p}>Contact at: <span>{response.user.user_name}</span></p>
+    </div>
+  ) : <button className={styles.btn}>Accept offer</button>;
 
   return (
     <div className={styles.responseCard}>
@@ -25,9 +30,8 @@ export default function ResponseBox({ response }: Props) {
         {response.content}
       </p>
       <hr className={styles.hr} />
-      <div>
-        <p className={styles.p}>You've accepted this offer for help.</p>
-        <p className={styles.p}>Contact at: <span>jane.parker@gmail.com</span></p>
+      <div className={styles.contact}>
+        {contactInfo}
       </div>
     </div>
   )
