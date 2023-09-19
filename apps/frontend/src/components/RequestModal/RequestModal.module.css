@@ -28,6 +28,7 @@
 
 .requestContent {
   display: flex;
+  width: 70%;
   flex-direction: column;
   gap: 10px;
 }
@@ -68,12 +69,24 @@
   background-color: #4b5563;
 }
 
-.solvedBtn{
+.closeBtn {
+  background-color: white;
+  border: 2px solid black;
+  color: black;
+}
+
+.closeBtn:hover,
+.closeBtn:active {
+  background-color: black;
+  color: white;
+}
+
+.offerHelpBtn{
   background-color: #1d4ed8;
 }
 
-.solvedBtn:hover,
-.solvedBtn:active {
+.offerHelpBtn:hover,
+.offerHelpBtn:active {
   background-color: #3b82f6;
 }
 

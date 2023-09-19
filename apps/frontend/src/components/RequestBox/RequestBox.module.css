@@ -47,6 +47,14 @@
   outline: none;
 }
 
+.button:active,
+.button:hover {
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+}
+
+
 .formButton {
   margin: 0 10px;
 }

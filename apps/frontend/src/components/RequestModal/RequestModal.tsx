@@ -37,11 +37,22 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     ) 
   })
  
-
-  function showCloseRequestBtn(request: RequestType) {
+  /**
+  * Based on the status of a user (creator, or viewer) and the status of the request 
+  (OPEN or CLOSED) returns the corresponding JSX for the request modal.
+  */
+  function displayRequestActions(request: RequestType) {
     let user = localStorage.getItem('user');
     let username = user ? JSON.parse(user).username : null;
-    return username === request.user.user_name && request.status === "OPEN" ? true : false;
+    if (username === request.user.user_name && request.status === "OPEN") {
+      return (
+        <button className={`${styles.btn} ${styles.closeBtn}`} onClick={handleCloseRequest}>Close request</button>
+      )
+    } else if (!(username === request.user.user_name) && request.status === "OPEN") {
+      return (
+        <button className={`${styles.btn} ${styles.offerHelpBtn}`}>Offer Help</button>
+      )
+    }
   }
 
   return (
@@ -61,7 +72,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
             <h1 className={styles.h1}>{request.title}</h1>
             <p className={styles.p}>{request.content}</p>
             <div className={styles.buttonGroups}>
-              {showCloseRequestBtn(request) ? <button className={`${styles.btn} ${styles.solvedBtn}`} onClick={handleCloseRequest}>Close request</button> : null}
+              {displayRequestActions(request)}
               {loading ? <Spinner animation="border" /> : null}
             </div>
           </div>
