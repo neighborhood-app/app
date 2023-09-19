@@ -1,5 +1,5 @@
 import { Response } from '@prisma/client';
-import { ResponseData, UpdateResponseData } from '../types';
+import { ResponseData, UpdateResponseData, ResponseWithRequest } from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import requestServices from './requestServices';
@@ -75,10 +75,13 @@ const createResponse = async (
  * @param responseId - (number) id of the response
  * @returns - Promise resolving to the found response
  */
-const getResponseById = async (responseId: number): Promise<Response> => {
+const getResponseById = async (responseId: number): Promise<ResponseWithRequest> => {
   const response = await prismaClient.response.findUniqueOrThrow({
     where: {
       id: responseId,
+    },
+    include: {
+      request: true,
     },
   });
 
@@ -98,6 +101,21 @@ const isUserResponseCreator = async (
 ): Promise<boolean> => {
   const response = await getResponseById(responseId);
   return response.user_id === userId;
+};
+
+/**
+ * Checks if the user is the creator of the request associated with the response
+ * @param responseId - (number) id of the response
+ * @param userId - (number) id of the user
+ * @returns - Promise resolving to a boolean
+ */
+const isUserRequestCreator = async (
+  responseId: number,
+  userId: number,
+): Promise<boolean> => {
+  const response = await getResponseById(responseId);
+  const { request } = response;
+  return request.user_id === userId;
 };
 
 // obj might be empty
@@ -192,4 +210,5 @@ export default {
   isUserResponseCreator,
   hasUserDeleteRights,
   deleteResponse,
+  isUserRequestCreator,
 };
