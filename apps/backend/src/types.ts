@@ -13,6 +13,9 @@ export type UserWithoutPasswordHash = Omit<User, 'password_hash'>;
  */
 export type UserWithoutId = Omit<User, 'id'>;
 
+/**
+ * Response type with the associated request
+ */
 export type ResponseWithRequest = Response & {
   request: Request
 };
