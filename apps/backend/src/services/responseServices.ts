@@ -118,6 +118,30 @@ const isUserRequestCreator = async (
   return request.user_id === userId;
 };
 
+/**
+ * Checks the role of the user in relation to the response.
+ * The roles can be 'RESPONSE OWNER' or 'REQUEST OWNER'
+ * @param responseId
+ * @param userId
+ * @returns 'RESPONSE OWNER' | 'REQUEST OWNER' | null
+ */
+const checkUserStatus = async (
+  responseId: number,
+  userId: number,
+): Promise<'RESPONSE OWNER' | 'REQUEST OWNER' | null> => {
+  const response = await getResponseById(responseId);
+  const { request } = response;
+
+  if (response.user_id === userId) {
+    return 'RESPONSE OWNER';
+  }
+  if (request.user_id === userId) {
+    return 'REQUEST OWNER';
+  }
+
+  return null;
+};
+
 // obj might be empty
 // if it has a content prop, it must be a string
 // if it has a status prop, it must be of ResponseStatus type
@@ -147,6 +171,7 @@ const isUpdateResponseData = (obj: object): obj is UpdateResponseData => {
 const updateResponse = async (
   body: unknown,
   responseId: number,
+  userStatus: 'RESPONSE OWNER' | 'REQUEST OWNER',
 ): Promise<Response> => {
   if (!middleware.isObject(body)) {
     const error = new Error('unable to parse data');
@@ -160,10 +185,21 @@ const updateResponse = async (
     throw error;
   }
 
-  const updatedResponse = await prismaClient.response.update({
-    where: { id: responseId },
-    data: { ...body },
-  });
+  let updatedResponse;
+
+  if (userStatus === 'RESPONSE OWNER') {
+    updatedResponse = await prismaClient.response.update({
+      where: { id: responseId },
+      data: { ...body },
+    });
+  } else {
+    updatedResponse = await prismaClient.response.update({
+      where: { id: responseId },
+      data: {
+        status: body.status,
+      },
+    });
+  }
 
   return updatedResponse;
 };
@@ -211,4 +247,5 @@ export default {
   hasUserDeleteRights,
   deleteResponse,
   isUserRequestCreator,
+  checkUserStatus,
 };
