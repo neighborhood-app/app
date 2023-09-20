@@ -73,16 +73,6 @@ responsesRouter.put(
     const userId = Number(req.loggedUserId);
     const responseId = Number(req.params.id);
 
-    // const isOwnerUser = await responseServices.isUserResponseCreator(
-    //   responseId,
-    //   userId,
-    // );
-
-    // const isRequestOwnerUser = await responseServices.isUserRequestCreator(
-    //   responseId,
-    //   userId,
-    // );
-
     const userStatus = await responseServices.checkUserStatus(responseId, userId);
 
     if (userStatus === null) {
