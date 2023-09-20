@@ -1,15 +1,19 @@
 import styles from './ResponseBox.module.css';
 import { ResponseWithUser } from "../../types"
 import acceptResponse from "../../services/responses";
+import { useRevalidator } from 'react-router';
 
 type Props = {
   response: ResponseWithUser;
 }
 
 export default function ResponseBox({ response }: Props) {
+  const revalidator = useRevalidator();
+
   const date = String(response.time_created).split("T")[0];
   function handleAcceptOffer() {
     acceptResponse(String(response.id));
+    revalidator.revalidate();
   }
 
   const contactInfo = response.status === "ACCEPTED" ? (
