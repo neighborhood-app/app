@@ -16,9 +16,12 @@
 
 @media screen and (max-width: 992px) {
   .imgDiv {
-    border-radius: 0;
-    height: 210px;
-    margin: 0;
-    width: 100%;
+    height: 0;
+    width: 0;
+  }
+
+  .textBackground {
+    background-color: #ffffffc9;
+    padding: 0 5px;
   }
 }

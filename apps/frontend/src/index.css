@@ -53,17 +53,17 @@ a {
 }
 
 .btn-primary {
-  --bs-btn-bg: #ef83a5;
-  --bs-btn-border-color: #ef83a5;
+  --bs-btn-bg: #ff2a70;
+  --bs-btn-border-color: #ff2a70;
   /* --bs-btn-bg: black;
   --bs-btn-border-color: black; */
 }
 
 .btn-primary, .btn-outline-dark {
-  --bs-btn-hover-bg: #ff91b4;
-  --bs-btn-hover-border-color: #ff91b4;
-  --bs-btn-active-bg: #db7092;
-  --bs-btn-active-border-color: #db7092;
+  --bs-btn-hover-bg: #FF5372;
+  --bs-btn-hover-border-color: #FF5372;
+  --bs-btn-active-bg: #FE496F;
+  --bs-btn-active-border-color: #FE496F;
   /* --bs-btn-hover-bg: #7f7f85;
   --bs-btn-hover-border-color: #7f7f85;
   --bs-btn-active-bg: #69696f;
@@ -76,10 +76,8 @@ a {
 }
 
 .form-check-input:checked {
-  background-color: #db7092;
-  border-color: #db7092;
-  /* background-color: black;
-  border-color: black; */
+  background-color: #ff2a70;
+  border-color: #ff2a70;
 }
 
 .form-check-input:focus {

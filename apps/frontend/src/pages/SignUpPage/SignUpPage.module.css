@@ -23,9 +23,8 @@
 }
 
 .imgCol {
-  /* Comment out the following line to see alternative with solid color */
-  background: linear-gradient(to right, #ff90b4 10%, white);
-  background-color: #ff90b4;
+  background: linear-gradient(to right, #ffa49f 9%, white);
+  background-color: #ffa49f;
   text-align: center;
   padding-top: 62px;
   padding-bottom: 3px;
@@ -33,12 +32,18 @@
 
 @media screen and (max-width: 992px) {
   .neighborhoodHeading {
+    position: absolute;
+    top: 1.5rem;
+    padding-right: 10px;
+    background: #ffffffc9;
     right: auto;
-  }
+  } 
 
   .imgCol {
-    background: #ff90b4;
-    /* background: linear-gradient(to bottom, #ff90b4 11%, white); */
-    padding: 62px 0 3px;
+    background-image: url('../../assets/neighborhood3.jpeg');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 320px;
   }
 }
