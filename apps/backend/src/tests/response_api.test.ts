@@ -4,7 +4,7 @@ import { Response } from 'supertest';
 import app from '../app';
 import seed from './seed';
 import testHelpers from './testHelpers';
-import { LoginData, UpdateRequestData, UpdateResponseData } from '../types';
+import { LoginData, UpdateResponseData } from '../types';
 
 const supertest = require("supertest"); // eslint-disable-line
 // 'require' was used because supertest does not support import
