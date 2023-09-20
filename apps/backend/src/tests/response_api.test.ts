@@ -229,7 +229,7 @@ describe('Tests for updating a response: PUT /responses/:id', () => {
 
     // Why can we not use type of `updateData` to be `UpdateRequestData` ?
     // TS still expects `status` field to be of type `number`
-    const updateData: UpdateRequestData = {
+    const updateData: UpdateResponseData = {
       status: 'ACCEPTED',
     };
 
