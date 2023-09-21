@@ -1,6 +1,6 @@
 .signUpForm {
   margin: auto;
-  min-width: 87%;
+  min-width: 56%;
 }
 
 .asterisk {
@@ -9,6 +9,6 @@
 
 @media screen and (max-width: 500px) {
   .signUpForm {
-    min-width: 75%;
+    min-width: 87%;
   }
 }

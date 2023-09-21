@@ -23,8 +23,8 @@
 }
 
 .imgCol {
-  background: linear-gradient(to right, #ffa49f 9%, white);
-  background-color: #ffa49f;
+  background: linear-gradient(to right, #ff7343 9%, white);
+  background-color: #ff7343;
   text-align: center;
   padding-top: 62px;
   padding-bottom: 3px;
@@ -40,6 +40,7 @@
   } 
 
   .imgCol {
+    background: #ff7343;
     background-image: url('../../assets/neighborhood3.jpeg');
     background-position: center center;
     background-size: cover;
