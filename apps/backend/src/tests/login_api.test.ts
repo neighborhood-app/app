@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */ // Need to access response._body
 import app from '../app';
-import { LoginData, CreateUserData } from '../types';
+import { CreateUserData, LoginData } from '../types';
 import testHelpers from './testHelpers';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -16,7 +16,10 @@ const loginData: LoginData = {
 beforeAll(async () => {
   await testHelpers.removeAllData();
 
-  const newUser: CreateUserData = loginData;
+  const newUser: CreateUserData = {
+    ...loginData,
+    email: 'johnsmith@example.com',
+  };
 
   await api
     .post('/api/users')

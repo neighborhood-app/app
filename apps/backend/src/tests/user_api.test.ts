@@ -21,6 +21,7 @@ describe('When there is initially no user in db', () => {
   test('Creating User succeeds with valid data', async () => {
     const newUser: CreateUserData = {
       username: 'johnsmith',
+      email: 'johnsmith@example.com',
       password: 'secret',
     };
 
@@ -31,11 +32,12 @@ describe('When there is initially no user in db', () => {
       .expect('Content-Type', /application\/json/);
 
     const body: UserWithoutPasswordHash = response._body;
-    expect(body.user_name).toBe('johnsmith');
+    expect(body.username).toBe('johnsmith');
+    expect(body.email).toBe('johnsmith@example.com');
 
     const users = await testHelpers.usersInDb();
     expect(users).toHaveLength(1);
-    expect(users[0].user_name).toBe('johnsmith');
+    expect(users[0].username).toBe('johnsmith');
   });
 
   test('Creating User fails with proper statuscode and message if username or password missing', async () => {
@@ -67,6 +69,7 @@ describe('When there is initially no user in db', () => {
   test('Creating User fails with proper statuscode and message if username or password too short', async () => {
     const dataWithShortUsername: CreateUserData = {
       username: 'foo',
+      email: 'foo@example.com',
       password: 'secret',
     };
 
@@ -80,6 +83,7 @@ describe('When there is initially no user in db', () => {
 
     const dataWithShortPassword: CreateUserData = {
       username: 'johnsmith',
+      email: 'johnsmith@example.com',
       password: 'foo',
     };
 
@@ -96,8 +100,11 @@ describe('When there is initially no user in db', () => {
 describe('When there is initially one user in db', () => {
   const USERNAME = 'johnsmith';
   const PASSWORD = 'secret';
+  const EMAIL = 'johnsmith@example.com';
+
   const createUserData: CreateUserData = {
     username: USERNAME,
+    email: EMAIL,
     password: PASSWORD,
   };
 
@@ -109,6 +116,7 @@ describe('When there is initially one user in db', () => {
   test('Unable to add user with same username', async () => {
     const newUser: CreateUserData = {
       username: USERNAME,
+      email: EMAIL,
       password: 'someOtherPassword',
     };
 
@@ -125,6 +133,7 @@ describe('When there is initially one user in db', () => {
     const usersBeforeTest = await testHelpers.usersInDb();
     const newUser: CreateUserData = {
       username: 'drewneil',
+      email: 'drewneil@gmail.com',
       password: 'secret',
     };
 
@@ -135,12 +144,13 @@ describe('When there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/);
 
     const body: UserWithoutPasswordHash = response._body;
-    expect(body.user_name).toBe('drewneil');
+    expect(body.username).toBe('drewneil');
+    expect(body.email).toBe('drewneil@gmail.com');
 
     const usersAfterTest = await testHelpers.usersInDb();
     expect(usersAfterTest.length).toBe(usersBeforeTest.length + 1);
 
-    const usernames = usersAfterTest.map(user => user.user_name);
+    const usernames = usersAfterTest.map(user => user.username);
     expect(usernames).toContain('drewneil');
   });
 });

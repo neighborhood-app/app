@@ -1,10 +1,27 @@
-.neighborhoodImg {
-  margin: 1em auto;
-  width: 70%;
+.welcomeHeading {
+  margin: .5em 0 .4em;
+  text-align: center;
 }
 
-.welcomeHeading {
-  color: #030303;
-  margin: 1em 0 0.5em;
-  text-align: center;
+.imgDiv {
+  background-image: url('../../assets/neighborhood3.jpeg');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 12px;
+  height: 273px;
+  margin: auto;
+  width: 380px;
+}
+
+@media screen and (max-width: 992px) {
+  .imgDiv {
+    height: 0;
+    width: 0;
+  }
+
+  .textBackground {
+    background-color: #ffffffc9;
+    padding: 0 5px;
+  }
 }

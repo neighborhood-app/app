@@ -1,7 +1,12 @@
+import { CreateUserData } from '@neighborhood/backend/src/types';
+import { User } from '@prisma/client';
+
 export interface LoginData {
   username: string;
   password: string;
 }
+
+export type SignUpData = CreateUserData;
 
 export interface RequestData {
   title: string;
@@ -43,17 +48,6 @@ export type NeighborhoodDetailsForNonMembers = {
 export type NeighborhoodType =
   | NeighborhoodDetailsForMembers
   | NeighborhoodDetailsForNonMembers;
-
-export type User = {
-  id: number;
-  user_name: string;
-  password_hash: string;
-  first_name: string | null;
-  last_name: string | null;
-  dob: Date | null;
-  gender_id: number | null;
-  bio: string | null;
-};
 
 export type RequestType = {
   id: number;
