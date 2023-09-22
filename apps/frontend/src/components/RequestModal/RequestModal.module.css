@@ -1,6 +1,4 @@
-.modal {
-
-}
+/* .modal {} */
 
 .requestImage {
   display: block;
@@ -52,24 +50,24 @@
 }
 
 .btn {
-  background-color: #000;
+  /* background-color: #000;
   color: rgb(250, 246, 246);
   padding: 10px 12px;
   border: none;
   border-radius: 5px;
-  font-weight: 600;
+  font-weight: 600; */
   /* font-size: 0.7rem; */
-  line-height: 1;
+  /* line-height: 1; */
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 }
 
-.btn:hover,
+/* .btn:hover,
 .btn:active {
   background-color: #4b5563;
 }
 
-.closeBtn {
+ .closeBtn {
   background-color: white;
   border: 2px solid black;
   color: black;
@@ -88,7 +86,7 @@
 .offerHelpBtn:hover,
 .offerHelpBtn:active {
   background-color: #3b82f6;
-}
+} */
 
 .responseSection {
   display: grid;

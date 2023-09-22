@@ -1,6 +1,7 @@
 import styles from './LoginForm.module.css'
 import { Form, Button, Container, Col, Row } from 'react-bootstrap';
 import { Form as FormRouter, Link } from 'react-router-dom';
+import SubmitBtn from '../SubmitButton/SubmitBtn';
 
 export default function LoginForm({ className }: {className: string}) {
     return (
@@ -28,9 +29,7 @@ export default function LoginForm({ className }: {className: string}) {
             </Container>
           </Form.Group>
           <div className='d-grid gap-2'>
-            <Button variant='primary' type='submit'>
-              Submit
-            </Button>
+            <SubmitBtn text='Submit' type='submit'></SubmitBtn>
             <Button variant='outline-dark' type='button' href='/signup'>
               Don't have an account? Sign up!
             </Button>

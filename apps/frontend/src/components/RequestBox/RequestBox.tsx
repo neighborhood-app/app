@@ -4,6 +4,7 @@ import styles from "./RequestBox.module.css";
 import { RequestType } from "../../types";
 import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
+import SubmitBtn from "../SubmitButton/SubmitBtn";
 
 //@ts-ignore
 export default function RequestBox({ requests }) {
@@ -51,9 +52,7 @@ export default function RequestBox({ requests }) {
   return (
     <div className={styles.header}>
       <h2 className={styles.title}>Neighborhood Requests</h2>
-      <button className={styles.button} onClick={handleShow}>
-        Create request
-      </button>
+      <SubmitBtn className={styles.button} onClick={handleShow} text='Create request'></SubmitBtn>
       <div className={styles.form}>
         <Form className={styles.form}>
           <Form.Group>

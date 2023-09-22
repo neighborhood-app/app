@@ -32,7 +32,7 @@
 
 .button {
   margin-left: 100px;
-  width: 188px;
+  /* width: 188px;
   height: 48px;
   padding: 0px 8px;
   border: 0;
@@ -41,10 +41,10 @@
   background-color: #1d1d1f;
   color: #ffffff;
   font-size: 16px;
-  /* font-family: "Poppins"; */
+  font-family: "Poppins";
   font-weight: 600;
   line-height: 24px;
-  outline: none;
+  outline: none; */
 }
 
 .editBtn {

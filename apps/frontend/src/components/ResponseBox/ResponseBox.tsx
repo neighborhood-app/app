@@ -19,7 +19,7 @@ export default function ResponseBox({ response }: Props) {
   const contactInfo = response.status === "ACCEPTED" ? (
     <div>
       <p className={styles.p}>You've accepted this offer for help.</p>
-      <p className={styles.p}>Contact at: <span>{response.user.user_name}</span></p>
+      <p className={styles.p}>Contact at: <span>{response.user.username}</span></p>
     </div>
   ) : <button className={styles.btn} onClick={handleAcceptOffer}>Accept offer</button>;
 
