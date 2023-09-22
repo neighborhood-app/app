@@ -8,27 +8,27 @@ export default function LoginForm({ className }: {className: string}) {
         <FormRouter method='post' role='form' className={styles.loginForm}>
           <h2>Log In</h2>
           <Form.Group className={`mb-3`} controlId='username'>
-            <Form.Label>Username</Form.Label>
+            <Form.Label column='sm'>Username</Form.Label>
             <Form.Control type='text' name='username' placeholder='Your username' required />
           </Form.Group>
           <Form.Group className='mb-3' controlId='password'>
-            <Form.Label>Password</Form.Label>
+            <Form.Label column='sm'>Password</Form.Label>
             <Form.Control type='password' name='password' placeholder='Password' required />
           </Form.Group>
-          <Form.Group className='mb-3' controlId='formBasicCheckbox'>
+          <Form.Group className='mb-3 input-group-sm' controlId='formBasicCheckbox'>
             <Container>
               <Row>
                 <Col className={styles.checkboxCol}>
                   <Form.Check type='checkbox' label='Remember me' />
                 </Col>
                 <Col sm={7} className={styles.forgotPwdCol}>
-                  <Link to={"#"}>Forgot your password?</Link>
+                  <Link to={'#'}>Forgot your password?</Link>
                 </Col>
               </Row>
             </Container>
           </Form.Group>
           <div className='d-grid gap-2'>
-            <Button className={styles.mainBtn} variant='primary' type='submit'>
+            <Button variant='primary' type='submit'>
               Submit
             </Button>
             <Button variant='outline-dark' type='button' href='/signup'>

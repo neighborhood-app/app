@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import RootLayout from "./pages/RootLayout/RootLayout";
 import LoginPage, { action as loginAction } from "./pages/LoginPage/LoginPage";
+import SignUpPage, { action as signUpAction } from "./pages/SignUpPage/SignUpPage";
 
 import TestPage from "./pages/Test/TestPage";
 
@@ -17,7 +18,7 @@ import SingleNeighborhoodPage, {
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 
 import { loader as logoutLoader } from "./pages/LogoutPage/LogoutPage";
-import { checkAuthLoader } from "./utils/auth";
+import { redirectLoggedInUser, checkAuthLoader } from "./utils/auth";
 import HomePage from "./pages/HomePage/HomePage";
 
 const router = createBrowserRouter([
@@ -56,7 +57,16 @@ const router = createBrowserRouter([
   {
     path: "/login", // No need to give absolute path to children elements
     element: <LoginPage />,
+    errorElement: <ErrorPage />,
+    loader: redirectLoggedInUser,
     action: loginAction,
+  },
+  {
+    path: "/signup",
+    element: <SignUpPage />,
+    errorElement: <ErrorPage />,
+    loader: redirectLoggedInUser,
+    action: signUpAction,
   },
 ]);
 

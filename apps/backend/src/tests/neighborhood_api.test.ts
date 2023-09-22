@@ -172,7 +172,7 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
   test('when user logged in, able to create neighborhood with valid data', async () => {
     const bobUser: User | null = await prismaClient.user.findUnique({
       where: {
-        user_name: BOBS_LOGIN_DATA.username,
+        username: BOBS_LOGIN_DATA.username,
       },
     });
 
@@ -194,7 +194,7 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
 
     const neighborhoodUsers = createNeighborhoodResponse.body.users;
 
-    const userNames = neighborhoodUsers.map((u: { user_name: any; }) => u.user_name);
+    const userNames = neighborhoodUsers.map((u: { username: any; }) => u.username);
     expect(userNames).toContain(BOBS_LOGIN_DATA.username);
 
     expect(createNeighborhoodResponse.body.name).toBe(NEW_NEIGHBORHOOD_NAME);
@@ -554,7 +554,7 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
     const finalUsersInDb = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
     expect(finalUsersInDb?.length).toBe(numInitialUsers + 1);
 
-    const finalUserNamesInDb = finalUsersInDb?.map(u => u.user_name);
+    const finalUserNamesInDb = finalUsersInDb?.map(u => u.username);
     expect(finalUserNamesInDb).toContain(BOBS_LOGIN_DATA.username);
   });
 

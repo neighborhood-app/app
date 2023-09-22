@@ -64,7 +64,7 @@ export default function SingleNeighborhood() {
       );
     }
     if (checkForNeighborhoodDetails(neighborhood)) {
-      return neighborhood.admin.user_name === userName
+      return neighborhood.admin.username === userName
         ? UserRole.ADMIN
         : UserRole.MEMBER;
     } else {

@@ -3,24 +3,17 @@
   min-width: 56%;
 }
 
-h2 {
-  color: #1e1f26;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
 a:hover {
   color: #7f7f85;
 }
 
 .checkboxCol {
+  font-size: .875rem;
   padding-left: 0;
 }
 
 .forgotPwdCol {
+  font-size: .875rem;
   padding: 0;
   text-align: right;
 }
@@ -28,5 +21,11 @@ a:hover {
 @media screen and (max-width: 575px) {
   .forgotPwdCol {
     text-align: left;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .loginForm {
+    max-width: 86%;
   }
 }

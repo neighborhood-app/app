@@ -227,8 +227,6 @@ describe('Tests for updating a response: PUT /responses/:id', () => {
     );
     expect(initialResponseInDb.status).toBe('PENDING');
 
-    // Why can we not use type of `updateData` to be `UpdateRequestData` ?
-    // TS still expects `status` field to be of type `number`
     const updateData: UpdateResponseData = {
       status: 'ACCEPTED',
     };

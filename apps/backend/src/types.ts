@@ -4,7 +4,7 @@ import {
 import { Request as APIRequest } from 'express';
 
 /**
- * format of the user data, without password hash, which is send in response
+ * format of the user data, without password hash, which is sent in response
  */
 export type UserWithoutPasswordHash = Omit<User, 'password_hash'>;
 
@@ -33,7 +33,10 @@ export interface LoginData {
  */
 export interface CreateUserData {
   username: string;
+  email: string;
   password: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 /**

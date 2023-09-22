@@ -45,8 +45,22 @@ export function checkAuthLoader() {
   const user = getStoredUser();
 
   if (!user) {
-    return redirect("/login");
+    return redirect('/login');
   } else {
     return null;
   }
+}
+
+/**
+ * - checks for user in localStorage
+ * - if user present, it redirects to root
+ * - else, returns `null`
+ * @returns
+ */
+export function redirectLoggedInUser() {
+  const user = getStoredUser();
+
+  if (user) return redirect('/');
+
+  return null;
 }

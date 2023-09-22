@@ -44,9 +44,7 @@ const parseLoginData = async (body: unknown): Promise<LoginData> => {
 const findUserByUsername = async (username: string): Promise<User> => {
   // using findUnique because we want to throw custom 401 error
   const user: User | null = await prismaClient.user.findUnique({
-    where: {
-      user_name: username,
-    },
+    where: { username },
   });
 
   if (user) return user;
