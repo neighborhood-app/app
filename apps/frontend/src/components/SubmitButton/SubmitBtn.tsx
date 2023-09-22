@@ -1,11 +1,9 @@
-import { Button } from "react-bootstrap";
+import { Button } from 'react-bootstrap';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  text: string;
-}
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {};
 
-export default function SubmitBtn({ text, ...props }: ButtonProps) {
+export default function SubmitBtn({...props }: ButtonProps) {
   return (
-    <Button {...props} variant='primary'>{text}</Button>
+    <Button {...props} variant='primary'></Button>
   )
 }

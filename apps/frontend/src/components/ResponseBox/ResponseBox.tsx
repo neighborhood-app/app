@@ -2,6 +2,7 @@ import styles from './ResponseBox.module.css';
 import { ResponseWithUser } from "../../types"
 import acceptResponse from "../../services/responses";
 import { useRevalidator } from 'react-router';
+import SubmitBtn from '../SubmitButton/SubmitBtn';
 
 type Props = {
   response: ResponseWithUser;
@@ -19,9 +20,9 @@ export default function ResponseBox({ response }: Props) {
   const contactInfo = response.status === "ACCEPTED" ? (
     <div>
       <p className={styles.p}>You've accepted this offer for help.</p>
-      <p className={styles.p}>Contact at: <span>{response.user.username}</span></p>
+      <p className={styles.p}>Contact at: <span>{response.user.email}</span></p>
     </div>
-  ) : <button className={styles.btn} onClick={handleAcceptOffer}>Accept offer</button>;
+  ) : <SubmitBtn className={styles.btn} onClick={handleAcceptOffer}>Accept Offer</SubmitBtn> // <button className={styles.btn} onClick={handleAcceptOffer}>Accept offer</button>;
 
   return (
     <div className={styles.responseCard}>

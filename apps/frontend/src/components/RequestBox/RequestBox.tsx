@@ -52,7 +52,7 @@ export default function RequestBox({ requests }) {
   return (
     <div className={styles.header}>
       <h2 className={styles.title}>Neighborhood Requests</h2>
-      <SubmitBtn className={styles.button} onClick={handleShow} text='Create request'></SubmitBtn>
+      <SubmitBtn className={styles.button} onClick={handleShow}>Create request</SubmitBtn>
       <div className={styles.form}>
         <Form className={styles.form}>
           <Form.Group>

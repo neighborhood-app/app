@@ -34,7 +34,7 @@ export default function SignUpForm({ className }: {className: string}) {
           </Form.Text>
           </Form.Group>
           <div className='d-grid gap-2'>
-            <SubmitBtn text='Submit' type='submit'></SubmitBtn>
+            <SubmitBtn type='submit'>Submit</SubmitBtn>
           </div>
         </FormRouter>
       </Col>

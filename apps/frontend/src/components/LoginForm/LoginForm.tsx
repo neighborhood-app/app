@@ -1,9 +1,13 @@
 import styles from './LoginForm.module.css'
-import { Form, Button, Container, Col, Row } from 'react-bootstrap';
-import { Form as FormRouter, Link } from 'react-router-dom';
+import { Form, Container, Col, Row } from 'react-bootstrap';
+import { Form as FormRouter, Link, useNavigate } from 'react-router-dom';
 import SubmitBtn from '../SubmitButton/SubmitBtn';
+import LinkBtn from '../LinkButton/LinkBtn';
 
 export default function LoginForm({ className }: {className: string}) {
+  const navigate = useNavigate();
+  const redirectToSignUp = () => navigate('/signup');
+
     return (
       <Col lg={6} className={className}>
         <FormRouter method='post' role='form' className={styles.loginForm}>
@@ -29,10 +33,8 @@ export default function LoginForm({ className }: {className: string}) {
             </Container>
           </Form.Group>
           <div className='d-grid gap-2'>
-            <SubmitBtn text='Submit' type='submit'></SubmitBtn>
-            <Button variant='outline-dark' type='button' href='/signup'>
-              Don't have an account? Sign up!
-            </Button>
+            <SubmitBtn type='submit'>Submit</SubmitBtn>
+            <LinkBtn onClick={redirectToSignUp}>Don't have an account? Sign up!</LinkBtn>
           </div>
         </FormRouter>
       </Col>

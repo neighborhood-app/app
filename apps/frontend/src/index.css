@@ -52,6 +52,10 @@ a {
   --bs-font-sans-serif: 'Poppins', system-ui, Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
+.btn {
+  transition: all 0.3s ease-in-out;
+}
+
 .btn-primary {
   --bs-btn-bg: #ff2a70;
   --bs-btn-border-color: #ff2a70;
@@ -60,8 +64,8 @@ a {
 }
 
 .btn-primary, .btn-outline-dark {
-  --bs-btn-hover-bg: #FF5372;
-  --bs-btn-hover-border-color: #FF5372;
+  --bs-btn-hover-bg: #ff0054;
+  --bs-btn-hover-border-color: #ff0054;
   --bs-btn-active-bg: #FE496F;
   --bs-btn-active-border-color: #FE496F;
   /* --bs-btn-hover-bg: #7f7f85;

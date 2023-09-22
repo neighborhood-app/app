@@ -47,7 +47,7 @@
   outline: none; */
 }
 
-.editBtn {
+/* .editBtn {
   width: 150px;
   height: 40px;
   padding: 0px 8px;
@@ -57,10 +57,10 @@
   background-color: white;
   color: black;
   font-size: 14px;
-  /* font-family: "Poppins"; */
+  font-family: "Poppins";
   outline: none;
   border: 1px solid black;
-}
+} */
 
 .leaveBtn {
   width: 188px;

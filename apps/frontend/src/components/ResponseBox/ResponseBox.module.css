@@ -7,7 +7,7 @@
   padding: 10px 20px;
 }
 
-.profileAndDate{
+.profileAndDate {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -57,22 +57,20 @@
 }
 
 .btn {
-  background-color: #000;
+  /* background-color: #000;
   color: rgb(250, 246, 246);
   padding: 10px 12px;
   border: none;
   border-radius: 5px;
-  font-weight: 600;
+  font-weight: 600; */
   font-size: 0.7rem;
-  line-height: 1;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
   width: 50%;
   margin: auto;
   margin-bottom: 5px;
 }
 
-.btn:hover,
+/* .btn:hover,
 .btn:active {
   background-color: #4b5563;
-}
+} */

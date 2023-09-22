@@ -47,12 +47,12 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     let username = user ? JSON.parse(user).username : null;
     if (username === request.user.username && request.status === "OPEN") {
       return (
-        <SubmitBtn className={`${styles.btn} ${styles.closeBtn}`} onClick={handleCloseRequest} text='Close request'></SubmitBtn>
+        <SubmitBtn className={`${styles.btn} ${styles.closeBtn}`} onClick={handleCloseRequest}>Close request</SubmitBtn>
         // <button className={`${styles.btn} ${styles.closeBtn}`} onClick={handleCloseRequest}>Close request</button>
       )
     } else if (!(username === request.user.username) && request.status === "OPEN") {
       return (
-        <SubmitBtn text='Offer help' className={`${styles.btn} ${styles.offerHelpBtn}`}></SubmitBtn>
+        <SubmitBtn className={`${styles.btn} ${styles.offerHelpBtn}`}>Offer help</SubmitBtn>
         // <button className={`${styles.btn} ${styles.offerHelpBtn}`}>Offer Help</button>
       )
     }
