@@ -59,8 +59,6 @@ a {
 .btn-primary {
   --bs-btn-bg: #ff2a70;
   --bs-btn-border-color: #ff2a70;
-  /* --bs-btn-bg: black;
-  --bs-btn-border-color: black; */
 }
 
 .btn-primary, .btn-outline-dark {
@@ -68,15 +66,6 @@ a {
   --bs-btn-hover-border-color: #ff0054;
   --bs-btn-active-bg: #FE496F;
   --bs-btn-active-border-color: #FE496F;
-  /* --bs-btn-hover-bg: #7f7f85;
-  --bs-btn-hover-border-color: #7f7f85;
-  --bs-btn-active-bg: #69696f;
-  --bs-btn-active-border-color: #69696f; */
-}
-
-.form-control:focus {
-  border-color: #ffeef3;
-  box-shadow: 0 0 0 0.25rem rgb(255 128 169 / 9%)
 }
 
 .form-check-input:checked {
@@ -84,9 +73,9 @@ a {
   border-color: #ff2a70;
 }
 
-.form-check-input:focus {
+.form-control:focus,
+.form-check-input:focus,
+.form-select:focus {
   border-color: #ffeef3;
-  box-shadow: 0 0 0 0.25rem rgb(255 128 169 / 9%)
-  /* border-color: #69696f;
-  box-shadow: 0 0 0 0.25rem rgb(115 119 125 / 25%); */
+  box-shadow: 0 0 0 0.25rem rgb(255 155 128 / 9%);
 }
