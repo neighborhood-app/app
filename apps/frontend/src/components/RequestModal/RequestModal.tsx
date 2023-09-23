@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRevalidator } from "react-router";
 import ResponseBox from '../ResponseBox/ResponseBox'
 import SubmitBtn from "../SubmitButton/SubmitBtn";
+import DangerBtn from "../DangerButton/DangerBtn";
 
 interface Props {
   show: boolean,
@@ -47,14 +48,12 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     let username = user ? JSON.parse(user).username : null;
     if (username === request.user.username && request.status === "OPEN") {
       return (
-        <SubmitBtn className={`${styles.btn} ${styles.closeBtn}`} onClick={handleCloseRequest}>Close request</SubmitBtn>
-        // <button className={`${styles.btn} ${styles.closeBtn}`} onClick={handleCloseRequest}>Close request</button>
-      )
+        <DangerBtn onClick={handleCloseRequest}>Close request</DangerBtn>
+      );
     } else if (!(username === request.user.username) && request.status === "OPEN") {
       return (
-        <SubmitBtn className={`${styles.btn} ${styles.offerHelpBtn}`}>Offer help</SubmitBtn>
-        // <button className={`${styles.btn} ${styles.offerHelpBtn}`}>Offer Help</button>
-      )
+        <SubmitBtn>Offer help</SubmitBtn>
+      );
     }
   }
 

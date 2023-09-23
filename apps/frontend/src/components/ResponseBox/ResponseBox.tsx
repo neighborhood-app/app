@@ -22,7 +22,7 @@ export default function ResponseBox({ response }: Props) {
       <p className={styles.p}>You've accepted this offer for help.</p>
       <p className={styles.p}>Contact at: <span>{response.user.email}</span></p>
     </div>
-  ) : <SubmitBtn className={styles.btn} onClick={handleAcceptOffer}>Accept Offer</SubmitBtn> // <button className={styles.btn} onClick={handleAcceptOffer}>Accept offer</button>;
+  ) : <SubmitBtn className={styles.btn} onClick={handleAcceptOffer}>Accept Offer</SubmitBtn>;
 
   return (
     <div className={styles.responseCard}>

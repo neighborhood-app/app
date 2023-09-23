@@ -49,20 +49,18 @@
   gap: 30px;
 }
 
-.btn {
-  /* background-color: #000;
+/* .btn {
+  background-color: #000;
   color: rgb(250, 246, 246);
   padding: 10px 12px;
   border: none;
   border-radius: 5px;
-  font-weight: 600; */
-  /* font-size: 0.7rem; */
-  /* line-height: 1; */
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
+  font-weight: 600;
+  font-size: 0.7rem;
+  line-height: 1;
 }
 
-/* .btn:hover,
+.btn:hover,
 .btn:active {
   background-color: #4b5563;
 }

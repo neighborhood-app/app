@@ -68,6 +68,15 @@ a {
   --bs-btn-active-border-color: #FE496F;
 }
 
+.btn-danger {
+  --bs-btn-bg: #FF4E2A;
+  --bs-btn-border-color: #FF4E2A;
+  --bs-btn-hover-bg: #ff2b00;
+  --bs-btn-hover-border-color: #ff2b00;
+  --bs-btn-active-bg: #e92700;
+  --bs-btn-active-border-color: #e92700;
+}
+
 .form-check-input:checked {
   background-color: #ff2a70;
   border-color: #ff2a70;

@@ -1,3 +1,4 @@
+import DangerBtn from '../DangerButton/DangerBtn';
 import LinkBtn from '../LinkButton/LinkBtn';
 import SubmitBtn from '../SubmitButton/SubmitBtn';
 import styles from './DescriptionBox.module.css';
@@ -23,10 +24,8 @@ export default function DescriptionBox({showJoinBtn, showEditBtn, showLeaveBtn, 
       <div className={styles.neighborhoodDescription}>
         <p>{description}</p>
         {users ? <p>{users.length} members</p> : null}
-        {/* {showEditBtn ? <button className={styles.editBtn}>Edit Neighborhood</button> : null} */}
         {showEditBtn ? <LinkBtn className={styles.editBtn}>Edit Neighborhood</LinkBtn> : null}
-
-        {showLeaveBtn ? <button className={styles.leaveBtn}>Leave Neighborhood</button> : null}
+        {showLeaveBtn ? <DangerBtn>Leave Neighborhood</DangerBtn> : null}
       </div>
     </div>
   )
