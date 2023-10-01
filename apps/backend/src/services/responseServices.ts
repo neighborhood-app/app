@@ -1,5 +1,7 @@
 import { Response } from '@prisma/client';
-import { ResponseData, UpdateResponseData, ResponseWithRequest, UserStatusOnResponse } from '../types';
+import {
+  ResponseData, UpdateResponseData, ResponseWithRequest, UserStatusOnResponse,
+} from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import requestServices from './requestServices';
