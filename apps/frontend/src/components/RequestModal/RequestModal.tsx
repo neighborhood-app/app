@@ -10,7 +10,7 @@ interface Props {
   show: boolean,
   handleCloseModal: () => void,
   request: RequestType,
-  updateRequestList: (requests: Array<RequestType>) => void,
+  // updateRequestList: (requests: Array<RequestType>) => void,
 }
 
 export default function RequestModal({ show, handleCloseModal, request }: Props) {
@@ -44,11 +44,11 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   function displayRequestActions(request: RequestType) {
     let user = localStorage.getItem('user');
     let username = user ? JSON.parse(user).username : null;
-    if (username === request.user.user_name && request.status === "OPEN") {
+    if (username === request.user.username && request.status === "OPEN") {
       return (
         <button className={`${styles.btn} ${styles.closeBtn}`} onClick={handleCloseRequest}>Close request</button>
       )
-    } else if (!(username === request.user.user_name) && request.status === "OPEN") {
+    } else if (!(username === request.user.username) && request.status === "OPEN") {
       return (
         <button className={`${styles.btn} ${styles.offerHelpBtn}`}>Offer Help</button>
       )
@@ -59,7 +59,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     <div onClick={e => e.stopPropagation()}>
       <Modal show={show} onHide={handleCloseModal} animation={true} backdrop="static" centered className={styles.modal} dialogClassName="modal-w200" size="xl">
         <Modal.Header closeButton>
-          {request.user.user_name}
+          {request.user.username}
         </Modal.Header>
         <Modal.Body>
         <section className={styles.currentRequestInfo}>
