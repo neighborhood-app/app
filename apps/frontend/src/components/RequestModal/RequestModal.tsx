@@ -10,7 +10,6 @@ interface Props {
   show: boolean,
   handleCloseModal: () => void,
   request: RequestType,
-  // updateRequestList: (requests: Array<RequestType>) => void,
 }
 
 export default function RequestModal({ show, handleCloseModal, request }: Props) {
@@ -48,7 +47,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
       return (
         <button className={`${styles.btn} ${styles.closeBtn}`} onClick={handleCloseRequest}>Close request</button>
       )
-    } else if (!(username === request.user.username) && request.status === "OPEN") {
+    } else if (request.status === "OPEN") {
       return (
         <button className={`${styles.btn} ${styles.offerHelpBtn}`}>Offer Help</button>
       )
