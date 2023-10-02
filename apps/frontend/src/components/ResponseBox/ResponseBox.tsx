@@ -2,7 +2,7 @@ import styles from './ResponseBox.module.css';
 import { ResponseWithUser } from "../../types"
 import acceptResponse from "../../services/responses";
 import { useRevalidator } from 'react-router';
-import SubmitBtn from '../SubmitButton/SubmitBtn';
+import CustomBtn from '../CustomBtn/CustomBtn';
 
 type Props = {
   response: ResponseWithUser;
@@ -22,7 +22,7 @@ export default function ResponseBox({ response }: Props) {
       <p className={styles.p}>You've accepted this offer for help.</p>
       <p className={styles.p}>Contact at: <span>{response.user.email}</span></p>
     </div>
-  ) : <SubmitBtn className={styles.btn} onClick={handleAcceptOffer}>Accept Offer</SubmitBtn>;
+  ) : <CustomBtn variant='outline-dark' className={styles.btn} onClick={handleAcceptOffer}>Accept Offer</CustomBtn>;
 
   return (
     <div className={styles.responseCard}>

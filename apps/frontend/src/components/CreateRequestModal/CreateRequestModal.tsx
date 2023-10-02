@@ -1,8 +1,7 @@
 import { Modal } from "react-bootstrap";
 import { Form } from 'react-router-dom';
 import styles from './CreateRequestModal.module.css';
-import SubmitBtn from "../SubmitButton/SubmitBtn";
-import LinkBtn from "../LinkButton/LinkBtn";
+import CustomBtn from "../CustomBtn/CustomBtn";
 
 interface Props {
   show: boolean,
@@ -28,8 +27,8 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
           <textarea className={styles.textarea} name='content' id='content' required></textarea>
 
           <div className={styles.buttonContainer}>
-            <SubmitBtn type='submit'  onClick={handleSubmit}>Submit</SubmitBtn>
-            <LinkBtn onClick={() => handleClose()}>Cancel</LinkBtn>
+            <CustomBtn variant='primary' type='submit' onClick={handleSubmit}>Submit</CustomBtn>
+            <CustomBtn variant='outline-dark' onClick={() => handleClose()}>Cancel</CustomBtn>
           </div>
         </Form>
       </Modal.Body>

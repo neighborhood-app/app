@@ -4,9 +4,8 @@ import { RequestType, ResponseWithUser } from "../../types";
 import requestServices from "../../services/requests";
 import { useState } from "react";
 import { useRevalidator } from "react-router";
-import ResponseBox from '../ResponseBox/ResponseBox'
-import SubmitBtn from "../SubmitButton/SubmitBtn";
-import DangerBtn from "../DangerButton/DangerBtn";
+import ResponseBox from '../ResponseBox/ResponseBox';
+import CustomBtn from "../CustomBtn/CustomBtn";
 
 interface Props {
   show: boolean,
@@ -48,11 +47,11 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     let username = user ? JSON.parse(user).username : null;
     if (username === request.user.username && request.status === "OPEN") {
       return (
-        <DangerBtn onClick={handleCloseRequest}>Close request</DangerBtn>
+        <CustomBtn variant='danger' onClick={handleCloseRequest}>Close request</CustomBtn>
       );
     } else if (!(username === request.user.username) && request.status === "OPEN") {
       return (
-        <SubmitBtn>Offer help</SubmitBtn>
+        <CustomBtn variant='primary'>Offer help</CustomBtn>
       );
     }
   }

@@ -1,8 +1,7 @@
 import styles from './LoginForm.module.css'
 import { Form, Container, Col, Row } from 'react-bootstrap';
 import { Form as FormRouter, Link, useNavigate } from 'react-router-dom';
-import SubmitBtn from '../SubmitButton/SubmitBtn';
-import LinkBtn from '../LinkButton/LinkBtn';
+import CustomBtn from '../CustomBtn/CustomBtn';
 
 export default function LoginForm({ className }: {className: string}) {
   const navigate = useNavigate();
@@ -33,8 +32,8 @@ export default function LoginForm({ className }: {className: string}) {
             </Container>
           </Form.Group>
           <div className='d-grid gap-2'>
-            <SubmitBtn type='submit'>Submit</SubmitBtn>
-            <LinkBtn onClick={redirectToSignUp}>Don't have an account? Sign up!</LinkBtn>
+            <CustomBtn variant='primary' type='submit'>Submit</CustomBtn>
+            <CustomBtn variant='outline-dark' onClick={redirectToSignUp}>Don't have an account? Sign up!</CustomBtn>
           </div>
         </FormRouter>
       </Col>

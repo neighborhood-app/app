@@ -1,6 +1,4 @@
-import DangerBtn from '../DangerButton/DangerBtn';
-import LinkBtn from '../LinkButton/LinkBtn';
-import SubmitBtn from '../SubmitButton/SubmitBtn';
+import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
 import { User } from '@prisma/client';
 
@@ -19,13 +17,13 @@ export default function DescriptionBox({showJoinBtn, showEditBtn, showLeaveBtn, 
       <div className={styles.card}>
         <img className={styles.neighborhoodImg} src={require('./palm.jpeg')} alt='Neighborhood'/>
         <h1 className={styles.neighborhoodTitle}>{name}</h1>
-        {showJoinBtn ? <SubmitBtn className={styles.button}>Join Neighborhood</SubmitBtn> : null}
+        {showJoinBtn ? <CustomBtn variant='primary' className={styles.button}>Join Neighborhood</CustomBtn> : null}
       </div>
       <div className={styles.neighborhoodDescription}>
         <p>{description}</p>
         {users ? <p>{users.length} members</p> : null}
-        {showEditBtn ? <LinkBtn className={styles.editBtn}>Edit Neighborhood</LinkBtn> : null}
-        {showLeaveBtn ? <DangerBtn>Leave Neighborhood</DangerBtn> : null}
+        {showEditBtn ? <CustomBtn variant='outline-dark' className={styles.editBtn}>Edit Neighborhood</CustomBtn> : null}
+        {showLeaveBtn ? <CustomBtn variant='danger'>Leave Neighborhood</CustomBtn> : null}
       </div>
     </div>
   )

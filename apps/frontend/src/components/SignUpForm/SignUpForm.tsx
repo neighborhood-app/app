@@ -1,7 +1,7 @@
 import styles from './SignUpForm.module.css'
-import { Form, Button, Col } from 'react-bootstrap';
+import { Form, Col } from 'react-bootstrap';
 import { Form as FormRouter } from 'react-router-dom';
-import SubmitBtn from '../SubmitButton/SubmitBtn';
+import CustomBtn from '../CustomBtn/CustomBtn';
 
 export default function SignUpForm({ className }: {className: string}) {
     return (
@@ -34,7 +34,7 @@ export default function SignUpForm({ className }: {className: string}) {
           </Form.Text>
           </Form.Group>
           <div className='d-grid gap-2'>
-            <SubmitBtn type='submit'>Submit</SubmitBtn>
+            <CustomBtn variant='primary' type='submit'>Submit</CustomBtn>
           </div>
         </FormRouter>
       </Col>
