@@ -73,17 +73,16 @@ responsesRouter.put(
     const userId = Number(req.loggedUserId);
     const responseId = Number(req.params.id);
 
-    const isOwnerUser = await responseServices.isUserResponseCreator(
-      responseId,
-      userId,
-    );
-    if (!isOwnerUser) {
+    const userStatus = await responseServices.checkUserStatus(responseId, userId);
+
+    if (userStatus === null) {
       return res.status(401).send({ error: 'User does not have edit rights.' });
     }
 
     const updatedResponse = await responseServices.updateResponse(
       req.body,
       responseId,
+      userStatus,
     );
 
     return res.status(200).json(updatedResponse);

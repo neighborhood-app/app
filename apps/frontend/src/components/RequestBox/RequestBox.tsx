@@ -1,9 +1,10 @@
-import SearchFilterForm from "../SearchFilterForm/SearchFilterForm";
 import Request from "../Request/Request";
-import RequestModal from "../RequestModal/RequestModal";
+import CreateRequestModal from "../CreateRequestModal/CreateRequestModal";
 import styles from "./RequestBox.module.css";
 import { RequestType } from "../../types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Form } from "react-bootstrap";
+import CustomBtn from "../CustomBtn/CustomBtn";
 
 //@ts-ignore
 export default function RequestBox({ requests }) {
@@ -12,52 +13,66 @@ export default function RequestBox({ requests }) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const [requestsType, setRequestsType] = useState("open");
-  const [requestSearchValue, setRequestSearchValue] = useState("");
+  const [requestList, setRequestList] = useState(requests);
+  const [searchCriteria, setSearchCriteria] = useState({ status: 'ALL', searchTerm: '' })
 
-  let requestSelection;
+  useEffect(() => {
+    let filteredRequests;
+    if (searchCriteria.status === 'ALL') {
+      filteredRequests = requests;
+    } else {
+      filteredRequests = requests.filter((request: RequestType) => {
+        return request.status === searchCriteria.status;
+      })
+    }
+    
+    if (searchCriteria.searchTerm !== '') {
+      filteredRequests = filteredRequests.filter((request: RequestType) => {
+        return request.title.toLowerCase().includes(searchCriteria.searchTerm.toLowerCase());
+      })
+    }
 
-  if (requestsType === "open") {
-    requestSelection = requests.filter((request: RequestType) => {
-      return request.status === "OPEN";
-    });
-  } else if (requestsType === "closed") {
-    requestSelection = requests.filter((request: RequestType) => {
-      return request.status === "CLOSED";
-    });
-  } else if (requestsType === "all") {
-    requestSelection = requests;
+    setRequestList(filteredRequests);
+  }, [requests, searchCriteria]);
+
+  function filterRequests(requestsType: string): void {
+    setSearchCriteria({status: requestsType, searchTerm: ''});
+  };
+
+  function searchRequests(searchInput: string): void {
+    setSearchCriteria(oldCriteria => {
+      return {...oldCriteria, searchTerm: searchInput}
+    })
   }
 
-  if (requestSearchValue !== "") {
-    requestSelection = requestSelection.filter((request: RequestType) => {
-      return request.title.toLowerCase().includes(requestSearchValue.toLowerCase());
-    });
-  }
-
-  const requestBoxes = requestSelection.map((request: RequestType) => {
-    return <Request requestObj={request} key={request.id}></Request>;
+  const requestBoxes = requestList.map((request: RequestType) => {
+    return <Request requestObj={request} key={request.id} updateRequestList={setRequestList}></Request>;
   });
 
   return (
     <div className={styles.header}>
       <h2 className={styles.title}>Neighborhood Requests</h2>
-      <button className={styles.button} onClick={handleShow}>
-        Create request
-      </button>
+      <CustomBtn variant='primary' className={styles.button} onClick={handleShow}>Create request</CustomBtn>
       <div className={styles.form}>
-        <SearchFilterForm
-          filterStatus={requestsType}
-          setFilterStatus={setRequestsType}
-          requestSearchValue={requestSearchValue}
-          setRequestSearchValue={setRequestSearchValue}
-        />
+        <Form className={styles.form}>
+          <Form.Group>
+            <Form.Control type="text" placeholder="Search requests by title" value={searchCriteria.searchTerm} 
+            onChange={event => searchRequests((event.target).value)}></Form.Control>
+          </Form.Group>
+          <div className={styles.inputGroup}>
+            <Form.Select size='sm' className={styles.selectBox} value={searchCriteria.status}
+              onChange={event => filterRequests((event.target).value)}>
+              <option value='OPEN'>Open Requests</option>
+              <option value='CLOSED'>Closed Requests</option>
+              <option value='ALL'>All Requests</option>
+            </Form.Select>
+          </div>
+        </Form>
       </div>
-      <RequestModal show={show} handleClose={handleClose} />
+      <CreateRequestModal show={show} handleClose={handleClose} />
       <div className={styles.container}>
-        {requestBoxes}
+        {requestBoxes.length !== 0 ? requestBoxes : 'Currently there are no requests that match your criteria!'}
       </div>
-      
     </div>
   );
 }

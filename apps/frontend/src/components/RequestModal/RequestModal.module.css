@@ -1,64 +1,93 @@
-.form {
-  height: 50vh;
-  padding: 10px;
+/* .modal {} */
+
+.requestImage {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  object-position: 50% 50%;
+  border-radius: 10px;
+  filter: contrast(70%);
+  transition: all 0.6s cubic-bezier(0.43, 0.41, 0.22, 0.91);
+}
+
+.requestImage:hover {
+  filter: contrast(100%);
+}
+
+.currentRequestInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.requestContent {
+  display: flex;
+  width: 70%;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.h1 {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.p {
+  /* font-size: 0.7rem;
+  line-height: 1.4; */
+  color: #4b5563;
+}
+
+.buttonGroups {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+/* .btn {
+  background-color: #000;
+  color: rgb(250, 246, 246);
+  padding: 10px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.btn:hover,
+.btn:active {
+  background-color: #4b5563;
+}
+
+ .closeBtn {
+  background-color: white;
+  border: 2px solid black;
+  color: black;
+}
+
+.closeBtn:hover,
+.closeBtn:active {
+  background-color: black;
+  color: white;
+}
+
+.offerHelpBtn{
+  background-color: #1d4ed8;
+}
+
+.offerHelpBtn:hover,
+.offerHelpBtn:active {
+  background-color: #3b82f6;
+} */
+
+.responseSection {
   display: grid;
-  grid-template-columns: 1fr 4fr;
-  grid-template-rows: 0.5fr 3fr 1fr;
-  grid-gap: 10px;
-}
-
-.label {
-  text-align: left;
-  font-weight: bold;
-  align-self: center;
-}
-
-.input {
-  padding: 5px;
-  border: 2px solid black;
-  border-radius: 5px;
-  width: 100%;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.textarea {
-  padding: 5px;
-  border: 2px solid black;
-  border-radius: 5px;
-  width: 100%;
-  box-sizing: border-box;
-  outline: none;
-  resize: none;
-}
-
-.buttonContainer {
-  grid-column: 1 / span 2;
-  justify-self: center;
-  align-self: center;
-}
-
-.submit {
-  background-color: #F6BA6F;
-  color: white;
-  padding: 10px 20px;
-  font-size: 18px;
-  font-weight: 600;
-  max-width: 50%;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 10px;
-}
-
-.button {
-  background-color: #F6BA6F;
-  color: white;
-  padding: 10px 20px;
-  font-size: 18px;
-  font-weight: 600;
-  max-width: 50%;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }

@@ -130,8 +130,8 @@ async function main() {
     data: {
       neighborhood_id: bobNeighborhood.id,
       user_id: mike.id,
-      title: 'Help moving furniture in apartment',
-      content: 'I need help moving my furniture this Saturday',
+      title: 'I need help changing a lightbulb',
+      content: 'Can anyone help me with changing the lightbulb this Saturday?',
       status: 'CLOSED',
     },
   });
@@ -140,8 +140,8 @@ async function main() {
     data: {
       neighborhood_id: bobNeighborhood.id,
       user_id: mike.id,
-      title: 'Help moving furniture in apartment',
-      content: 'I need help moving my furniture this Saturday',
+      title: 'URGENT My cat fell from the balcony!',
+      content: 'Please find Fluffy',
     },
   });
 
@@ -149,8 +149,8 @@ async function main() {
     data: {
       neighborhood_id: bobNeighborhood.id,
       user_id: mike.id,
-      title: 'Help moving furniture in apartment',
-      content: 'I need help moving my furniture this Saturday',
+      title: 'I can\'t cook. Help!',
+      content: 'I need someone to cook breakfast and dinner for me everyday. I don\'t want to pay anything btw.',
     },
   });
   //---------------------------------------------------------

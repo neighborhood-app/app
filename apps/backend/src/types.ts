@@ -1,7 +1,7 @@
 import {
-  Neighborhood, Prisma, User, Response, RequestStatus,
+  Neighborhood, Prisma, RequestStatus, User, Response, Request,
 } from '@prisma/client';
-import { Request } from 'express';
+import { Request as APIRequest } from 'express';
 
 /**
  * format of the user data, without password hash, which is sent in response
@@ -12,6 +12,13 @@ export type UserWithoutPasswordHash = Omit<User, 'password_hash'>;
  * format of user data, without id, to create entry in users table
  */
 export type UserWithoutId = Omit<User, 'id'>;
+
+/**
+ * Response type with the associated request
+ */
+export type ResponseWithRequest = Response & {
+  request: Request
+};
 
 /**
  * format of the data sent to `POST /login` to login user
@@ -43,7 +50,7 @@ export interface CreateNeighborhoodData {
 /**
  * Request with token for authentication
  */
-export interface RequestWithAuthentication extends Request {
+export interface RequestWithAuthentication extends APIRequest {
   token?: string;
   loggedUserId?: number;
 }

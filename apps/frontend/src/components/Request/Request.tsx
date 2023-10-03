@@ -1,19 +1,17 @@
 import styles from "./Request.module.css";
 import { RequestType } from "../../types";
 import { useState } from "react";
+import RequestModal from "../RequestModal/RequestModal";
 
-export default function Request({ requestObj }: { requestObj: RequestType }) {
+export default function Request({ requestObj, updateRequestList }: { requestObj: RequestType, updateRequestList: (requests: Array<RequestType>) => void }) {
   const date = requestObj.time_created.split("T")[0];
-  const [showDetails, setShowDetails] = useState(false);
+  const [show, setShow] = useState(false);
 
-  function clickHandler() {
-    setShowDetails(!showDetails);
-  }
-
-  const details = <p>{requestObj.content}</p>;
+  const handleCloseModal = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onClick={handleShow}>
       <div className={styles.requestHeader}>
         <p>{requestObj.user.username}</p>
       </div>
@@ -24,6 +22,7 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
         <p className={styles.title}>{requestObj.title}</p>
         <p className={styles.date}>Created on {date}</p>
       </div>
+      <RequestModal show={show} handleCloseModal={handleCloseModal} request={requestObj} updateRequestList={updateRequestList}/>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import {
   LoaderFunctionArgs,
   useLoaderData,
 } from "react-router";
-import createRequest from "../../services/requests";
+import requestServices from "../../services/requests";
 import { useUser } from "../../store/user-context";
 import {
   NeighborhoodDetailsForMembers,
@@ -39,7 +39,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const requestData = Object.fromEntries(formData) as unknown as RequestData;
   requestData.neighborhoodId = Number(params.id);
 
-  const response = await createRequest(requestData);
+  const response = await requestServices.createRequest(requestData);
   return response;
 }
 
@@ -77,7 +77,6 @@ export default function SingleNeighborhood() {
   const user = useUser();
 
   const neighborhoodData = useLoaderData() as NeighborhoodType;
-
   const userRole: UserRole = checkLoggedUserRole(
     user.username,
     neighborhoodData

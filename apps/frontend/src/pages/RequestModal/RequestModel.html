@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Request Modal</title>
+  </head>
+  <body>
+    <!-- e.g. 'Active Request' Card -->
+    <button class="active-request">Active Request</button>
+
+    <!-- Transparent Overlay between the Home Page and the Modal -->
+    <div class="overlay hidden"></div>
+
+    <!-- Modal -->
+    <main class="modal hidden">
+      <button class="close-btn">&times;</button>
+
+      <div class="modal-container">
+        <section class="current-request-info">
+          <img
+            src="images/image.jpeg"
+            alt="active request on neighborhood app" />
+
+          <div class="request-content">
+            <h1>Help! My cat is drowning</h1>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+            <div class="button-groups">
+              <button class="btn solved-btn">Close as solved</button>
+              <button class="btn not-needed-btn">Close as not needed</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 'accepted-offer' classes have <hr /> and 'pending-offer' classes have buttons but their css are not different each other -->
+        <section class="all-offers">
+          <div class="offer-cards accepted-offer">
+            <div class="profile-and-created-date">
+              <div class="profile-info">
+                <img
+                  src="images/profile-2.jpg"
+                  alt="active user on neighborhood app" />
+                <p>Jane Parker</p>
+              </div>
+              <p class="created-date">Created 11 Mar 2022</p>
+            </div>
+            <p>
+              I can help out with your drowning cat. I've been a lifeguard for 5
+              years and I know how to save a cat.
+            </p>
+            <hr />
+            <div>
+              <p>You've accepted this offer for help.</p>
+              <p>Contact at: <span>jane.parker@gmail.com</span></p>
+            </div>
+          </div>
+
+          <div class="offer-cards pending-offer">
+            <div class="profile-and-created-date">
+              <div class="profile-info">
+                <img
+                  src="images/profile-2.jpg"
+                  alt="active user on neighborhood app" />
+                <p>Jane Parker</p>
+              </div>
+              <p class="created-date">Created 11 Mar 2022</p>
+            </div>
+            <p>
+              I can help out with your drowning cat. I've been a lifeguard for 5
+              years and I know how to save a cat.
+            </p>
+            <button class="btn accept-offer-btn">Accept offer</button>
+          </div>
+
+          <div class="offer-cards pending-offer">
+            <div class="profile-and-created-date">
+              <div class="profile-info">
+                <img
+                  src="images/profile.jpg"
+                  alt="active user on neighborhood app" />
+                <p>John Smith</p>
+              </div>
+              <p class="created-date">Created 10 Mar 2022</p>
+            </div>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut
+              repellat dignissimos quis sunt laboriosam perspiciatis.
+            </p>
+            <button class="btn accept-offer-btn">Accept offer</button>
+          </div>
+
+          <div class="offer-cards pending-offer">
+            <div class="profile-and-created-date">
+              <div class="profile-info">
+                <img
+                  src="images/profile.jpg"
+                  alt="active user on neighborhood app" />
+                <p>John Smith</p>
+              </div>
+              <p class="created-date">Created 12 Mar 2022</p>
+            </div>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea sunt
+              consequuntur reiciendis excepturi eveniet ex quaerat laboriosam
+              placeat quisquam laborum!
+            </p>
+            <button class="btn accept-offer-btn">Accept offer</button>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

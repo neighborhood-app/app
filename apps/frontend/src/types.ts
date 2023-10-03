@@ -1,3 +1,4 @@
+import { Response } from "@prisma/client"
 import { CreateUserData } from '@neighborhood/backend/src/types';
 import { User } from '@prisma/client';
 
@@ -58,7 +59,12 @@ export type RequestType = {
   status: string;
   time_created: string;
   user: User;
+  responses: Array<ResponseWithUser>;
 };
+
+export type ResponseWithUser = Response & {
+  user: User;
+}
 
 export interface URLParameterID {
   id: string;

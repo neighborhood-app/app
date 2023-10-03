@@ -1,0 +1,278 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+/* DEFAULT VALUES */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+p {
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: #4b5563;
+}
+
+.hidden {
+  display: none;
+}
+
+.btn {
+  background-color: #000;
+  color: rgb(250, 246, 246);
+  padding: 10px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn:hover,
+.btn:active {
+  background-color: #4b5563;
+}
+
+body {
+  position: relative;
+  font-family: "Poppins", sans-serif;
+  color: #333;
+  min-height: 100vh;
+}
+
+/* OVERLAY */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background-color: rgba(255, 255, 255, 0.6); */
+  backdrop-filter: blur(3px);
+  z-index: 5;
+}
+
+/* REQUEST MODAL */
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  max-height: calc(100vh - 90px);
+  background: rgba(221, 221, 221, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 40px 50px;
+  border-radius: 5px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  overflow-y: auto;
+}
+
+/* CLOSE BUTTON on REQUEST MODAL*/
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* CURRENT REQUEST INFO */
+
+.current-request-info {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.current-request-info > img {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  object-position: 50% 50%;
+  border-radius: 10px;
+  filter: contrast(70%);
+  transition: all 0.6s cubic-bezier(0.43, 0.41, 0.22, 0.91);
+}
+
+.current-request-info > img:hover {
+  filter: contrast(100%);
+}
+
+.request-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.request-content > p {
+  text-align: justify;
+  margin: 5px 0;
+}
+
+.button-groups {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.solved-btn {
+  background-color: #1d4ed8;
+}
+
+.solved-btn:hover,
+.solved-btn:active {
+  background-color: #3b82f6;
+}
+
+/* ALL OFFERS */
+
+.all-offers {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.offer-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+
+.offer-cards span {
+  font-weight: 500;
+}
+
+.accept-offer-btn {
+  width: 50%;
+  margin: auto;
+  margin-bottom: 5px;
+}
+
+/* PROFIL and CREATED DATE */
+
+.profile-and-created-date {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.created-date {
+  font-size: 0.6rem;
+  color: #9ca3af;
+}
+
+/* PROFIL INFO */
+
+.profile-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.profile-info > img {
+  display: block;
+  width: 30px;
+  object-fit: cover;
+  object-position: 50% 50%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.profile-info > p {
+  font-weight: 600;
+}
+
+/* MEDIA QUERIES */
+
+@media (max-width: 1100px) {
+  .current-request-info {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 800px) {
+  .modal {
+    padding: 40px 30px;
+  }
+
+  .current-request-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .current-request-info > img {
+    margin: auto;
+  }
+
+  .all-offers {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .modal {
+    width: 80%;
+  }
+
+  .accept-offer-btn {
+    width: 40%;
+  }
+}
+
+@media (max-width: 440px) {
+  .button-groups {
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .accept-offer-btn {
+    width: 60%;
+  }
+}
+
+/* BUTTON instead of 'Active Request' cards on Home Page. It's just for opening the modal, you can remove it. */
+
+.active-request {
+  width: 200px;
+  height: 50px;
+  background-color: #444;
+  color: #fff;
+  text-align: center;
+  font-size: 1rem;
+  background-size: 200% auto;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  margin: 40px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.5s ease-in;
+}

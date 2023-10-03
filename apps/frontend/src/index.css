@@ -52,27 +52,29 @@ a {
   --bs-font-sans-serif: 'Poppins', system-ui, Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
+.btn {
+  transition: all 0.3s ease-in-out;
+}
+
 .btn-primary {
   --bs-btn-bg: #ff2a70;
   --bs-btn-border-color: #ff2a70;
-  /* --bs-btn-bg: black;
-  --bs-btn-border-color: black; */
 }
 
 .btn-primary, .btn-outline-dark {
-  --bs-btn-hover-bg: #FF5372;
-  --bs-btn-hover-border-color: #FF5372;
+  --bs-btn-hover-bg: #ff0054;
+  --bs-btn-hover-border-color: #ff0054;
   --bs-btn-active-bg: #FE496F;
   --bs-btn-active-border-color: #FE496F;
-  /* --bs-btn-hover-bg: #7f7f85;
-  --bs-btn-hover-border-color: #7f7f85;
-  --bs-btn-active-bg: #69696f;
-  --bs-btn-active-border-color: #69696f; */
 }
 
-.form-control:focus {
-  border-color: #ffeef3;
-  box-shadow: 0 0 0 0.25rem rgb(255 128 169 / 9%)
+.btn-danger {
+  --bs-btn-bg: #FF4E2A;
+  --bs-btn-border-color: #FF4E2A;
+  --bs-btn-hover-bg: #ff2b00;
+  --bs-btn-hover-border-color: #ff2b00;
+  --bs-btn-active-bg: #e92700;
+  --bs-btn-active-border-color: #e92700;
 }
 
 .form-check-input:checked {
@@ -80,9 +82,9 @@ a {
   border-color: #ff2a70;
 }
 
-.form-check-input:focus {
+.form-control:focus,
+.form-check-input:focus,
+.form-select:focus {
   border-color: #ffeef3;
-  box-shadow: 0 0 0 0.25rem rgb(255 128 169 / 9%)
-  /* border-color: #69696f;
-  box-shadow: 0 0 0 0.25rem rgb(115 119 125 / 25%); */
+  box-shadow: 0 0 0 0.25rem rgb(255 155 128 / 9%);
 }
