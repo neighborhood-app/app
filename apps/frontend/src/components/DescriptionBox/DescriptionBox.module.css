@@ -32,7 +32,7 @@
 
 .button {
   margin-left: 100px;
-  width: 188px;
+  /* width: 188px;
   height: 48px;
   padding: 0px 8px;
   border: 0;
@@ -41,13 +41,13 @@
   background-color: #1d1d1f;
   color: #ffffff;
   font-size: 16px;
-  /* font-family: "Poppins"; */
+  font-family: "Poppins";
   font-weight: 600;
   line-height: 24px;
-  outline: none;
+  outline: none; */
 }
 
-.editBtn {
+/* .editBtn {
   width: 150px;
   height: 40px;
   padding: 0px 8px;
@@ -57,12 +57,12 @@
   background-color: white;
   color: black;
   font-size: 14px;
-  /* font-family: "Poppins"; */
+  font-family: "Poppins";
   outline: none;
   border: 1px solid black;
 }
 
-.leaveBtn {
+ .leaveBtn {
   width: 188px;
   height: 40px;
   padding: 0px 8px;
@@ -72,7 +72,7 @@
   background-color: white;
   color: black;
   font-size: 16px;
-  /* font-family: "Poppins"; */
+  font-family: "Poppins";
   font-weight: 600;
   line-height: 24px;
   outline: none;
@@ -83,4 +83,4 @@
 .leaveBtn:hover {
   background-color: black;
   color: white;
-}
+} */

@@ -1,6 +1,6 @@
 import styles from './MemberBox.module.css';
-import { Button } from 'react-bootstrap';
 import type { User } from '@prisma/client';
+import CustomBtn from '../CustomBtn/CustomBtn';
 
 interface Props {
   showLeaveBtn: boolean;
@@ -34,7 +34,7 @@ export default function MemberBox({ showLeaveBtn, admin, users }: Props) {
       </p>
       <ul className={styles.list}>{userNames}</ul>
       {showLeaveBtn ? (
-        <Button className={styles.button}>Leave Neighborhood</Button>
+        <CustomBtn variant='danger' className={styles.button}>Leave Neighborhood</CustomBtn>
       ) : null}
     </div>
   );
