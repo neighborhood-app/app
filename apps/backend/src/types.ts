@@ -141,3 +141,11 @@ export type ResponseData = Pick<Response, 'content' | 'request_id'>;
  * shape of data for updating a Response
  */
 export type UpdateResponseData = Pick<Partial<Response>, 'content' | 'status'>;
+
+/**
+ * Represents the status of a user in the context of a reponse.
+ * It is used when updating a response.
+ * A reponse owner can update any field of the response.
+ * A request owner of the associated response can only update its status.
+ */
+export type UserStatusOnResponse = 'RESPONSE OWNER' | 'REQUEST OWNER';

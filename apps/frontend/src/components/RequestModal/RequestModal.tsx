@@ -11,7 +11,6 @@ interface Props {
   show: boolean,
   handleCloseModal: () => void,
   request: RequestType,
-  updateRequestList: (requests: Array<RequestType>) => void,
 }
 
 export default function RequestModal({ show, handleCloseModal, request }: Props) {

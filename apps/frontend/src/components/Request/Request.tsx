@@ -3,7 +3,7 @@ import { RequestType } from "../../types";
 import { useState } from "react";
 import RequestModal from "../RequestModal/RequestModal";
 
-export default function Request({ requestObj, updateRequestList }: { requestObj: RequestType, updateRequestList: (requests: Array<RequestType>) => void }) {
+export default function Request({ requestObj }: { requestObj: RequestType}) {
   const date = requestObj.time_created.split("T")[0];
   const [show, setShow] = useState(false);
 
@@ -22,7 +22,7 @@ export default function Request({ requestObj, updateRequestList }: { requestObj:
         <p className={styles.title}>{requestObj.title}</p>
         <p className={styles.date}>Created on {date}</p>
       </div>
-      <RequestModal show={show} handleCloseModal={handleCloseModal} request={requestObj} updateRequestList={updateRequestList}/>
+      <RequestModal show={show} handleCloseModal={handleCloseModal} request={requestObj}/>
     </div>
   );
 }

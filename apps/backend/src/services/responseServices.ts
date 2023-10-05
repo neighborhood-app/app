@@ -1,5 +1,7 @@
 import { Response } from '@prisma/client';
-import { ResponseData, UpdateResponseData, ResponseWithRequest } from '../types';
+import {
+  ResponseData, UpdateResponseData, ResponseWithRequest, UserStatusOnResponse,
+} from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import requestServices from './requestServices';
@@ -128,7 +130,7 @@ const isUserRequestCreator = async (
 const checkUserStatus = async (
   responseId: number,
   userId: number,
-): Promise<'RESPONSE OWNER' | 'REQUEST OWNER' | null> => {
+): Promise<UserStatusOnResponse | null> => {
   const response = await getResponseById(responseId);
   const { request } = response;
 
@@ -171,7 +173,7 @@ const isUpdateResponseData = (obj: object): obj is UpdateResponseData => {
 const updateResponse = async (
   body: unknown,
   responseId: number,
-  userStatus: 'RESPONSE OWNER' | 'REQUEST OWNER',
+  userStatus: UserStatusOnResponse,
 ): Promise<Response> => {
   if (!middleware.isObject(body)) {
     const error = new Error('unable to parse data');
