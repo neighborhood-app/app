@@ -6,20 +6,22 @@ import CustomBtn from '../CustomBtn/CustomBtn';
 
 type Props = {
   response: ResponseWithUserAndRequest;
+  requestOwnerId: number;
 }
 
-function isLoggedUserRequestOwner(userId: number, response: ResponseWithUserAndRequest) {
-  console.log(userId, response.request.user_id)
-  return userId === response.request.user_id;
+function isLoggedUserRequestOwner(userId: number, requestOwnerId: number) {
+  return userId === requestOwnerId;
 };
 
-export default function ResponseBox({ response }: Props) {
+function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
+  return userId === responseOwnerId;
+}
+
+export default function ResponseBox({ response, requestOwnerId }: Props) {
   const revalidator = useRevalidator();
 
-  let user = localStorage.getItem('user');
-  let userId = user ? JSON.parse(user).id : null;
-
-  console.log(isLoggedUserRequestOwner(userId, response));
+  let loggedUser = localStorage.getItem('user');
+  let loggedUserId = loggedUser ? JSON.parse(loggedUser).id : null;
 
   const date = String(response.time_created).split("T")[0];
   function handleAcceptOffer() {
@@ -27,13 +29,42 @@ export default function ResponseBox({ response }: Props) {
     revalidator.revalidate();
   }
 
-  //if response status is ACCEPTED and logged in username === response.request owner username
-  const contactInfo = response.status === "ACCEPTED" ? (
-    <div>
-      <p className={styles.p}>You've accepted this offer for help.</p>
-      <p className={styles.p}>Contact at: <span>{response.user.email}</span></p>
-    </div>
-  ) : <CustomBtn variant='outline-dark' className={styles.btn} onClick={handleAcceptOffer}>Accept Offer</CustomBtn>;
+  /*
+    Cases:
+    1. User is not the response or request owner;
+      Show nothing;
+    2. User is also response owner:
+      Show a delete and edit button;
+      - if response status is ACCEPTED also show msg "You're response has been accepted"
+    3. User is also request owner:
+      Show a 'Accept offer' button;
+      - if response status is ACCEPTED show contact info.
+  */
+
+  function displayContactInfo() {
+    const requestOwner = isLoggedUserRequestOwner(loggedUserId, requestOwnerId);
+    const responseOwner = isLoggedUserResponseOwner(loggedUserId, response.user_id);
+
+    if (!(requestOwner || responseOwner)) {
+      return null;
+    } else if (requestOwner) {
+      if (response.status === "ACCEPTED") {
+        return (
+          <div>
+            <p className={styles.p}>You've accepted this offer for help.</p>
+            <p className={styles.p}>Contact at: <span>{response.user.email}</span></p>
+          </div>
+        )
+      } else {
+        return (
+          <CustomBtn variant='outline-dark' className={styles.btn} onClick={handleAcceptOffer}>Accept Offer</CustomBtn>
+        )
+      }
+    } else if (responseOwner) {
+      //to be completed
+    }
+  }
+  const contactInfo = displayContactInfo();
 
   return (
     <div className={styles.responseCard}>
