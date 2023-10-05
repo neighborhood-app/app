@@ -10,6 +10,10 @@ type Props = {
 
 export default function ResponseBox({ response }: Props) {
   const revalidator = useRevalidator();
+  console.log(response);
+
+  let user = localStorage.getItem('user');
+  let username = user ? JSON.parse(user).username : null;
 
   const date = String(response.time_created).split("T")[0];
   function handleAcceptOffer() {
@@ -17,6 +21,7 @@ export default function ResponseBox({ response }: Props) {
     revalidator.revalidate();
   }
 
+  //if response status is ACCEPTED and logged in username === response.request owner username
   const contactInfo = response.status === "ACCEPTED" ? (
     <div>
       <p className={styles.p}>You've accepted this offer for help.</p>
@@ -32,7 +37,7 @@ export default function ResponseBox({ response }: Props) {
             className={styles.profileImg}
             src={require('./images/profile.jpg')}
             alt="active user on neighborhood app" />
-          <p className={styles.p}>Jane Parker</p>
+          <p className={styles.p}>{response.user.username}</p>
         </div>
         <p className={styles.createdDate}>{date}</p>
       </div>
