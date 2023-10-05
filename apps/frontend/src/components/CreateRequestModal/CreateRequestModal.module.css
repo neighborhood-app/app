@@ -1,64 +1,16 @@
-.form {
-  height: 50vh;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: 1fr 4fr;
-  grid-template-rows: 0.5fr 3fr 1fr;
-  grid-gap: 10px;
+.createReqForm {
+  margin: 0 auto 1.4rem;
+  max-width: 90%;
 }
 
-.label {
-  text-align: left;
-  font-weight: bold;
-  align-self: center;
+.asterisk {
+  color: #ff2a70;
 }
 
-.input {
-  padding: 5px;
-  border: 2px solid black;
-  border-radius: 5px;
+.btnContainer {
+  padding: 0;
+}
+
+.btn {
   width: 100%;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.textarea {
-  padding: 5px;
-  border: 2px solid black;
-  border-radius: 5px;
-  width: 100%;
-  box-sizing: border-box;
-  outline: none;
-  resize: none;
-}
-
-.buttonContainer {
-  grid-column: 1 / span 2;
-  justify-self: center;
-  align-self: center;
-}
-
-.submit {
-  background-color: #F6BA6F;
-  color: white;
-  padding: 10px 20px;
-  font-size: 18px;
-  font-weight: 600;
-  max-width: 50%;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 10px;
-}
-
-.button {
-  background-color: #F6BA6F;
-  color: white;
-  padding: 10px 20px;
-  font-size: 18px;
-  font-weight: 600;
-  max-width: 50%;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
