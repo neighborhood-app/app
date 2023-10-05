@@ -1,5 +1,5 @@
-import { Modal } from "react-bootstrap";
-import { Form } from 'react-router-dom';
+import { Modal, Form } from "react-bootstrap";
+import { Form as FormRouter } from 'react-router-dom';
 import styles from './CreateRequestModal.module.css';
 import CustomBtn from "../CustomBtn/CustomBtn";
 
@@ -9,9 +9,7 @@ interface Props {
 }
 
 export default function CreateRequestModal({ show, handleClose }: Props) {
-  function handleSubmit() {
-    handleClose();
-  }
+  const closeModal = () => handleClose();
 
   return (
     <Modal show={show} onHide={handleClose} animation={true} backdrop="static" centered>
@@ -19,18 +17,20 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
         <Modal.Title>Create a request</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form method='post' className={styles.form} name='new-request-form'>
-          <label className={styles.label} htmlFor='title'>Title:</label>
-          <input className={styles.input} type='text' name='title' id='title' required minLength={4}></input>
-
-          <label className={styles.label} htmlFor='content'>Content:</label>
-          <textarea className={styles.textarea} name='content' id='content' required></textarea>
-
-          <div className={styles.buttonContainer}>
-            <CustomBtn variant='primary' type='submit' onClick={handleSubmit}>Submit</CustomBtn>
-            <CustomBtn variant='outline-dark' onClick={() => handleClose()}>Cancel</CustomBtn>
+      <FormRouter method='post' role='form' onSubmit={closeModal} className={styles.createReqForm}>
+          <Form.Group className={`mb-3`} controlId='title'>
+            <Form.Label column='sm'>Title</Form.Label>
+            <Form.Control type='text' name='title' placeholder='' minLength={4} required />
+          </Form.Group>
+          <Form.Group className='mb-3' controlId='content'>
+            <Form.Label column='sm'>Content</Form.Label>
+            <Form.Control as="textarea" rows={3} name='content' required />
+          </Form.Group>
+          <div className='d-grid gap-2'>
+            <CustomBtn variant='primary' type='submit'>Submit</CustomBtn>
+            <CustomBtn variant='outline-dark' onClick={closeModal}>Cancel</CustomBtn>
           </div>
-        </Form>
+        </FormRouter>
       </Modal.Body>
     </Modal>
   )
