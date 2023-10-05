@@ -1,19 +1,25 @@
 import styles from './ResponseBox.module.css';
-import { ResponseWithUser } from "../../types"
+import { ResponseWithUserAndRequest } from "../../types"
 import acceptResponse from "../../services/responses";
 import { useRevalidator } from 'react-router';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
 type Props = {
-  response: ResponseWithUser;
+  response: ResponseWithUserAndRequest;
 }
+
+function isLoggedUserRequestOwner(userId: number, response: ResponseWithUserAndRequest) {
+  console.log(userId, response.request.user_id)
+  return userId === response.request.user_id;
+};
 
 export default function ResponseBox({ response }: Props) {
   const revalidator = useRevalidator();
-  console.log(response);
 
   let user = localStorage.getItem('user');
-  let username = user ? JSON.parse(user).username : null;
+  let userId = user ? JSON.parse(user).id : null;
+
+  console.log(isLoggedUserRequestOwner(userId, response));
 
   const date = String(response.time_created).split("T")[0];
   function handleAcceptOffer() {

@@ -1,6 +1,6 @@
 import { Modal, Spinner } from "react-bootstrap";
 import styles from './RequestModal.module.css';
-import { RequestType, ResponseWithUser } from "../../types";
+import { RequestType, ResponseWithUserAndRequest } from "../../types";
 import requestServices from "../../services/requests";
 import { useState } from "react";
 import { useRevalidator } from "react-router";
@@ -31,7 +31,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     }
   }
 
-  const responses = request.responses.map((responseObj: ResponseWithUser)=> {
+  const responses = request.responses.map((responseObj: ResponseWithUserAndRequest)=> {
     return (
       <ResponseBox response={responseObj} key={responseObj.id}/>
     ) 
