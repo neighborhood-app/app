@@ -1,6 +1,6 @@
 import styles from './ResponseBox.module.css';
 import { ResponseWithUserAndRequest } from "../../types"
-import acceptResponse from "../../services/responses";
+import {acceptResponse, deleteResponse} from "../../services/responses";
 import { useRevalidator } from 'react-router';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
@@ -61,7 +61,9 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         )
       }
     } else if (responseOwner) {
-      <p>Will show delete and edit button</p>
+      return (
+        <CustomBtn variant='danger' className={styles.btn}>Delete Response</CustomBtn>
+      )
     }
   }
   const contactInfo = displayContactInfo();
