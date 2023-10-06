@@ -50,12 +50,33 @@ const parseAndValidateUsername = async (username: unknown): Promise<string> => {
   });
 
   if (existingUser) {
-    const error = new Error('User already exists');
+    const error = new Error('A user with that username already exists.');
     error.name = 'UserDataError';
     throw error;
   }
 
   return username;
+};
+
+/**
+ * - checks if email exists in db
+ * - throws Error if it does
+ * @param email this should be a unique email
+ * @returns Promise resolving to email
+ */
+const validateEmail = async (email: string): Promise<string> => {
+  // attempted regex validation but don't know if it's a great idea
+  // might suffice to use browser's built-in validation
+
+  const existingUser: User | null = await prismaClient.user.findUnique({
+    where: { email },
+  });
+
+  if (!existingUser) return email;
+
+  const error = new Error('Sorry, that email is taken.');
+  error.name = 'UserDataError';
+  throw error;
 };
 
 /**
@@ -115,19 +136,6 @@ const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
       lastName: body.lastName,
     };
 
-    const users = await getAllUsers();
-    const duplicateUsername = users.some(user => user.username === createUserData.username);
-    const duplicateEmail = users.some(user => user.email === createUserData.email);
-    let errorMsg = '';
-    if (duplicateEmail) errorMsg = 'Another user is using that email.';
-    if (duplicateUsername) errorMsg = 'Sorry, that username is taken.';
-
-    if (errorMsg) {
-      const error = new Error(errorMsg);
-      error.name = 'UserDataError';
-      throw error;
-    }
-
     return createUserData;
   }
 
@@ -150,7 +158,7 @@ const generateUserDataWithoutId = async (createUserData: CreateUserData)
   const userData: UserWithoutId = {
     username: await parseAndValidateUsername(createUserData.username),
     password_hash: await getPasswordHash(createUserData.password),
-    email: createUserData.email,
+    email: await validateEmail(createUserData.email),
     first_name: createUserData.firstName || null,
     last_name: createUserData.lastName || null,
     dob: null,
