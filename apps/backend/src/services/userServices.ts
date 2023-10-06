@@ -18,6 +18,19 @@ const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
 // helpers
 
 /**
+ * fetches all users from db
+ * does not include password_hash in returned user fields
+ * @returns Promise resolving to Array of User Data (without password_hash)
+ */
+const getAllUsers = async (): Promise<Array<UserWithoutPasswordHash>> => {
+  const users: Array<UserWithoutPasswordHash> = await prismaClient.user.findMany({
+    select: USER_FIELDS_WITHOUT_PASSWORD_HASH,
+  });
+
+  return users;
+};
+
+/**
  * - narrows username type to string, checks if username is valid
  * - throws Error if username already exists
  * - throws Error if username not valid
@@ -83,7 +96,7 @@ const isCreateUserData = (obj: object): obj is CreateUserData => (
  * - performs type narrowing for data from req.body to POST /users
  * - if data is valid, returns an object containing CreateUserData
  * - else throws Error
- * @param body request.body should contain username and password
+ * @param body request.body should contain username, email and password
  * @returns Promise resolving to user input for POST /users
  */
 const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
@@ -102,10 +115,23 @@ const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
       lastName: body.lastName,
     };
 
+    const users = await getAllUsers();
+    const duplicateUsername = users.some(user => user.username === createUserData.username);
+    const duplicateEmail = users.some(user => user.email === createUserData.email);
+    let errorMsg = '';
+    if (duplicateEmail) errorMsg = 'Another user is using that email.';
+    if (duplicateUsername) errorMsg = 'Sorry, that username is taken.';
+
+    if (errorMsg) {
+      const error = new Error(errorMsg);
+      error.name = 'UserDataError';
+      throw error;
+    }
+
     return createUserData;
   }
 
-  const error = new Error('Username or Password missing');
+  const error = new Error('Username, Email or Password missing');
   error.name = 'UserDataError';
   throw error;
 };
@@ -133,19 +159,6 @@ const generateUserDataWithoutId = async (createUserData: CreateUserData)
   };
 
   return userData;
-};
-
-/**
- * fetches all users from db
- * does not include password_hash in returned user fields
- * @returns Promise resolving to Array of User Data (without password_hash)
- */
-const getAllUsers = async (): Promise<Array<UserWithoutPasswordHash>> => {
-  const users: Array<UserWithoutPasswordHash> = await prismaClient.user.findMany({
-    select: USER_FIELDS_WITHOUT_PASSWORD_HASH,
-  });
-
-  return users;
 };
 
 /**

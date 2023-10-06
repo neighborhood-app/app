@@ -3,11 +3,9 @@ import { Form as FormRouter } from 'react-router-dom';
 import styles from './CreateRequestModal.module.css';
 import CustomBtn from "../CustomBtn/CustomBtn";
 
-// add bootstrap validation
-
 interface Props {
-  show: boolean,
-  handleClose: () => void,
+  show: boolean;
+  handleClose: () => void;
 }
 
 export default function CreateRequestModal({ show, handleClose }: Props) {
@@ -45,10 +43,6 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
           </Container>
         </FormRouter>
       </Modal.Body>
-      {/* <Modal.Footer>
-          <CustomBtn variant='primary' type='submit'>Submit</CustomBtn>
-          <CustomBtn variant='outline-dark' onClick={closeModal}>Cancel</CustomBtn>
-      </Modal.Footer> */}
     </Modal>
   )
 }
