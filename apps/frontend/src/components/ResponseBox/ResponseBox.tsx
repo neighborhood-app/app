@@ -24,8 +24,14 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
   let loggedUserId = loggedUser ? JSON.parse(loggedUser).id : null;
 
   const date = String(response.time_created).split("T")[0];
+
   function handleAcceptOffer() {
     acceptResponse(String(response.id));
+    revalidator.revalidate();
+  }
+
+  function handleDeleteResponse() {
+    deleteResponse(String(response.id));
     revalidator.revalidate();
   }
 
@@ -62,7 +68,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       }
     } else if (responseOwner) {
       return (
-        <CustomBtn variant='danger' className={styles.btn}>Delete Response</CustomBtn>
+        <CustomBtn variant='danger' className={styles.btn} onClick={handleDeleteResponse}>Delete Response</CustomBtn>
       )
     }
   }
