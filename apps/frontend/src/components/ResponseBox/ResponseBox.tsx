@@ -1,6 +1,6 @@
 import styles from './ResponseBox.module.css';
 import { ResponseWithUserAndRequest } from "../../types"
-import {acceptResponse, deleteResponse} from "../../services/responses";
+import { acceptResponse, deleteResponse } from "../../services/responses";
 import { useRevalidator } from 'react-router';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
@@ -67,9 +67,19 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         )
       }
     } else if (responseOwner) {
-      return (
-        <CustomBtn variant='danger' className={styles.btn} onClick={handleDeleteResponse}>Delete Response</CustomBtn>
-      )
+      if (response.status === "ACCEPTED") {
+        return (
+          <>
+            <p className={styles.p}>Your help offer has been accepted.</p>
+            <CustomBtn variant='danger' className={`${styles.btn} ${styles.deleteResponseBtn}`} onClick={handleDeleteResponse}>Delete Response</CustomBtn>
+          </>
+        )
+      } else {
+        return (
+          <CustomBtn variant='danger' className={`${styles.btn} ${styles.deleteResponseBtn}`} onClick={handleDeleteResponse}>Delete Response</CustomBtn>
+        )
+      }
+
     }
   }
   const contactInfo = displayContactInfo();
