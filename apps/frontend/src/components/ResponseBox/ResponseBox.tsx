@@ -56,10 +56,10 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
     } else if (requestOwner) {
       if (response.status === "ACCEPTED") {
         return (
-          <div>
+          <>
             <p className={styles.p}>You've accepted this offer for help.</p>
             <p className={styles.p}>Contact at: <span>{response.user.email}</span></p>
-          </div>
+          </>
         )
       } else {
         return (
@@ -79,7 +79,6 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
           <CustomBtn variant='danger' className={`${styles.btn} ${styles.deleteResponseBtn}`} onClick={handleDeleteResponse}>Delete Response</CustomBtn>
         )
       }
-
     }
   }
   const contactInfo = displayContactInfo();
