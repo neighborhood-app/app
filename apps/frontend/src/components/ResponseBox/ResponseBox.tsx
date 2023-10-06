@@ -61,7 +61,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         )
       }
     } else if (responseOwner) {
-      //to be completed
+      <p>Will show delete and edit button</p>
     }
   }
   const contactInfo = displayContactInfo();
