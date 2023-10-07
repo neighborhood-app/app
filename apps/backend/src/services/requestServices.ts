@@ -15,12 +15,14 @@ import neighborhoodServices from './neighborhoodServices';
  * @param obj - request.body
  * @returns - type predicate (boolean)
  */
-const isCreateRequestData = (obj: object): obj is CreateRequestData => 'title' in obj
+const isCreateRequestData = (obj: object): obj is CreateRequestData => (
+  'title' in obj
   && typeof obj.title === 'string'
   && 'content' in obj
   && typeof obj.content === 'string'
   && 'neighborhoodId' in obj
-  && typeof obj.neighborhoodId === 'number';
+  && typeof obj.neighborhoodId === 'number'
+);
 
 /**
  * - parses data sent to POST /requests
@@ -47,9 +49,7 @@ const parseCreateRequestData = async (
     return requestData;
   }
 
-  const error = new Error(
-    'title, content or neighborhoodId missing or invalid',
-  );
+  const error = new Error('Title, content or neighborhoodId missing or invalid.');
   error.name = 'InvalidInputError';
   throw error;
 };
@@ -174,7 +174,7 @@ const hasUserAccessToRequest = async (
 
 /**
  * - validates data for creating new request in the db
- * - title length should be >= 4,
+ * - title and content length should be >= 4,
  * - user must be a member of the neighborhood represented by neighborhoodId
  * - throws Error if data is not valid
  * @param requestData parsed request data sent to POST /requests
@@ -195,27 +195,60 @@ const validateCreateRequestData = async (
     },
   });
 
-  const MINIMUM_TITLE_LENGTH = 4;
+  const MIN_LENGTH = 4;
+  let errorMsg = '';
 
-  if (!neighborhood) {
-    const error = new Error('Neighborhood does not exist');
+  if (!neighborhood) errorMsg = 'Neighborhood does not exist';
+
+  if (!errorMsg && requestData.title.trim().length < MIN_LENGTH) {
+    errorMsg = 'Title must be at least 4 characters long.';
+  }
+
+  console.log(requestData.content.trim());
+
+  if (!errorMsg && requestData.content.trim().length < MIN_LENGTH) {
+    errorMsg = 'Content must be at least 4 characters long.';
+  }
+
+  if (!errorMsg && neighborhood) {
+    const neighborhoodsUsersIds = neighborhood.users.map((user) => user.id);
+
+    if (!neighborhoodsUsersIds.includes(userId)) {
+      errorMsg = 'User is not a member of neighborhood';
+    }
+  }
+
+  if (errorMsg) {
+    const error = new Error(errorMsg);
     error.name = 'InvalidInputError';
     throw error;
   }
 
-  if (requestData.title.trim().length < MINIMUM_TITLE_LENGTH) {
-    const error = new Error('Invalid title');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
+  // if (!neighborhood) {
+  //   const error = new Error('Neighborhood does not exist');
+  //   error.name = 'InvalidInputError';
+  //   throw error;
+  // }
 
-  const neighborhoodsUsersIds = neighborhood.users.map((u) => u.id);
+  // if (requestData.title.trim().length < MIN_LENGTH) {
+  //   const error = new Error('Title must be at least 4 characters long.');
+  //   error.name = 'InvalidInputError';
+  //   throw error;
+  // }
 
-  if (!neighborhoodsUsersIds.includes(userId)) {
-    const error = new Error('User is not a member of neighborhood');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
+  // if (requestData.content.trim().length < MIN_LENGTH) {
+  //   const error = new Error('Content must be at least 4 characters long.');
+  //   error.name = 'InvalidInputError';
+  //   throw error;
+  // }
+
+  // const neighborhoodsUsersIds = neighborhood.users.map((u) => u.id);
+
+  // if (!neighborhoodsUsersIds.includes(userId)) {
+  //   const error = new Error('User is not a member of neighborhood');
+  //   error.name = 'InvalidInputError';
+  //   throw error;
+  // }
 };
 
 /**
