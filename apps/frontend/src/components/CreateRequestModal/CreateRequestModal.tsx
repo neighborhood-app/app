@@ -75,10 +75,15 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
             Fields marked with <span className={styles.asterisk}>*</span> are required.
           </Form.Text>
           </Form.Group>
+          <Form.Group>
+          <Form.Control type='hidden' name='intent' value='create-request' />
+          </Form.Group>
           <Container className={styles.btnContainer} fluid>
             <Row className='gx-3 gy-2'>
               <Col sm={6}>
-                <CustomBtn variant='primary' type='submit' className={`${styles.btn}`}>Submit</CustomBtn>
+                <CustomBtn variant='primary' type='submit' className={`${styles.btn}`}>
+                  Submit
+                </CustomBtn>
               </Col>
               <Col sm={6}>
                 <CustomBtn variant='outline-dark' onClick={closeModal} className={styles.btn}>Cancel</CustomBtn>
