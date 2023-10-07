@@ -18,10 +18,9 @@ export default function DescriptionBox({showJoinBtn, showEditBtn, showLeaveBtn, 
   const submit = useSubmit();
   const { id: neighborhoodId } = useParams();
 
-  const handleJoin = (event: FormEvent<HTMLFormElement>) => {
-    console.log(event.target);
-    for (let idx = 0; idx < 10**10; idx += 1) {}
-    
+  const handleJoin = (event: FormEvent<HTMLFormElement>) => {    
+    event.preventDefault();
+
     submit(event.currentTarget, {
       method: 'post',
       action: `/neighborhoods/${neighborhoodId}`,
@@ -34,7 +33,7 @@ export default function DescriptionBox({showJoinBtn, showEditBtn, showLeaveBtn, 
         <img className={styles.neighborhoodImg} src={require('./palm.jpeg')} alt='Neighborhood'/>
         <h1 className={styles.neighborhoodTitle}>{name}</h1>
         {showJoinBtn ? 
-        <Form onSubmit={handleJoin}>
+        <Form method='post' onSubmit={handleJoin}>
           <Form.Group>
             <Form.Control type='hidden' name='intent' value='join-neighborhood' />
           </Form.Group>

@@ -34,8 +34,6 @@ async function connectUserToNeighborhood(neighborhoodId: number) {
   if (user) {
     const userObj: UserInfo = JSON.parse(user);
     headers.authorization = `Bearer ${userObj.token}`;
-
-    console.log(userObj);
   }
 
   const response = await axios.post(`${BASE_URL}/${neighborhoodId}/join`, null, { headers });

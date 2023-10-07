@@ -33,10 +33,10 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
   
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const form = event.currentTarget;
     
     if (!form.checkValidity()) {
-      event.preventDefault();
       event.stopPropagation();
 
       form.classList.add('was-validated');
@@ -55,7 +55,7 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
         <Modal.Title>Create a request</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form role='form' noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
+        <Form method='post' role='form' noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
           <Form.Group className='mb-3' controlId='title'>
             <Form.Label column='sm'>Title<span className={styles.asterisk}>*</span></Form.Label>
             <Form.Control type='text' name='title' minLength={4} pattern='\s*(\S\s*){4,}' required />
