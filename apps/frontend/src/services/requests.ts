@@ -1,9 +1,10 @@
-import axios from "axios";
-import { RequestData, StorageWithUser, UserInfo } from "../types";
+import axios from 'axios';
+import { RequestData, StorageWithUser, UserInfo } from '../types';
+import { Request } from '@prisma/client';
 
 const baseURL = '/api/requests';
 
-async function createRequest(requestData: RequestData) {
+async function createRequest(requestData: RequestData): Promise<Request> {
   const headers: { authorization?: string } = {};
   let { user }: { user?: string } = localStorage as StorageWithUser;
 

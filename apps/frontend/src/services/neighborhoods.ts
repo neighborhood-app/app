@@ -1,9 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { StorageWithUser, UserInfo } from "../types";
-import { getStoredUser } from "../utils/auth";
-import axios from "axios";
+import { StorageWithUser, UserInfo } from '../types';
+import { getStoredUser } from '../utils/auth';
+import axios from 'axios';
 
-const BASE_URL = "/api/neighborhoods";
+const BASE_URL = '/api/neighborhoods';
 
 async function getAllNeighborhoods() {
   const response = await axios.get(BASE_URL);
@@ -26,7 +26,7 @@ async function getSingleNeighborhood(id: Number) {
   }
 }
 
-async function connectUserToNeighborhood(neighborhoodId: number) {
+async function connectUserToNeighborhood(neighborhoodId: number): Promise<{ success: string }> {
   const headers: { authorization?: string } = {};
   let { user }: { user?: string } = localStorage as StorageWithUser;
   
@@ -38,7 +38,6 @@ async function connectUserToNeighborhood(neighborhoodId: number) {
 
   const response = await axios.post(`${BASE_URL}/${neighborhoodId}/join`, null, { headers });
 
-  console.log(response.data);
   return response.data;
 }
 

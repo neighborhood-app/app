@@ -16,6 +16,7 @@ import {
 import NeighborhoodPageForMembers from "./NeighborhoodPageForMembers";
 import NeighborhoodPageForAdmin from "./NeighborhoodPageForAdmin";
 import NeighborhoodPageForNonMembers from "./NeighborhoodPageForNonMembers";
+import { Request } from '@prisma/client';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   // TODO: If unable to login because of token invalid or otherwise
@@ -40,12 +41,13 @@ export async function action({ params, request }: ActionFunctionArgs) {
   requestData.neighborhoodId = Number(params.id);
 
   const intent = formData.get('intent');
-  let response = null;
+  // We should consider only returning success objects from all routes if 
+  // we aren't gonna need the new data
+  let response: Request | { success: string } | null = null;
 
   if (intent === 'create-request') {
     response = await requestServices.createRequest(requestData);
   } else if (intent === 'join-neighborhood') {
-    console.log('clicked join button');
     response = await neighborhoodsService.connectUserToNeighborhood(requestData.neighborhoodId);
   }
 

@@ -204,8 +204,6 @@ const validateCreateRequestData = async (
     errorMsg = 'Title must be at least 4 characters long.';
   }
 
-  console.log(requestData.content.trim());
-
   if (!errorMsg && requestData.content.trim().length < MIN_LENGTH) {
     errorMsg = 'Content must be at least 4 characters long.';
   }
@@ -223,32 +221,6 @@ const validateCreateRequestData = async (
     error.name = 'InvalidInputError';
     throw error;
   }
-
-  // if (!neighborhood) {
-  //   const error = new Error('Neighborhood does not exist');
-  //   error.name = 'InvalidInputError';
-  //   throw error;
-  // }
-
-  // if (requestData.title.trim().length < MIN_LENGTH) {
-  //   const error = new Error('Title must be at least 4 characters long.');
-  //   error.name = 'InvalidInputError';
-  //   throw error;
-  // }
-
-  // if (requestData.content.trim().length < MIN_LENGTH) {
-  //   const error = new Error('Content must be at least 4 characters long.');
-  //   error.name = 'InvalidInputError';
-  //   throw error;
-  // }
-
-  // const neighborhoodsUsersIds = neighborhood.users.map((u) => u.id);
-
-  // if (!neighborhoodsUsersIds.includes(userId)) {
-  //   const error = new Error('User is not a member of neighborhood');
-  //   error.name = 'InvalidInputError';
-  //   throw error;
-  // }
 };
 
 /**

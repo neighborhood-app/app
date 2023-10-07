@@ -33,6 +33,7 @@ export default function DescriptionBox({showJoinBtn, showEditBtn, showLeaveBtn, 
         <img className={styles.neighborhoodImg} src={require('./palm.jpeg')} alt='Neighborhood'/>
         <h1 className={styles.neighborhoodTitle}>{name}</h1>
         {showJoinBtn ? 
+        // Create separate component
         <Form method='post' onSubmit={handleJoin}>
           <Form.Group>
             <Form.Control type='hidden' name='intent' value='join-neighborhood' />
