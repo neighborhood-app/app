@@ -2,7 +2,7 @@ import { Modal, Form, Container, Row, Col } from 'react-bootstrap';
 import { useParams, useSubmit } from 'react-router-dom';
 import styles from './CreateRequestModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
-import { FormEvent, useState } from 'react';
+import { FormEvent, FocusEvent, ChangeEvent, useState } from 'react';
 
 interface Props {
   show: boolean;
@@ -17,6 +17,22 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
     handleClose();
     setValidated(false);
   };
+
+  const validateTextArea = (event: FocusEvent<HTMLTextAreaElement>) => {
+    const textarea = event.currentTarget as HTMLTextAreaElement ;
+    const validPattern = /\s*(\S\s*){4,}/;
+
+    if (!validPattern.test(textarea.value)) {
+      textarea.setCustomValidity('The content needs to be at least 4 characters long.');
+    } else {
+      textarea.setCustomValidity('');
+    }
+
+    textarea.reportValidity();
+  }
+
+  const hideValidation = (event: ChangeEvent<HTMLTextAreaElement>) =>
+    event.currentTarget.setCustomValidity('');
     
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
@@ -51,7 +67,7 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
           </Form.Group>
           <Form.Group className='mb-2' controlId='content'>
             <Form.Label column='sm'>Content<span className={styles.asterisk}>*</span></Form.Label>
-            <Form.Control as='textarea' rows={4} name='content' minLength={4} required />
+            <Form.Control as='textarea' rows={4} name='content' minLength={4} onChange={hideValidation} onBlur={validateTextArea} required />
             <Form.Control.Feedback type='invalid'>
               Please input some explanatory content.
             </Form.Control.Feedback>
