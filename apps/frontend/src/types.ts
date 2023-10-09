@@ -74,6 +74,7 @@ export interface URLParameterID {
 export interface StoredUserData {
   username: string;
   token: string;
+  id: string;
 }
 
 export enum UserRole {

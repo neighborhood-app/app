@@ -2,6 +2,7 @@ import styles from './ResponseBox.module.css';
 import { ResponseWithUserAndRequest } from "../../types"
 import { acceptResponse, deleteResponse } from "../../services/responses";
 import { useRevalidator } from 'react-router';
+import { getStoredUser } from '../../utils/auth';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
 type Props = {
@@ -20,8 +21,8 @@ function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
 export default function ResponseBox({ response, requestOwnerId }: Props) {
   const revalidator = useRevalidator();
 
-  let loggedUser = localStorage.getItem('user');
-  let loggedUserId = loggedUser ? JSON.parse(loggedUser).id : null;
+  let loggedUser = getStoredUser();
+  let loggedUserId = loggedUser ? Number(loggedUser.id) : null;
 
   const date = String(response.time_created).split("T")[0];
 
@@ -48,6 +49,8 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
   */
 
   function displayContactInfo() {
+    if (!(loggedUserId)) return;
+
     const requestOwner = isLoggedUserRequestOwner(loggedUserId, requestOwnerId);
     const responseOwner = isLoggedUserResponseOwner(loggedUserId, response.user_id);
 
