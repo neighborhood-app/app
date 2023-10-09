@@ -32,18 +32,13 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
 
   const date = String(response.time_created).split("T")[0];
 
-  function handleAcceptOffer(event: FormEvent<HTMLFormElement>) {
+  function handleResponseAction(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     submit(event.currentTarget, {
       method: 'post',
       action: `/neighborhoods/${neighborhoodId}`,
     });
-  }
-
-  function handleDeleteResponse() {
-    deleteResponse(String(response.id));
-    // revalidator.revalidate();
   }
 
   /*
@@ -64,6 +59,18 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
     const requestOwner = isLoggedUserRequestOwner(loggedUserId, requestOwnerId);
     const responseOwner = isLoggedUserResponseOwner(loggedUserId, response.user_id);
 
+    const deleteResponseBtn = (
+      <Form method='post' onSubmit={handleResponseAction}>
+        <Form.Group>
+          <Form.Control type='hidden' name='intent' value='delete-response' />
+          <Form.Control type='hidden' name='responseId' value={id} />
+        </Form.Group>
+        <CustomBtn variant='primary' className={styles.btn} type='submit'>
+          Delete Response
+        </CustomBtn>
+      </Form>
+    )
+
     if (!(requestOwner || responseOwner)) return null;
 
     if (requestOwner) {
@@ -76,7 +83,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         )
       } else {
         return (
-          <Form method='post' onSubmit={handleAcceptOffer}>
+          <Form method='post' onSubmit={handleResponseAction}>
             <Form.Group>
               <Form.Control type='hidden' name='intent' value='accept-offer' />
               <Form.Control type='hidden' name='responseId' value={id} />
@@ -92,13 +99,11 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         return (
           <>
             <p className={styles.p}>Your help offer has been accepted.</p>
-            <CustomBtn variant='danger' className={`${styles.btn} ${styles.deleteResponseBtn}`} onClick={handleDeleteResponse}>Delete Response</CustomBtn>
+            {deleteResponseBtn}
           </>
         )
       } else {
-        return (
-          <CustomBtn variant='danger' className={`${styles.btn} ${styles.deleteResponseBtn}`} onClick={handleDeleteResponse}>Delete Response</CustomBtn>
-        )
+        return deleteResponseBtn
       }
     }
   }
