@@ -51,7 +51,7 @@ describe('When there is initially no user in db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    expect(response1._body.error).toBe('Username or Password missing');
+    expect(response1._body.error).toBe('Username, Email or Password missing');
 
     const dataWithoutPassword = {
       username: 'johnsmith',
@@ -63,7 +63,7 @@ describe('When there is initially no user in db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    expect(response2._body.error).toBe('Username or Password missing');
+    expect(response2._body.error).toBe('Username, Email or Password missing');
   });
 
   test('Creating User fails with proper statuscode and message if username or password too short', async () => {
@@ -126,7 +126,7 @@ describe('When there is initially one user in db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    expect(response._body.error).toBe('User already exists');
+    expect(response._body.error).toBe('A user with that username already exists.');
   });
 
   test('Able to create user with different username and valid data', async () => {
