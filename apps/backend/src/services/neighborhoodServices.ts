@@ -193,7 +193,7 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
 /**
  * associates user with the neighborhood in the db
  * throws error if userId or neighborhoodId invalid
- * throws error if user already associates with the neighborhood
+ * throws error if user already associated with the neighborhood
  * @param userId
  * @param neighborhoodId
  */

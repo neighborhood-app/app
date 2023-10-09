@@ -82,3 +82,5 @@ export enum UserRole {
   "MEMBER" = "MEMBER",
   "ADMIN" = "ADMIN",
 }
+
+export type SingleNeighborhoodFormIntent = 'create-request' | 'join-neighborhood' | null;
