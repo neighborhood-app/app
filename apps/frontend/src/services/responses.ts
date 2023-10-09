@@ -31,4 +31,4 @@ async function deleteResponse(responseId: string) {
   return response.data;
 }
 
-export {acceptResponse, deleteResponse};
+export { acceptResponse, deleteResponse };

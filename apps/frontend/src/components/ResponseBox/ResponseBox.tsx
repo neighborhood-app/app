@@ -1,9 +1,12 @@
 import styles from './ResponseBox.module.css';
+import { FormEvent } from 'react';
 import { ResponseWithUserAndRequest } from "../../types"
 import { acceptResponse, deleteResponse } from "../../services/responses";
-import { useRevalidator } from 'react-router';
+import { useRevalidator, useParams } from 'react-router';
+import { useSubmit } from 'react-router-dom';
 import { getStoredUser } from '../../utils/auth';
 import CustomBtn from '../CustomBtn/CustomBtn';
+import { Form } from 'react-bootstrap';
 
 type Props = {
   response: ResponseWithUserAndRequest;
@@ -19,21 +22,28 @@ function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
 }
 
 export default function ResponseBox({ response, requestOwnerId }: Props) {
-  const revalidator = useRevalidator();
+  // const revalidator = useRevalidator();
+  const submit = useSubmit();
+  const id = response.id;
+  const { id: neighborhoodId } = useParams();
 
   let loggedUser = getStoredUser();
   let loggedUserId = loggedUser ? Number(loggedUser.id) : null;
 
   const date = String(response.time_created).split("T")[0];
 
-  function handleAcceptOffer() {
-    acceptResponse(String(response.id));
-    revalidator.revalidate();
+  function handleAcceptOffer(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    submit(event.currentTarget, {
+      method: 'post',
+      action: `/neighborhoods/${neighborhoodId}`,
+    });
   }
 
   function handleDeleteResponse() {
     deleteResponse(String(response.id));
-    revalidator.revalidate();
+    // revalidator.revalidate();
   }
 
   /*
@@ -55,7 +65,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
     const responseOwner = isLoggedUserResponseOwner(loggedUserId, response.user_id);
 
     if (!(requestOwner || responseOwner)) return null;
-      
+
     if (requestOwner) {
       if (response.status === "ACCEPTED") {
         return (
@@ -66,7 +76,15 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         )
       } else {
         return (
-          <CustomBtn variant='outline-dark' className={styles.btn} onClick={handleAcceptOffer}>Accept Offer</CustomBtn>
+          <Form method='post' onSubmit={handleAcceptOffer}>
+            <Form.Group>
+              <Form.Control type='hidden' name='intent' value='accept-offer' />
+              <Form.Control type='hidden' name='responseId' value={id} />
+            </Form.Group>
+            <CustomBtn variant='primary' className={styles.btn} type='submit'>
+              Accept Offer
+            </CustomBtn>
+          </Form>
         )
       }
     } else if (responseOwner) {

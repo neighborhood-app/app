@@ -5,6 +5,7 @@ import {
   useLoaderData,
 } from 'react-router';
 import requestServices from '../../services/requests';
+import { acceptResponse, deleteResponse } from '../../services/responses';
 import { useUser } from '../../store/user-context';
 import {
   NeighborhoodDetailsForMembers,
@@ -37,8 +38,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 export async function action({ params, request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const requestData = Object.fromEntries(formData) as unknown as RequestData;
-  requestData.neighborhoodId = Number(params.id);
+  const neighborhoodId = Number(params.id);
 
   const intent = formData.get('intent') as SingleNeighborhoodFormIntent;
   // We should consider only returning success/error objects from all routes 
@@ -46,9 +46,14 @@ export async function action({ params, request }: ActionFunctionArgs) {
   let response: Request | Response | { success: string } | { error: string } | null = null;
 
   if (intent === 'create-request') {
+    const requestData = Object.fromEntries(formData) as unknown as RequestData;
+    requestData.neighborhoodId = neighborhoodId;
     response = await requestServices.createRequest(requestData);
   } else if (intent === 'join-neighborhood') {
-    response = await neighborhoodsService.connectUserToNeighborhood(requestData.neighborhoodId);
+    response = await neighborhoodsService.connectUserToNeighborhood(neighborhoodId);
+  } else if (intent === 'accept-offer') {
+    let responseId = String(formData.get('responseId'));
+    response = await acceptResponse(responseId);
   }
 
   return response;
