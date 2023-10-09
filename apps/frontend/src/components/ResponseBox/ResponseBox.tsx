@@ -51,15 +51,15 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
     const requestOwner = isLoggedUserRequestOwner(loggedUserId, requestOwnerId);
     const responseOwner = isLoggedUserResponseOwner(loggedUserId, response.user_id);
 
-    if (!(requestOwner || responseOwner)) {
-      return null;
-    } else if (requestOwner) {
+    if (!(requestOwner || responseOwner)) return null;
+      
+    if (requestOwner) {
       if (response.status === "ACCEPTED") {
         return (
-          <div>
+          <>
             <p className={styles.p}>You've accepted this offer for help.</p>
             <p className={styles.p}>Contact at: <span>{response.user.email}</span></p>
-          </div>
+          </>
         )
       } else {
         return (
@@ -79,7 +79,6 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
           <CustomBtn variant='danger' className={`${styles.btn} ${styles.deleteResponseBtn}`} onClick={handleDeleteResponse}>Delete Response</CustomBtn>
         )
       }
-
     }
   }
   const contactInfo = displayContactInfo();
