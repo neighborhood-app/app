@@ -11,6 +11,7 @@ import {
   NeighborhoodDetailsForNonMembers,
   NeighborhoodType,
   RequestData,
+  SingleNeighborhoodFormIntent,
   UserRole,
 } from '../../types';
 import NeighborhoodPageForMembers from './NeighborhoodPageForMembers';
@@ -39,7 +40,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const requestData = Object.fromEntries(formData) as unknown as RequestData;
   requestData.neighborhoodId = Number(params.id);
 
-  const intent = formData.get('intent');
+  const intent = formData.get('intent') as SingleNeighborhoodFormIntent;
   // We should consider only returning success/error objects from all routes 
   // where we don't need the new data
   let response: Request | Response | { success: string } | { error: string } | null = null;
