@@ -1,8 +1,7 @@
 import styles from './ResponseBox.module.css';
 import { FormEvent } from 'react';
 import { ResponseWithUserAndRequest } from "../../types"
-import { acceptResponse, deleteResponse } from "../../services/responses";
-import { useRevalidator, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { useSubmit } from 'react-router-dom';
 import { getStoredUser } from '../../utils/auth';
 import CustomBtn from '../CustomBtn/CustomBtn';
@@ -41,35 +40,29 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
     });
   }
 
-  /*
-    Cases:
-    1. User is not the response or request owner;
-      Show nothing;
-    2. User is also response owner:
-      Show a delete and edit button;
-      - if response status is ACCEPTED also show msg "You're response has been accepted"
-    3. User is also request owner:
-      Show a 'Accept offer' button;
-      - if response status is ACCEPTED show contact info.
-  */
+  function createActionButton(
+    submitHandler: (event: FormEvent<HTMLFormElement>) => void, 
+    intent: 'accept-offer' | 'delete-response', 
+    text: string
+    ) {
+    return (
+      <Form method='post' onSubmit={submitHandler}>
+        <Form.Group>
+          <Form.Control type='hidden' name='intent' value={intent} />
+          <Form.Control type='hidden' name='responseId' value={id} />
+        </Form.Group>
+        <CustomBtn variant='primary' className={styles.btn} type='submit'>
+          {text}
+        </CustomBtn>
+      </Form>
+    )
+  }
 
   function displayContactInfo() {
     if (!(loggedUserId)) return;
 
     const requestOwner = isLoggedUserRequestOwner(loggedUserId, requestOwnerId);
-    const responseOwner = isLoggedUserResponseOwner(loggedUserId, response.user_id);
-
-    const deleteResponseBtn = (
-      <Form method='post' onSubmit={handleResponseAction}>
-        <Form.Group>
-          <Form.Control type='hidden' name='intent' value='delete-response' />
-          <Form.Control type='hidden' name='responseId' value={id} />
-        </Form.Group>
-        <CustomBtn variant='primary' className={styles.btn} type='submit'>
-          Delete Response
-        </CustomBtn>
-      </Form>
-    )
+    const responseOwner = isLoggedUserResponseOwner(loggedUserId, response.user_id); 
 
     if (!(requestOwner || responseOwner)) return null;
 
@@ -82,28 +75,18 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
           </>
         )
       } else {
-        return (
-          <Form method='post' onSubmit={handleResponseAction}>
-            <Form.Group>
-              <Form.Control type='hidden' name='intent' value='accept-offer' />
-              <Form.Control type='hidden' name='responseId' value={id} />
-            </Form.Group>
-            <CustomBtn variant='primary' className={styles.btn} type='submit'>
-              Accept Offer
-            </CustomBtn>
-          </Form>
-        )
+        return createActionButton(handleResponseAction, 'accept-offer', 'Accept Offer');
       }
     } else if (responseOwner) {
       if (response.status === "ACCEPTED") {
         return (
           <>
             <p className={styles.p}>Your help offer has been accepted.</p>
-            {deleteResponseBtn}
+            {createActionButton(handleResponseAction, 'delete-response', 'Delete response')}
           </>
         )
       } else {
-        return deleteResponseBtn
+        return createActionButton(handleResponseAction, 'delete-response', 'Delete response');
       }
     }
   }
