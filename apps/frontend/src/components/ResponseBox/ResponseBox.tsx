@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import { useSubmit } from 'react-router-dom';
 import { getStoredUser } from '../../utils/auth';
 import CustomBtn from '../CustomBtn/CustomBtn';
+import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import { Form } from 'react-bootstrap';
 
 type Props = {
@@ -23,7 +24,7 @@ function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
 export default function ResponseBox({ response, requestOwnerId }: Props) {
   // const revalidator = useRevalidator();
   const submit = useSubmit();
-  const id = response.id;
+  // const id = response.id;
   const { id: neighborhoodId } = useParams();
 
   let loggedUser = getStoredUser();
@@ -31,32 +32,32 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
 
   const date = String(response.time_created).split("T")[0];
 
-  function handleResponseAction(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  // function handleResponseAction(event: FormEvent<HTMLFormElement>) {
+  //   event.preventDefault();
 
-    submit(event.currentTarget, {
-      method: 'post',
-      action: `/neighborhoods/${neighborhoodId}`,
-    });
-  }
+  //   submit(event.currentTarget, {
+  //     method: 'post',
+  //     action: `/neighborhoods/${neighborhoodId}`,
+  //   });
+  // }
 
-  function createActionButton(
-    submitHandler: (event: FormEvent<HTMLFormElement>) => void, 
-    intent: 'accept-offer' | 'delete-response', 
-    text: string
-    ) {
-    return (
-      <Form method='post' onSubmit={submitHandler}>
-        <Form.Group>
-          <Form.Control type='hidden' name='intent' value={intent} />
-          <Form.Control type='hidden' name='responseId' value={id} />
-        </Form.Group>
-        <CustomBtn variant='primary' className={styles.btn} type='submit'>
-          {text}
-        </CustomBtn>
-      </Form>
-    )
-  }
+  // function createActionButton(
+  //   submitHandler: (event: FormEvent<HTMLFormElement>) => void, 
+  //   intent: 'accept-offer' | 'delete-response', 
+  //   text: string
+  //   ) {
+  //   return (
+  //     <Form method='post' onSubmit={submitHandler}>
+  //       <Form.Group>
+  //         <Form.Control type='hidden' name='intent' value={intent} />
+  //         <Form.Control type='hidden' name='responseId' value={id} />
+  //       </Form.Group>
+  //       <CustomBtn variant='primary' className={styles.btn} type='submit'>
+  //         {text}
+  //       </CustomBtn>
+  //     </Form>
+  //   )
+  // }
 
   function displayContactInfo() {
     if (!(loggedUserId)) return;
@@ -75,18 +76,24 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
           </>
         )
       } else {
-        return createActionButton(handleResponseAction, 'accept-offer', 'Accept Offer');
+        // return createActionButton(handleResponseAction, 'accept-offer', 'Accept Offer');
+        return (
+          <TriggerActionButton id={response.id} route={`/neighborhoods/${neighborhoodId}`} intent='accept-offer' text='Accept offer'/>
+        )
       }
     } else if (responseOwner) {
       if (response.status === "ACCEPTED") {
         return (
           <>
             <p className={styles.p}>Your help offer has been accepted.</p>
-            {createActionButton(handleResponseAction, 'delete-response', 'Delete response')}
+            {/* {createActionButton(handleResponseAction, 'delete-response', 'Delete response')} */}
+            <TriggerActionButton id={response.id} route={`/neighborhoods/${neighborhoodId}`} intent='delete-response' text='Delete response'/>
           </>
         )
       } else {
-        return createActionButton(handleResponseAction, 'delete-response', 'Delete response');
+        return (
+          <TriggerActionButton id={response.id} route={`/neighborhoods/${neighborhoodId}`} intent='delete-response' text='Delete response'/>
+        )
       }
     }
   }
