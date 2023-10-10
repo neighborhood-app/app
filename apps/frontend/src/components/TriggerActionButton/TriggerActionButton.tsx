@@ -1,9 +1,7 @@
 import { FormEvent } from "react";
 import { useSubmit } from "react-router-dom";
 import { Form } from "react-bootstrap";
-import styles from "./TriggerActionButton.module.css"
 import CustomBtn from "../CustomBtn/CustomBtn";
-
 
 /**
  * This is a custom button element that will trigger the action of the specified route. It's current use case
@@ -41,12 +39,12 @@ export default function TriggerActionButton(
     }
 
     return (
-        <Form className={styles.form} method='post' onSubmit={handleResponseAction}>
+        <Form method='post' onSubmit={handleResponseAction}>
             <Form.Group>
                 <Form.Control type='hidden' name='intent' value={intent} />
                 <Form.Control type='hidden' name='responseId' value={id} />
             </Form.Group>
-            <CustomBtn variant='primary' className={styles.btn} type='submit'>
+            <CustomBtn variant='primary' type='submit'>
                 {text}
             </CustomBtn>
         </Form>

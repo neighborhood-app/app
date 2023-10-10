@@ -5,7 +5,7 @@ import {
   useLoaderData,
 } from 'react-router';
 import requestServices from '../../services/requests';
-import { acceptResponse, deleteResponse } from '../../services/responses';
+import responseServices from '../../services/responses';
 import { useUser } from '../../store/user-context';
 import {
   NeighborhoodDetailsForMembers,
@@ -53,9 +53,9 @@ export async function action({ params, request }: ActionFunctionArgs) {
   } else if (intent === 'join-neighborhood') {
     response = await neighborhoodsService.connectUserToNeighborhood(neighborhoodId);
   } else if (intent === 'accept-offer') {
-    response = await acceptResponse(String(responseId));
+    response = await responseServices.acceptResponse(String(responseId));
   } else if (intent === 'delete-response') {
-    response = await deleteResponse(String(responseId));
+    response = await responseServices.deleteResponse(String(responseId));
   }
 
   return response;
