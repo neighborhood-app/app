@@ -220,6 +220,70 @@ const connectUserToNeighborhood = async (userId: number, neighborhoodId: number)
 };
 
 /**
+ * deletes user from neighborhood in the db
+ * throws error if userId or neighborhoodId invalid
+ * throws error if user is not a member of the neighborhood
+ * @param userId
+ * @param neighborhoodId
+ */
+const removeUserFromNeighborhood = async (
+  userId: number,
+  neighborhoodId: number,
+): Promise<void> => {
+  const neighborhood = await prismaClient.neighborhood
+    .findUniqueOrThrow({
+      where: { id: neighborhoodId },
+      include: { users: true, requests: { include: { responses: true } } },
+    });
+
+  // console.log(await prismaClient.neighborhood
+  //   .findUniqueOrThrow({
+  //     where:
+  //     { id: neighborhoodId },
+  //     include: { users: true, requests: { include: { responses: true } } },
+  //   }));
+
+  const userIsMemberOfNeighborhood = neighborhood.users.some(user => user.id === userId);
+  const userIsNeighborhoodAdmin = neighborhood.admin_id === userId;
+
+  const userRequestsInNeighborhood = neighborhood.requests.filter(req => req.user_id === userId);
+  const requestsIds = userRequestsInNeighborhood.map(req => ({ id: req.id }));
+  // const userResponsesInNeighborhood = userRequestsInNeighborhood.flatMap(req => req.responses)
+  //   .filter(res => res.user_id === userId);
+  // const responsesIds = userResponsesInNeighborhood.map(res => res.id);
+
+  // const requestsWithUserResponsesIds = neighborhood.requests
+  //   .filter(req => req.responses.some(res => res.user_id === userId))
+  //   .map(req => req.id);
+
+  if (!userIsMemberOfNeighborhood) {
+    const error = new Error('User is not a member of this neighborhood.');
+    error.name = 'InvalidInputError';
+    throw error;
+  } else if (userIsNeighborhoodAdmin) {
+    // In that case, the user will have to delete the neighborhood (?)
+    const error = new Error('User is neighborhood admin.');
+    error.name = 'UserDataError';
+    throw error;
+  }
+
+  // remove user and delete (or mark them as "closed") associated requests
+  await prismaClient.neighborhood.update({
+    where: { id: neighborhoodId },
+    data: {
+      users: {
+        disconnect: { id: userId },
+      },
+      requests: {
+        deleteMany: requestsIds,
+      },
+    },
+  });
+
+  // TODO: delete user responses or mark them as "invactive"
+};
+
+/**
  * creates new neighborhood in the database
  * associates the user (from data) as the admin of the new neighborhood
  * throws error if data is invalid
@@ -273,5 +337,6 @@ export default {
   parseCreateNeighborhoodData,
   createNeighborhood,
   connectUserToNeighborhood,
+  removeUserFromNeighborhood,
   getRequestsAssociatedWithNeighborhood,
 };
