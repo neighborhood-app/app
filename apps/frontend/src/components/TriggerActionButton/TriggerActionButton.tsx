@@ -41,7 +41,7 @@ export default function TriggerActionButton(
     }
 
     return (
-        <Form method='post' onSubmit={handleResponseAction}>
+        <Form className={styles.form} method='post' onSubmit={handleResponseAction}>
             <Form.Group>
                 <Form.Control type='hidden' name='intent' value={intent} />
                 <Form.Control type='hidden' name='responseId' value={id} />

@@ -1,7 +1,11 @@
 .btn {
   font-size: 0.7rem;
   cursor: pointer;
-  width: 50%;
   margin: auto;
   margin-bottom: 5px;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
 }
