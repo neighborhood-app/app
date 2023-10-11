@@ -149,3 +149,12 @@ export type UpdateResponseData = Pick<Partial<Response>, 'content' | 'status'>;
  * A request owner of the associated response can only update its status.
  */
 export type UserStatusOnResponse = 'RESPONSE OWNER' | 'REQUEST OWNER';
+
+/**
+ * Shape of data returned as a response after a successful login
+ */
+export interface LoginResponseData {
+  id: number;
+  username: string;
+  token: string;
+}

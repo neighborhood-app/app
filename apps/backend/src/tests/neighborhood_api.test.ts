@@ -6,7 +6,7 @@ import prismaClient from '../../prismaClient';
 import seed from './seed';
 import testHelpers from './testHelpers';
 import {
-  LoginData, NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers,
+  LoginData, NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers, LoginResponseData,
 } from '../types';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -21,6 +21,11 @@ const BOBS_LOGIN_DATA: LoginData = {
 
 const ANTONINA_LOGIN_DATA: LoginData = {
   username: 'antonina',
+  password: 'secret',
+};
+
+const RADU_LOGIN_DATA: LoginData = {
+  username: 'radu',
   password: 'secret',
 };
 
@@ -117,7 +122,7 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
   });
 
   test('GET /neighborhoods/id only returns the id, name, description and location of neighborhood if is logged in but not a member', async () => {
-    const loginResponse = await loginUser(ANTONINA_LOGIN_DATA);
+    const loginResponse = await loginUser(RADU_LOGIN_DATA);
     const { token } = loginResponse.body;
 
     const neighborhood: NeighborhoodDetailsForNonMembers | null = await prismaClient
@@ -606,6 +611,53 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
     const finalUsers = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
 
     expect(finalUsers?.length).toBe(initialUsers?.length);
+  });
+});
+
+describe('Tests for user leaving a neighborhood: PUT /neighborhood/:id/leave', () => {
+  let token: string;
+  let userId: number;
+
+  beforeAll(async () => {
+    const loginResponse = await loginUser(ANTONINA_LOGIN_DATA);
+    token = loginResponse.body.token;
+    userId = loginResponse.body.id;
+  });
+
+  beforeEach(async () => {
+    await seed();
+  });
+
+  test('User can leave neighborhood with valid data', async () => {
+    const initialUsers = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
+    const numInitialUsers = initialUsers?.length as number;
+
+    await api.put(`/api/neighborhoods/${BOBS_NHOOD_ID}/leave`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const finalUsersInNeighborhood = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
+    const usernameInNeighborhood = finalUsersInNeighborhood
+      ?.map(user => user.username)
+      .includes(ANTONINA_LOGIN_DATA.username);
+
+    expect(finalUsersInNeighborhood?.length).toBe(numInitialUsers - 1);
+    expect(usernameInNeighborhood).toBe(false);
+
+    const neighborhoodReqs = await testHelpers.getNeighborhoodRequests(BOBS_NHOOD_ID);
+    const deactivatedRequests = neighborhoodReqs
+      .filter(req => req.user_id === userId)
+      .every(req => req.status === 'CLOSED' || req.status === 'INACTIVE');
+
+    const requestsIds = neighborhoodReqs.map(req => req.id);
+    const userResponses = await testHelpers.getUserResponses(userId);
+    const deactivatedResponses = userResponses
+      ?.filter(res => requestsIds.includes(res.request_id))
+      .every(res => res.status === 'INACTIVE');
+
+    expect(deactivatedRequests).toBe(true);
+    expect(deactivatedResponses).toBe(true);
   });
 });
 

@@ -133,7 +133,7 @@ neighborhoodsRouter.get('/:id/requests', middleware.userIdExtractorAndLoginValid
   }
 
   const requests: RequestData[] = await neighborhoodServices
-    .getRequestsAssociatedWithNeighborhood(neighborhoodID);
+    .getNeighborhoodRequests(neighborhoodID);
 
   return res.status(200).send(requests);
 }));

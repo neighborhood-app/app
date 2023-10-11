@@ -4,6 +4,7 @@ import {
   NeighborhoodWithRelatedFields, CreateNeighborhoodData,
   NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers,
 } from '../types';
+import responseServices from './responseServices';
 
 // helpers
 
@@ -136,6 +137,27 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
   return neighborhood;
 };
 
+const getNeighborhoodRequests = async (nhoodId: number): Promise<Request[]> => {
+  const neighborhood: NeighborhoodWithRelatedFields | null = await prismaClient
+    .neighborhood.findUnique({
+      where: {
+        id: nhoodId,
+      },
+      include: {
+        requests: true,
+        users: true,
+      },
+    });
+
+  if (!neighborhood) {
+    const error = new Error('Neighborhood does not exist');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+  const { requests } = neighborhood;
+  return requests;
+};
+
 /**
  * checks if the user is admin of the neighborhood
  * throws error if neighborhoodId is invalid
@@ -230,22 +252,15 @@ const connectUserToNeighborhood = async (userId: number, neighborhoodId: number)
 const removeUserFromNeighborhood = async (
   userId: number,
   neighborhoodId: number,
-): Promise<boolean> => {
+): Promise<void> => {
   const neighborhood = await prismaClient.neighborhood
     .findUniqueOrThrow({
       where: { id: neighborhoodId },
-      include: { users: true, requests: { include: { responses: true } } },
+      include: { users: true, requests: true },
     });
 
   const userIsMemberOfNeighborhood = neighborhood.users.some(user => user.id === userId);
   const userIsNeighborhoodAdmin = neighborhood.admin_id === userId;
-
-  const userRequestsInNeighborhood = neighborhood.requests.filter(req => req.user_id === userId);
-  const requestsIds = userRequestsInNeighborhood.map(req => req.id);
-  const userResponsesInNeighborhood = userRequestsInNeighborhood
-    .flatMap(req => req.responses)
-    .filter(res => res.user_id === userId);
-  const responsesIds = userResponsesInNeighborhood.map(res => res.id);
 
   if (!userIsMemberOfNeighborhood) {
     const error = new Error('User is not a member of this neighborhood.');
@@ -258,15 +273,16 @@ const removeUserFromNeighborhood = async (
     // eslint-disable-next-line no-restricted-globals, no-alert
     const confirmation = confirm('That will delete the neighborhood. Are you sure you want to proceed?');
     if (confirmation) {
-      await prismaClient.neighborhood.delete({
-        where: {
-          id: neighborhoodId,
-        },
-      });
-
-      return true;
+      await deleteNeighborhood(neighborhoodId);
+      return;
     }
   }
+
+  const userRequestsInNeighborhood = neighborhood.requests.filter(req => req.user_id === userId);
+  const requestsIds = userRequestsInNeighborhood.map(req => req.id);
+  const responsesInNeighborhood = await responseServices.getResponsesInNeighborhood(neighborhoodId);
+  const userResponsesInNeighborhood = responsesInNeighborhood.filter(res => res.user_id === userId);
+  const responsesIds = userResponsesInNeighborhood.map(res => res.id);
 
   // remove user and mark associated requests as "inactive"
   await prismaClient.neighborhood.update({
@@ -298,8 +314,6 @@ const removeUserFromNeighborhood = async (
       status: 'INACTIVE',
     },
   });
-
-  return true;
 };
 
 /**
@@ -325,27 +339,6 @@ const createNeighborhood = async (data: CreateNeighborhoodData): Promise<Neighbo
   }
 };
 
-const getRequestsAssociatedWithNeighborhood = async (nhoodId: number): Promise<Request[]> => {
-  const neighborhood: NeighborhoodWithRelatedFields | null = await prismaClient
-    .neighborhood.findUnique({
-      where: {
-        id: nhoodId,
-      },
-      include: {
-        requests: true,
-        users: true,
-      },
-    });
-
-  if (!neighborhood) {
-    const error = new Error('Neighborhood does not exist');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-  const { requests } = neighborhood;
-  return requests;
-};
-
 export default {
   getAllNeighborhoods,
   isUserMemberOfNeighborhood,
@@ -357,5 +350,5 @@ export default {
   createNeighborhood,
   connectUserToNeighborhood,
   removeUserFromNeighborhood,
-  getRequestsAssociatedWithNeighborhood,
+  getNeighborhoodRequests,
 };

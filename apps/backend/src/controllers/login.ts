@@ -1,7 +1,7 @@
 import express, { Response } from 'express';
 import { User } from '@prisma/client';
 import catchError from '../utils/catchError';
-import { LoginData, RequestWithAuthentication } from '../types';
+import { LoginData, LoginResponseData, RequestWithAuthentication } from '../types';
 import loginServices from '../services/loginServices';
 import middleware from '../utils/middleware';
 
@@ -22,7 +22,8 @@ loginRouter.post('/', middleware.isUserLoggedIn, catchError(async (request: Requ
   }
 
   const token: string = await loginServices.generateToken(userInDb.username, userInDb.id);
-  const responseData = {
+  const responseData: LoginResponseData = {
+    id: userInDb.id,
     username: userInDb.username,
     token,
   };

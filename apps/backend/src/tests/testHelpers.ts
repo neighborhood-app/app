@@ -105,13 +105,13 @@ const getNumberOfRequests = async (): Promise<number> => {
 };
 
 /**
- * @param userID
+ * @param userId
  * @returns a Promise resolving to Requests associated with User
  */
-const getRequestsOfUser = async (userID: number): Promise<Request[]> => {
+const getRequestsOfUser = async (userId: number): Promise<Request[]> => {
   const user: UserWithRequests = (await prismaClient.user.findUnique({
     where: {
-      id: userID,
+      id: userId,
     },
     include: {
       requests: true,
@@ -180,6 +180,19 @@ const getNumberOfResponses = async (): Promise<number> => {
   return responses.length;
 };
 
+/*
+* @param userID
+* @returns a Promise resolving to Requests associated with User
+*/
+const getUserResponses = async (userId: number): Promise<Response[] | null> => {
+  const user = await prismaClient.user.findUnique({
+    where: { id: userId },
+    include: { responses: true },
+  });
+
+  return user ? user.responses : null;
+};
+
 /**
  * - Creates a new response
  * - assumes that requestId and userId are consistent, throws error otherwise
@@ -231,5 +244,6 @@ export default {
   getSingleRequest,
   getSingleResponse,
   getNumberOfResponses,
+  getUserResponses,
   createResponse,
 };
