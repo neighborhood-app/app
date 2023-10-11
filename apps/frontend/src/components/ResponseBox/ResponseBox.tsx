@@ -26,7 +26,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
   const date = String(response.time_created).split("T")[0];
 
   function displayContactInfo() {
-    if (!(loggedUserId)) return;
+    if (!loggedUserId) return;
 
     const requestOwner = isLoggedUserRequestOwner(loggedUserId, requestOwnerId);
     const responseOwner = isLoggedUserResponseOwner(loggedUserId, response.user_id); 
