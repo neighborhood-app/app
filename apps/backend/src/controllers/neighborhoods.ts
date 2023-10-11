@@ -107,7 +107,6 @@ neighborhoodsRouter.post('/:id/join', middleware.userIdExtractorAndLoginValidato
 }));
 
 // Leave a neighborhood
-// should not be possible if user is admin
 neighborhoodsRouter.put('/:id/leave', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
   const loggedUserId = req.loggedUserId as number;
   const neighborhoodId = Number(req.params.id);
@@ -117,7 +116,7 @@ neighborhoodsRouter.put('/:id/leave', middleware.userIdExtractorAndLoginValidato
   }
 
   await neighborhoodServices.removeUserFromNeighborhood(loggedUserId, neighborhoodId);
-  return res.status(201).send({ success: 'You have leaved this neighborhood.' });
+  return res.status(201).send({ success: 'You have left this neighborhood.' });
 }));
 
 // Get a neighborhood's requests

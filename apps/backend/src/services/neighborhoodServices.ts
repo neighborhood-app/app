@@ -220,7 +220,8 @@ const connectUserToNeighborhood = async (userId: number, neighborhoodId: number)
 };
 
 /**
- * deletes user from neighborhood in the db
+ * removes user from neighborhood in the db
+ * also, marks their open requests and responses in this neighborhood INACTIVE
  * throws error if userId or neighborhoodId invalid
  * throws error if user is not a member of the neighborhood
  * @param userId
@@ -229,19 +230,12 @@ const connectUserToNeighborhood = async (userId: number, neighborhoodId: number)
 const removeUserFromNeighborhood = async (
   userId: number,
   neighborhoodId: number,
-): Promise<void> => {
+): Promise<boolean> => {
   const neighborhood = await prismaClient.neighborhood
     .findUniqueOrThrow({
       where: { id: neighborhoodId },
       include: { users: true, requests: { include: { responses: true } } },
     });
-
-  // console.log(await prismaClient.neighborhood
-  //   .findUniqueOrThrow({
-  //     where:
-  //     { id: neighborhoodId },
-  //     include: { users: true, requests: { include: { responses: true } } },
-  //   }));
 
   const userIsMemberOfNeighborhood = neighborhood.users.some(user => user.id === userId);
   const userIsNeighborhoodAdmin = neighborhood.admin_id === userId;
@@ -253,21 +247,25 @@ const removeUserFromNeighborhood = async (
     .filter(res => res.user_id === userId);
   const responsesIds = userResponsesInNeighborhood.map(res => res.id);
 
-  // const requestsWithUserResponsesIds = neighborhood.requests
-  //   .filter(req => req.responses.some(res => res.user_id === userId))
-  //   .map(req => req.id);
-
   if (!userIsMemberOfNeighborhood) {
     const error = new Error('User is not a member of this neighborhood.');
     error.name = 'InvalidInputError';
     throw error;
   } else if (userIsNeighborhoodAdmin) {
-    // TODO:
     // In this case, prompt the user that this action will delete the neighborhood
     // If confirmed, delete neighborhood
-    const error = new Error('User is neighborhood admin.');
-    error.name = 'UserDataError';
-    throw error;
+    // This is a temporary fix. Confirmation should be done on the front-end using modal
+    // eslint-disable-next-line no-restricted-globals, no-alert
+    const confirmation = confirm('That will delete the neighborhood. Are you sure you want to proceed?');
+    if (confirmation) {
+      await prismaClient.neighborhood.delete({
+        where: {
+          id: neighborhoodId,
+        },
+      });
+
+      return true;
+    }
   }
 
   // remove user and mark associated requests as "inactive"
@@ -300,6 +298,8 @@ const removeUserFromNeighborhood = async (
       status: 'INACTIVE',
     },
   });
+
+  return true;
 };
 
 /**
