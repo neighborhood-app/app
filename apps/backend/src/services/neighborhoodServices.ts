@@ -247,10 +247,11 @@ const removeUserFromNeighborhood = async (
   const userIsNeighborhoodAdmin = neighborhood.admin_id === userId;
 
   const userRequestsInNeighborhood = neighborhood.requests.filter(req => req.user_id === userId);
-  const requestsIds = userRequestsInNeighborhood.map(req => ({ id: req.id }));
-  // const userResponsesInNeighborhood = userRequestsInNeighborhood.flatMap(req => req.responses)
-  //   .filter(res => res.user_id === userId);
-  // const responsesIds = userResponsesInNeighborhood.map(res => res.id);
+  const requestsIds = userRequestsInNeighborhood.map(req => req.id);
+  const userResponsesInNeighborhood = userRequestsInNeighborhood
+    .flatMap(req => req.responses)
+    .filter(res => res.user_id === userId);
+  const responsesIds = userResponsesInNeighborhood.map(res => res.id);
 
   // const requestsWithUserResponsesIds = neighborhood.requests
   //   .filter(req => req.responses.some(res => res.user_id === userId))
@@ -261,13 +262,15 @@ const removeUserFromNeighborhood = async (
     error.name = 'InvalidInputError';
     throw error;
   } else if (userIsNeighborhoodAdmin) {
-    // In that case, the user will have to delete the neighborhood (?)
+    // TODO:
+    // In this case, prompt the user that this action will delete the neighborhood
+    // If confirmed, delete neighborhood
     const error = new Error('User is neighborhood admin.');
     error.name = 'UserDataError';
     throw error;
   }
 
-  // remove user and delete (or mark them as "closed") associated requests
+  // remove user and mark associated requests as "inactive"
   await prismaClient.neighborhood.update({
     where: { id: neighborhoodId },
     data: {
@@ -275,12 +278,28 @@ const removeUserFromNeighborhood = async (
         disconnect: { id: userId },
       },
       requests: {
-        deleteMany: requestsIds,
+        updateMany: {
+          where: {
+            status: 'OPEN',
+            id: { in: requestsIds },
+          },
+          data: {
+            status: 'INACTIVE',
+          },
+        },
       },
     },
   });
 
-  // TODO: delete user responses or mark them as "invactive"
+  // Mark user responses as "inactive"
+  await prismaClient.response.updateMany({
+    where: {
+      id: { in: responsesIds },
+    },
+    data: {
+      status: 'INACTIVE',
+    },
+  });
 };
 
 /**
