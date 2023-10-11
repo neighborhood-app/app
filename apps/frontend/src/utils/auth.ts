@@ -38,7 +38,7 @@ export function deleteStoredUser(): null {
 /**
  * - checks for user in localStorage
  * - if user present, returns null
- * - else, redirects to '/'
+ * - else, redirects to '/login'
  * @returns
  */
 export function checkAuthLoader() {
