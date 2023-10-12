@@ -14,7 +14,7 @@ export default function RequestBox({ requests }) {
   const handleShow = () => setShow(true);
 
   const [requestList, setRequestList] = useState(requests);
-  const [searchCriteria, setSearchCriteria] = useState({ status: 'ALL', searchTerm: '' })
+  const [searchCriteria, setSearchCriteria] = useState({ status: 'ALL', searchTerm: '' });
 
   useEffect(() => {
     let filteredRequests;

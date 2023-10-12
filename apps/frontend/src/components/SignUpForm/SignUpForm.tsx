@@ -28,7 +28,7 @@ export default function SignUpForm({ className }: {className: string}) {
             <Form.Label column='sm'>Password<span className={styles.asterisk}>*</span></Form.Label>
             <Form.Control type='password' name='password' placeholder='Password' required />
           </Form.Group>
-          <Form.Group className='mb-3' controlId='password'>
+          <Form.Group className='mb-3'>
           <Form.Text className='text-muted'>
             Fields marked with <span className={styles.asterisk}>*</span> are required.
           </Form.Text>

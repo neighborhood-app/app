@@ -13,6 +13,7 @@ import neighborhoodServices from '../services/neighborhoodServices';
 
 const neighborhoodsRouter = express.Router();
 
+// Add user authentication
 neighborhoodsRouter.get('/', catchError(async (_req: Request, res: Response) => {
   const neighborhoods = await neighborhoodServices.getAllNeighborhoods();
   res.status(200).send(neighborhoods);

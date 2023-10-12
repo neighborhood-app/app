@@ -1,21 +1,23 @@
-import neighborhoodsService from "../../services/neighborhoods";
+import neighborhoodsService from '../../services/neighborhoods';
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   useLoaderData,
-} from "react-router";
-import requestServices from "../../services/requests";
-import { useUser } from "../../store/user-context";
+} from 'react-router';
+import requestServices from '../../services/requests';
+import { useUser } from '../../store/user-context';
 import {
   NeighborhoodDetailsForMembers,
   NeighborhoodDetailsForNonMembers,
   NeighborhoodType,
   RequestData,
+  SingleNeighborhoodFormIntent,
   UserRole,
-} from "../../types";
-import NeighborhoodPageForMembers from "./NeighborhoodPageForMembers";
-import NeighborhoodPageForAdmin from "./NeighborhoodPageForAdmin";
-import NeighborhoodPageForNonMembers from "./NeighborhoodPageForNonMembers";
+} from '../../types';
+import NeighborhoodPageForMembers from './NeighborhoodPageForMembers';
+import NeighborhoodPageForAdmin from './NeighborhoodPageForAdmin';
+import NeighborhoodPageForNonMembers from './NeighborhoodPageForNonMembers';
+import { Request } from '@prisma/client';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   // TODO: If unable to login because of token invalid or otherwise
@@ -26,7 +28,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
   // to throw an Error if request is unsuccessfull
 
   const { id } = params;
-  // TODO: provide type for neighborhood.
   const neighborhood = await neighborhoodsService.getSingleNeighborhood(
     Number(id)
   );
@@ -39,7 +40,17 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const requestData = Object.fromEntries(formData) as unknown as RequestData;
   requestData.neighborhoodId = Number(params.id);
 
-  const response = await requestServices.createRequest(requestData);
+  const intent = formData.get('intent') as SingleNeighborhoodFormIntent;
+  // We should consider only returning success/error objects from all routes 
+  // where we don't need the new data
+  let response: Request | Response | { success: string } | { error: string } | null = null;
+
+  if (intent === 'create-request') {
+    response = await requestServices.createRequest(requestData);
+  } else if (intent === 'join-neighborhood') {
+    response = await neighborhoodsService.connectUserToNeighborhood(requestData.neighborhoodId);
+  }
+
   return response;
 }
 
@@ -68,7 +79,7 @@ export default function SingleNeighborhood() {
         ? UserRole.ADMIN
         : UserRole.MEMBER;
     } else {
-      return UserRole["NON-MEMBER"];
+      return UserRole['NON-MEMBER'];
     }
   }
 

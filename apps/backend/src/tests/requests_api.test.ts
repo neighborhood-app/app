@@ -450,7 +450,7 @@ describe('Tests for creating a new request at POST /requests', () => {
     let numberOfCurrentRequests = await testHelpers.getNumberOfRequests();
     expect(numberOfCurrentRequests).toEqual(numberOfInitialRequests);
     expect(response1.body.error).toEqual(
-      'title, content or neighborhoodId missing or invalid',
+      'Title, content or neighborhoodId missing or invalid.',
     );
 
     // no title
@@ -464,7 +464,7 @@ describe('Tests for creating a new request at POST /requests', () => {
     numberOfCurrentRequests = await testHelpers.getNumberOfRequests();
     expect(numberOfCurrentRequests).toEqual(numberOfInitialRequests);
     expect(response2.body.error).toEqual(
-      'title, content or neighborhoodId missing or invalid',
+      'Title, content or neighborhoodId missing or invalid.',
     );
 
     // no neighborhoodId
@@ -478,7 +478,7 @@ describe('Tests for creating a new request at POST /requests', () => {
     numberOfCurrentRequests = await testHelpers.getNumberOfRequests();
     expect(numberOfCurrentRequests).toEqual(numberOfInitialRequests);
     expect(response.body.error).toBe(
-      'title, content or neighborhoodId missing or invalid',
+      'Title, content or neighborhoodId missing or invalid.',
     );
   });
 
@@ -504,7 +504,7 @@ describe('Tests for creating a new request at POST /requests', () => {
     expect(response.body.error).toBe('Neighborhood does not exist');
   });
 
-  test('POST /request fails when content invalid', async () => {
+  test('POST /request fails when title invalid', async () => {
     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
     const { token } = loginResponse.body;
 
@@ -524,7 +524,30 @@ describe('Tests for creating a new request at POST /requests', () => {
 
     const numberOfFinalRequests = await testHelpers.getNumberOfRequests();
     expect(numberOfFinalRequests).toEqual(numberOfInitialRequests);
-    expect(response.body.error).toBe('Invalid title');
+    expect(response.body.error).toBe('Title must be at least 4 characters long.');
+  });
+
+  test('POST /request fails when content invalid', async () => {
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    const { token } = loginResponse.body;
+
+    const numberOfInitialRequests = await testHelpers.getNumberOfRequests();
+
+    const INVALID_CONTENT = 'foo';
+    const response = await api
+      .post('/api/requests')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        title: 'test',
+        content: INVALID_CONTENT,
+        neighborhoodId: BOBS_NHOOD_ID,
+      })
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const numberOfFinalRequests = await testHelpers.getNumberOfRequests();
+    expect(numberOfFinalRequests).toEqual(numberOfInitialRequests);
+    expect(response.body.error).toBe('Content must be at least 4 characters long.');
   });
 
   test('POST /request fails when user not a member of the neighborhood', async () => {
