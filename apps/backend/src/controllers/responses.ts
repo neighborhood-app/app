@@ -23,15 +23,10 @@ responsesRouter.post(
     );
 
     if (!isUserMemberOfNeighborhood) {
-      return res
-        .status(401)
-        .send({ error: 'User is not authorized to respond.' });
+      return res.status(401).send({ error: 'User is not authorized to respond.' });
     }
 
-    const response = await responseServices.createResponse(
-      postData,
-      loggedUserId,
-    );
+    const response = await responseServices.createResponse(postData, loggedUserId);
 
     return res.status(201).send(response);
   }),
@@ -55,9 +50,7 @@ responsesRouter.get(
     );
 
     if (!isUserMemberOfNeighborhood) {
-      return res
-        .status(401)
-        .send({ error: 'User is not part of neighborhood.' });
+      return res.status(401).send({ error: 'User is not part of neighborhood.' });
     }
 
     return res.status(200).send(response);
@@ -79,11 +72,7 @@ responsesRouter.put(
       return res.status(401).send({ error: 'User does not have edit rights.' });
     }
 
-    const updatedResponse = await responseServices.updateResponse(
-      req.body,
-      responseId,
-      userStatus,
-    );
+    const updatedResponse = await responseServices.updateResponse(req.body, responseId, userStatus);
 
     return res.status(200).json(updatedResponse);
   }),
@@ -104,9 +93,7 @@ responsesRouter.delete(
     );
 
     if (!userHasDeleteRights) {
-      return res
-        .status(401)
-        .send("User doesn't have delete rights for this response.");
+      return res.status(401).send("User doesn't have delete rights for this response.");
     }
 
     await responseServices.deleteResponse(responseId);
