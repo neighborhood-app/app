@@ -10,21 +10,25 @@ import CustomBtn from "../CustomBtn/CustomBtn";
  * @param route - url of the route that triggers the action
  * @param intent - decides which action to trigger based on the intent 
  * @param text - the text that shows in the button
+ * @param variant (optional) - the variant of the rendered button ('primary' | 'outline-dark' | 'danger')
  * @returns React component
  */
 
 interface Props {
-    id: number,
-    route: string,
-    intent: 'accept-offer' | 'delete-response',
-    text: string
+    id: number;
+    route: string;
+    intent: 'accept-offer' | 'delete-response';
+    text: string;
+    variant?: 'primary' | 'outline-dark' | 'danger'; 
 }
+
 export default function TriggerActionButton(
     {
         id,
         route,
         intent,
-        text
+        text,
+        variant = 'primary',
     }: Props
 ) {
     const submit = useSubmit();
@@ -44,7 +48,7 @@ export default function TriggerActionButton(
                 <Form.Control type='hidden' name='intent' value={intent} />
                 <Form.Control type='hidden' name='responseId' value={id} />
             </Form.Group>
-            <CustomBtn variant='primary' type='submit'>
+            <CustomBtn variant={variant} type='submit'>
                 {text}
             </CustomBtn>
         </Form>
