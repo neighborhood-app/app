@@ -46,6 +46,19 @@ const generateUserData = async (
 };
 
 /**
+ * fetches neighborhood from db
+ * @param neighborhoodId - (number) id of the neighborhood
+ * @returns - Promise resolving to the found neighborhood or `null`
+ */
+const getNeighborhoodById = async (neighborhoodId: number): Promise<Neighborhood | null> => {
+  const neighborhod = await prismaClient.neighborhood.findUnique({
+    where: { id: neighborhoodId },
+  });
+
+  return neighborhod;
+};
+
+/**
  * Uses prisma client to find all users in db
  * @returns Promise resolved to an array consisting all users in db
  */
@@ -125,7 +138,7 @@ const getRequestsOfUser = async (userId: number): Promise<Request[]> => {
  * @param neighborhoodId
  * @returns Returns a Promise resolving to Requests associated with a neighborhood
  */
-const getNeighborhoodRequests = async (neighborhoodId: number) => {
+const getNeighborhoodRequests = async (neighborhoodId: number): Promise<Request[]> => {
   const neighborhood = await prismaClient.neighborhood.findUnique({
     where: {
       id: neighborhoodId,
@@ -135,8 +148,7 @@ const getNeighborhoodRequests = async (neighborhoodId: number) => {
     },
   });
 
-  const requests: Request[] = neighborhood?.requests as Request[];
-
+  const requests = neighborhood?.requests || [];
   return requests;
 };
 
@@ -154,6 +166,15 @@ const getSingleRequest = async (id: number): Promise<Request> => {
   });
 
   return request;
+};
+
+/**
+ * - fetches all responses from the db
+ * @returns an array of the responses
+ */
+const getResponses = async (): Promise<Response[]> => {
+  const response = await prismaClient.response.findMany({});
+  return response;
 };
 
 /**
@@ -232,6 +253,7 @@ const removeAllData = async () => {
 };
 
 export default {
+  getNeighborhoodById,
   usersInDb,
   neighborhoodsInDb,
   seedUser,
@@ -242,6 +264,7 @@ export default {
   getRequestsOfUser,
   getNeighborhoodRequests,
   getSingleRequest,
+  getResponses,
   getSingleResponse,
   getNumberOfResponses,
   getUserResponses,

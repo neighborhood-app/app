@@ -89,7 +89,7 @@ responsesRouter.put(
   }),
 );
 
-// Delete request
+// Delete response
 responsesRouter.delete(
   '/:id',
   middleware.validateURLParams,
@@ -110,7 +110,6 @@ responsesRouter.delete(
     }
 
     await responseServices.deleteResponse(responseId);
-
     return res.sendStatus(204);
   }),
 );

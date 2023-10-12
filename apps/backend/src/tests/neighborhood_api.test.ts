@@ -6,7 +6,7 @@ import prismaClient from '../../prismaClient';
 import seed from './seed';
 import testHelpers from './testHelpers';
 import {
-  LoginData, NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers, LoginResponseData,
+  LoginData, NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers,
 } from '../types';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -31,7 +31,7 @@ const RADU_LOGIN_DATA: LoginData = {
 
 const BOBS_NHOOD_ID = 1;
 const ANTONINAS_NHOOD_ID = 2;
-const INVALID_NHOOD_ID = 12345;
+const NONEXISTENT_NHOOD_ID = 12345;
 
 const loginUser = async (loginData: LoginData): Promise<Response> => {
   const loginResponse = await api
@@ -590,7 +590,7 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
 
   test('when user logged in and non-existend neighborhood ID, error occurs', async () => {
     const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
-    await api.post(`/api/neighborhoods/${INVALID_NHOOD_ID}/join`)
+    await api.post(`/api/neighborhoods/${NONEXISTENT_NHOOD_ID}/join`)
       .set('Authorization', `Bearer ${token}`)
       .expect(400)
       .expect('Content-Type', /application\/json/);
@@ -619,7 +619,7 @@ describe('Tests for user leaving a neighborhood: PUT /neighborhood/:id/leave', (
   let userId: number;
 
   beforeAll(async () => {
-    const loginResponse = await loginUser(ANTONINA_LOGIN_DATA);
+    const loginResponse = await loginUser(RADU_LOGIN_DATA);
     token = loginResponse.body.token;
     userId = loginResponse.body.id;
   });
@@ -629,23 +629,23 @@ describe('Tests for user leaving a neighborhood: PUT /neighborhood/:id/leave', (
   });
 
   test('User can leave neighborhood with valid data', async () => {
-    const initialUsers = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
+    const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
     const numInitialUsers = initialUsers?.length as number;
 
-    await api.put(`/api/neighborhoods/${BOBS_NHOOD_ID}/leave`)
+    await api.put(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/leave`)
       .set('Authorization', `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const finalUsersInNeighborhood = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
+    const finalUsersInNeighborhood = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
     const usernameInNeighborhood = finalUsersInNeighborhood
       ?.map(user => user.username)
-      .includes(ANTONINA_LOGIN_DATA.username);
+      .includes(RADU_LOGIN_DATA.username);
 
     expect(finalUsersInNeighborhood?.length).toBe(numInitialUsers - 1);
     expect(usernameInNeighborhood).toBe(false);
 
-    const neighborhoodReqs = await testHelpers.getNeighborhoodRequests(BOBS_NHOOD_ID);
+    const neighborhoodReqs = await testHelpers.getNeighborhoodRequests(ANTONINAS_NHOOD_ID);
     const deactivatedRequests = neighborhoodReqs
       .filter(req => req.user_id === userId)
       .every(req => req.status === 'CLOSED' || req.status === 'INACTIVE');
@@ -658,6 +658,66 @@ describe('Tests for user leaving a neighborhood: PUT /neighborhood/:id/leave', (
 
     expect(deactivatedRequests).toBe(true);
     expect(deactivatedResponses).toBe(true);
+  });
+
+  test('If user is neighborhood admin, the neighborhood is deleted', async () => {
+    const loginData = await loginUser(ANTONINA_LOGIN_DATA);
+    const antoninaToken = loginData.body.token;
+    const neighborhoodRequestIds = (await testHelpers.getNeighborhoodRequests(ANTONINAS_NHOOD_ID))
+      .map(req => req.id);
+
+    await api.put(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/leave`)
+      .set('Authorization', `Bearer ${antoninaToken}`)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const antoninaNeighborhood = await testHelpers.getNeighborhoodById(ANTONINAS_NHOOD_ID);
+    const neighborhoodReqs = await testHelpers.getNeighborhoodRequests(ANTONINAS_NHOOD_ID);
+    const neighborhoodResponses = (await testHelpers.getResponses())
+      .filter(res => neighborhoodRequestIds.includes(res.request_id));
+
+    expect(antoninaNeighborhood).toBe(null);
+    expect(neighborhoodReqs.length).toBe(0);
+    expect(neighborhoodResponses.length).toBe(0);
+  });
+
+  test("User can't leave neighborhood without being logged-in", async () => {
+    const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
+    const numInitialUsers = initialUsers?.length as number;
+
+    await api.put(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/leave`)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    const finalUsersInNeighborhood = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
+    expect(finalUsersInNeighborhood?.length).toBe(numInitialUsers);
+  });
+
+  test("User can't leave neighborhood they're not a member of", async () => {
+    const initialUsers = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
+    const numInitialUsers = initialUsers?.length as number;
+
+    await api.put(`/api/neighborhoods/${BOBS_NHOOD_ID}/leave`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401)
+      .expect('Content-Type', /application\/json/);
+
+    const finalUsersInNeighborhood = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
+    expect(finalUsersInNeighborhood?.length).toBe(numInitialUsers);
+  });
+
+  test('Non-existent neighborhood id raises an error', async () => {
+    await api.put(`/api/neighborhoods/${NONEXISTENT_NHOOD_ID}/leave`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(404)
+      .expect('Content-Type', /application\/json/);
+  });
+
+  test('Invalid neighborhood id raises an error', async () => {
+    await api.put('/api/neighborhoods/xyz/leave')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
   });
 });
 

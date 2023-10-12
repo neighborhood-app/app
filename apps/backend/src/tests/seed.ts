@@ -97,34 +97,15 @@ async function main() {
 
   await connectUserToNeighborhood(bob.id, bobNeighborhood.id);
   await connectUserToNeighborhood(mike.id, bobNeighborhood.id);
-  // Change back, breaks too many tests
-  await connectUserToNeighborhood(antonina.id, bobNeighborhood.id);
 
   // The variable will be used in the future when we add responses.
   // eslint-disable-next-line
-  const antoninaRequest = await prismaClient.request.create({
-    data: {
-      neighborhood_id: bobNeighborhood.id,
-      user_id: antonina.id,
-      title: 'Help moving furniture in apartment',
-      content: 'I need help moving my furniture this Saturday',
-    },
-  });
-
   const mikeRequest = await prismaClient.request.create({
     data: {
       neighborhood_id: bobNeighborhood.id,
       user_id: mike.id,
       title: 'Help moving furniture in apartment',
       content: 'I need help moving my furniture this Saturday',
-    },
-  });
-
-  await prismaClient.response.create({
-    data: {
-      request_id: mikeRequest.id,
-      user_id: antonina.id,
-      content: 'I can help!',
     },
   });
   //---------------------------------------------------------
@@ -141,8 +122,6 @@ async function main() {
   await connectUserToNeighborhood(radu.id, antoninaNeighborhood.id);
   await connectUserToNeighborhood(maria.id, antoninaNeighborhood.id);
 
-  // The variable will be used in the future when we add responses.
-  // eslint-disable-next-line
   const raduRequest = await prismaClient.request.create({
     data: {
       neighborhood_id: antoninaNeighborhood.id,
@@ -153,8 +132,6 @@ async function main() {
     },
   });
 
-  // The variable will be used in the future when we add responses.
-  // eslint-disable-next-line
   const mariaRequest = await prismaClient.request.create({
     data: {
       neighborhood_id: antoninaNeighborhood.id,
@@ -170,6 +147,14 @@ async function main() {
       user_id: antonina.id,
       content: 'I can help out',
       status: 'PENDING',
+    },
+  });
+
+  await prismaClient.response.create({
+    data: {
+      request_id: mariaRequest.id,
+      user_id: radu.id,
+      content: 'I can help!',
     },
   });
   //---------------------------------------------------------

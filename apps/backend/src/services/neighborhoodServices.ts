@@ -264,18 +264,13 @@ const removeUserFromNeighborhood = async (
 
   if (!userIsMemberOfNeighborhood) {
     const error = new Error('User is not a member of this neighborhood.');
-    error.name = 'InvalidInputError';
+    error.name = 'Unauthorized';
     throw error;
   } else if (userIsNeighborhoodAdmin) {
     // In this case, prompt the user that this action will delete the neighborhood
     // If confirmed, delete neighborhood
-    // This is a temporary fix. Confirmation should be done on the front-end using modal
-    // eslint-disable-next-line no-restricted-globals, no-alert
-    const confirmation = confirm('That will delete the neighborhood. Are you sure you want to proceed?');
-    if (confirmation) {
-      await deleteNeighborhood(neighborhoodId);
-      return;
-    }
+    await deleteNeighborhood(neighborhoodId);
+    return;
   }
 
   const userRequestsInNeighborhood = neighborhood.requests.filter(req => req.user_id === userId);

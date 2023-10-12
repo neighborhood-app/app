@@ -227,6 +227,7 @@ const hasUserDeleteRights = async (
     request.neighborhood_id,
   );
 
+  console.log({ isAdmin, request });
   return isAdmin;
 };
 
@@ -235,9 +236,11 @@ const hasUserDeleteRights = async (
  * @param responseId - (number) must be an existing response id
  */
 const deleteResponse = async (responseId: number) => {
-  await prismaClient.response.delete({
+  const res = await prismaClient.response.delete({
     where: { id: responseId },
   });
+
+  console.log(res);
 };
 
 /**
