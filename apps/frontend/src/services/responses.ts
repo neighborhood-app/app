@@ -1,20 +1,35 @@
 import axios from "axios";
-import { StorageWithUser, UserInfo } from "../types";
+import { getStoredUser } from "../utils/auth";
 
-const baseURL = '/api/responses';
+const baseURL = "/api/responses";
+let user = getStoredUser();
 
 async function acceptResponse(responseId: string) {
   const headers: { authorization?: string } = {};
-  let { user }: { user?: string } = localStorage as StorageWithUser;
 
   if (user) {
-    const userObj: UserInfo = JSON.parse(user);
-    headers.authorization = `Bearer ${userObj.token}`;
+    headers.authorization = `Bearer ${user.token}`;
   }
 
-  const response = await axios.put(`${baseURL}/${responseId}`, { status: 'ACCEPTED' }, { headers });
+  const response = await axios.put(
+    `${baseURL}/${responseId}`,
+    { status: "ACCEPTED" },
+    { headers }
+  );
 
   return response.data;
 }
 
-export default acceptResponse;
+async function deleteResponse(responseId: string) {
+  const headers: { authorization?: string } = {};
+
+  if (user) {
+    headers.authorization = `Bearer ${user.token}`;
+  }
+
+  const response = await axios.delete(`${baseURL}/${responseId}`, { headers });
+
+  return response.data;
+}
+
+export default { acceptResponse, deleteResponse };
