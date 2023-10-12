@@ -2,7 +2,7 @@ import { Modal, Form, Container, Row, Col } from 'react-bootstrap';
 import { useParams, useSubmit } from 'react-router-dom';
 import styles from './CreateRequestModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
-import { FormEvent, FocusEvent, ChangeEvent } from 'react';
+import { FormEvent, FocusEvent, ChangeEvent, useState } from 'react';
 
 interface Props {
   show: boolean;
@@ -10,15 +10,18 @@ interface Props {
 }
 
 export default function CreateRequestModal({ show, handleClose }: Props) {
+  const [validated, setValidated] = useState(false);
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
-  const closeModal = () => handleClose();
-
+  const closeModal = () => {
+    handleClose();
+    setValidated(false);
+  };
 
   const validateTextArea = (event: FocusEvent<HTMLTextAreaElement>) => {
     const textarea = event.currentTarget as HTMLTextAreaElement ;
     const validPattern = /\s*(\S\s*){4,}/;
-    
+
     if (!validPattern.test(textarea.value)) {
       textarea.setCustomValidity('The content needs to be at least 4 characters long.');
     } else {
@@ -30,8 +33,7 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
 
   const hideValidation = (event: ChangeEvent<HTMLTextAreaElement>) =>
     event.currentTarget.setCustomValidity('');
-  
-
+    
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -39,7 +41,7 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
     if (!form.checkValidity()) {
       event.stopPropagation();
 
-      form.classList.add('was-validated');
+      setValidated(true);
     } else {
       submit(form, {
         method: 'post',
@@ -50,12 +52,12 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
   };  
 
   return (
-    <Modal show={show} onHide={handleClose} animation={true} backdrop='static' centered>
+    <Modal show={show} onHide={closeModal} animation={true} backdrop='static' centered>
       <Modal.Header closeButton>
         <Modal.Title>Create a request</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form method='post' role='form' noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
+        <Form role='form' noValidate validated={validated} onSubmit={handleSubmit} className={styles.createReqForm}>
           <Form.Group className='mb-3' controlId='title'>
             <Form.Label column='sm'>Title<span className={styles.asterisk}>*</span></Form.Label>
             <Form.Control type='text' name='title' minLength={4} pattern='\s*(\S\s*){4,}' required />
@@ -65,7 +67,7 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
           </Form.Group>
           <Form.Group className='mb-2' controlId='content'>
             <Form.Label column='sm'>Content<span className={styles.asterisk}>*</span></Form.Label>
-            <Form.Control as='textarea' rows={4} name='content' onChange={hideValidation} onBlur={validateTextArea} minLength={4} required />
+            <Form.Control as='textarea' rows={4} name='content' minLength={4} onChange={hideValidation} onBlur={validateTextArea} required />
             <Form.Control.Feedback type='invalid'>
               Please input some explanatory content.
             </Form.Control.Feedback>
