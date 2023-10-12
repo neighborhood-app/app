@@ -1,8 +1,7 @@
-/* eslint-disable import/no-anonymous-default-export */
 import axios from "axios";
 import { getStoredUser } from "../utils/auth";
 
-const baseURL = '/api/responses';
+const baseURL = "/api/responses";
 let user = getStoredUser();
 
 async function acceptResponse(responseId: string) {
@@ -12,7 +11,11 @@ async function acceptResponse(responseId: string) {
     headers.authorization = `Bearer ${user.token}`;
   }
 
-  const response = await axios.put(`${baseURL}/${responseId}`, { status: 'ACCEPTED' }, { headers });
+  const response = await axios.put(
+    `${baseURL}/${responseId}`,
+    { status: "ACCEPTED" },
+    { headers }
+  );
 
   return response.data;
 }
