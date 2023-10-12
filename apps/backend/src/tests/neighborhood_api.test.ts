@@ -164,11 +164,11 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
   // error was 'socket hang up'
   test('when user not logged in, unable to create neighborhood', async () => {
     const postResponse: Response = await api.post('/api/neighborhoods');
-    // console.log(postResponse?.body);
+    console.log(postResponse?.body);
 
     const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
     const numCurrentNeighborhoods = currentNeighborhoods.length;
-    // console.log(currentNeighborhoods);
+    console.log(currentNeighborhoods);
 
     expect(postResponse.status).toEqual(401);
     expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods);

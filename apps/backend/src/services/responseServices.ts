@@ -227,7 +227,6 @@ const hasUserDeleteRights = async (
     request.neighborhood_id,
   );
 
-  console.log({ isAdmin, request });
   return isAdmin;
 };
 
@@ -236,28 +235,9 @@ const hasUserDeleteRights = async (
  * @param responseId - (number) must be an existing response id
  */
 const deleteResponse = async (responseId: number) => {
-  const res = await prismaClient.response.delete({
+  await prismaClient.response.delete({
     where: { id: responseId },
   });
-
-  console.log(res);
-};
-
-/**
- * gets all the responses in a single neighborhood
- * @param neighborhoodId (number) - the id of the neighborhood to find responses in
- * @returns an array of the responses or null if no responses were found
- */
-const getResponsesInNeighborhood = async (neighborhoodId: number): Promise<Response[]> => {
-  const neighborhoodReqs = await neighborhoodServices.getNeighborhoodRequests(neighborhoodId);
-  const requestsIds = neighborhoodReqs.map(req => req.id);
-  const responses: Response[] | null = await prismaClient.response.findMany({
-    where: {
-      request_id: { in: requestsIds },
-    },
-  });
-
-  return responses;
 };
 
 export default {
@@ -270,5 +250,4 @@ export default {
   deleteResponse,
   isUserRequestCreator,
   checkUserStatus,
-  getResponsesInNeighborhood,
 };

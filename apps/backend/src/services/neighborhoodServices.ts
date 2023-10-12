@@ -1,10 +1,9 @@
-import { Neighborhood, Request } from '@prisma/client';
+import { Neighborhood, Request, Response } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
   NeighborhoodWithRelatedFields, CreateNeighborhoodData,
   NeighborhoodDetailsForNonMembers, NeighborhoodDetailsForMembers,
 } from '../types';
-import responseServices from './responseServices';
 
 // helpers
 
@@ -159,6 +158,23 @@ const getNeighborhoodRequests = async (nhoodId: number): Promise<Request[]> => {
 };
 
 /**
+ * gets all the responses in a single neighborhood
+ * @param neighborhoodId (number) - the id of the neighborhood to find responses in
+ * @returns an array of the responses or null if no responses were found
+ */
+const getNeighborhoodResponses = async (neighborhoodId: number): Promise<Response[]> => {
+  const neighborhoodReqs = await getNeighborhoodRequests(neighborhoodId);
+  const requestsIds = neighborhoodReqs.map(req => req.id);
+  const responses: Response[] | null = await prismaClient.response.findMany({
+    where: {
+      request_id: { in: requestsIds },
+    },
+  });
+
+  return responses;
+};
+
+/**
  * checks if the user is admin of the neighborhood
  * throws error if neighborhoodId is invalid
  * @param userId
@@ -275,7 +291,7 @@ const removeUserFromNeighborhood = async (
 
   const userRequestsInNeighborhood = neighborhood.requests.filter(req => req.user_id === userId);
   const requestsIds = userRequestsInNeighborhood.map(req => req.id);
-  const responsesInNeighborhood = await responseServices.getResponsesInNeighborhood(neighborhoodId);
+  const responsesInNeighborhood = await getNeighborhoodResponses(neighborhoodId);
   const userResponsesInNeighborhood = responsesInNeighborhood.filter(res => res.user_id === userId);
   const responsesIds = userResponsesInNeighborhood.map(res => res.id);
 
