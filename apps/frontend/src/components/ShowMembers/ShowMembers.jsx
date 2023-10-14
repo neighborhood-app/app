@@ -2,17 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-const usernames = ["radu", "antonina", "ecem", "maria", "mike", "john"];
-
 function App() {
+  const usernames = ["radu", "antonina", "ecem", "maria", "mike", "john"];
+
   return (
     <div>
-      <UserCircleStack />
+      <UserCircleStack usernames={usernames} />
     </div>
   );
 }
 
-function UserCircleStack() {
+function UserCircleStack({ usernames }) {
   const displayUsers = usernames.slice(0, 4);
 
   return (
