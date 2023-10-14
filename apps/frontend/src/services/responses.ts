@@ -1,8 +1,8 @@
-import axios from "axios";
-import { getStoredUser } from "../utils/auth";
+import axios from 'axios';
+import { getStoredUser } from '../utils/auth';
 
-const baseURL = "/api/responses";
-let user = getStoredUser();
+const baseURL = '/api/responses';
+const user = getStoredUser();
 
 async function acceptResponse(responseId: string) {
   const headers: { authorization?: string } = {};
@@ -11,11 +11,7 @@ async function acceptResponse(responseId: string) {
     headers.authorization = `Bearer ${user.token}`;
   }
 
-  const response = await axios.put(
-    `${baseURL}/${responseId}`,
-    { status: "ACCEPTED" },
-    { headers }
-  );
+  const response = await axios.put(`${baseURL}/${responseId}`, { status: 'ACCEPTED' }, { headers });
 
   return response.data;
 }

@@ -1,5 +1,5 @@
-import styles from './MemberBox.module.css';
 import type { User } from '@prisma/client';
+import styles from './MemberBox.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
 interface Props {
@@ -10,14 +10,12 @@ interface Props {
 
 export default function MemberBox({ showLeaveBtn, admin, users }: Props) {
   const userNames = users
-    ? users.map((user) => {
-        return (
-          <li className={styles.liElement} key={user.id}>
-            {user.username}
-          </li>
-        );
-      })
-    : "There are currently no members of this neighborhood.";
+    ? users.map((user) => (
+        <li className={styles.liElement} key={user.id}>
+          {user.username}
+        </li>
+      ))
+    : 'There are currently no members of this neighborhood.';
 
   return (
     <div className={`${styles.column} ${styles.memberColumn}`}>
@@ -34,7 +32,9 @@ export default function MemberBox({ showLeaveBtn, admin, users }: Props) {
       </p>
       <ul className={styles.list}>{userNames}</ul>
       {showLeaveBtn ? (
-        <CustomBtn variant='danger' className={styles.button}>Leave Neighborhood</CustomBtn>
+        <CustomBtn variant="danger" className={styles.button}>
+          Leave Neighborhood
+        </CustomBtn>
       ) : null}
     </div>
   );

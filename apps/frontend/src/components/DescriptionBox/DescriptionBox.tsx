@@ -1,7 +1,9 @@
+import { User } from '@prisma/client';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
-import { User } from '@prisma/client';
-import { JoinNeighborhoodForm } from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
+import JoinNeighborhoodForm from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
+
+const neighborhoodImg = require('./palm.jpeg');
 
 interface Props {
   showJoinBtn: boolean;
@@ -23,7 +25,7 @@ export default function DescriptionBox({
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <img className={styles.neighborhoodImg} src={require('./palm.jpeg')} alt="Neighborhood" />
+        <img className={styles.neighborhoodImg} src={neighborhoodImg} alt="Neighborhood" />
         <h1 className={styles.neighborhoodTitle}>{name}</h1>
         {showJoinBtn ? <JoinNeighborhoodForm></JoinNeighborhoodForm> : null}
       </div>
