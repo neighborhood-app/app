@@ -44,7 +44,7 @@
   font-size: 0.7rem;
   line-height: 1.4;
   color: #4b5563;
-  margin: 0;
+  margin-bottom: 8px;
 }
 
 .hr {
@@ -54,20 +54,19 @@
 
 .contact {
   display: flex;
+  flex-direction: column;
 }
 
 .btn {
-  /* background-color: #000;
-  color: rgb(250, 246, 246);
-  padding: 10px 12px;
-  border: none;
-  border-radius: 5px;
-  font-weight: 600; */
   font-size: 0.7rem;
   cursor: pointer;
   width: 50%;
   margin: auto;
   margin-bottom: 5px;
+}
+
+.deleteResponseBtn {
+  justify-self: center;
 }
 
 /* .btn:hover,

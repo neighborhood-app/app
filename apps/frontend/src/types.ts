@@ -59,11 +59,12 @@ export type RequestType = {
   status: string;
   time_created: string;
   user: User;
-  responses: Array<ResponseWithUser>;
+  responses: Array<ResponseWithUserAndRequest>;
 };
 
-export type ResponseWithUser = Response & {
+export type ResponseWithUserAndRequest = Response & {
   user: User;
+  request: RequestType;
 }
 
 export interface URLParameterID {
@@ -73,6 +74,7 @@ export interface URLParameterID {
 export interface StoredUserData {
   username: string;
   token: string;
+  id: string;
 }
 
 export enum UserRole {
@@ -81,4 +83,4 @@ export enum UserRole {
   "ADMIN" = "ADMIN",
 }
 
-export type SingleNeighborhoodFormIntent = 'create-request' | 'join-neighborhood' | null;
+export type SingleNeighborhoodFormIntent = 'create-request' | 'join-neighborhood' | 'accept-offer' | 'delete-response' | null;

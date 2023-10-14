@@ -14,7 +14,7 @@ export function JoinNeighborhoodForm() {
     submit(event.currentTarget, {
       method: 'post',
       action: `/neighborhoods/${neighborhoodId}`,
-    });
+    }); 
   }
 
   return (

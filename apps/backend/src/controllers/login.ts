@@ -25,6 +25,7 @@ loginRouter.post('/', middleware.isUserLoggedIn, catchError(async (request: Requ
   const responseData: LoginResponseData = {
     id: userInDb.id,
     username: userInDb.username,
+    id: userInDb.id,
     token,
   };
 
