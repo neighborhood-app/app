@@ -1,7 +1,7 @@
-import { redirect } from "react-router-dom";
-import { StoredUserData } from "../types";
+import { redirect } from 'react-router-dom';
+import { StoredUserData } from '../types';
 
-const STORAGE_KEY = "user";
+const STORAGE_KEY = 'user';
 
 /**
  * - fetches user data from local storage
@@ -14,11 +14,8 @@ const STORAGE_KEY = "user";
 export function getStoredUser(): StoredUserData | null {
   const user = window.localStorage.getItem(STORAGE_KEY);
 
-  if (user) {
-    return JSON.parse(user);
-  } else {
-    return null;
-  }
+  if (user) return JSON.parse(user);
+  return null;
 }
 
 /**
@@ -44,11 +41,8 @@ export function deleteStoredUser(): null {
 export function checkAuthLoader() {
   const user = getStoredUser();
 
-  if (!user) {
-    return redirect('/login');
-  } else {
-    return null;
-  }
+  if (!user) return redirect('/login');
+  return null;
 }
 
 /**

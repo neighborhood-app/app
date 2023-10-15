@@ -91,6 +91,8 @@ neighborhoodsRouter.post('/', middleware.userIdExtractorAndLoginValidator, catch
   res.status(201).json(newNeighborhoodWithRelatedFields);
 }));
 
+// Should probably be `put` instead
+// Join a neighborhood
 neighborhoodsRouter.post('/:id/join', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
   const loggedUserId = req.loggedUserId as number; // user should be extracted by the middleware
   const neighborhoodId = Number(req.params.id);
@@ -103,6 +105,19 @@ neighborhoodsRouter.post('/:id/join', middleware.userIdExtractorAndLoginValidato
 
   await neighborhoodServices.connectUserToNeighborhood(loggedUserId, neighborhoodId);
   return res.status(201).send({ success: 'You have joined the neighborhood' });
+}));
+
+// Leave a neighborhood
+neighborhoodsRouter.put('/:id/leave', middleware.userIdExtractorAndLoginValidator, catchError(async (req: RequestWithAuthentication, res: Response) => {
+  const loggedUserId = req.loggedUserId as number;
+  const neighborhoodId = Number(req.params.id);
+
+  if (!neighborhoodId || Number.isNaN(neighborhoodId)) {
+    return res.status(400).send({ error: 'Unable to parse URL' });
+  }
+
+  await neighborhoodServices.removeUserFromNeighborhood(loggedUserId, neighborhoodId);
+  return res.status(201).send({ success: 'You have left this neighborhood.' });
 }));
 
 // Get a neighborhood's requests
@@ -119,7 +134,7 @@ neighborhoodsRouter.get('/:id/requests', middleware.userIdExtractorAndLoginValid
   }
 
   const requests: RequestData[] = await neighborhoodServices
-    .getRequestsAssociatedWithNeighborhood(neighborhoodID);
+    .getNeighborhoodRequests(neighborhoodID);
 
   return res.status(200).send(requests);
 }));

@@ -1,12 +1,10 @@
-import styles from "./SingleNeighborhoodPage.module.css";
-import DescriptionBox from "../../components/DescriptionBox/DescriptionBox";
-import RequestBox from "../../components/RequestBox/RequestBox";
-import { NeighborhoodDetailsForMembers } from "../../types";
+import styles from './SingleNeighborhoodPage.module.css';
+import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
+import RequestBox from '../../components/RequestBox/RequestBox';
+import { NeighborhoodDetailsForMembers } from '../../types';
 
-const NeighborhoodPageForAdmin = (props: {
-  neighborhood: NeighborhoodDetailsForMembers;
-}) => {
-  const neighborhood = props.neighborhood;
+const NeighborhoodPageForAdmin = (props: { neighborhood: NeighborhoodDetailsForMembers }) => {
+  const { neighborhood } = props;
 
   return (
     <div className={styles.wrapper}>
@@ -15,7 +13,7 @@ const NeighborhoodPageForAdmin = (props: {
         showEditBtn={true}
         showLeaveBtn={false}
         name={neighborhood.name}
-        description={neighborhood.description ? neighborhood.description : ""}
+        description={neighborhood.description ? neighborhood.description : ''}
         users={neighborhood.users}
       />
       {/* <MemberBox

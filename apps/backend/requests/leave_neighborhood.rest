@@ -1,8 +1,5 @@
-POST http://localhost:3001/api/responses
+PUT http://localhost:3001/api/neighborhoods/1/leave
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvYjEyMzQiLCJpZCI6MSwiaWF0IjoxNjk2ODY5MTE0LCJleHAiOjE3MDA0NjkxMTR9.p2nPltlI39FglOWfjR26NUi02tliOAugXKzzCLzjf9I
 
-{
-  "content": "test content",
-  "request_id": 7
-}
+{}
