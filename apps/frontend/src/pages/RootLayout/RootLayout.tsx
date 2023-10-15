@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router';
+import { Outlet } from 'react-router-dom';
 import styles from './RootLayout.module.css';
 
 import MainNav from '../../components/MainNavigation/MainNav';
