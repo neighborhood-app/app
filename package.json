@@ -9,7 +9,8 @@
     "client": "npm start -w apps/frontend",
     "test": "npm run test -w apps/backend && npm run test -w apps/frontend",
     "seed-db": "npm run seed -w apps/backend",
-    "build": "npm run tsc -w apps/backend && npm run build -w apps/frontend"
+    "build": "npm run tsc -w apps/backend && npm run build -w apps/frontend",
+    "lint": "npm run lint -w apps/backend && npm run lint -w apps/frontend"
   },
   "dependencies": {
     "@prisma/client": "^4.14.1"
