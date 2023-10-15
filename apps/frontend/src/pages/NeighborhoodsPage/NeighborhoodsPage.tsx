@@ -10,6 +10,8 @@ export async function loader() {
 export default function Neighborhoods() {
   const neighborhoods = useLoaderData() as Array<NeighborhoodType>;
 
-  const neighborhoodList = neighborhoods.map((neighborhood) => <li>{neighborhood.name}</li>);
+  const neighborhoodList = neighborhoods.map((neighborhood) => (
+    <li key={neighborhood.id}>{neighborhood.name}</li>
+  ));
   return <ul>{neighborhoodList}</ul>;
 }
