@@ -16,15 +16,15 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
    if (requestObj.status === 'OPEN') {
     statusHeader = (
       <div className={styles.statusHeader}>
-        <FontAwesomeIcon icon={faQuestion} size="xl" style={{color: "#3465a4",}} />
         <p className={styles.statusP}>{requestObj.status}</p>
+        <FontAwesomeIcon icon={faQuestion} size="xl" style={{color: "#3465a4" }} />    
       </div>
     )
   } else if (requestObj.status === 'CLOSED') {
     statusHeader = (
       <div className={styles.statusHeader}>
-        <FontAwesomeIcon icon={faCheck} size="xl" style={{ color: "#3465a4", }} />
         <p className={styles.statusP}>{requestObj.status}</p>
+        <FontAwesomeIcon icon={faCheck} size="xl" style={{ color: "#3465a4" }} /> 
       </div>
     )
   } else {
