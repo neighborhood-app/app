@@ -13,6 +13,7 @@
   display: flex;
   justify-content: space-between;
   padding-left: 10px;
+  margin-top: 5px;
 }
 
 .requestContent {
@@ -78,4 +79,13 @@
 .closedHeader {
   color: black;
   text-align: center;
+}
+
+.statusHeader {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.statusP {
+  margin: 0 10px 0 10px;
 }

@@ -1,9 +1,9 @@
 import styles from "./Request.module.css";
 import { RequestType } from "../../types";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import RequestModal from "../RequestModal/RequestModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faQuestion } from "@fortawesome/free-solid-svg-icons";
 
 export default function Request({ requestObj }: { requestObj: RequestType }) {
   const date = requestObj.time_created.split("T")[0];
@@ -12,22 +12,33 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
   const handleCloseModal = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const closedHeader = (
-    <div className={styles.dividerVertical}>
-      <h2 className={styles.closedHeader}>CLOSED</h2>
-    </div>
-  )
+  let statusHeader: ReactElement | null;
+   if (requestObj.status === 'OPEN') {
+    statusHeader = (
+      <div className={styles.statusHeader}>
+        <FontAwesomeIcon icon={faQuestion} size="xl" style={{color: "#3465a4",}} />
+        <p className={styles.statusP}>{requestObj.status}</p>
+      </div>
+    )
+  } else if (requestObj.status === 'CLOSED') {
+    statusHeader = (
+      <div className={styles.statusHeader}>
+        <FontAwesomeIcon icon={faCheck} size="xl" style={{ color: "#3465a4", }} />
+        <p className={styles.statusP}>{requestObj.status}</p>
+      </div>
+    )
+  } else {
+    statusHeader = null;
+  }
 
   return (
     <div className={styles.container} onClick={handleShow}>
       <div className={styles.requestHeader}>
         <p>{requestObj.user.username}</p>
-        <FontAwesomeIcon icon={faCheck} style={{color: "#3465a4",}} />
-        <p>{requestObj.status}</p>
+        {statusHeader}
       </div>
       <div className={styles.imageContainer}>
         <img className={styles.image} src={require('./help_wanted.jpeg')} alt='Help Wanted' />
-        {requestObj.status === 'CLOSED' ? closedHeader : null}
       </div>
       <div className={styles.requestContent}>
         <p className={styles.title}>{requestObj.title}</p>
