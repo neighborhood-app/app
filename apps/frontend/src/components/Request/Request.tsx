@@ -13,20 +13,19 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
   const handleShow = () => setShow(true);
 
   let statusHeader: ReactElement | null;
-   if (requestObj.status === 'OPEN') {
+  if (requestObj.status === "OPEN") {
+    statusHeader = null;
+  } else if (requestObj.status === "CLOSED") {
     statusHeader = (
       <div className={styles.statusHeader}>
         <p className={styles.statusP}>{requestObj.status}</p>
-        <FontAwesomeIcon icon={faQuestion} size="xl" style={{color: "#3465a4" }} />    
+        <FontAwesomeIcon
+          icon={faCheck}
+          size="xl"
+          style={{ color: "#3465a4" }}
+        />
       </div>
-    )
-  } else if (requestObj.status === 'CLOSED') {
-    statusHeader = (
-      <div className={styles.statusHeader}>
-        <p className={styles.statusP}>{requestObj.status}</p>
-        <FontAwesomeIcon icon={faCheck} size="xl" style={{ color: "#3465a4" }} /> 
-      </div>
-    )
+    );
   } else {
     statusHeader = null;
   }
@@ -38,13 +37,21 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
         {statusHeader}
       </div>
       <div className={styles.imageContainer}>
-        <img className={styles.image} src={require('./help_wanted.jpeg')} alt='Help Wanted' />
+        <img
+          className={styles.image}
+          src={require("./help_wanted.jpeg")}
+          alt="Help Wanted"
+        />
       </div>
       <div className={styles.requestContent}>
         <p className={styles.title}>{requestObj.title}</p>
         <p className={styles.date}>Created on {date}</p>
       </div>
-      <RequestModal show={show} handleCloseModal={handleCloseModal} request={requestObj} />
+      <RequestModal
+        show={show}
+        handleCloseModal={handleCloseModal}
+        request={requestObj}
+      />
     </div>
   );
 }
