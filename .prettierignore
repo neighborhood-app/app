@@ -1,0 +1,6 @@
+# Ignore artifacts:
+apps/backend/prisma
+apps/backend/requests
+**/build
+package.json
+package-lock.json

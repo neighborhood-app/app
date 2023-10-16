@@ -1,4 +1,4 @@
-import { Neighborhood, Request } from '@prisma/client';
+import { Neighborhood, Request, Response } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
   NeighborhoodWithRelatedFields, CreateNeighborhoodData,
@@ -136,6 +136,44 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
   return neighborhood;
 };
 
+const getNeighborhoodRequests = async (nhoodId: number): Promise<Request[]> => {
+  const neighborhood: NeighborhoodWithRelatedFields | null = await prismaClient
+    .neighborhood.findUnique({
+      where: {
+        id: nhoodId,
+      },
+      include: {
+        requests: true,
+        users: true,
+      },
+    });
+
+  if (!neighborhood) {
+    const error = new Error('Neighborhood does not exist');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+  const { requests } = neighborhood;
+  return requests;
+};
+
+/**
+ * gets all the responses in a single neighborhood
+ * @param neighborhoodId (number) - the id of the neighborhood to find responses in
+ * @returns an array of the responses or null if no responses were found
+ */
+const getNeighborhoodResponses = async (neighborhoodId: number): Promise<Response[]> => {
+  const neighborhoodReqs = await getNeighborhoodRequests(neighborhoodId);
+  const requestsIds = neighborhoodReqs.map(req => req.id);
+  const responses: Response[] | null = await prismaClient.response.findMany({
+    where: {
+      request_id: { in: requestsIds },
+    },
+  });
+
+  return responses;
+};
+
 /**
  * checks if the user is admin of the neighborhood
  * throws error if neighborhoodId is invalid
@@ -220,6 +258,76 @@ const connectUserToNeighborhood = async (userId: number, neighborhoodId: number)
 };
 
 /**
+ * removes user from neighborhood in the db
+ * also, marks their open requests and responses in this neighborhood INACTIVE
+ * throws error if userId or neighborhoodId invalid
+ * throws error if user is not a member of the neighborhood
+ * @param userId
+ * @param neighborhoodId
+ */
+const removeUserFromNeighborhood = async (
+  userId: number,
+  neighborhoodId: number,
+): Promise<void> => {
+  const neighborhood = await prismaClient.neighborhood
+    .findUniqueOrThrow({
+      where: { id: neighborhoodId },
+      include: { users: true, requests: true },
+    });
+
+  const userIsMemberOfNeighborhood = neighborhood.users.some(user => user.id === userId);
+  const userIsNeighborhoodAdmin = neighborhood.admin_id === userId;
+
+  if (!userIsMemberOfNeighborhood) {
+    const error = new Error('User is not a member of this neighborhood.');
+    error.name = 'Unauthorized';
+    throw error;
+  } else if (userIsNeighborhoodAdmin) {
+    // In this case, prompt the user that this action will delete the neighborhood
+    // If confirmed, delete neighborhood
+    await deleteNeighborhood(neighborhoodId);
+    return;
+  }
+
+  const userRequestsInNeighborhood = neighborhood.requests.filter(req => req.user_id === userId);
+  const requestsIds = userRequestsInNeighborhood.map(req => req.id);
+  const responsesInNeighborhood = await getNeighborhoodResponses(neighborhoodId);
+  const userResponsesInNeighborhood = responsesInNeighborhood.filter(res => res.user_id === userId);
+  const responsesIds = userResponsesInNeighborhood.map(res => res.id);
+
+  // remove user and mark associated requests as "inactive"
+  await prismaClient.neighborhood.update({
+    where: { id: neighborhoodId },
+    data: {
+      users: {
+        disconnect: { id: userId },
+      },
+      requests: {
+        updateMany: {
+          where: {
+            status: 'OPEN',
+            id: { in: requestsIds },
+          },
+          data: {
+            status: 'INACTIVE',
+          },
+        },
+      },
+    },
+  });
+
+  // Mark user responses as "inactive"
+  await prismaClient.response.updateMany({
+    where: {
+      id: { in: responsesIds },
+    },
+    data: {
+      status: 'INACTIVE',
+    },
+  });
+};
+
+/**
  * creates new neighborhood in the database
  * associates the user (from data) as the admin of the new neighborhood
  * throws error if data is invalid
@@ -242,27 +350,6 @@ const createNeighborhood = async (data: CreateNeighborhoodData): Promise<Neighbo
   }
 };
 
-const getRequestsAssociatedWithNeighborhood = async (nhoodId: number): Promise<Request[]> => {
-  const neighborhood: NeighborhoodWithRelatedFields | null = await prismaClient
-    .neighborhood.findUnique({
-      where: {
-        id: nhoodId,
-      },
-      include: {
-        requests: true,
-        users: true,
-      },
-    });
-
-  if (!neighborhood) {
-    const error = new Error('Neighborhood does not exist');
-    error.name = 'InvalidInputError';
-    throw error;
-  }
-  const { requests } = neighborhood;
-  return requests;
-};
-
 export default {
   getAllNeighborhoods,
   isUserMemberOfNeighborhood,
@@ -273,5 +360,6 @@ export default {
   parseCreateNeighborhoodData,
   createNeighborhood,
   connectUserToNeighborhood,
-  getRequestsAssociatedWithNeighborhood,
+  removeUserFromNeighborhood,
+  getNeighborhoodRequests,
 };

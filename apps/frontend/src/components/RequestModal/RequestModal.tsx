@@ -1,14 +1,19 @@
-import { Modal, Spinner } from "react-bootstrap";
-import styles from "./RequestModal.module.css";
-import { RequestType, ResponseWithUser } from "../../types";
-import requestServices from "../../services/requests";
-import { useState } from "react";
-import { useRevalidator } from "react-router";
-import ResponseBox from "../ResponseBox/ResponseBox";
-import CustomBtn from "../CustomBtn/CustomBtn";
+import { Modal, Spinner } from 'react-bootstrap';
+import { useState } from 'react';
+import { useRevalidator } from 'react-router';
+import styles from './RequestModal.module.css';
+import { RequestType, ResponseWithUserAndRequest } from '../../types';
+import requestServices from '../../services/requests';
+import ResponseBox from '../ResponseBox/ResponseBox';
+import CustomBtn from '../CustomBtn/CustomBtn';
 import StatusHeader from "../StatusHeader/StatusHeader";
 
+const requestImg = require('./images/image.jpeg');
+
 interface Props {
+  show: boolean;
+  handleCloseModal: () => void;
+  request: RequestType;
   show: boolean;
   handleCloseModal: () => void;
   request: RequestType;
@@ -26,38 +31,42 @@ export default function RequestModal({
     try {
       setIsLoading(true);
       await requestServices.closeRequest(String(request.id));
+      await requestServices.closeRequest(String(request.id));
       setIsLoading(false);
       handleCloseModal();
       revalidator.revalidate();
+    } catch (e) {
     } catch (e) {
       setIsLoading(false);
       console.log(e);
     }
   }
 
-  const responses = request.responses.map((responseObj: ResponseWithUser) => {
-    return <ResponseBox response={responseObj} key={responseObj.id} />;
-  });
+  const responses = request.responses.map((responseObj: ResponseWithUserAndRequest) => (
+    <ResponseBox response={responseObj} requestOwnerId={request.user_id} key={responseObj.id} />
+  ));
 
   /**
   * Based on the status of a user (creator, or viewer) and the status of the request 
   (OPEN or CLOSED) returns the corresponding JSX for the request modal.
   */
-  function displayRequestActions(request: RequestType) {
-    let user = localStorage.getItem("user");
-    let username = user ? JSON.parse(user).username : null;
-    if (username === request.user.username && request.status === "OPEN") {
+  function displayRequestActions() {
+    const user = localStorage.getItem('user');
+    const username = user ? JSON.parse(user).username : null;
+    if (username === request.user.username && request.status === 'OPEN') {
       return (
         <CustomBtn variant="danger" onClick={handleCloseRequest}>
           Close request
         </CustomBtn>
+        <CustomBtn variant="danger" onClick={handleCloseRequest}>
+          Close request
+        </CustomBtn>
       );
-    } else if (
-      !(username === request.user.username) &&
-      request.status === "OPEN"
-    ) {
+    } else if (request.status === 'OPEN') {
       return <CustomBtn variant="primary">Offer help</CustomBtn>;
     }
+
+    return null;
   }
 
   return (
@@ -76,7 +85,7 @@ export default function RequestModal({
         <Modal.Body>
           <section className={styles.currentRequestInfo}>
             <img
-              src={require("./images/image.jpeg")}
+              src={requestImg}
               alt="active request on neighborhood app"
               className={styles.requestImage}
             />

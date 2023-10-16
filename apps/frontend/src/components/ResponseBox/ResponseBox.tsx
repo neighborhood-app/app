@@ -1,28 +1,86 @@
+import { useParams } from 'react-router';
 import styles from './ResponseBox.module.css';
-import { ResponseWithUser } from "../../types"
-import acceptResponse from "../../services/responses";
-import { useRevalidator } from 'react-router';
-import CustomBtn from '../CustomBtn/CustomBtn';
+import { ResponseWithUserAndRequest } from '../../types';
+import { getStoredUser } from '../../utils/auth';
+import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
+
+const profilePic = require('./images/profile.jpg');
 
 type Props = {
-  response: ResponseWithUser;
+  response: ResponseWithUserAndRequest;
+  requestOwnerId: number;
+};
+
+function isLoggedUserRequestOwner(userId: number, requestOwnerId: number) {
+  return userId === requestOwnerId;
 }
 
-export default function ResponseBox({ response }: Props) {
-  const revalidator = useRevalidator();
+function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
+  return userId === responseOwnerId;
+}
 
-  const date = String(response.time_created).split("T")[0];
-  function handleAcceptOffer() {
-    acceptResponse(String(response.id));
-    revalidator.revalidate();
+export default function ResponseBox({ response, requestOwnerId }: Props) {
+  const { id: neighborhoodId } = useParams();
+
+  const loggedUser = getStoredUser();
+  const loggedUserId = loggedUser ? Number(loggedUser.id) : null;
+
+  const date = String(response.time_created).split('T')[0];
+
+  function displayContactInfo() {
+    if (!loggedUserId) return null;
+
+    const requestOwner = isLoggedUserRequestOwner(loggedUserId, requestOwnerId);
+    const responseOwner = isLoggedUserResponseOwner(loggedUserId, response.user_id);
+
+    if (requestOwner) {
+      if (response.status === 'ACCEPTED') {
+        return (
+          <>
+            <p className={styles.p}>You've accepted this offer for help.</p>
+            <p className={styles.p}>
+              Contact at: <span>{response.user.email}</span>
+            </p>
+          </>
+        );
+      }
+
+      return (
+        <TriggerActionButton
+          id={response.id}
+          route={`/neighborhoods/${neighborhoodId}`}
+          intent="accept-offer"
+          text="Accept offer"
+        />
+      );
+    } else if (responseOwner) {
+      if (response.status === 'ACCEPTED') {
+        return (
+          <>
+            <p className={styles.p}>Your help offer has been accepted.</p>
+            <TriggerActionButton
+              id={response.id}
+              route={`/neighborhoods/${neighborhoodId}`}
+              intent="delete-response"
+              text="Delete response"
+            />
+          </>
+        );
+      }
+
+      return (
+        <TriggerActionButton
+          id={response.id}
+          route={`/neighborhoods/${neighborhoodId}`}
+          intent="delete-response"
+          text="Delete response"
+        />
+      );
+    }
+
+    return null;
   }
-
-  const contactInfo = response.status === "ACCEPTED" ? (
-    <div>
-      <p className={styles.p}>You've accepted this offer for help.</p>
-      <p className={styles.p}>Contact at: <span>{response.user.email}</span></p>
-    </div>
-  ) : <CustomBtn variant='outline-dark' className={styles.btn} onClick={handleAcceptOffer}>Accept Offer</CustomBtn>;
+  const contactInfo = displayContactInfo();
 
   return (
     <div className={styles.responseCard}>
@@ -30,19 +88,16 @@ export default function ResponseBox({ response }: Props) {
         <div className={styles.profileInfo}>
           <img
             className={styles.profileImg}
-            src={require('./images/profile.jpg')}
-            alt="active user on neighborhood app" />
-          <p className={styles.p}>Jane Parker</p>
+            src={profilePic}
+            alt="active user on neighborhood app"
+          />
+          <p className={styles.p}>{response.user.username}</p>
         </div>
         <p className={styles.createdDate}>{date}</p>
       </div>
-      <p className={styles.p}>
-        {response.content}
-      </p>
+      <p className={styles.p}>{response.content}</p>
       <hr className={styles.hr} />
-      <div className={styles.contact}>
-        {contactInfo}
-      </div>
+      <div className={styles.contact}>{contactInfo}</div>
     </div>
-  )
+  );
 }

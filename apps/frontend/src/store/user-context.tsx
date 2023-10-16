@@ -1,15 +1,9 @@
-import {
-  createContext,
-  useState,
-  useEffect,
-  PropsWithChildren,
-  useContext,
-} from "react";
-import { getStoredUser } from "../utils/auth";
+import { createContext, useState, useEffect, PropsWithChildren, useContext } from 'react';
+import { getStoredUser } from '../utils/auth';
 
 const UserContext = createContext({
-  username: "",
-  token: "",
+  username: '',
+  token: '',
 });
 
 export function useUser() {
@@ -17,8 +11,8 @@ export function useUser() {
 }
 
 export const UserContextProvider = (props: PropsWithChildren) => {
-  const [username, setUser] = useState("");
-  const [token, setToken] = useState("");
+  const [username, setUser] = useState('');
+  const [token, setToken] = useState('');
 
   useEffect(() => {
     const storedUserInfo = getStoredUser();
@@ -29,9 +23,5 @@ export const UserContextProvider = (props: PropsWithChildren) => {
     }
   }, []);
 
-  return (
-    <UserContext.Provider value={{ username, token }}>
-      {props.children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{ username, token }}>{props.children}</UserContext.Provider>;
 };

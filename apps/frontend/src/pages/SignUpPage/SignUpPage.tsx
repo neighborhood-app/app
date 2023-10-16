@@ -1,11 +1,11 @@
-import SignUpForm from "../../components/SignUpForm/SignUpForm";
-import WelcomeImgBox from "../../components/WelcomeImgBox/WelcomeImgBox";
 import { Container, Row } from 'react-bootstrap';
-import styles from "./SignUpPage.module.css";
-import { SignUpData } from "../../types";
-import signUp from "../../services/signUp";
+import SignUpForm from '../../components/SignUpForm/SignUpForm';
+import WelcomeImgBox from '../../components/WelcomeImgBox/WelcomeImgBox';
+import signUp from '../../services/signUp';
+import { SignUpData } from '../../types';
+import styles from './SignUpPage.module.css';
 
-export async function action({ request }: { request: Request }) {  
+export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
   const signUpData = Object.fromEntries(formData) as unknown as SignUpData;
 
@@ -22,6 +22,6 @@ export default function SignUpPage() {
         <WelcomeImgBox className={`${styles.customCol} ${styles.imgCol}`}></WelcomeImgBox>
         <SignUpForm className={`${styles.customCol} ${styles.formWrapper}`}></SignUpForm>
       </Row>
-  </Container>
+    </Container>
   );
 }
