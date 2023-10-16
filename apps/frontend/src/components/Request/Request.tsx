@@ -2,6 +2,8 @@ import styles from "./Request.module.css";
 import { RequestType } from "../../types";
 import { useState } from "react";
 import RequestModal from "../RequestModal/RequestModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 export default function Request({ requestObj }: { requestObj: RequestType }) {
   const date = requestObj.time_created.split("T")[0];
@@ -20,6 +22,8 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
     <div className={styles.container} onClick={handleShow}>
       <div className={styles.requestHeader}>
         <p>{requestObj.user.username}</p>
+        <FontAwesomeIcon icon={faCheck} style={{color: "#3465a4",}} />
+        <p>{requestObj.status}</p>
       </div>
       <div className={styles.imageContainer}>
         <img className={styles.image} src={require('./help_wanted.jpeg')} alt='Help Wanted' />
