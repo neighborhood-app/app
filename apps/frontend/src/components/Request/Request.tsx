@@ -3,7 +3,7 @@ import { RequestType } from "../../types";
 import { ReactElement, useState } from "react";
 import RequestModal from "../RequestModal/RequestModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 export default function Request({ requestObj }: { requestObj: RequestType }) {
   const date = requestObj.time_created.split("T")[0];
@@ -12,6 +12,7 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
   const handleCloseModal = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  //Needs to be updated once we implement the inactive request state.
   let statusHeader: ReactElement | null;
   if (requestObj.status === "OPEN") {
     statusHeader = null;

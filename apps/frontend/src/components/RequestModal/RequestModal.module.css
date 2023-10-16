@@ -91,3 +91,15 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
+
+.statusHeader {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
+  margin-bottom: 0px;
+}
+
+.statusP {
+  margin: 0 10px 0 10px;
+  color: #3465a4;
+}
