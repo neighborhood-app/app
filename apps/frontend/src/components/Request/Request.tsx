@@ -1,9 +1,8 @@
 import styles from "./Request.module.css";
 import { RequestType } from "../../types";
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import RequestModal from "../RequestModal/RequestModal";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import StatusHeader from "../StatusHeader/StatusHeader";
 
 export default function Request({ requestObj }: { requestObj: RequestType }) {
   const date = requestObj.time_created.split("T")[0];
@@ -12,30 +11,11 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
   const handleCloseModal = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  //Needs to be updated once we implement the inactive request state.
-  let statusHeader: ReactElement | null;
-  if (requestObj.status === "OPEN") {
-    statusHeader = null;
-  } else if (requestObj.status === "CLOSED") {
-    statusHeader = (
-      <div className={styles.statusHeader}>
-        <p className={styles.statusP}>{requestObj.status}</p>
-        <FontAwesomeIcon
-          icon={faCheck}
-          size="xl"
-          style={{ color: "#3465a4" }}
-        />
-      </div>
-    );
-  } else {
-    statusHeader = null;
-  }
-
   return (
     <div className={styles.container} onClick={handleShow}>
       <div className={styles.requestHeader}>
         <p>{requestObj.user.username}</p>
-        {statusHeader}
+        <StatusHeader status={requestObj.status} />
       </div>
       <div className={styles.imageContainer}>
         <img

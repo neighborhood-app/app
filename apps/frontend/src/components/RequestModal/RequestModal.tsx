@@ -6,8 +6,7 @@ import { useState } from "react";
 import { useRevalidator } from "react-router";
 import ResponseBox from "../ResponseBox/ResponseBox";
 import CustomBtn from "../CustomBtn/CustomBtn";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import StatusHeader from "../StatusHeader/StatusHeader";
 
 interface Props {
   show: boolean;
@@ -89,14 +88,7 @@ export default function RequestModal({
                 {loading ? <Spinner animation="border" /> : null}
               </div>
             </div>
-            <div className={styles.statusHeader}>
-              <p className={styles.statusP}>{request.status}</p>
-              <FontAwesomeIcon
-                icon={faCheck}
-                size="xl"
-                style={{ color: "#3465a4" }}
-              />
-            </div>
+            <StatusHeader status={request.status} />
           </section>
           <section className={styles.responseSection}>{responses}</section>
         </Modal.Body>

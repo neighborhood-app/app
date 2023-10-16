@@ -1,0 +1,11 @@
+.statusHeader {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 10px;
+    margin-bottom: 0px;
+  }
+  
+  .statusP {
+    margin: 0 10px 0 10px;
+    color: #3465a4;
+  }
