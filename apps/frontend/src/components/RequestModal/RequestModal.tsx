@@ -6,7 +6,7 @@ import { RequestType, ResponseWithUserAndRequest } from '../../types';
 import requestServices from '../../services/requests';
 import ResponseBox from '../ResponseBox/ResponseBox';
 import CustomBtn from '../CustomBtn/CustomBtn';
-import StatusHeader from "../StatusHeader/StatusHeader";
+import StatusHeader from '../StatusHeader/StatusHeader';
 
 const requestImg = require('./images/image.jpeg');
 
@@ -14,16 +14,9 @@ interface Props {
   show: boolean;
   handleCloseModal: () => void;
   request: RequestType;
-  show: boolean;
-  handleCloseModal: () => void;
-  request: RequestType;
 }
 
-export default function RequestModal({
-  show,
-  handleCloseModal,
-  request,
-}: Props) {
+export default function RequestModal({ show, handleCloseModal, request }: Props) {
   const [loading, setIsLoading] = useState(false);
   const revalidator = useRevalidator();
 
@@ -35,7 +28,6 @@ export default function RequestModal({
       setIsLoading(false);
       handleCloseModal();
       revalidator.revalidate();
-    } catch (e) {
     } catch (e) {
       setIsLoading(false);
       console.log(e);
@@ -58,9 +50,6 @@ export default function RequestModal({
         <CustomBtn variant="danger" onClick={handleCloseRequest}>
           Close request
         </CustomBtn>
-        <CustomBtn variant="danger" onClick={handleCloseRequest}>
-          Close request
-        </CustomBtn>
       );
     } else if (request.status === 'OPEN') {
       return <CustomBtn variant="primary">Offer help</CustomBtn>;
@@ -79,8 +68,7 @@ export default function RequestModal({
         centered
         className={styles.modal}
         dialogClassName="modal-w200"
-        size="xl"
-      >
+        size="xl">
         <Modal.Header closeButton>{request.user.username}</Modal.Header>
         <Modal.Body>
           <section className={styles.currentRequestInfo}>
@@ -93,7 +81,7 @@ export default function RequestModal({
               <h1 className={styles.h1}>{request.title}</h1>
               <p className={styles.p}>{request.content}</p>
               <div className={styles.buttonGroups}>
-                {displayRequestActions(request)}
+                {displayRequestActions()}
                 {loading ? <Spinner animation="border" /> : null}
               </div>
             </div>
