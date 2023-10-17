@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faBan } from '@fortawesome/free-solid-svg-icons';
 import styles from './StatusHeader.module.css';
 
 interface Props {
@@ -7,12 +7,21 @@ interface Props {
 }
 
 export default function StatusHeader({ status }: Props) {
-  if (status === 'OPEN') return null;
-
-  return (
-    <div className={styles.statusHeader}>
-      <p className={styles.statusP}>{status}</p>
-      <FontAwesomeIcon icon={faCheck} size="xl" style={{ color: '#3465a4' }} />
-    </div>
-  );
+  if (status === 'OPEN') {
+    return null;
+  } else if (status === 'CLOSED') {
+    return (
+      <div className={styles.statusHeader}>
+        <p className={styles.pClosed}>{status}</p>
+        <FontAwesomeIcon className={styles.iconClosed} icon={faCheck} size="xl" />
+      </div>
+    );
+  } else {
+    return (
+      <div className={styles.statusHeader}>
+        <p className={styles.pInactive}>{status}</p>
+        <FontAwesomeIcon className={styles.iconInactive} icon={faBan} />
+      </div>
+    );
+  }
 }
