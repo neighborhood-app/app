@@ -13,6 +13,7 @@ const NeighborhoodPageForNonMembers = (props: {
         showJoinBtn={true}
         showEditBtn={false}
         showLeaveBtn={false}
+        showMembers={false}
         name={neighborhood.name}
         description={neighborhood.description ? neighborhood.description : ''}
       />

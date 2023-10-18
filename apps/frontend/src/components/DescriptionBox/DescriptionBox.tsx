@@ -10,6 +10,7 @@ interface Props {
   showJoinBtn: boolean;
   showEditBtn: boolean;
   showLeaveBtn: boolean;
+  showMembers: boolean;
   name: string;
   description: string;
   users?: Array<User> | null;
@@ -19,6 +20,7 @@ export default function DescriptionBox({
   showJoinBtn,
   showEditBtn,
   showLeaveBtn,
+  showMembers,
   name,
   description,
   users,
@@ -50,7 +52,7 @@ export default function DescriptionBox({
         </div>
       </div>
       <div className={styles.secondHalf}>
-        <UserCircleStack usernames={usernames} />
+        {showMembers ? <UserCircleStack usernames={usernames}/> : null}
       </div>
     </div>
   );
