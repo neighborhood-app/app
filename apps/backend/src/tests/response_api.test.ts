@@ -21,10 +21,11 @@ const BOBS_LOGIN_DATA: LoginData = {
   password: 'secret',
 };
 
-const ANTONINAS_NHOOD_ID = 2;
-const RADUS_REQUEST_ID = 2;
-const ANTONINAS_RESPONSE_ID = 1;
 const ANTONINAS_USER_ID = 2;
+const ANTONINAS_NHOOD_ID = 2;
+const ANTONINAS_RESPONSE_ID = 1;
+const RADUS_USER_ID = 4;
+const RADUS_REQUEST_ID = 2;
 const MARIAS_USER_ID = 6;
 
 const loginUser = async (loginData: LoginData) => {
@@ -351,39 +352,23 @@ describe('Tests for deleting a response: DELETE /responses/:id', () => {
     expect(deleted).toBe(null);
   });
 
-  // In the Test Data, The Creator of the Response and Admin of neighborhood
-  // are same. Hence test for deleting as admin does not make sense.
-  // We are not testing for deleting response as admin of neighborhood.
-
-  // We have ANTONINAS_RESPONSE (Antonina's user_id = 2, response_id = 1)
-  // The response is associated with RADUS_REQUEST (request_id = 2
-  // created by the user RADU, user_id = 4)
-  // RADUS_REQUEST is in ANTONINAS_NEIGHBORHOOD (neighborhood_id = 2, admin_id = 2)
-
-  // More Users in Antonina's neighborhood - Maria (user_id = 6)
-
   test('Delete an existing request as admin of neighborhood', async () => {
-    const mariasResponse = await testHelpers.createResponse(
-      RADUS_REQUEST_ID,
-      MARIAS_USER_ID,
-      'new content',
-    );
-
-    expect(mariasResponse.id).toBeDefined();
-    const mariasResponseId: number = mariasResponse.id;
-    const mariasResponseInDb = await testHelpers.getSingleResponse(
-      mariasResponseId,
-    );
-    expect(mariasResponseInDb).toBeDefined();
+    const neighborhoodReqs = await testHelpers.getNeighborhoodRequests(ANTONINAS_NHOOD_ID);
+    const mariasReq = neighborhoodReqs.find(req => req.user_id === MARIAS_USER_ID);
+    const radusResponses = await testHelpers.getUserResponses(RADUS_USER_ID);
+    const responseToMariasReq = radusResponses?.find(res => res.request_id === mariasReq?.id);
+    const radusResponseId = responseToMariasReq?.id;
 
     const httpResponse: Response = await api
-      .delete(`/api/requests/${mariasResponseId}`)
+      .delete(`/api/responses/${radusResponseId}`)
       .set('Authorization', `Bearer ${token}`);
 
     let deletedResponse;
     try {
-      deletedResponse = await testHelpers.getSingleResponse(mariasResponseId);
+      if (typeof radusResponseId !== 'number') throw new TypeError("Response doesn't exist");
+      deletedResponse = await testHelpers.getSingleResponse(radusResponseId);
     } catch (error) {
+      if (error instanceof TypeError) throw error;
       deletedResponse = null;
     }
 

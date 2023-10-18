@@ -122,8 +122,6 @@ async function main() {
   await connectUserToNeighborhood(radu.id, antoninaNeighborhood.id);
   await connectUserToNeighborhood(maria.id, antoninaNeighborhood.id);
 
-  // The variable will be used in the future when we add responses.
-  // eslint-disable-next-line
   const raduRequest = await prismaClient.request.create({
     data: {
       neighborhood_id: antoninaNeighborhood.id,
@@ -134,8 +132,6 @@ async function main() {
     },
   });
 
-  // The variable will be used in the future when we add responses.
-  // eslint-disable-next-line
   const mariaRequest = await prismaClient.request.create({
     data: {
       neighborhood_id: antoninaNeighborhood.id,
@@ -151,6 +147,14 @@ async function main() {
       user_id: antonina.id,
       content: 'I can help out',
       status: 'PENDING',
+    },
+  });
+
+  await prismaClient.response.create({
+    data: {
+      request_id: mariaRequest.id,
+      user_id: radu.id,
+      content: 'I can help!',
     },
   });
   //---------------------------------------------------------

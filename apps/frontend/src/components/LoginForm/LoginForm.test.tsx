@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen } from '@testing-library/react';
-import LoginForm from './LoginForm'; 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import LoginForm from './LoginForm';
 
 // Use screen.debug(element) if you want to check out the rendered HTML;
 
@@ -10,10 +10,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 test('LoginForm is rendered', async () => {
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: <LoginForm className='' />,
+      path: '/',
+      element: <LoginForm className="" />,
     },
-  ])
+  ]);
 
   render(<RouterProvider router={router} />);
 

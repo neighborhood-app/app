@@ -1,6 +1,4 @@
-import {
-  Neighborhood, Prisma, RequestStatus, User, Response, Request,
-} from '@prisma/client';
+import { Neighborhood, Prisma, RequestStatus, User, Response, Request } from '@prisma/client';
 import { Request as APIRequest } from 'express';
 
 /**
@@ -17,7 +15,7 @@ export type UserWithoutId = Omit<User, 'id'>;
  * Response type with the associated request
  */
 export type ResponseWithRequest = Response & {
-  request: Request
+  request: Request;
 };
 
 /**
@@ -95,9 +93,7 @@ const neighborhoodWithUsers = Prisma.validator<Prisma.NeighborhoodArgs>()({
 /**
  * Neighborhood data with users
  */
-export type NeighborhoodWithUsers = Prisma.NeighborhoodGetPayload<
-  typeof neighborhoodWithUsers
->;
+export type NeighborhoodWithUsers = Prisma.NeighborhoodGetPayload<typeof neighborhoodWithUsers>;
 
 const userWithRequests = Prisma.validator<Prisma.UserArgs>()({
   include: {
@@ -149,3 +145,12 @@ export type UpdateResponseData = Pick<Partial<Response>, 'content' | 'status'>;
  * A request owner of the associated response can only update its status.
  */
 export type UserStatusOnResponse = 'RESPONSE OWNER' | 'REQUEST OWNER';
+
+/**
+ * Shape of data returned as a response after a successful login
+ */
+export interface LoginResponseData {
+  id: number;
+  username: string;
+  token: string;
+}

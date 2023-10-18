@@ -39,7 +39,7 @@ const errorHandler = (error: Error, _req: Request, response: Response, _next: Ne
 
   if (error.name === 'UserDataError') {
     response.status(400).send({ error: error.message });
-  } else if (error.name === 'InvalidUserameOrPasswordError') {
+  } else if (['InvalidUserameOrPasswordError', 'Unauthorized'].includes(error.name)) {
     response.status(401).send({ error: error.message });
     // } else if (error.name === 'NeighborhoodDataError') {
     //   response.status(400).send({ error: error.message });

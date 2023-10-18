@@ -1,10 +1,18 @@
-import CustomBtn from "../CustomBtn/CustomBtn";
-import styles from "./DescriptionBox.module.css";
-import { User } from "@prisma/client";
-import { JoinNeighborhoodForm } from "../JoinNeighborhoodForm/JoinNeighborhoodForm";
+import { User } from '@prisma/client';
+import CustomBtn from '../CustomBtn/CustomBtn';
+import styles from './DescriptionBox.module.css';
+import JoinNeighborhoodForm from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
 import UserCircleStack from "../UserCircleStack/UserCircleStack";
 
+const neighborhoodImg = require('./palm.jpeg');
+
 interface Props {
+  showJoinBtn: boolean;
+  showEditBtn: boolean;
+  showLeaveBtn: boolean;
+  name: string;
+  description: string;
+  users?: Array<User> | null;
   showJoinBtn: boolean;
   showEditBtn: boolean;
   showLeaveBtn: boolean;
@@ -28,7 +36,7 @@ export default function DescriptionBox({
         <div className={styles.card}>
           <img
             className={styles.neighborhoodImg}
-            src={require("./palm.jpeg")}
+            src={neighborhoodImg}
             alt="Neighborhood"
           />
           <h1 className={styles.neighborhoodTitle}>{name}</h1>

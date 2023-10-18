@@ -1,6 +1,5 @@
-import { Response } from "@prisma/client"
+import { User, Response } from '@prisma/client';
 import { CreateUserData } from '@neighborhood/backend/src/types';
-import { User } from '@prisma/client';
 
 export interface LoginData {
   username: string;
@@ -36,7 +35,7 @@ export type NeighborhoodDetailsForMembers = {
   location: string | null;
   admin: User;
   users: Array<User> | null;
-  requests: Array<string> | null;
+  requests: Array<RequestType> | null;
 };
 
 export type NeighborhoodDetailsForNonMembers = {
@@ -46,9 +45,7 @@ export type NeighborhoodDetailsForNonMembers = {
   location: string | null;
 };
 
-export type NeighborhoodType =
-  | NeighborhoodDetailsForMembers
-  | NeighborhoodDetailsForNonMembers;
+export type NeighborhoodType = NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers;
 
 export type RequestType = {
   id: number;
@@ -65,7 +62,7 @@ export type RequestType = {
 export type ResponseWithUserAndRequest = Response & {
   user: User;
   request: RequestType;
-}
+};
 
 export interface URLParameterID {
   id: string;
@@ -78,9 +75,14 @@ export interface StoredUserData {
 }
 
 export enum UserRole {
-  "NON-MEMBER" = "NON-MEMBER",
-  "MEMBER" = "MEMBER",
-  "ADMIN" = "ADMIN",
+  'NON-MEMBER' = 'NON-MEMBER',
+  'MEMBER' = 'MEMBER',
+  'ADMIN' = 'ADMIN',
 }
 
-export type SingleNeighborhoodFormIntent = 'create-request' | 'join-neighborhood' | 'accept-offer' | 'delete-response' | null;
+export type SingleNeighborhoodFormIntent =
+  | 'create-request'
+  | 'join-neighborhood'
+  | 'accept-offer'
+  | 'delete-response'
+  | null;

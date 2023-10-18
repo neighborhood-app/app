@@ -79,9 +79,11 @@ model User {
 enum RequestStatus {
   OPEN
   CLOSED
+  INACTIVE
 }
 
 enum ResponseStatus {
   PENDING
   ACCEPTED
+  INACTIVE
 }
