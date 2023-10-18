@@ -21,6 +21,7 @@ export default function DescriptionBox({
   description,
   users,
 }: Props) {
+  const usernames = users?.map((user) => user.username);
   return (
     <div className={styles.container}>
       <div className={styles.firstHalf}>
@@ -47,7 +48,7 @@ export default function DescriptionBox({
         </div>
       </div>
       <div className={styles.secondHalf}>
-        <UserCircleStack usernames={["mike", "antonina", "maria", "radu"]} />
+        <UserCircleStack usernames={usernames} />
       </div>
     </div>
   );
