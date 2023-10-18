@@ -13,10 +13,25 @@
   font-size: 0.62rem;
   z-index: calc(2 * var(--i));
   margin-left: -19px;
+  box-shadow: 0.25em 0.25em 0 0 rgba(15, 28, 63, 0.125);
 }
 
-.circle:nth-child(4) {
+.lastCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(220, 220, 220);
+  border: 1px solid rgb(123, 123, 123);
+  color: rgb(51, 51, 51);
+  letter-spacing: 0.2rem;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  padding: 0 5px;
+  font-size: 0.62rem;
+  z-index: calc(2 * var(--i));
+  margin-left: -19px;
+  box-shadow: 0.25em 0.25em 0 0 rgba(15, 28, 63, 0.125);
 }
 
 .circleContainer {
