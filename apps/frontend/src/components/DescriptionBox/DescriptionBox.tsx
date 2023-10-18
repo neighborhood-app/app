@@ -40,7 +40,6 @@ export default function DescriptionBox({
         </div>
         <div className={styles.neighborhoodDescription}>
           <p>{description}</p>
-          {users ? <p>{users.length} members</p> : null}
           {showEditBtn ? (
             <CustomBtn variant="outline-dark" className={styles.editBtn}>
               Edit Neighborhood
