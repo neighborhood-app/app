@@ -13,12 +13,6 @@ interface Props {
   name: string;
   description: string;
   users?: Array<User> | null;
-  showJoinBtn: boolean;
-  showEditBtn: boolean;
-  showLeaveBtn: boolean;
-  name: string;
-  description: string;
-  users?: Array<User> | null;
 }
 
 export default function DescriptionBox({
