@@ -12,6 +12,7 @@ const NeighborhoodPageForAdmin = (props: { neighborhood: NeighborhoodDetailsForM
         showJoinBtn={false}
         showEditBtn={true}
         showLeaveBtn={false}
+        showMembers={true}
         name={neighborhood.name}
         description={neighborhood.description ? neighborhood.description : ''}
         users={neighborhood.users}

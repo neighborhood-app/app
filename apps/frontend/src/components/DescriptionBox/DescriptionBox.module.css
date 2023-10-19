@@ -1,5 +1,15 @@
 .container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.firstHalf {
   max-width: 40vw;
+}
+
+.secondHalf {
+  display: flex;
+  justify-content: end;
 }
 
 .card {
@@ -17,12 +27,12 @@
 }
 
 .neighborhoodTitle {
-    margin-left: 10px;
-    color: #030303;
-    font-size: 32px;
-    /* font-family: "Poppins"; */
-    font-weight: 600;
-    line-height: 40px;
+  margin-left: 10px;
+  color: #030303;
+  font-size: 32px;
+  /* font-family: "Poppins"; */
+  font-weight: 600;
+  line-height: 40px;
 }
 
 .neighborhoodDescription {

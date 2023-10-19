@@ -13,6 +13,7 @@ const NeighborhoodPageForMembers = (props: { neighborhood: NeighborhoodDetailsFo
         showJoinBtn={false}
         showEditBtn={false}
         showLeaveBtn={true}
+        showMembers={true}
         name={neighborhood.name}
         description={neighborhood.description ? neighborhood.description : ''}
         users={neighborhood.users}
