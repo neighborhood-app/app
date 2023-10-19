@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styles from './Request.module.css';
 import { RequestType } from '../../types';
 import RequestModal from '../RequestModal/RequestModal';
+import StatusHeader from "../StatusHeader/StatusHeader";
 
 const helpImg = require('./help_wanted.jpeg');
 
@@ -16,6 +17,7 @@ export default function Request({ requestObj }: { requestObj: RequestType }) {
     <div className={styles.container} onClick={handleShow}>
       <div className={styles.requestHeader}>
         <p>{requestObj.user.username}</p>
+        <StatusHeader status={requestObj.status} />
       </div>
       <div className={styles.requestImage}>
         <img className={styles.image} src={helpImg} alt="Help Wanted" />

@@ -1,0 +1,26 @@
+.statusHeader {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
+  margin-bottom: 0px;
+}
+
+.pClosed {
+  margin: 0 10px 0 10px;
+  color: #ff2b009c;
+}
+
+.iconClosed {
+  color: #ff2b009c;
+  font-size: 1.1em;
+  margin-top: 0.15em;
+}
+
+.pInactive {
+  margin: 0 10px 0 10px;
+}
+
+.iconInactive {
+  font-size: 1.1em;
+  margin-top: 0.15em;
+}

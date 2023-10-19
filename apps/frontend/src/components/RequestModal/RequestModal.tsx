@@ -6,6 +6,7 @@ import { RequestType, ResponseWithUserAndRequest } from '../../types';
 import requestServices from '../../services/requests';
 import ResponseBox from '../ResponseBox/ResponseBox';
 import CustomBtn from '../CustomBtn/CustomBtn';
+import StatusHeader from '../StatusHeader/StatusHeader';
 
 const requestImg = require('./images/image.jpeg');
 
@@ -22,6 +23,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   async function handleCloseRequest() {
     try {
       setIsLoading(true);
+      await requestServices.closeRequest(String(request.id));
       await requestServices.closeRequest(String(request.id));
       setIsLoading(false);
       handleCloseModal();
@@ -83,6 +85,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
                 {loading ? <Spinner animation="border" /> : null}
               </div>
             </div>
+            <StatusHeader status={request.status} />
           </section>
           <section className={styles.responseSection}>{responses}</section>
         </Modal.Body>
