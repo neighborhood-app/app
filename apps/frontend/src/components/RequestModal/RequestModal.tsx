@@ -1,12 +1,12 @@
-import { Modal, Spinner } from 'react-bootstrap';
+import { Form, Modal, Spinner, Container, Col, Row } from 'react-bootstrap';
 import { useState } from 'react';
 import { useRevalidator } from 'react-router';
 import styles from './RequestModal.module.css';
 import { RequestType, ResponseWithUserAndRequest } from '../../types';
 import requestServices from '../../services/requests';
 import ResponseBox from '../ResponseBox/ResponseBox';
-import CustomBtn from '../CustomBtn/CustomBtn';
 import StatusHeader from '../StatusHeader/StatusHeader';
+import CustomBtn from '../CustomBtn/CustomBtn';
 
 const requestImg = require('./images/image.jpeg');
 
@@ -18,6 +18,7 @@ interface Props {
 
 export default function RequestModal({ show, handleCloseModal, request }: Props) {
   const [loading, setIsLoading] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const revalidator = useRevalidator();
 
   async function handleCloseRequest() {
@@ -86,6 +87,39 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
               </div>
             </div>
             <StatusHeader status={request.status} />
+          </section>
+          <section>
+            <Form className={styles.createResponseForm}>
+              <Form.Group className="mb-2" controlId="content">
+                <Form.Label column="sm">Write the details of your help offer:</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={4}
+                  name="content"
+                  minLength={4}
+                  // onChange={hideValidation}
+                  // onBlur={validateTextArea}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please input some explanatory content.
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Container className={styles.btnContainer} fluid>
+                <Row className="gx-3 gy-2">
+                  <Col sm={6}>
+                    <CustomBtn variant="primary" type="submit" className={`${styles.btn}`}>
+                      Submit
+                    </CustomBtn>
+                  </Col>
+                  <Col sm={6}>
+                    <CustomBtn variant="outline-dark" className={styles.btn}>
+                      Cancel
+                    </CustomBtn>
+                  </Col>
+                </Row>
+              </Container>
+            </Form>
           </section>
           <section className={styles.responseSection}>{responses}</section>
         </Modal.Body>

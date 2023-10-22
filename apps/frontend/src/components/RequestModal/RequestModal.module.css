@@ -91,3 +91,13 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
+
+.btnContainer {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.createResponseForm {
+  margin: 0 auto;
+}
