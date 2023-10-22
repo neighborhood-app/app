@@ -21,6 +21,41 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   const [showForm, setShowForm] = useState(false);
   const revalidator = useRevalidator();
 
+  const responseForm = (
+    <Form className={styles.createResponseForm}>
+      <Form.Group className="mb-2" controlId="content">
+        <Form.Label column="sm">Write the details of your help offer:</Form.Label>
+        <Form.Control
+          as="textarea"
+          rows={4}
+          name="content"
+          minLength={4}
+          // onChange={hideValidation}
+          // onBlur={validateTextArea}
+          required
+        />
+        <Form.Control.Feedback type="invalid">
+          Please input some explanatory content.
+        </Form.Control.Feedback>
+      </Form.Group>
+      <Container className={styles.btnContainer} fluid>
+        <Row className="gx-3 gy-2">
+          <Col sm={6}>
+            <CustomBtn variant="primary" type="submit" className={`${styles.btn}`}>
+              Submit
+            </CustomBtn>
+          </Col>
+          <Col sm={6}>
+            <CustomBtn variant="outline-dark" className={styles.btn}>
+              Cancel
+            </CustomBtn>
+          </Col>
+        </Row>
+      </Container>
+    </Form>
+  );
+
+  // Delete this
   async function handleCloseRequest() {
     try {
       setIsLoading(true);
@@ -53,7 +88,11 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
         </CustomBtn>
       );
     } else if (request.status === 'OPEN') {
-      return <CustomBtn variant="primary">Offer help</CustomBtn>;
+      return (
+        <CustomBtn variant="primary" onClick={() => setShowForm(true)}>
+          Offer help
+        </CustomBtn>
+      );
     }
 
     return null;
@@ -88,40 +127,8 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
             </div>
             <StatusHeader status={request.status} />
           </section>
-          <section>
-            <Form className={styles.createResponseForm}>
-              <Form.Group className="mb-2" controlId="content">
-                <Form.Label column="sm">Write the details of your help offer:</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={4}
-                  name="content"
-                  minLength={4}
-                  // onChange={hideValidation}
-                  // onBlur={validateTextArea}
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please input some explanatory content.
-                </Form.Control.Feedback>
-              </Form.Group>
-              <Container className={styles.btnContainer} fluid>
-                <Row className="gx-3 gy-2">
-                  <Col sm={6}>
-                    <CustomBtn variant="primary" type="submit" className={`${styles.btn}`}>
-                      Submit
-                    </CustomBtn>
-                  </Col>
-                  <Col sm={6}>
-                    <CustomBtn variant="outline-dark" className={styles.btn}>
-                      Cancel
-                    </CustomBtn>
-                  </Col>
-                </Row>
-              </Container>
-            </Form>
-          </section>
-          <section className={styles.responseSection}>{responses}</section>
+          <section>{showForm ? responseForm : null}</section>
+          <section className={styles.responseSection}>{showForm ? null : responses}</section>
         </Modal.Body>
       </Modal>
     </div>
