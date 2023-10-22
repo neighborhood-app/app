@@ -94,6 +94,7 @@
 
 .btnContainer {
   padding: 0;
+  margin-top: 2vh;
   display: flex;
   justify-content: center;
 }

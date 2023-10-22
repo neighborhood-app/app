@@ -1,6 +1,7 @@
 import { Form, Modal, Spinner, Container, Col, Row } from 'react-bootstrap';
-import { useState } from 'react';
-import { useRevalidator } from 'react-router';
+import { useState, FormEvent } from 'react';
+import { useRevalidator, useParams } from 'react-router';
+import { useSubmit } from 'react-router-dom';
 import styles from './RequestModal.module.css';
 import { RequestType, ResponseWithUserAndRequest } from '../../types';
 import requestServices from '../../services/requests';
@@ -20,9 +21,21 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   const [loading, setIsLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const revalidator = useRevalidator();
+  const { id: neighborhoodId } = useParams();
+  const submit = useSubmit();
+
+  const handleResponseSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    submit(form, {
+      method: 'post',
+      action: `/neighborhoods/${neighborhoodId}`,
+    });
+    setShowForm(false);
+  };
 
   const responseForm = (
-    <Form className={styles.createResponseForm}>
+    <Form className={styles.createResponseForm} role="form" onSubmit={handleResponseSubmit}>
       <Form.Group className="mb-2" controlId="content">
         <Form.Label column="sm">Write the details of your help offer:</Form.Label>
         <Form.Control
@@ -38,6 +51,10 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
           Please input some explanatory content.
         </Form.Control.Feedback>
       </Form.Group>
+      <Form.Group>
+        <Form.Control type="hidden" name="intent" value="create-response" />
+        <Form.Control type="hidden" name="request_id" value={Number(request.id)} />
+      </Form.Group>
       <Container className={styles.btnContainer} fluid>
         <Row className="gx-3 gy-2">
           <Col sm={6}>
@@ -46,7 +63,10 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
             </CustomBtn>
           </Col>
           <Col sm={6}>
-            <CustomBtn variant="outline-dark" className={styles.btn}>
+            <CustomBtn
+              variant="outline-dark"
+              onClick={() => setShowForm(false)}
+              className={styles.btn}>
               Cancel
             </CustomBtn>
           </Col>
@@ -55,7 +75,6 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     </Form>
   );
 
-  // Delete this
   async function handleCloseRequest() {
     try {
       setIsLoading(true);

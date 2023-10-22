@@ -1,5 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
 import { Request } from '@prisma/client';
+import { ResponseData } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
 import responseServices from '../../services/responses';
@@ -50,6 +51,10 @@ export async function action({ params, request }: ActionFunctionArgs) {
     response = await responseServices.acceptResponse(String(responseId));
   } else if (intent === 'delete-response') {
     response = await responseServices.deleteResponse(String(responseId));
+  } else if (intent === 'create-response') {
+    const responseData = Object.fromEntries(formData) as unknown as ResponseData;
+    responseData.request_id = Number(responseData.request_id);
+    response = await responseServices.createResponse(responseData);
   }
 
   return response;
