@@ -25,6 +25,9 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
 
+  const user = localStorage.getItem('user');
+  const { username, id: userId } = user ? JSON.parse(user) : null;
+
   const validateTextArea = (event: FocusEvent<HTMLTextAreaElement>) => {
     const textarea = event.currentTarget as HTMLTextAreaElement;
     const validPattern = /\s*(\S\s*){4,}/;
@@ -121,20 +124,19 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     <ResponseBox response={responseObj} requestOwnerId={request.user_id} key={responseObj.id} />
   ));
 
+  const hasUserResponded = request.responses.some((response) => response.user_id === userId);
   /**
   * Based on the status of a user (creator, or viewer) and the status of the request 
   (OPEN or CLOSED) returns the corresponding JSX for the request modal.
   */
   function displayRequestActions() {
-    const user = localStorage.getItem('user');
-    const username = user ? JSON.parse(user).username : null;
     if (username === request.user.username && request.status === 'OPEN') {
       return (
         <CustomBtn variant="danger" onClick={handleCloseRequest}>
           Close request
         </CustomBtn>
       );
-    } else if (request.status === 'OPEN') {
+    } else if (request.status === 'OPEN' && !hasUserResponded) {
       return (
         <CustomBtn variant="primary" onClick={() => setShowForm(true)}>
           Offer help
