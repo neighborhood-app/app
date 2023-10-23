@@ -1,5 +1,5 @@
 import { Form, Modal, Spinner, Container, Col, Row } from 'react-bootstrap';
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, ChangeEvent, FocusEvent } from 'react';
 import { useRevalidator, useParams } from 'react-router';
 import { useSubmit } from 'react-router-dom';
 import styles from './RequestModal.module.css';
@@ -19,23 +19,51 @@ interface Props {
 
 export default function RequestModal({ show, handleCloseModal, request }: Props) {
   const [loading, setIsLoading] = useState(false);
+  const [validated, setValidated] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const revalidator = useRevalidator();
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
 
+  const validateTextArea = (event: FocusEvent<HTMLTextAreaElement>) => {
+    const textarea = event.currentTarget as HTMLTextAreaElement;
+    const validPattern = /\s*(\S\s*){4,}/;
+
+    if (!validPattern.test(textarea.value)) {
+      textarea.setCustomValidity('The content needs to be at least 4 characters long.');
+    } else {
+      textarea.setCustomValidity('');
+    }
+
+    textarea.reportValidity();
+  };
+
+  const hideValidation = (event: ChangeEvent<HTMLTextAreaElement>) =>
+    event.currentTarget.setCustomValidity('');
+
   const handleResponseSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
-    submit(form, {
-      method: 'post',
-      action: `/neighborhoods/${neighborhoodId}`,
-    });
-    setShowForm(false);
+    if (!form.checkValidity()) {
+      event.stopPropagation();
+
+      setValidated(true);
+    } else {
+      submit(form, {
+        method: 'post',
+        action: `/neighborhoods/${neighborhoodId}`,
+      });
+      setShowForm(false);
+    }
   };
 
   const responseForm = (
-    <Form className={styles.createResponseForm} role="form" onSubmit={handleResponseSubmit}>
+    <Form
+      className={styles.createResponseForm}
+      role="form"
+      onSubmit={handleResponseSubmit}
+      noValidate
+      validated={validated}>
       <Form.Group className="mb-2" controlId="content">
         <Form.Label column="sm">Write the details of your help offer:</Form.Label>
         <Form.Control
@@ -43,9 +71,9 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
           rows={4}
           name="content"
           minLength={4}
-          // onChange={hideValidation}
-          // onBlur={validateTextArea}
           required
+          onChange={hideValidation}
+          onBlur={validateTextArea}
         />
         <Form.Control.Feedback type="invalid">
           Please input some explanatory content.
