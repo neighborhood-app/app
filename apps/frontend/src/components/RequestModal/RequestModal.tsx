@@ -149,7 +149,10 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     <div onClick={(e) => e.stopPropagation()}>
       <Modal
         show={show}
-        onHide={handleCloseModal}
+        onHide={() => {
+          handleCloseModal();
+          setShowForm(false);
+        }}
         animation={true}
         backdrop="static"
         centered
