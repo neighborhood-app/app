@@ -32,4 +32,18 @@ async function closeRequest(requestId: string) {
   return response.data;
 }
 
-export default { createRequest, closeRequest };
+async function deleteRequest(requestId: string) {
+  const headers: { authorization?: string } = {};
+  const { user }: { user?: string } = localStorage as StorageWithUser;
+
+  if (user) {
+    const userObj: UserInfo = JSON.parse(user);
+    headers.authorization = `Bearer ${userObj.token}`;
+  }
+
+  const response = await axios.delete(`${baseURL}/${requestId}`, { headers });
+
+  return response.data;
+}
+
+export default { createRequest, closeRequest, deleteRequest };

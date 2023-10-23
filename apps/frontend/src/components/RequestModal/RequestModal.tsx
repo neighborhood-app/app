@@ -110,7 +110,6 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     try {
       setIsLoading(true);
       await requestServices.closeRequest(String(request.id));
-      await requestServices.closeRequest(String(request.id));
       setIsLoading(false);
       handleCloseModal();
       revalidator.revalidate();
@@ -118,6 +117,12 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
       setIsLoading(false);
       console.log(e);
     }
+  }
+
+  async function handleDeleteRequest() {
+    await requestServices.deleteRequest(String(request.id));
+    handleCloseModal();
+    revalidator.revalidate();
   }
 
   const responses = request.responses.map((responseObj: ResponseWithUserAndRequest) => (
@@ -132,9 +137,14 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   function displayRequestActions() {
     if (username === request.user.username && request.status === 'OPEN') {
       return (
-        <CustomBtn variant="danger" onClick={handleCloseRequest}>
+        <>
+        <CustomBtn variant="primary" onClick={handleCloseRequest}>
           Close request
         </CustomBtn>
+        <CustomBtn variant="danger" onClick={handleDeleteRequest}>
+        Delete request
+      </CustomBtn>
+      </>
       );
     } else if (request.status === 'OPEN' && !hasUserResponded) {
       return (
