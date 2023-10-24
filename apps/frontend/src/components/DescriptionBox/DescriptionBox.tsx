@@ -1,8 +1,10 @@
 import { User } from '@prisma/client';
+import { Modal } from 'react-bootstrap';
+import { useState } from 'react';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
 import JoinNeighborhoodForm from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
-import UserCircleStack from "../UserCircleStack/UserCircleStack";
+import UserCircleStack from '../UserCircleStack/UserCircleStack';
 
 const neighborhoodImg = require('./palm.jpeg');
 
@@ -26,15 +28,29 @@ export default function DescriptionBox({
   users,
 }: Props) {
   const usernames = users?.map((user) => user.username);
+  const [showAlert, setShowAlert] = useState(false);
+  console.log(showAlert);
   return (
     <div className={styles.container}>
+      <Modal show={showAlert} onHide={() => setShowAlert(false)}>
+        <Modal.Body>Are you sure you want to leave this neighborhood?</Modal.Body>
+        <Modal.Footer>
+          <div className={styles.alertBtnContainer}>
+            <CustomBtn variant="primary" className={styles.alertBtn}>
+              Yes
+            </CustomBtn>
+            <CustomBtn
+              variant="outline-dark"
+              className={styles.alertBtn}
+              onClick={() => setShowAlert(false)}>
+              No
+            </CustomBtn>
+          </div>
+        </Modal.Footer>
+      </Modal>
       <div className={styles.firstHalf}>
         <div className={styles.card}>
-          <img
-            className={styles.neighborhoodImg}
-            src={neighborhoodImg}
-            alt="Neighborhood"
-          />
+          <img className={styles.neighborhoodImg} src={neighborhoodImg} alt="Neighborhood" />
           <h1 className={styles.neighborhoodTitle}>{name}</h1>
           {showJoinBtn ? <JoinNeighborhoodForm></JoinNeighborhoodForm> : null}
         </div>
@@ -46,12 +62,14 @@ export default function DescriptionBox({
             </CustomBtn>
           ) : null}
           {showLeaveBtn ? (
-            <CustomBtn variant="danger">Leave Neighborhood</CustomBtn>
+            <CustomBtn variant="danger" onClick={() => setShowAlert(true)}>
+              Leave Neighborhood
+            </CustomBtn>
           ) : null}
         </div>
       </div>
       <div className={styles.secondHalf}>
-        {showMembers ? <UserCircleStack usernames={usernames}/> : null}
+        {showMembers ? <UserCircleStack usernames={usernames} /> : null}
       </div>
     </div>
   );

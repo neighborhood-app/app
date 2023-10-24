@@ -40,6 +40,14 @@
   margin: 10px;
 }
 
+.alertBtnContainer {
+  margin: 0 auto;
+}
+
+.alertBtn {
+  margin: 0 5px;
+}
+
 /* .editBtn {
   width: 150px;
   height: 40px;
