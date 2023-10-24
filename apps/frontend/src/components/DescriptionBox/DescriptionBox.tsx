@@ -40,7 +40,7 @@ export default function DescriptionBox({
         <Modal.Body>Are you sure you want to leave this neighborhood?</Modal.Body>
         <Modal.Footer>
           <div className={styles.alertBtnContainer}>
-            <TriggerActionButton route={`/neighborhoods/${neighborhoodId}`} variant="primary" intent='leave-neighborhood' text='Yes' />
+            <TriggerActionButton route={`/neighborhoods/${neighborhoodId}`} variant="primary" intent='leave-neighborhood' text='Yes'/>
             <CustomBtn
               variant="outline-dark"
               className={styles.alertBtn}
