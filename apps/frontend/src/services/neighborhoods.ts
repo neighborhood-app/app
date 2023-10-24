@@ -46,9 +46,9 @@ async function leaveNeighborhood(
   if (!user) return redirect('/login');
 
   const headers = { authorization: `Bearer ${user.token}` };
-  const response = await axios.put(`${BASE_URL}/${neighborhoodId}/leave`, null, { headers });
+  await axios.put(`${BASE_URL}/${neighborhoodId}/leave`, null, { headers });
 
-  return response.data;
+  return redirect('/');
 }
 
 
