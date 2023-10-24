@@ -138,15 +138,16 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     if (username === request.user.username && request.status === 'OPEN') {
       return (
         <>
-        <CustomBtn variant="primary" onClick={handleCloseRequest}>
-          Close request
-        </CustomBtn>
-        <CustomBtn variant="danger" onClick={handleDeleteRequest}>
-        Delete request
-      </CustomBtn>
-      </>
+          <CustomBtn variant="primary" onClick={handleCloseRequest}>
+            Close request
+          </CustomBtn>
+          <CustomBtn variant="danger" onClick={handleDeleteRequest}>
+            Delete request
+          </CustomBtn>
+        </>
       );
-    } else if (request.status === 'OPEN' && !hasUserResponded) {
+    }
+    if (request.status === 'OPEN' && !hasUserResponded) {
       return (
         <CustomBtn variant="primary" onClick={() => setShowForm(true)}>
           Offer help
