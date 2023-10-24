@@ -53,7 +53,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
           text="Accept offer"
         />
       );
-    } else if (responseOwner) {
+    }  if (responseOwner) {
       if (response.status === 'ACCEPTED') {
         return (
           <>

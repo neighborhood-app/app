@@ -1,10 +1,12 @@
 import { User } from '@prisma/client';
 import { Modal } from 'react-bootstrap';
 import { useState } from 'react';
+import { useParams } from 'react-router';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
 import JoinNeighborhoodForm from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
 import UserCircleStack from '../UserCircleStack/UserCircleStack';
+import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 
 const neighborhoodImg = require('./palm.jpeg');
 
@@ -29,6 +31,8 @@ export default function DescriptionBox({
 }: Props) {
   const usernames = users?.map((user) => user.username);
   const [showAlert, setShowAlert] = useState(false);
+
+  const { id: neighborhoodId } = useParams();
   console.log(showAlert);
   return (
     <div className={styles.container}>
@@ -36,9 +40,7 @@ export default function DescriptionBox({
         <Modal.Body>Are you sure you want to leave this neighborhood?</Modal.Body>
         <Modal.Footer>
           <div className={styles.alertBtnContainer}>
-            <CustomBtn variant="primary" className={styles.alertBtn}>
-              Yes
-            </CustomBtn>
+            <TriggerActionButton route={`/neighborhoods/${neighborhoodId}`} variant="primary" intent='leave-neighborhood' text='Yes' />
             <CustomBtn
               variant="outline-dark"
               className={styles.alertBtn}

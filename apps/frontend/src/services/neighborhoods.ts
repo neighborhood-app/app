@@ -39,8 +39,22 @@ async function connectUserToNeighborhood(
   return response.data;
 }
 
+async function leaveNeighborhood(
+  neighborhoodId: number,
+): Promise<Response | { success: string } | { error: string }> {
+  const user = getStoredUser();
+  if (!user) return redirect('/login');
+
+  const headers = { authorization: `Bearer ${user.token}` };
+  const response = await axios.put(`${BASE_URL}/${neighborhoodId}/leave`, null, { headers });
+
+  return response.data;
+}
+
+
 export default {
   getAllNeighborhoods,
   getSingleNeighborhood,
   connectUserToNeighborhood,
+  leaveNeighborhood
 };

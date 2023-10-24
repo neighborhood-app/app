@@ -15,15 +15,16 @@ import CustomBtn from '../CustomBtn/CustomBtn';
  */
 
 interface Props {
-  id: number;
+  id?: number | null;
   route: string;
-  intent: 'accept-offer' | 'delete-response';
+  intent: 'accept-offer' | 'delete-response' | 'leave-neighborhood';
   text: string;
   variant?: 'primary' | 'outline-dark' | 'danger';
+  className?: string;
 }
 
 export default function TriggerActionButton({
-  id,
+  id = null,
   route,
   intent,
   text,
@@ -44,7 +45,7 @@ export default function TriggerActionButton({
     <Form method="post" onSubmit={handleResponseAction}>
       <Form.Group>
         <Form.Control type="hidden" name="intent" value={intent} />
-        <Form.Control type="hidden" name="responseId" value={id} />
+        {id ? <Form.Control type="hidden" name="responseId" value={id} /> : null} 
       </Form.Group>
       <CustomBtn variant={variant} type="submit">
         {text}
