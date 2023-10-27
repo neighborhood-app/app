@@ -1,5 +1,5 @@
 import { Form, Modal, Spinner, Container, Col, Row } from 'react-bootstrap';
-import { useState, FormEvent, ChangeEvent, FocusEvent } from 'react';
+import { useState, useRef, FormEvent } from 'react';
 import { useRevalidator, useParams } from 'react-router';
 import { useSubmit } from 'react-router-dom';
 import styles from './RequestModal.module.css';
@@ -21,6 +21,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   const [loading, setIsLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const textareaRef = useRef(null);
   const revalidator = useRevalidator();
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
@@ -28,28 +29,32 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   const user = localStorage.getItem('user');
   const { username, id: userId } = user ? JSON.parse(user) : null;
 
-  const validateTextArea = (event: FocusEvent<HTMLTextAreaElement>) => {
-    const textarea = event.currentTarget as HTMLTextAreaElement;
-    const validPattern = /\s*(\S\s*){4,}/;
+  const validateTextArea = (): void => {
+    if (textareaRef.current) {
+      const textarea = textareaRef.current as HTMLTextAreaElement;
+      const validPattern = /\s*(\S\s*){4,}/;
 
-    if (!validPattern.test(textarea.value)) {
-      textarea.setCustomValidity('The content needs to be at least 4 characters long.');
-    } else {
-      textarea.setCustomValidity('');
+      if (!validPattern.test(textarea.value)) {
+        textarea.setCustomValidity('The content needs to be at least 4 characters long.');
+      } else {
+        textarea.setCustomValidity('');
+      }
+
+      textarea.reportValidity();
     }
-
-    textarea.reportValidity();
   };
 
-  const hideValidation = (event: ChangeEvent<HTMLTextAreaElement>) =>
-    event.currentTarget.setCustomValidity('');
+  function hideValidation() {
+    textareaRef.current = null;
+  }
 
   const handleResponseSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
+    validateTextArea();
     if (!form.checkValidity()) {
       event.stopPropagation();
-
+      validateTextArea();
       setValidated(true);
     } else {
       submit(form, {
@@ -65,18 +70,19 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
       className={styles.createResponseForm}
       role="form"
       onSubmit={handleResponseSubmit}
-      noValidate
+      // noValidate
       validated={validated}>
       <Form.Group className="mb-2" controlId="content">
         <Form.Label column="sm">Write the details of your help offer:</Form.Label>
         <Form.Control
           as="textarea"
+          ref={textareaRef}
           rows={4}
           name="content"
           minLength={4}
           required
           onChange={hideValidation}
-          onBlur={validateTextArea}
+          // onBlur={validateTextArea}
         />
         <Form.Control.Feedback type="invalid">
           Please input some explanatory content.
@@ -89,7 +95,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
       <Container className={styles.btnContainer} fluid>
         <Row className="gx-3 gy-2">
           <Col sm={6}>
-            <CustomBtn variant="primary" type="submit" className={`${styles.btn}`}>
+            <CustomBtn variant="primary" type="submit" className={styles.btn}>
               Submit
             </CustomBtn>
           </Col>
@@ -149,7 +155,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     }
     if (request.status === 'OPEN' && !hasUserResponded) {
       return (
-        <CustomBtn variant="primary" onClick={() => setShowForm(true)}>
+        <CustomBtn variant="primary" className={styles.btn} onClick={() => setShowForm(true)}>
           Offer help
         </CustomBtn>
       );

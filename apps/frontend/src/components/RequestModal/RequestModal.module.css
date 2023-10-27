@@ -49,42 +49,9 @@
   gap: 30px;
 }
 
-/* .btn {
-  background-color: #000;
-  color: rgb(250, 246, 246);
-  padding: 10px 12px;
-  border: none;
-  border-radius: 5px;
-  font-weight: 600;
-  font-size: 0.7rem;
-  line-height: 1;
+.btn {
+  padding: 8px 30px;
 }
-
-.btn:hover,
-.btn:active {
-  background-color: #4b5563;
-}
-
- .closeBtn {
-  background-color: white;
-  border: 2px solid black;
-  color: black;
-}
-
-.closeBtn:hover,
-.closeBtn:active {
-  background-color: black;
-  color: white;
-}
-
-.offerHelpBtn{
-  background-color: #1d4ed8;
-}
-
-.offerHelpBtn:hover,
-.offerHelpBtn:active {
-  background-color: #3b82f6;
-} */
 
 .responseSection {
   display: grid;
@@ -102,4 +69,10 @@
 .createResponseForm {
   margin: 0 auto;
   width: 70%;
+}
+
+@media (max-width: 576px) {
+  .btn {
+    padding: 8px 155px;
+  }
 }
