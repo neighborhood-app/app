@@ -155,7 +155,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     }
     if (request.status === 'OPEN' && !hasUserResponded) {
       return (
-        <CustomBtn variant="primary" className={styles.btn} onClick={() => setShowForm(true)}>
+        <CustomBtn variant="primary" onClick={() => setShowForm(true)}>
           Offer help
         </CustomBtn>
       );
