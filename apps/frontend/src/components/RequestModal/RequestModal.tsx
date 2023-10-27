@@ -38,6 +38,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   const handleResponseSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
+    setFormSubmitted(true);
 
     if (!validateTextArea()) {
       event.stopPropagation();
@@ -47,8 +48,9 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
         action: `/neighborhoods/${neighborhoodId}`,
       });
       setShowForm(false);
+      setFormSubmitted(false);
+      setResponseInput('');
     }
-    setFormSubmitted(true);
   };
 
   const responseForm = (
