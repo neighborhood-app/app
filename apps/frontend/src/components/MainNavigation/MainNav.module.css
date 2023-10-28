@@ -54,6 +54,7 @@
     justify-content: flex-end;
     align-items: center;
     padding: 1.5vh 5vw;
+    height: 100%;
   }
 
   .link {
