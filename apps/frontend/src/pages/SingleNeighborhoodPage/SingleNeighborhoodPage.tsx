@@ -35,7 +35,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const neighborhoodId = Number(params.id);
 
   const intent = formData.get('intent') as SingleNeighborhoodFormIntent;
-  const responseId = formData.get('responseId');
+  
   // We should consider only returning success/error objects from all routes
   // where we don't need the new data
   let response: Request | Response | { success: string } | { error: string } | null = null;
@@ -47,9 +47,13 @@ export async function action({ params, request }: ActionFunctionArgs) {
   } else if (intent === 'join-neighborhood') {
     response = await neighborhoodsService.connectUserToNeighborhood(neighborhoodId);
   } else if (intent === 'accept-offer') {
+    const responseId = formData.get('responseId');
     response = await responseServices.acceptResponse(String(responseId));
   } else if (intent === 'delete-response') {
+    const responseId = formData.get('responseId');
     response = await responseServices.deleteResponse(String(responseId));
+  } else if (intent === 'leave-neighborhood') {
+    response = await neighborhoodsService.leaveNeighborhood(neighborhoodId);
   }
 
   return response;
