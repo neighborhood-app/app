@@ -3,8 +3,9 @@ import { useState, FormEvent } from 'react';
 import { useRevalidator, useParams } from 'react-router';
 import { useSubmit } from 'react-router-dom';
 import styles from './RequestModal.module.css';
-import { RequestType, ResponseWithUserAndRequest } from '../../types';
+import { RequestType, ResponseWithUserAndRequest, StoredUserData } from '../../types';
 import requestServices from '../../services/requests';
+import { getStoredUser } from '../../utils/auth';
 import ResponseBox from '../ResponseBox/ResponseBox';
 import StatusHeader from '../StatusHeader/StatusHeader';
 import CustomBtn from '../CustomBtn/CustomBtn';
@@ -27,8 +28,8 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
 
-  const user = localStorage.getItem('user');
-  const { username, id: userId } = user ? JSON.parse(user) : null;
+  const user = getStoredUser() as StoredUserData;
+  const { username, id: userId } = user;
 
   const validateTextArea = () => {
     const validPattern = /\s*(\S\s*){4,}/;
@@ -128,7 +129,9 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     <ResponseBox response={responseObj} requestOwnerId={request.user_id} key={responseObj.id} />
   ));
 
-  const hasUserResponded = request.responses.some((response) => response.user_id === userId);
+  const hasUserResponded = request.responses.some(
+    (response) => response.user_id === Number(userId),
+  );
   /**
   * Based on the status of a user (creator, or viewer) and the status of the request 
   (OPEN or CLOSED) returns the corresponding JSX for the request modal.
