@@ -19,6 +19,7 @@ interface Props {
 }
 
 export default function RequestModal({ show, handleCloseModal, request }: Props) {
+  const validTextAreaPattern = /\s*(\S\s*){4,}/;
   const [loading, setIsLoading] = useState(false);
   const [responseInput, setResponseInput] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -31,10 +32,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   const user = getStoredUser() as StoredUserData;
   const { username, id: userId } = user;
 
-  const validateTextArea = () => {
-    const validPattern = /\s*(\S\s*){4,}/;
-    return validPattern.test(responseInput);
-  };
+  const validateTextArea = () => validTextAreaPattern.test(responseInput);
 
   const handleResponseSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,6 +40,8 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     setFormSubmitted(true);
 
     if (!validateTextArea()) {
+      console.log('invalid');
+
       event.stopPropagation();
     } else {
       submit(form, {
@@ -66,10 +66,14 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
           as="textarea"
           rows={4}
           name="content"
+          className="mb-3"
           minLength={4}
           required
-          isInvalid={responseInput.trim().length < 4 && formSubmitted}
-          isValid={responseInput.trim().length >= 4}
+          isInvalid={
+            (responseInput.trim().length < 4 || !validTextAreaPattern.test(responseInput)) &&
+            formSubmitted
+          }
+          isValid={responseInput.trim().length >= 4 && validTextAreaPattern.test(responseInput)}
           onChange={(event) => {
             setResponseInput(event.target.value);
             setFormSubmitted(false);
@@ -84,13 +88,13 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
         <Form.Control type="hidden" name="request_id" value={Number(request.id)} />
       </Form.Group>
       <Container className={styles.btnContainer} fluid>
-        <Row className="gx-3 gy-2">
-          <Col sm={6}>
+        <Row className={`gx-3 gy-2 ${styles.responseBtnRow}`}>
+          <Col sm="6" lg="3">
             <CustomBtn variant="primary" type="submit" className={styles.btn}>
               Submit
             </CustomBtn>
           </Col>
-          <Col sm={6}>
+          <Col sm="6" lg="3">
             <CustomBtn
               variant="outline-dark"
               onClick={() => {

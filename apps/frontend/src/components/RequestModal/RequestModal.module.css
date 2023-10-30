@@ -62,9 +62,10 @@
 
 .btnContainer {
   padding: 0;
-  width: 60%;
-  /* display: flex;
-  justify-content: center; */
+}
+
+.responseBtnRow {
+  justify-content: center;
 }
 
 .createResponseForm {
