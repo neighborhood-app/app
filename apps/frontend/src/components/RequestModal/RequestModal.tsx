@@ -70,10 +70,10 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
           minLength={4}
           required
           isInvalid={
-            (responseInput.trim().length < 4 || !validTextAreaPattern.test(responseInput)) &&
+            (!validTextAreaPattern.test(responseInput)) &&
             formSubmitted
           }
-          isValid={responseInput.trim().length >= 4 && validTextAreaPattern.test(responseInput)}
+          isValid={validTextAreaPattern.test(responseInput)}
           onChange={(event) => {
             setResponseInput(event.target.value);
             setFormSubmitted(false);
