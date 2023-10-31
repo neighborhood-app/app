@@ -18,7 +18,7 @@
 }
 
 .neighborhoodImg {
-  width: 96px;
+  min-width: 96px;
   height: 96px;
   border-radius: 100000px;
   background-position: center center;
@@ -38,6 +38,17 @@
 .neighborhoodDescription {
   max-width: 40vw;
   margin: 10px;
+}
+
+.alertBtnContainer {
+  margin: 1.5vh auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.alertBtn {
+  margin: 0 5px;
 }
 
 /* .editBtn {

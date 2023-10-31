@@ -6,7 +6,7 @@ import CustomBtn from '../CustomBtn/CustomBtn';
 /**
  * This is a custom button element that will trigger the action of the specified route. It's current use case
  * is to accept a Response offer or delete a Response.
- * @param id - id of the element for which the action is triggered (At the moment , just the Response ID)
+ * @param id (optional) - id of the element for which the action is triggered (At the moment, just the Response ID)
  * @param route - url of the route that triggers the action
  * @param intent - decides which action to trigger based on the intent
  * @param text - the text that shows in the button
@@ -15,15 +15,16 @@ import CustomBtn from '../CustomBtn/CustomBtn';
  */
 
 interface Props {
-  id: number;
+  id?: number | null;
   route: string;
-  intent: 'accept-offer' | 'delete-response';
+  intent: 'accept-offer' | 'delete-response' | 'leave-neighborhood';
   text: string;
   variant?: 'primary' | 'outline-dark' | 'danger';
+  className?: string;
 }
 
 export default function TriggerActionButton({
-  id,
+  id = null,
   route,
   intent,
   text,
@@ -44,7 +45,7 @@ export default function TriggerActionButton({
     <Form method="post" onSubmit={handleResponseAction}>
       <Form.Group>
         <Form.Control type="hidden" name="intent" value={intent} />
-        <Form.Control type="hidden" name="responseId" value={id} />
+        {id ? <Form.Control type="hidden" name="responseId" value={id} /> : null} 
       </Form.Group>
       <CustomBtn variant={variant} type="submit">
         {text}

@@ -24,7 +24,7 @@
 }
 
 .homeLink {
-  overflow: visible; 
+  overflow: visible;
   fill: rgb(3, 3, 3);
   font-size: 42px;
   width: 42px;
@@ -33,7 +33,7 @@
 }
 
 .exploreLink {
-  overflow: visible; 
+  overflow: visible;
   fill: rgb(3, 3, 3);
   font-size: 43px;
   width: 43px;
@@ -42,7 +42,7 @@
 }
 
 .notificationsLink {
-  overflow: visible; 
+  overflow: visible;
   fill: rgb(3, 3, 3);
   font-size: 29px;
   top: 204px;
