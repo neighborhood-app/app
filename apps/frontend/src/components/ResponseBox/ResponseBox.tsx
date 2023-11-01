@@ -59,12 +59,14 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         return (
           <>
             <p className={styles.p}>Your help offer has been accepted.</p>
-            <TriggerActionButton
-              id={response.id}
-              route={`/neighborhoods/${neighborhoodId}`}
-              intent="delete-response"
-              text="Delete response"
-            />
+            <div className={styles.btnContainer}>
+              <TriggerActionButton
+                id={response.id}
+                route={`/neighborhoods/${neighborhoodId}`}
+                intent="delete-response"
+                text="Delete response"
+              />
+            </div>
           </>
         );
       }

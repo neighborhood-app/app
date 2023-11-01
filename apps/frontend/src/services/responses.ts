@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ResponseData } from '@neighborhood/backend/src/types';
 import { getStoredUser } from '../utils/auth';
 
 const baseURL = '/api/responses';
@@ -28,4 +29,16 @@ async function deleteResponse(responseId: string) {
   return response.data;
 }
 
-export default { acceptResponse, deleteResponse };
+async function createResponse(responseInput: ResponseData) {
+  const headers: { authorization?: string } = {};
+
+  if (user) {
+    headers.authorization = `Bearer ${user.token}`;
+  }
+
+  const response = await axios.post(baseURL, responseInput, { headers });
+
+  return response.data;
+}
+
+export default { acceptResponse, deleteResponse, createResponse };

@@ -1,5 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
 import { Request } from '@prisma/client';
+import { ResponseData } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
 import responseServices from '../../services/responses';
@@ -35,7 +36,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const neighborhoodId = Number(params.id);
 
   const intent = formData.get('intent') as SingleNeighborhoodFormIntent;
-  
+
   // We should consider only returning success/error objects from all routes
   // where we don't need the new data
   let response: Request | Response | { success: string } | { error: string } | null = null;
@@ -52,6 +53,10 @@ export async function action({ params, request }: ActionFunctionArgs) {
   } else if (intent === 'delete-response') {
     const responseId = formData.get('responseId');
     response = await responseServices.deleteResponse(String(responseId));
+  } else if (intent === 'create-response') {
+    const responseData = Object.fromEntries(formData) as unknown as ResponseData;
+    responseData.request_id = Number(responseData.request_id);
+    response = await responseServices.createResponse(responseData);
   } else if (intent === 'leave-neighborhood') {
     response = await neighborhoodsService.leaveNeighborhood(neighborhoodId);
   }
