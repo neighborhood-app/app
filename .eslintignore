@@ -1,0 +1,16 @@
+# dependencies
+**/node_modules
+
+# production
+**/build
+**/*.d.ts
+apps/backend/**/*.js
+
+# misc
+**/.env
+**/test.env
+
+# other
+apps/backend/prisma
+apps/backend/requests
+.eslintrc.js

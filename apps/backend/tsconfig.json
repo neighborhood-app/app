@@ -1,7 +1,7 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    /* Emit */
-    "outDir": "./build/"
+    "outDir": "./build/",
+    "composite": true
   }
 }

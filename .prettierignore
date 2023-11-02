@@ -4,3 +4,4 @@ apps/backend/requests
 **/build
 package.json
 package-lock.json
+**/*.d.ts

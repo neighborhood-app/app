@@ -1,4 +1,4 @@
-{
+module.exports = {
   "extends": ["airbnb-base", "airbnb-typescript/base", "prettier"],
   "plugins": ["@typescript-eslint"],
   "env": {
@@ -7,7 +7,6 @@
     "node": true
   },
   "rules": {
-    "no-console": 0,
     "arrow-parens": 0,
     "no-param-reassign": 1,
     "no-else-return": 1,
@@ -20,6 +19,7 @@
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": ["tsconfig.base.json"],
+    "tsconfigRootDir": __dirname
   }
 }

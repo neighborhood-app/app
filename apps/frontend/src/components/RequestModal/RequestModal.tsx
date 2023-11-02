@@ -40,8 +40,6 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     setFormSubmitted(true);
 
     if (!validateTextArea()) {
-      console.log('invalid');
-
       event.stopPropagation();
     } else {
       submit(form, {
