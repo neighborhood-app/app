@@ -7,13 +7,7 @@ import MainNav from '../../components/MainNavigation/MainNav';
 const RootLayout = () => (
   <Container fluid className={styles.container}>
     <Row>
-      <Col
-        className={`${styles.column} ${styles.sticky}`}
-        xxl="auto"
-        xl="auto"
-        lg="auto"
-        md="auto"
-        sm="auto">
+      <Col className={`${styles.column} ${styles.sticky}`} sm="auto">
         <MainNav />
       </Col>
       <Col className={styles.column}>
