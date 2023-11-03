@@ -1,27 +1,26 @@
-.header {
-  width: 4%;
-  min-width: 50px;
+.container {
+  position: relative;
+  height: auto;
+  min-height: 100vh;
 }
 
-.link {
-  padding: 15px;
-  color: black;
-  text-decoration: none;
+.row {
+  min-height: 100vh;
 }
 
-.footer {
-  width: 100vw;
-  height: 6vh;
-  background-color: white;
-  /* position: absolute;
-  bottom: 0; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: auto;
-  border-top: 1px solid black;
+.column {
+  min-height: 100vh;
+  padding: 0;
 }
 
-.paragraph {
-  margin: 0;
+.sticky {
+  position: sticky;
+  top: 0;
+}
+
+@media (max-width: 576px) {
+  .column {
+    min-height: 0;
+    height: auto;
+  }
 }
