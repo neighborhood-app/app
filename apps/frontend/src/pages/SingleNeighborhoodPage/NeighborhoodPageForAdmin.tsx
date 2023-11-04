@@ -17,11 +17,6 @@ const NeighborhoodPageForAdmin = (props: { neighborhood: NeighborhoodDetailsForM
         description={neighborhood.description ? neighborhood.description : ''}
         users={neighborhood.users}
       />
-      {/* <MemberBox
-    showLeaveBtn={true}
-    admin={neighborhood.admin as unknown as User}
-    users={neighborhood.users as unknown as Array<User>}
-  /> */}
       <RequestBox requests={neighborhood.requests} />
     </div>
   );

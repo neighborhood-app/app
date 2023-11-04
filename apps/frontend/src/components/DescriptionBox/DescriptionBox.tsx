@@ -1,5 +1,5 @@
 import { User } from '@prisma/client';
-import { Modal } from 'react-bootstrap';
+import { Container, Row, Col, Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import CustomBtn from '../CustomBtn/CustomBtn';
@@ -35,7 +35,7 @@ export default function DescriptionBox({
   const { id: neighborhoodId } = useParams();
   console.log(showAlert);
   return (
-    <div className={styles.container}>
+    <Container className={styles.container}>
       <Modal show={showAlert} onHide={() => setShowAlert(false)}>
         <Modal.Body>Are you sure you want to leave this neighborhood?</Modal.Body>
         <Modal.Footer>
@@ -55,12 +55,19 @@ export default function DescriptionBox({
           </div>
         </Modal.Footer>
       </Modal>
-      <div className={styles.firstHalf}>
-        <div className={styles.card}>
+      <Row xs="1" sm="2">
+        <Col className={styles.column}>
           <img className={styles.neighborhoodImg} src={neighborhoodImg} alt="Neighborhood" />
           <h1 className={styles.neighborhoodTitle}>{name}</h1>
           {showJoinBtn ? <JoinNeighborhoodForm></JoinNeighborhoodForm> : null}
-        </div>
+        </Col>
+        <Col>
+          <div className={styles.usernamesContainer}>
+            {showMembers ? <UserCircleStack usernames={usernames} /> : null}
+          </div>
+        </Col>
+      </Row>
+      <Row>
         <div className={styles.neighborhoodDescription}>
           <p>{description}</p>
           {showEditBtn ? (
@@ -74,10 +81,7 @@ export default function DescriptionBox({
             </CustomBtn>
           ) : null}
         </div>
-      </div>
-      <div className={styles.secondHalf}>
-        {showMembers ? <UserCircleStack usernames={usernames} /> : null}
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 }

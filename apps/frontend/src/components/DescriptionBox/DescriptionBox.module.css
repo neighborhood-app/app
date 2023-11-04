@@ -1,18 +1,4 @@
-.container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.firstHalf {
-  max-width: 40vw;
-}
-
-.secondHalf {
-  display: flex;
-  justify-content: end;
-}
-
-.card {
+.column {
   display: flex;
   align-items: center;
 }
@@ -51,40 +37,14 @@
   margin: 0 5px;
 }
 
-/* .editBtn {
-  width: 150px;
-  height: 40px;
-  padding: 0px 8px;
-  border: 0;
-  box-sizing: border-box;
-  border-radius: 12px;
-  background-color: white;
-  color: black;
-  font-size: 14px;
-  font-family: "Poppins";
-  outline: none;
-  border: 1px solid black;
+.usernamesContainer {
+  display: flex;
+  justify-content: flex-end;
 }
 
- .leaveBtn {
-  width: 188px;
-  height: 40px;
-  padding: 0px 8px;
-  border: 0;
-  box-sizing: border-box;
-  border-radius: 12px;
-  background-color: white;
-  color: black;
-  font-size: 16px;
-  font-family: "Poppins";
-  font-weight: 600;
-  line-height: 24px;
-  outline: none;
-  border: 2px solid black;
+@media (max-width: 576px) {
+  .usernamesContainer {
+    justify-content: flex-start;
+    margin: 10px 0 0 22px;
+  }
 }
-
-.leaveBtn:active,
-.leaveBtn:hover {
-  background-color: black;
-  color: white;
-} */
