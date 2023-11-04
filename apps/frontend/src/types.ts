@@ -5,7 +5,7 @@ export type SignUpData = CreateUserData;
 export interface RequestData {
   title: string;
   content: string;
-  neighborhoodId?: number;
+  neighborhood_id?: number;
 }
 
 export interface RouteIdParameter {

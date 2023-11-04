@@ -41,7 +41,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
   if (intent === 'create-request') {
     const requestData = Object.fromEntries(formData) as unknown as RequestData;
-    requestData.neighborhoodId = neighborhoodId;
+    requestData.neighborhood_id = neighborhoodId;
     response = await requestServices.createRequest(requestData);
   } else if (intent === 'join-neighborhood') {
     response = await neighborhoodsService.connectUserToNeighborhood(neighborhoodId);

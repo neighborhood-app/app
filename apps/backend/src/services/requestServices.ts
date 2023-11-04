@@ -20,8 +20,8 @@ const isCreateRequestData = (obj: object): obj is CreateRequestData => (
   && typeof obj.title === 'string'
   && 'content' in obj
   && typeof obj.content === 'string'
-  && 'neighborhoodId' in obj
-  && typeof obj.neighborhoodId === 'number'
+  && 'neighborhood_id' in obj
+  && typeof obj.neighborhood_id === 'number'
 );
 
 /**
@@ -43,7 +43,7 @@ const parseCreateRequestData = async (
     const requestData: CreateRequestData = {
       title: body.title,
       content: body.content,
-      neighborhoodId: body.neighborhoodId,
+      neighborhood_id: body.neighborhood_id,
     };
 
     return requestData;
@@ -233,12 +233,13 @@ const createRequest = async (
   requestData: CreateRequestData,
   userId: number,
 ): Promise<Request> => {
-  const { neighborhoodId } = requestData;
-  await validateCreateRequestData(requestData, userId, Number(neighborhoodId));
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { neighborhood_id } = requestData;
+  await validateCreateRequestData(requestData, userId, Number(neighborhood_id));
 
   const request: Request = await prismaClient.request.create({
     data: {
-      neighborhood_id: Number(neighborhoodId),
+      neighborhood_id: Number(neighborhood_id),
       user_id: userId,
       title: requestData.title,
       content: requestData.content,
