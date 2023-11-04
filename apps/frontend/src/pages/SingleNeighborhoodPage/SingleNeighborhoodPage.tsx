@@ -1,13 +1,12 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
 import { Request } from '@prisma/client';
-import { ResponseData } from '@neighborhood/backend/src/types';
+import { ResponseData, NeighborhoodDetailsForNonMembers } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
 import responseServices from '../../services/responses';
 import { useUser } from '../../store/user-context';
 import {
   NeighborhoodDetailsForMembers,
-  NeighborhoodDetailsForNonMembers,
   NeighborhoodType,
   RequestData,
   SingleNeighborhoodFormIntent,

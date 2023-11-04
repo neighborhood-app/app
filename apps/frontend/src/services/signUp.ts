@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { redirect } from 'react-router';
-import { UserWithoutPasswordHash } from '@neighborhood/backend/src/types';
-import { LoginData, SignUpData, UserInfo } from '../types';
+import { UserWithoutPasswordHash, LoginData } from '@neighborhood/backend/src/types';
+import { SignUpData, UserInfo } from '../types';
 import login from './login';
 
 const baseURL = '/api/users';

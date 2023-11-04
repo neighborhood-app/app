@@ -1,8 +1,8 @@
 import { redirect } from 'react-router';
 import axios from 'axios';
-import { Neighborhood } from '@prisma/client';
+import { Neighborhood, NeighborhoodDetailsForNonMembers } from '@neighborhood/backend/src/types';
+import { NeighborhoodDetailsForMembers } from '../types';
 import { getStoredUser } from '../utils/auth';
-import { NeighborhoodDetailsForMembers, NeighborhoodDetailsForNonMembers } from '../types';
 
 const BASE_URL = '/api/neighborhoods';
 
