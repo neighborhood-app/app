@@ -1,4 +1,3 @@
-// import { User, Response } from '@prisma/client';
 import { CreateUserData, User, Response, Request, NeighborhoodDetailsForNonMembers } from '@neighborhood/backend/src/types';
 
 export type SignUpData = CreateUserData;

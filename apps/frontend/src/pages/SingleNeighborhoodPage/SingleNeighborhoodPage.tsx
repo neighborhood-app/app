@@ -1,6 +1,5 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
-import { Request } from '@prisma/client';
-import { ResponseData, NeighborhoodDetailsForNonMembers } from '@neighborhood/backend/src/types';
+import { Request, ResponseData, NeighborhoodDetailsForNonMembers } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
 import responseServices from '../../services/responses';

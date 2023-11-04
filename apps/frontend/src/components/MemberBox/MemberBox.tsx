@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client';
+import type { User } from '@neighborhood/backend/src/types';
 import styles from './MemberBox.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
 

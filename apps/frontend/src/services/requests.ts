@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Request } from '@prisma/client';
+import { Request } from '@neighborhood/backend/src/types';
 import { RequestData, StorageWithUser, UserInfo } from '../types';
 
 const baseURL = '/api/requests';
