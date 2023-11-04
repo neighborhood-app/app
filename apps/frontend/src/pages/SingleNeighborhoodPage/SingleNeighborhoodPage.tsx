@@ -25,7 +25,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
   const { id } = params;
   const neighborhood = await neighborhoodsService.getSingleNeighborhood(Number(id));
-
+  
   return neighborhood;
 }
 

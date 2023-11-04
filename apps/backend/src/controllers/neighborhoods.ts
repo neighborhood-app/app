@@ -30,7 +30,8 @@ neighborhoodsRouter.get('/:id', middleware.userIdExtractor, catchError(async (re
   const neighborhood: NeighborhoodDetailsForMembers |
   NeighborhoodDetailsForNonMembers = isUserLoggedInAndMemberOfNeighborhood
     ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
-    : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
+      : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
+    
   res.status(200).send(neighborhood);
 }));
 

@@ -3,7 +3,11 @@ import { useState, FormEvent } from 'react';
 import { useRevalidator, useParams } from 'react-router';
 import { useSubmit } from 'react-router-dom';
 import styles from './RequestModal.module.css';
-import { RequestType, ResponseWithUserAndRequest, StoredUserData } from '../../types';
+import {
+  RequestWithUserAndResponses,
+  ResponseWithUserAndRequest,
+  StoredUserData,
+} from '../../types';
 import requestServices from '../../services/requests';
 import { getStoredUser } from '../../utils/auth';
 import ResponseBox from '../ResponseBox/ResponseBox';
@@ -15,7 +19,7 @@ const requestImg = require('./images/image.jpeg');
 interface Props {
   show: boolean;
   handleCloseModal: () => void;
-  request: RequestType;
+  request: RequestWithUserAndResponses;
 }
 
 export default function RequestModal({ show, handleCloseModal, request }: Props) {

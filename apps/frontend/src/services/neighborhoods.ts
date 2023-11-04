@@ -21,6 +21,7 @@ async function getSingleNeighborhood(
   if (userDataInLocalStorage) {
     const headers = { authorization: `Bearer ${userDataInLocalStorage.token}` };
     const response = await axios.get(`${BASE_URL}/${id}`, { headers });
+    
     return response.data;
   }
 

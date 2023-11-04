@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import styles from './Request.module.css';
-import { RequestType } from '../../types';
+import { RequestWithUserAndResponses } from '../../types';
 import RequestModal from '../RequestModal/RequestModal';
 import StatusHeader from "../StatusHeader/StatusHeader";
 
 const helpImg = require('./help_wanted.jpeg');
 
-export default function Request({ requestObj }: { requestObj: RequestType }) {
+export default function Request({ requestObj }: { requestObj: RequestWithUserAndResponses }) {
   const date = requestObj.time_created.split('T')[0];
   const [show, setShow] = useState(false);
 

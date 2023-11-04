@@ -132,7 +132,7 @@ const getNeighborhoodDetailsForMembers = async (neighborhoodId: number)
       },
       include: FIELDS_TO_INCLUDE_FOR_MEMBERS,
     });
-
+  
   return neighborhood;
 };
 

@@ -49,7 +49,7 @@ const parseCreateRequestData = async (
     return requestData;
   }
 
-  const error = new Error('Title, content or neighborhoodId missing or invalid.');
+  const error = new Error('Title, content or neighborhood ID missing or invalid.');
   error.name = 'InvalidInputError';
   throw error;
 };
@@ -65,7 +65,7 @@ const getRequestById = async (requestId: number): Promise<Request> => {
     where: {
       id: requestId,
     },
-  });
+  });  
 
   return request;
 };

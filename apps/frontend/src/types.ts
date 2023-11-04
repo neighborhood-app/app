@@ -29,32 +29,21 @@ export type NeighborhoodDetailsForMembers = {
   location: string | null;
   admin: User;
   users: Array<User> | null;
-  requests: Array<RequestType> | null;
+  requests: Array<RequestWithUserAndResponses> | null;
 };
 
 export type NeighborhoodType = NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers;
 
-export type RequestType = {
-  id: number;
-  neighborhood_id: number;
-  user_id: number;
-  title: string;
-  content: string;
-  status: string;
+export interface RequestWithUserAndResponses extends Omit<Request, 'time_created'> {
   time_created: string;
-  user: User;
-  responses: Array<ResponseWithUserAndRequest>;
-};
-
-// use this instead of RequestType
-export interface RequestWithUserAndResponses extends Request {
   user: User;
   responses: ResponseWithUserAndRequest[];
 }
 
+// RequestWithUserAndResponses or just Request?
 export interface ResponseWithUserAndRequest extends Response {
   user: User;
-  request: RequestType;
+  request: RequestWithUserAndResponses;
 }
 
 export interface URLParameterID {
