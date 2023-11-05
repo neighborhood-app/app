@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, Container, Row, Col } from 'react-bootstrap';
 import Request from '../Request/Request';
 import CreateRequestModal from '../CreateRequestModal/CreateRequestModal';
 import styles from './RequestBox.module.css';
@@ -44,43 +44,54 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
 
   const requestBoxes =
     requestList?.map((request: RequestType) => (
-      <Request requestObj={request} key={request.id}></Request>
+      <Col className={styles.column}>
+        <Request requestObj={request} key={request.id}></Request>
+      </Col>
     )) || [];
 
   return (
-    <div className={styles.header}>
-      <h2 className={styles.title}>Neighborhood Requests</h2>
-      <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>
-        Create request
-      </CustomBtn>
-      <div className={styles.form}>
-        <Form className={styles.form}>
-          <Form.Group>
-            <Form.Control
-              type="text"
-              placeholder="Search requests by title"
-              value={searchCriteria.searchTerm}
-              onChange={(event) => searchRequests(event.target.value)}></Form.Control>
-          </Form.Group>
-          <div className={styles.inputGroup}>
-            <Form.Select
-              size="sm"
-              className={styles.selectBox}
-              value={searchCriteria.status}
-              onChange={(event) => filterRequests(event.target.value)}>
-              <option value="OPEN">Open Requests</option>
-              <option value="CLOSED">Closed Requests</option>
-              <option value="ALL">All Requests</option>
-            </Form.Select>
-          </div>
-        </Form>
-      </div>
+    <Container className={styles.container}>
+      <Row>
+        <h2 className={styles.title}>Neighborhood Requests</h2>
+      </Row>
+      <Row>
+        <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>
+          Create request
+        </CustomBtn>
+      </Row>
+
+      <Form>
+        <Row className={styles.formRow}>
+          <Col className={styles.column}>
+            <Form.Group>
+              <Form.Control
+                type="text"
+                placeholder="Search requests by title"
+                value={searchCriteria.searchTerm}
+                onChange={(event) => searchRequests(event.target.value)}></Form.Control>
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group>
+              <Form.Select
+                size="sm"
+                className={styles.selectBox}
+                value={searchCriteria.status}
+                onChange={(event) => filterRequests(event.target.value)}>
+                <option value="OPEN">Open Requests</option>
+                <option value="CLOSED">Closed Requests</option>
+                <option value="ALL">All Requests</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
+        </Row>
+      </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
-      <div className={styles.container}>
+      <Row>
         {requestBoxes.length !== 0
           ? requestBoxes
           : 'Currently there are no requests that match your criteria!'}
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 }
