@@ -87,7 +87,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
         </Row>
       </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
-      <Row>
+      <Row xs="1" sm="2" md="3" lg="4">
         {requestBoxes.length !== 0
           ? requestBoxes
           : 'Currently there are no requests that match your criteria!'}
