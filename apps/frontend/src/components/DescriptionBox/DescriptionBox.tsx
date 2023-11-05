@@ -2,6 +2,8 @@ import { User } from '@prisma/client';
 import { Container, Row, Col, Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import { useParams } from 'react-router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
 import JoinNeighborhoodForm from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
@@ -62,8 +64,16 @@ export default function DescriptionBox({
           {showJoinBtn ? <JoinNeighborhoodForm></JoinNeighborhoodForm> : null}
         </Col>
         <Col>
-          <div className={styles.usernamesContainer}>
+          <div className={styles.membersContainer}>
             {showMembers ? <UserCircleStack usernames={usernames} /> : null}
+            {showLeaveBtn ? (
+              <FontAwesomeIcon
+                icon={faDoorOpen}
+                size="2xl"
+                className={styles.leaveIcon}
+                onClick={() => setShowAlert(true)}
+              />
+            ) : null}
           </div>
         </Col>
       </Row>
@@ -73,11 +83,6 @@ export default function DescriptionBox({
           {showEditBtn ? (
             <CustomBtn variant="outline-dark" className={styles.editBtn}>
               Edit Neighborhood
-            </CustomBtn>
-          ) : null}
-          {showLeaveBtn ? (
-            <CustomBtn variant="danger" onClick={() => setShowAlert(true)}>
-              Leave Neighborhood
             </CustomBtn>
           ) : null}
         </div>

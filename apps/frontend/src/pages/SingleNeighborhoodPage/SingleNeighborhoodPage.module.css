@@ -1,10 +1,9 @@
 .wrapper {
-  /* width: 100%; */
   padding: 50px;
 }
 
-/* @media (max-width: 576px) {
+@media (max-width: 576px) {
   .wrapper {
-    padding: 25px;
+    padding: 10px 10px;
   }
-} */
+}

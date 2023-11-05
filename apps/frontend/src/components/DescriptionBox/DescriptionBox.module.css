@@ -1,3 +1,7 @@
+.container {
+  margin: 0;
+}
+
 .column {
   display: flex;
   align-items: center;
@@ -22,8 +26,7 @@
 }
 
 .neighborhoodDescription {
-  max-width: 40vw;
-  margin: 10px;
+  margin: 10px 0px;
 }
 
 .alertBtnContainer {
@@ -37,13 +40,23 @@
   margin: 0 5px;
 }
 
-.usernamesContainer {
+.membersContainer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+}
+
+.leaveIcon {
+  margin-left: 8px;
+  color: #000000;
+}
+
+.leaveIcon:hover {
+  cursor: pointer;
 }
 
 @media (max-width: 576px) {
-  .usernamesContainer {
+  .membersContainer {
     justify-content: flex-start;
     margin: 10px 0 0 22px;
   }
