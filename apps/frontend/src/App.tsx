@@ -20,6 +20,7 @@ import ErrorPage from './pages/ErrorPage/ErrorPage';
 import logoutLoader from './pages/LogoutPage/LogoutPage';
 import { redirectLoggedInUser, checkAuthLoader } from './utils/auth';
 import HomePage from './pages/HomePage/HomePage';
+import SingleRequestPage, { loader as requestLoader } from './pages/SingleRequestPage/SingleRequestPage';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,12 @@ const router = createBrowserRouter([
             loader: neighborhoodLoader,
             action: requestAction,
             element: <SingleNeighborhoodPage />,
+          },
+          {
+            path: 'requests/:id',
+            loader: requestLoader,
+            // action: requestAction,
+            element: <SingleRequestPage />,
           },
           {
             path: 'home',

@@ -71,6 +71,26 @@ const getRequestById = async (requestId: number): Promise<Request> => {
 };
 
 /**
+ * - fetches request with associated user and responses
+ * - throws error if request not found
+ * @param requestId
+ * @returns
+ */
+const getRequestWithUserAndResponses = async (requestId: number) => {
+  const request: Request = await prismaClient.request.findUniqueOrThrow({
+    where: {
+      id: requestId,
+    },
+    include: {
+      user: true,
+      responses: true,
+    }
+  });
+
+  return request;
+};
+
+/**
  * - checks whether user created the request
  * - throws error if request with requestId is not found
  * @param requestId
@@ -251,6 +271,7 @@ const createRequest = async (
 
 export default {
   getRequestById,
+  getRequestWithUserAndResponses,
   hasUserCreatedRequest,
   parseCreateRequestData,
   updateRequest,
