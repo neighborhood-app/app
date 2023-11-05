@@ -76,6 +76,7 @@ const getRequestById = async (requestId: number): Promise<Request> => {
  * @param requestId
  * @returns
  */
+// TODO: Add return type after refactoring merge
 const getRequestWithUserAndResponses = async (requestId: number) => {
   const request: Request = await prismaClient.request.findUniqueOrThrow({
     where: {

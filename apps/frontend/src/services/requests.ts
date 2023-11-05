@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { Request } from '@prisma/client';
-import { RequestData, StorageWithUser, UserInfo } from '../types';
+import { RequestData, RequestType, StorageWithUser, UserInfo } from '../types';
 import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/requests';
 
-async function getSingleRequest(id: Number): Promise<Request | null> {
+async function getSingleRequest(id: Number): Promise<RequestType | null> {
   const user = getStoredUser();
 
   if (user) {
