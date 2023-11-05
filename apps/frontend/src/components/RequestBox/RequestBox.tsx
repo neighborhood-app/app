@@ -50,7 +50,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
     )) || [];
 
   return (
-    <Container className={styles.container}>
+    <Container>
       <Row>
         <h2 className={styles.title}>Neighborhood Requests</h2>
       </Row>
@@ -62,7 +62,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
 
       <Form>
         <Row className={styles.formRow}>
-          <Col className={styles.column}>
+          <Col className={`${styles.column} ${styles.formColumn}`}>
             <Form.Group>
               <Form.Control
                 type="text"
@@ -71,7 +71,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
                 onChange={(event) => searchRequests(event.target.value)}></Form.Control>
             </Form.Group>
           </Col>
-          <Col>
+          <Col className={styles.column}>
             <Form.Group>
               <Form.Select
                 size="sm"
@@ -87,7 +87,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
         </Row>
       </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
-      <Row xs="1" sm="2" md="3" lg="4">
+      <Row xs="1" sm="auto" className={styles.requestRow}>
         {requestBoxes.length !== 0
           ? requestBoxes
           : 'Currently there are no requests that match your criteria!'}

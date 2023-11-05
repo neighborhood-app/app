@@ -37,7 +37,7 @@ export default function DescriptionBox({
   const { id: neighborhoodId } = useParams();
   console.log(showAlert);
   return (
-    <Container className={styles.container}>
+    <Container>
       <Modal show={showAlert} onHide={() => setShowAlert(false)}>
         <Modal.Body>Are you sure you want to leave this neighborhood?</Modal.Body>
         <Modal.Footer>

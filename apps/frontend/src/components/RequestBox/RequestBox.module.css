@@ -1,15 +1,19 @@
-.container {
-  margin: 10px;
-}
-
 .formRow {
   margin-top: 20px;
   margin-bottom: 20px;
-  max-width: 50%;
+}
+
+.requestRow {
+  /* margin: 0;
+  padding: 0; */
 }
 
 .column {
   padding: 0;
+}
+
+.formColumn {
+  /* margin: 0px 10px 0px 0px; */
 }
 
 .title {
@@ -35,7 +39,6 @@
 }
 
 .selectBox {
-  margin-left: 10px;
   height: 40px;
   border-radius: 5px;
 }

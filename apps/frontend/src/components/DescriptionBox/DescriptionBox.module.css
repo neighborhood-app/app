@@ -1,11 +1,7 @@
-.container {
-  padding: 0;
-  margin: 10px;
-}
-
 .column {
   display: flex;
   align-items: center;
+  padding: 0;
 }
 
 .neighborhoodImg {
@@ -15,6 +11,7 @@
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
+  padding: 0;
 }
 
 .neighborhoodTitle {
@@ -28,6 +25,7 @@
 
 .neighborhoodDescription {
   margin: 10px 0px;
+  padding: 0;
 }
 
 .alertBtnContainer {
