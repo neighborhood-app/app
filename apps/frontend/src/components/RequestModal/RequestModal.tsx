@@ -2,12 +2,9 @@ import { Form, Modal, Spinner, Container, Col, Row } from 'react-bootstrap';
 import { useState, FormEvent } from 'react';
 import { useRevalidator, useParams } from 'react-router';
 import { useSubmit } from 'react-router-dom';
+import { ResponseWithUser } from '@neighborhood/backend/src/types';
+import { RequestWithUserAndResponses, StoredUserData } from '../../types';
 import styles from './RequestModal.module.css';
-import {
-  RequestWithUserAndResponses,
-  ResponseWithUserAndRequest,
-  StoredUserData,
-} from '../../types';
 import requestServices from '../../services/requests';
 import { getStoredUser } from '../../utils/auth';
 import ResponseBox from '../ResponseBox/ResponseBox';
@@ -132,8 +129,8 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     handleCloseModal();
     revalidator.revalidate();
   }
-
-  const responses = request.responses.map((responseObj: ResponseWithUserAndRequest) => (
+  
+  const responses = request.responses.map((responseObj: ResponseWithUser) => (
     <ResponseBox response={responseObj} requestOwnerId={request.user_id} key={responseObj.id} />
   ));
 

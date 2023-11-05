@@ -1,7 +1,7 @@
 import { redirect } from 'react-router';
 import axios from 'axios';
-import { Neighborhood, NeighborhoodDetailsForNonMembers } from '@neighborhood/backend/src/types';
-import { NeighborhoodDetailsForMembers } from '../types';
+import { Neighborhood } from '@neighborhood/backend/src/types';
+import { NeighborhoodType } from '../types';
 import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/neighborhoods';
@@ -15,7 +15,7 @@ async function getAllNeighborhoods(): Promise<Neighborhood[]> {
 // throw Error
 async function getSingleNeighborhood(
   id: Number,
-): Promise<NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers | null> {
+): Promise<NeighborhoodType | null> {
   const userDataInLocalStorage = getStoredUser();
 
   if (userDataInLocalStorage) {

@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { Request } from '@neighborhood/backend/src/types';
-import { RequestData, StorageWithUser, UserInfo } from '../types';
+import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
+import { StorageWithUser, UserInfo } from '../types';
 
 const baseURL = '/api/requests';
 
-async function createRequest(requestData: RequestData): Promise<Request> {
+async function createRequest(requestData: CreateRequestData): Promise<Request> {
   const headers: { authorization?: string } = {};
   const { user }: { user?: string } = localStorage as StorageWithUser;
 

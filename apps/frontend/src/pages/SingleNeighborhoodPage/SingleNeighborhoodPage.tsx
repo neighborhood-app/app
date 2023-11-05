@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
-import { Request, ResponseData, NeighborhoodDetailsForNonMembers } from '@neighborhood/backend/src/types';
+import { Request, ResponseData, CreateRequestData } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
 import responseServices from '../../services/responses';
@@ -7,7 +7,6 @@ import { useUser } from '../../store/user-context';
 import {
   NeighborhoodDetailsForMembers,
   NeighborhoodType,
-  RequestData,
   SingleNeighborhoodFormIntent,
   UserRole,
 } from '../../types';
@@ -40,7 +39,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   let response: Request | Response | { success: string } | { error: string } | null = null;
 
   if (intent === 'create-request') {
-    const requestData = Object.fromEntries(formData) as unknown as RequestData;
+    const requestData = Object.fromEntries(formData) as unknown as CreateRequestData;
     requestData.neighborhood_id = neighborhoodId;
     response = await requestServices.createRequest(requestData);
   } else if (intent === 'join-neighborhood') {
@@ -70,11 +69,10 @@ export default function SingleNeighborhood() {
   // I think checking whether user is admin or not can be slighly easier if we have access to userId.
   // We just want to check the role and not do type-narrowing for Neighborhood
   function checkLoggedUserRole(userName: string, neighborhood: NeighborhoodType): UserRole {
-    function checkForNeighborhoodDetails(
-      neighborhood: NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers,
-    ): neighborhood is NeighborhoodDetailsForMembers {
-      return (neighborhood as NeighborhoodDetailsForMembers).admin !== undefined;
-    }
+    const checkForNeighborhoodDetails = (
+      neighborhood: NeighborhoodType
+    ): neighborhood is NeighborhoodDetailsForMembers => Object.hasOwn(neighborhood, 'admin');
+
     if (checkForNeighborhoodDetails(neighborhood)) {
       return neighborhood.admin.username === userName ? UserRole.ADMIN : UserRole.MEMBER;
     }
