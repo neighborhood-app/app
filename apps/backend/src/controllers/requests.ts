@@ -84,7 +84,7 @@ requestsRouter.get(
     }
 
     const requestData: RequestData =
-      await requestServices.getRequestWithUserAndResponses(requestId);
+      await requestServices.getFullRequestData(requestId);
 
     return res.status(200).send(requestData);
   }),

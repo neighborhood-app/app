@@ -1,11 +1,15 @@
 import axios from 'axios';
 import { Request } from '@prisma/client';
-import { RequestData, RequestType, StorageWithUser, UserInfo } from '../types';
+import { NeighborhoodDetailsForMembers, RequestData, RequestType, StorageWithUser, UserInfo } from '../types';
 import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/requests';
 
-async function getSingleRequest(id: Number): Promise<RequestType | null> {
+export interface FullRequestData extends RequestType {
+  neighborhood: NeighborhoodDetailsForMembers;
+}
+
+async function getSingleRequest(id: Number): Promise<FullRequestData | null> {
   const user = getStoredUser();
 
   if (user) {
