@@ -1,5 +1,4 @@
 // /* eslint-disable no-underscore-dangle */ // Need to access httpResponse._body
-// // import { Neighborhood, User } from '@prisma/client';
 import { Response } from 'supertest';
 import app from '../app';
 import seed from './seed';

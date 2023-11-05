@@ -1,5 +1,5 @@
-import { Request } from '@prisma/client';
 import {
+  Request,
   CreateRequestData,
   UpdateRequestData,
   NeighborhoodWithUsers,
