@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 *,
 *::before,
@@ -8,37 +8,39 @@
   padding: 0;
 }
 
-html, body, #root {
-  color: #1d1d1f;
+html,
+body,
+#root {
+  position: relative;
+  height: auto;
+  position: relative;
   min-height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: row;
 }
 
 body {
   margin: 0;
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif; */  
+    sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: white;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   color: #030303;
   line-height: 38px;
 }
 
 h2 {
   color: #1e1f26;
-  margin-bottom: .6rem;
+  margin-bottom: 0.6rem;
 }
 
 a {
@@ -49,7 +51,9 @@ a {
 /* Override Bootstrap default variables */
 
 :root {
-  --bs-font-sans-serif: 'Poppins', system-ui, Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  --bs-font-sans-serif: 'Poppins', system-ui, Roboto, 'Helvetica Neue', 'Noto Sans',
+    'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
 }
 
 .btn {
@@ -61,16 +65,17 @@ a {
   --bs-btn-border-color: #ff2a70;
 }
 
-.btn-primary, .btn-outline-dark {
+.btn-primary,
+.btn-outline-dark {
   --bs-btn-hover-bg: #ff0054;
   --bs-btn-hover-border-color: #ff0054;
-  --bs-btn-active-bg: #FE496F;
-  --bs-btn-active-border-color: #FE496F;
+  --bs-btn-active-bg: #fe496f;
+  --bs-btn-active-border-color: #fe496f;
 }
 
 .btn-danger {
-  --bs-btn-bg: #FF4E2A;
-  --bs-btn-border-color: #FF4E2A;
+  --bs-btn-bg: #ff4e2a;
+  --bs-btn-border-color: #ff4e2a;
   --bs-btn-hover-bg: #ff2b00;
   --bs-btn-hover-border-color: #ff2b00;
   --bs-btn-active-bg: #e92700;

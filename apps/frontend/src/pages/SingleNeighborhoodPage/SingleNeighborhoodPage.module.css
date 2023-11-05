@@ -25,7 +25,7 @@
 }
 
 .leaveButton {
-  background-color: #6DA9E4;
+  background-color: #6da9e4;
   width: 150px;
   border: 5px solid;
   align-self: center;
@@ -34,11 +34,11 @@
 }
 
 .leaveButton:hover {
-  background-color: #ADE4DB;
+  background-color: #ade4db;
 }
 
 .addRequestButton {
-  background-color: #6DA9E4;
+  background-color: #6da9e4;
   width: 150px;
   border: 0px solid;
   align-self: center;
@@ -47,7 +47,7 @@
 }
 
 .addRequestButton:hover {
-  background-color: #ADE4DB;
+  background-color: #ade4db;
 }
 
 .author {
