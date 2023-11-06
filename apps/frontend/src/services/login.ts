@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { LoginResponseData } from '@neighborhood/backend/src/types';
-import { LoginData } from '../types';
+import { LoginResponseData, LoginData } from '@neighborhood/backend/src/types';
 
 const baseURL = '/api/login';
 

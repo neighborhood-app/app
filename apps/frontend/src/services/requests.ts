@@ -1,11 +1,16 @@
 import axios from 'axios';
-import { Request } from '@prisma/client';
-import { NeighborhoodDetailsForMembers, RequestData, RequestType, StorageWithUser, UserInfo } from '../types';
+import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
+import {
+  RequestWithUserAndResponses,
+  StorageWithUser,
+  UserInfo,
+  NeighborhoodDetailsForMembers,
+} from '../types';
 import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/requests';
 
-export interface FullRequestData extends RequestType {
+export interface FullRequestData extends RequestWithUserAndResponses {
   neighborhood: NeighborhoodDetailsForMembers;
 }
 
@@ -21,7 +26,7 @@ async function getSingleRequest(id: Number): Promise<FullRequestData | null> {
   return null;
 }
 
-async function createRequest(requestData: RequestData): Promise<Request> {
+async function createRequest(requestData: CreateRequestData): Promise<Request> {
   const headers: { authorization?: string } = {};
   const { user }: { user?: string } = localStorage as StorageWithUser;
 

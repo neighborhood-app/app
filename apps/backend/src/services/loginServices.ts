@@ -1,7 +1,6 @@
-import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
-import { LoginData } from '../types';
+import { User, LoginData } from '../types';
 import prismaClient from '../../prismaClient';
 import config from '../utils/config';
 

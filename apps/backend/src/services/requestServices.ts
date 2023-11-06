@@ -1,5 +1,9 @@
-import { Request } from '@prisma/client';
-import { CreateRequestData, UpdateRequestData, NeighborhoodWithUsers } from '../types';
+import {
+  Request,
+  CreateRequestData,
+  UpdateRequestData,
+  NeighborhoodWithUsers,
+} from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import neighborhoodServices from './neighborhoodServices';
@@ -11,13 +15,14 @@ import neighborhoodServices from './neighborhoodServices';
  * @param obj - request.body
  * @returns - type predicate (boolean)
  */
-const isCreateRequestData = (obj: object): obj is CreateRequestData =>
-  'title' in obj &&
-  typeof obj.title === 'string' &&
-  'content' in obj &&
-  typeof obj.content === 'string' &&
-  'neighborhoodId' in obj &&
-  typeof obj.neighborhoodId === 'number';
+const isCreateRequestData = (obj: object): obj is CreateRequestData => (
+  'title' in obj
+  && typeof obj.title === 'string'
+  && 'content' in obj
+  && typeof obj.content === 'string'
+  && 'neighborhood_id' in obj
+  && typeof obj.neighborhood_id === 'number'
+);
 
 /**
  * - parses data sent to POST /requests
@@ -36,13 +41,13 @@ const parseCreateRequestData = async (body: unknown): Promise<CreateRequestData>
     const requestData: CreateRequestData = {
       title: body.title,
       content: body.content,
-      neighborhoodId: body.neighborhoodId,
+      neighborhood_id: body.neighborhood_id,
     };
 
     return requestData;
   }
 
-  const error = new Error('Title, content or neighborhoodId missing or invalid.');
+  const error = new Error('Title, content or neighborhood ID missing or invalid.');
   error.name = 'InvalidInputError';
   throw error;
 };
@@ -57,6 +62,32 @@ const getRequestById = async (requestId: number): Promise<Request> => {
   const request: Request = await prismaClient.request.findUniqueOrThrow({
     where: {
       id: requestId,
+    },
+  });  
+
+  return request;
+};
+
+/**
+ * - fetches request with associated user and responses
+ * - throws error if request not found
+ * @param requestId
+ * @returns
+ */
+// TODO: Add return type after refactoring merge
+const getFullRequestData = async (requestId: number) => {
+  const request: Request = await prismaClient.request.findUniqueOrThrow({
+    where: {
+      id: requestId,
+    },
+    include: {
+      user: true,
+      neighborhood: {
+        include: {
+          users: true,
+        },
+      },
+      responses: true,
     },
   });
 
@@ -237,13 +268,17 @@ const validateCreateRequestData = async (
  * @param userId - user must be a member of the neighborhood represented by neighborhoodId
  * @returns - Promise resolving to newly created request
  */
-const createRequest = async (requestData: CreateRequestData, userId: number): Promise<Request> => {
-  const { neighborhoodId } = requestData;
-  await validateCreateRequestData(requestData, userId, Number(neighborhoodId));
+const createRequest = async (
+  requestData: CreateRequestData,
+  userId: number,
+): Promise<Request> => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { neighborhood_id } = requestData;
+  await validateCreateRequestData(requestData, userId, Number(neighborhood_id));
 
   const request: Request = await prismaClient.request.create({
     data: {
-      neighborhood_id: Number(neighborhoodId),
+      neighborhood_id: Number(neighborhood_id),
       user_id: userId,
       title: requestData.title,
       content: requestData.content,

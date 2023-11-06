@@ -1,8 +1,7 @@
 import express, { Response } from 'express';
-import { Request as RequestData } from '@prisma/client';
 import catchError from '../utils/catchError';
 import middleware from '../utils/middleware';
-import { CreateRequestData, RequestWithAuthentication } from '../types';
+import { Request as RequestData, CreateRequestData, RequestWithAuthentication } from '../types';
 import requestServices from '../services/requestServices';
 import neighborhoodServices from '../services/neighborhoodServices';
 
