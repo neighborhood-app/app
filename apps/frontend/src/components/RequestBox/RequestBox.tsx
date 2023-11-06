@@ -61,7 +61,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
       </Row>
 
       <Form>
-        <Row className={styles.formRow}>
+        <Row className={styles.formRow} xs="1" sm="2">
           <Col className={`${styles.column} ${styles.formColumn}`}>
             <Form.Group>
               <Form.Control
@@ -71,7 +71,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
                 onChange={(event) => searchRequests(event.target.value)}></Form.Control>
             </Form.Group>
           </Col>
-          <Col className={styles.column}>
+          <Col className={`${styles.column} ${styles.formColumn2}`}>
             <Form.Group>
               <Form.Select
                 size="sm"
@@ -87,10 +87,12 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
         </Row>
       </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
-      <Row xs="1" sm="auto" className={`${styles.requestRow} row-cols-m-4 gy-4`}>
-        {requestBoxes.length !== 0
-          ? requestBoxes
-          : 'Currently there are no requests that match your criteria!'}
+      <Row xs="1" sm="auto" className={styles.requestRow}>
+        {requestBoxes.length !== 0 ? (
+          requestBoxes
+        ) : (
+          <p className="mt-2 p-1">Currently there are no requests that match your criteria!</p>
+        )}
       </Row>
     </Container>
   );
