@@ -3,7 +3,7 @@ import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
 import RequestBox from '../../components/RequestBox/RequestBox';
 import { NeighborhoodDetailsForMembers } from '../../types';
 
-const NeighborhoodPageForAdmin = (props: { neighborhood: NeighborhoodDetailsForMembers }) => {
+const NeighborhoodPageForAdmin = (props: { neighborhood: NeighborhoodDetailsForMembers }) => {  
   const { neighborhood } = props;
 
   return (

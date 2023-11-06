@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { User } from '@neighborhood/backend/src/types';
 import { Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import { useParams } from 'react-router';

@@ -1,8 +1,13 @@
 import bcrypt from 'bcrypt';
 import {
-  Neighborhood, User, Request, Response,
-} from '@prisma/client';
-import { UserWithoutId, CreateUserData, UserWithRequests } from '../types';
+  Neighborhood,
+  User,
+  Request,
+  Response,
+  UserWithoutId,
+  CreateUserData,
+  UserWithRequests,
+} from '../types';
 import prismaClient from '../../prismaClient';
 
 /**
@@ -25,12 +30,8 @@ const getPasswordHash = async (password: string) => {
  * @param password required to populate password_hash field in users table
  * @returns Promise resolved to an object with user fields without id
  */
-const generateUserData = async (
-  createUserData: CreateUserData,
-): Promise<UserWithoutId> => {
-  const {
-    username, password, email, firstName, lastName,
-  } = createUserData;
+const generateUserData = async (createUserData: CreateUserData): Promise<UserWithoutId> => {
+  const { username, password, email, firstName, lastName } = createUserData;
   const user: UserWithoutId = {
     username,
     password_hash: await getPasswordHash(password),
@@ -89,9 +90,7 @@ const seedUser = async (createUserData: CreateUserData) => {
   });
 };
 
-const getNeighborhoodUsers = async (
-  neighborhoodId: number,
-): Promise<void | User[]> => {
+const getNeighborhoodUsers = async (neighborhoodId: number): Promise<void | User[]> => {
   const neighborhood = await prismaClient.neighborhood.findFirst({
     where: {
       id: neighborhoodId,
@@ -202,9 +201,9 @@ const getNumberOfResponses = async (): Promise<number> => {
 };
 
 /*
-* @param userID
-* @returns a Promise resolving to Requests associated with User
-*/
+ * @param userID
+ * @returns a Promise resolving to Requests associated with User
+ */
 const getUserResponses = async (userId: number): Promise<Response[] | null> => {
   const user = await prismaClient.user.findUnique({
     where: { id: userId },

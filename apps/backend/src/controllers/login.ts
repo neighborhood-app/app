@@ -1,7 +1,6 @@
 import express, { Response } from 'express';
-import { User } from '@prisma/client';
 import catchError from '../utils/catchError';
-import { LoginData, LoginResponseData, RequestWithAuthentication } from '../types';
+import { User, LoginData, LoginResponseData, RequestWithAuthentication } from '../types';
 import loginServices from '../services/loginServices';
 import middleware from '../utils/middleware';
 
