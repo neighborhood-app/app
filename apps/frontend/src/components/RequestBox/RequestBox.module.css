@@ -42,3 +42,7 @@
   height: 40px;
   border-radius: 5px;
 }
+
+@media (max-width: 576px) {
+
+}

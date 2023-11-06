@@ -50,7 +50,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
     )) || [];
 
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <h2 className={styles.title}>Neighborhood Requests</h2>
       </Row>
@@ -87,7 +87,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
         </Row>
       </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
-      <Row xs="1" sm="auto" className={styles.requestRow}>
+      <Row xs="1" sm="auto" className={`${styles.requestRow} row-cols-m-4 gy-4`}>
         {requestBoxes.length !== 0
           ? requestBoxes
           : 'Currently there are no requests that match your criteria!'}
