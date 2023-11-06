@@ -1,7 +1,8 @@
 import { LoaderFunctionArgs, useLoaderData } from 'react-router';
-import requestServices, { type FullRequestData } from '../../services/requests';
+import requestServices from '../../services/requests';
 // import { useUser } from '../../store/user-context';
 import RequestDescBox from '../../components/RequestDescBox/RequestDescBox';
+import { FullRequestData } from '../../types';
 
 export async function loader({ params }: LoaderFunctionArgs): Promise<FullRequestData | null> {
   const { id } = params;

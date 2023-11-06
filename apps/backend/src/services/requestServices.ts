@@ -3,6 +3,7 @@ import {
   CreateRequestData,
   UpdateRequestData,
   NeighborhoodWithUsers,
+  FullRequestData,
 } from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
@@ -75,45 +76,19 @@ const getRequestById = async (requestId: number): Promise<Request> => {
  * @returns
  */
 // TODO: Add return type after refactoring merge
-const getFullRequestData = async (requestId: number) => {
-  const request: Request = await prismaClient.request.findUniqueOrThrow({
+const getFullRequestData = async (requestId: number): Promise<FullRequestData> => {
+  const request: FullRequestData = await prismaClient.request.findUniqueOrThrow({
     where: {
       id: requestId,
     },
     include: {
       user: true,
+      responses: true,
       neighborhood: {
         include: {
           users: true,
         },
       },
-      responses: true,
-    },
-  });
-
-  return request;
-};
-
-/**
- * - fetches request with associated user and responses
- * - throws error if request not found
- * @param requestId
- * @returns
- */
-// TODO: Add return type after refactoring merge
-const getFullRequestData = async (requestId: number) => {
-  const request: Request = await prismaClient.request.findUniqueOrThrow({
-    where: {
-      id: requestId,
-    },
-    include: {
-      user: true,
-      neighborhood: {
-        include: {
-          users: true,
-        },
-      },
-      responses: true,
     },
   });
 

@@ -1,18 +1,9 @@
 import axios from 'axios';
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
-import {
-  RequestWithUserAndResponses,
-  StorageWithUser,
-  UserInfo,
-  NeighborhoodDetailsForMembers,
-} from '../types';
+import { StorageWithUser, UserInfo, FullRequestData } from '../types';
 import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/requests';
-
-export interface FullRequestData extends RequestWithUserAndResponses {
-  neighborhood: NeighborhoodDetailsForMembers;
-}
 
 async function getSingleRequest(id: Number): Promise<FullRequestData | null> {
   const user = getStoredUser();

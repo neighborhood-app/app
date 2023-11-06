@@ -6,6 +6,7 @@ import {
   NeighborhoodDetailsForNonMembers,
   LoginResponseData,
   ResponseWithUser,
+  NeighborhoodWithUsers,
 } from '@neighborhood/backend/src/types';
 
 export interface NeighborhoodDetailsForMembers extends Neighborhood {
@@ -21,6 +22,10 @@ export interface RequestWithUserAndResponses extends Omit<Request, 'time_created
   time_created: string;
   user: User;
   responses: ResponseWithUser[];
+}
+
+export interface FullRequestData extends RequestWithUserAndResponses {
+  neighborhood: NeighborhoodWithUsers
 }
 
 export interface StorageWithUser extends Storage {
