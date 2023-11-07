@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 327px;
+  /* height: 327px; */
   background-color: #ffffff;
   border-radius: 12px;
   border: 1px solid #f0f0f0;
@@ -85,5 +85,10 @@
 @media (max-width: 576px) {
   .container {
     margin: 15px auto;
+    max-width: 95%;
+  }
+
+  .image {
+    height: 240px;
   }
 }

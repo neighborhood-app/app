@@ -1,6 +1,6 @@
 .formRow {
   margin-top: 20px;
-  /* width: 40%; */
+  width: 60%;
 }
 
 .column {
@@ -8,11 +8,11 @@
 }
 
 .formColumn {
-  margin-right: 20px;
+  padding-right: 20px;
 }
 
 .formColumn2 {
-  margin-top: 15px;
+  /* margin-top: 15px; */
 }
 
 .title {
@@ -44,8 +44,12 @@
 
 @media (max-width: 576px) {
   .formRow {
-    /* width: 100%; */
+    width: 100%;
     margin: 20px auto;
+  }
+
+  .formColumn {
+    padding-right: 0;
   }
 
   .formColumn2 {
@@ -58,5 +62,12 @@
 
   .title {
     text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .formRow {
+    width: 100%;
+    margin: 20px auto;
   }
 }

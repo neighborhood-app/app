@@ -87,7 +87,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
         </Row>
       </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
-      <Row xs="1" sm="auto" className={styles.requestRow}>
+      <Row xs="1" lg="auto" className={styles.requestRow}>
         {requestBoxes.length !== 0 ? (
           requestBoxes
         ) : (
