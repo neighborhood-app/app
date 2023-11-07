@@ -9,6 +9,10 @@
   max-width: 260px;
 }
 
+.container:hover {
+  cursor: pointer;
+}
+
 .requestHeader {
   display: flex;
   justify-content: space-between;
@@ -85,6 +89,10 @@
   .container {
     max-width: 100%;
     margin: 20px 0 0 0;
+  }
+
+  .requestImage {
+    display: none;
   }
 
   .image {
