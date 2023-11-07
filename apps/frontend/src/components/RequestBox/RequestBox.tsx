@@ -65,7 +65,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
       </Row>
 
       <Form>
-        <Row className={styles.formRow} xs="1" sm="2">
+        <Row className={styles.formRow} xs="1" sm="2" lg="3" xl="4">
           <Col className={styles.column}>
             <Form.Group>
               <Form.Control

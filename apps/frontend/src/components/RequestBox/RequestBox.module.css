@@ -1,6 +1,6 @@
 .formRow {
   margin-top: 20px;
-  width: 50%;
+  /* width: 50%; */
 }
 
 .title {
@@ -31,9 +31,8 @@
 }
 
 @media (max-width: 576px) {
-  .formRow {
-    /* width: 100%;
-    margin: 20px auto; */
+  .statusColumn {
+    margin-top: 10px;
   }
 
   .button {
