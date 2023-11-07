@@ -14,7 +14,7 @@ async function getAllNeighborhoods(): Promise<Neighborhood[]> {
 // TODO: If unable to login because of token invalid or otherwise
 // throw Error
 async function getSingleNeighborhood(
-  id: Number,
+  id: number,
 ): Promise<NeighborhoodType | null> {
   const userDataInLocalStorage = getStoredUser();
 

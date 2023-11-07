@@ -45,6 +45,10 @@ export type SingleNeighborhoodFormIntent =
   | 'delete-response'
   | null;
 
+export type SingleRequestFormIntent =
+  | 'delete-request'
+  | 'close-request';
+
 // this is a [bug](https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope)
 // eslint-disable-next-line no-shadow
 export enum UserRole {

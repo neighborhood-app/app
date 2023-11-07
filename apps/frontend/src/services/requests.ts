@@ -31,7 +31,7 @@ async function createRequest(requestData: CreateRequestData): Promise<Request> {
   return response.data;
 }
 
-async function closeRequest(requestId: string) {
+async function closeRequest(requestId: number): Promise<Request> {
   const headers: { authorization?: string } = {};
   const { user }: { user?: string } = localStorage as StorageWithUser;
 
@@ -45,7 +45,7 @@ async function closeRequest(requestId: string) {
   return response.data;
 }
 
-async function deleteRequest(requestId: string) {
+async function deleteRequest(requestId: number) {
   const headers: { authorization?: string } = {};
   const { user }: { user?: string } = localStorage as StorageWithUser;
 
