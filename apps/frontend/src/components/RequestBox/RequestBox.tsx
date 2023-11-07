@@ -66,7 +66,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
 
       <Form>
         <Row className={styles.formRow} xs="1" sm="2">
-          <Col className={`${styles.column} ${styles.formColumn}`}>
+          <Col className={styles.column}>
             <Form.Group>
               <Form.Control
                 type="text"
@@ -75,7 +75,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
                 onChange={(event) => searchRequests(event.target.value)}></Form.Control>
             </Form.Group>
           </Col>
-          <Col className={`${styles.column} ${styles.formColumn2}`}>
+          <Col className={`${styles.column} ${styles.statusColumn}`}>
             <Form.Group>
               <Form.Select
                 size="sm"

@@ -3,10 +3,6 @@
   width: 50%;
 }
 
-.formColumn {
-  padding-right: 20px;
-}
-
 .title {
   padding: 0;
 }
@@ -40,14 +36,6 @@
     margin: 20px auto;
   }
 
-  .formColumn {
-    padding-right: 0;
-  }
-
-  .formColumn2 {
-    margin-top: 15px;
-  }
-
   .button {
     margin: 0 auto;
   }
@@ -58,8 +46,11 @@
 }
 
 @media (max-width: 992px) {
-  .formRow {
-    width: 100%;
-    margin: 20px auto;
+  .column {
+    padding: 0;
+  }
+
+  .statusColumn {
+    margin-top: 10px;
   }
 }
