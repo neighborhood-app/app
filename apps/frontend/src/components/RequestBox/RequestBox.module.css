@@ -1,6 +1,6 @@
 .formRow {
   margin-top: 20px;
-  width: 60%;
+  width: 50%;
 }
 
 .column {
@@ -65,7 +65,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .formRow {
     width: 100%;
     margin: 20px auto;
