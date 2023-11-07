@@ -95,7 +95,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
         {requestBoxes.length !== 0 ? (
           requestBoxes
         ) : (
-          <p className="mt-2 p-1">Currently there are no requests that match your criteria!</p>
+          <p className="mt-2">Currently there are no requests that match your criteria!</p>
         )}
       </Row>
     </Container>
