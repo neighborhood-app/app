@@ -32,8 +32,8 @@
 
 @media (max-width: 576px) {
   .formRow {
-    width: 100%;
-    margin: 20px auto;
+    /* width: 100%;
+    margin: 20px auto; */
   }
 
   .button {
@@ -45,12 +45,3 @@
   }
 }
 
-@media (max-width: 992px) {
-  .column {
-    padding: 0;
-  }
-
-  .statusColumn {
-    margin-top: 10px;
-  }
-}
