@@ -443,31 +443,31 @@ describe('Tests for creating a new request at POST /requests', () => {
     const response1 = await api
       .post('/api/requests')
       .set('Authorization', `Bearer ${token}`)
-      .send({ title: 'foo', neighborhoodId: BOBS_NHOOD_ID })
+      .send({ title: 'foo', neighborhood_id: BOBS_NHOOD_ID })
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
     let numberOfCurrentRequests = await testHelpers.getNumberOfRequests();
     expect(numberOfCurrentRequests).toEqual(numberOfInitialRequests);
     expect(response1.body.error).toEqual(
-      'Title, content or neighborhoodId missing or invalid.',
+      'Title, content or neighborhood ID missing or invalid.',
     );
 
     // no title
     const response2 = await api
       .post('/api/requests')
       .set('Authorization', `Bearer ${token}`)
-      .send({ neighborhoodId: BOBS_NHOOD_ID, content: 'foo' })
+      .send({ neighborhood_id: BOBS_NHOOD_ID, content: 'foo' })
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
     numberOfCurrentRequests = await testHelpers.getNumberOfRequests();
     expect(numberOfCurrentRequests).toEqual(numberOfInitialRequests);
     expect(response2.body.error).toEqual(
-      'Title, content or neighborhoodId missing or invalid.',
+      'Title, content or neighborhood ID missing or invalid.',
     );
 
-    // no neighborhoodId
+    // no neighborhood_id
     const response = await api
       .post('/api/requests')
       .set('Authorization', `Bearer ${token}`)
@@ -478,7 +478,7 @@ describe('Tests for creating a new request at POST /requests', () => {
     numberOfCurrentRequests = await testHelpers.getNumberOfRequests();
     expect(numberOfCurrentRequests).toEqual(numberOfInitialRequests);
     expect(response.body.error).toBe(
-      'Title, content or neighborhoodId missing or invalid.',
+      'Title, content or neighborhood ID missing or invalid.',
     );
   });
 
@@ -494,7 +494,7 @@ describe('Tests for creating a new request at POST /requests', () => {
       .send({
         title: 'foofoo',
         content: 'barbar',
-        neighborhoodId: INVALID_NHOOD_ID,
+        neighborhood_id: INVALID_NHOOD_ID,
       })
       .expect(400)
       .expect('Content-Type', /application\/json/);
@@ -517,7 +517,7 @@ describe('Tests for creating a new request at POST /requests', () => {
       .send({
         title: INVALID_TITLE,
         content: 'barbar',
-        neighborhoodId: BOBS_NHOOD_ID,
+        neighborhood_id: BOBS_NHOOD_ID,
       })
       .expect(400)
       .expect('Content-Type', /application\/json/);
@@ -540,7 +540,7 @@ describe('Tests for creating a new request at POST /requests', () => {
       .send({
         title: 'test',
         content: INVALID_CONTENT,
-        neighborhoodId: BOBS_NHOOD_ID,
+        neighborhood_id: BOBS_NHOOD_ID,
       })
       .expect(400)
       .expect('Content-Type', /application\/json/);
@@ -562,7 +562,7 @@ describe('Tests for creating a new request at POST /requests', () => {
       .send({
         title: 'foofoo',
         content: 'barbar',
-        neighborhoodId: ANTONINAS_NHOOD_ID,
+        neighborhood_id: ANTONINAS_NHOOD_ID,
       })
       .expect(400)
       .expect('Content-Type', /application\/json/);
@@ -590,7 +590,7 @@ describe('Tests for creating a new request at POST /requests', () => {
       .send({
         title: 'foofoo',
         content: 'barbar',
-        neighborhoodId: BOBS_NHOOD_ID,
+        neighborhood_id: BOBS_NHOOD_ID,
       })
       .expect(201)
       .expect('Content-Type', /application\/json/);

@@ -1,9 +1,10 @@
 import { Container, Row } from 'react-bootstrap';
 import { redirect } from 'react-router';
+import { LoginData } from '@neighborhood/backend/src/types';
+import { UserInfo } from '../../types';
 import LoginForm from '../../components/LoginForm/LoginForm';
 import WelcomeImgBox from '../../components/WelcomeImgBox/WelcomeImgBox';
 import login from '../../services/login';
-import { LoginData, UserInfo } from '../../types';
 import styles from './LoginPage.module.css';
 
 export async function action({ request }: { request: Request }) {

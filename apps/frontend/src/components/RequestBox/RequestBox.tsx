@@ -3,10 +3,10 @@ import { Form, Container, Row, Col } from 'react-bootstrap';
 import Request from '../Request/Request';
 import CreateRequestModal from '../CreateRequestModal/CreateRequestModal';
 import styles from './RequestBox.module.css';
-import { RequestType } from '../../types';
+import { RequestWithUserAndResponses } from '../../types';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
-export default function RequestBox({ requests }: { requests: RequestType[] | null }) {
+export default function RequestBox({ requests }: { requests: RequestWithUserAndResponses[] | null }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -21,12 +21,14 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
       filteredRequests = requests;
     } else {
       filteredRequests =
-        requests?.filter((request: RequestType) => request.status === searchCriteria.status) || [];
+        requests?.filter(
+          (request: RequestWithUserAndResponses) => request.status === searchCriteria.status,
+        ) || [];
     }
 
     if (searchCriteria.searchTerm !== '') {
       filteredRequests =
-        filteredRequests?.filter((request: RequestType) =>
+        filteredRequests?.filter((request: RequestWithUserAndResponses) =>
           request.title.toLowerCase().includes(searchCriteria.searchTerm.toLowerCase()),
         ) || [];
     }
@@ -43,7 +45,7 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
   }
 
   const requestBoxes =
-    requestList?.map((request: RequestType) => (
+    requestList?.map((request: RequestWithUserAndResponses) => (
       <Col className={styles.column}>
         <Request requestObj={request} key={request.id}></Request>
       </Col>

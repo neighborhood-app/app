@@ -1,13 +1,13 @@
 import { useParams } from 'react-router';
+import { ResponseWithUser } from '@neighborhood/backend/src/types';
 import styles from './ResponseBox.module.css';
-import { ResponseWithUserAndRequest } from '../../types';
 import { getStoredUser } from '../../utils/auth';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 
 const profilePic = require('./images/profile.jpg');
 
 type Props = {
-  response: ResponseWithUserAndRequest;
+  response: ResponseWithUser;
   requestOwnerId: number;
 };
 

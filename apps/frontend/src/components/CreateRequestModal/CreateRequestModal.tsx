@@ -1,6 +1,6 @@
 import { Modal, Form, Container, Row, Col } from 'react-bootstrap';
 import { useParams, useSubmit } from 'react-router-dom';
-import { FormEvent, FocusEvent, ChangeEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import styles from './CreateRequestModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
@@ -10,44 +10,37 @@ interface Props {
 }
 
 export default function CreateRequestModal({ show, handleClose }: Props) {
-  const [validated, setValidated] = useState(false);
+  const validInputPattern = /\s*(\S\s*){4,}/;
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [titleInput, setTitleInput] = useState('');
+  const [textAreaInput, setTextAreaInput] = useState('');
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
   const closeModal = () => {
     handleClose();
-    setValidated(false);
   };
 
-  const validateTextArea = (event: FocusEvent<HTMLTextAreaElement>) => {
-    const textarea = event.currentTarget as HTMLTextAreaElement;
-    const validPattern = /\s*(\S\s*){4,}/;
-
-    if (!validPattern.test(textarea.value)) {
-      textarea.setCustomValidity('The content needs to be at least 4 characters long.');
-    } else {
-      textarea.setCustomValidity('');
-    }
-
-    textarea.reportValidity();
+  function validateInput() {
+     return validInputPattern.test(textAreaInput) && validInputPattern.test(titleInput)
   };
-
-  const hideValidation = (event: ChangeEvent<HTMLTextAreaElement>) =>
-    event.currentTarget.setCustomValidity('');
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
+    setFormSubmitted(true);
 
-    if (!form.checkValidity()) {
+    if (!form.checkValidity() || !validateInput()) {
       event.stopPropagation();
 
-      setValidated(true);
     } else {
       submit(form, {
         method: 'post',
         action: `/neighborhoods/${neighborhoodId}`,
       });
       closeModal();
+      setFormSubmitted(false);
+      setTitleInput("");
+      setTextAreaInput("");
     }
   };
 
@@ -60,7 +53,6 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
         <Form
           role="form"
           noValidate
-          validated={validated}
           onSubmit={handleSubmit}
           className={styles.createReqForm}>
           <Form.Group className="mb-3" controlId="title">
@@ -71,7 +63,14 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
               type="text"
               name="title"
               minLength={4}
-              pattern="\s*(\S\s*){4,}"
+              isInvalid={
+                (!validInputPattern.test(titleInput)) && formSubmitted
+              }
+              isValid={validInputPattern.test(titleInput)}
+              onChange={(event) => {
+                setTitleInput(event?.target.value);
+                setFormSubmitted(false);
+              }}
               required
             />
             <Form.Control.Feedback type="invalid">
@@ -86,13 +85,18 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
               as="textarea"
               rows={4}
               name="content"
-              minLength={4}
-              onChange={hideValidation}
-              onBlur={validateTextArea}
+              isInvalid={
+                (!validInputPattern.test(textAreaInput)) && formSubmitted
+              }
+              isValid={validInputPattern.test(textAreaInput)}
+              onChange={(event) => {
+                setTextAreaInput(event?.target.value);
+                setFormSubmitted(false);
+              }}
               required
             />
             <Form.Control.Feedback type="invalid">
-              Please input some explanatory content.
+              The content needs to be at least 4 characters long.
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3">

@@ -1,8 +1,8 @@
 import { redirect } from 'react-router';
 import axios from 'axios';
-import { Neighborhood } from '@prisma/client';
+import { Neighborhood } from '@neighborhood/backend/src/types';
+import { NeighborhoodType } from '../types';
 import { getStoredUser } from '../utils/auth';
-import { NeighborhoodDetailsForMembers, NeighborhoodDetailsForNonMembers } from '../types';
 
 const BASE_URL = '/api/neighborhoods';
 
@@ -15,12 +15,13 @@ async function getAllNeighborhoods(): Promise<Neighborhood[]> {
 // throw Error
 async function getSingleNeighborhood(
   id: Number,
-): Promise<NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers | null> {
+): Promise<NeighborhoodType | null> {
   const userDataInLocalStorage = getStoredUser();
 
   if (userDataInLocalStorage) {
     const headers = { authorization: `Bearer ${userDataInLocalStorage.token}` };
     const response = await axios.get(`${BASE_URL}/${id}`, { headers });
+    
     return response.data;
   }
 

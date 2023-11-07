@@ -1,6 +1,6 @@
+import { NeighborhoodDetailsForNonMembers } from '@neighborhood/backend/src/types';
 import styles from './SingleNeighborhoodPage.module.css';
 import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
-import { NeighborhoodDetailsForNonMembers } from '../../types';
 
 const NeighborhoodPageForNonMembers = (props: {
   neighborhood: NeighborhoodDetailsForNonMembers;
