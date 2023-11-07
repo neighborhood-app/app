@@ -50,14 +50,18 @@ export default function RequestBox({ requests }: { requests: RequestType[] | nul
     )) || [];
 
   return (
-    <Container fluid>
+    <Container fluid className={styles.container}>
       <Row>
-        <h2 className={styles.title}>Neighborhood Requests</h2>
+        <Col>
+          <h2 className={styles.title}>Neighborhood Requests</h2>
+        </Col>
       </Row>
       <Row>
-        <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>
-          Create request
-        </CustomBtn>
+        <Col>
+          <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>
+            Create request
+          </CustomBtn>
+        </Col>
       </Row>
 
       <Form>
