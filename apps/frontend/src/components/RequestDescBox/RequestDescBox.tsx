@@ -67,18 +67,28 @@ export default function RequestDescBox({ request }: Props) {
     if (username === request.user.username && request.status === 'OPEN') {
       return (
         <>
-          <CustomBtn variant="primary" onClick={handleCloseRequest}>
-            Close request
-          </CustomBtn>
-          <CustomBtn variant="danger" onClick={handleDeleteRequest}>
-            Delete request
-          </CustomBtn>
+          <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-sm-4 mb-2">
+            <CustomBtn
+              className={styles.actionBtn}
+              variant="primary"
+              onClick={handleCloseRequest}>
+              Close request
+            </CustomBtn>
+          </Col>
+          <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
+            <CustomBtn
+              className={styles.actionBtn}
+              variant="danger"
+              onClick={handleDeleteRequest}>
+              Delete request
+            </CustomBtn>
+          </Col>
         </>
       );
     }
     if (request.status === 'OPEN' && !hasUserResponded) {
       return (
-        <Col sm="2" xs="4" className="pe-0 me-md-5">
+        <Col lg="2" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
           <CustomBtn
             className={styles.actionBtn}
             variant="primary"
