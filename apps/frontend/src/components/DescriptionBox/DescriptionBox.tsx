@@ -9,6 +9,7 @@ import styles from './DescriptionBox.module.css';
 import JoinNeighborhoodForm from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
 import UserCircleStack from '../UserCircleStack/UserCircleStack';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
+import EditNeighborhoodModal from '../EditNeighborhoodModal/EditNeighborhoodModal';
 
 const neighborhoodImg = require('./palm.jpeg');
 
@@ -34,6 +35,11 @@ export default function DescriptionBox({
   const usernames = users?.map((user) => user.username);
   const [showAlert, setShowAlert] = useState(false);
 
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const { id: neighborhoodId } = useParams();
   return (
     <Container fluid className={styles.container}>
@@ -56,6 +62,7 @@ export default function DescriptionBox({
           </div>
         </Modal.Footer>
       </Modal>
+      <EditNeighborhoodModal show={show} handleClose={handleClose} />
       <Row xs="1" sm="2">
         <Col className={styles.column}>
           <img className={styles.neighborhoodImg} src={neighborhoodImg} alt="Neighborhood" />
@@ -80,7 +87,7 @@ export default function DescriptionBox({
         <div className={styles.neighborhoodDescription}>
           <p>{description}</p>
           {showEditBtn ? (
-            <CustomBtn variant="outline-dark" className={styles.editBtn}>
+            <CustomBtn variant="outline-dark" className={styles.editBtn} onClick={handleShow}>
               Edit Neighborhood
             </CustomBtn>
           ) : null}
