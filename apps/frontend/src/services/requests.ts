@@ -33,11 +33,10 @@ async function createRequest(requestData: CreateRequestData): Promise<Request> {
 
 async function closeRequest(requestId: number): Promise<Request> {
   const headers: { authorization?: string } = {};
-  const { user }: { user?: string } = localStorage as StorageWithUser;
+  const user = getStoredUser();
 
   if (user) {
-    const userObj: UserInfo = JSON.parse(user);
-    headers.authorization = `Bearer ${userObj.token}`;
+    headers.authorization = `Bearer ${user.token}`;
   }
 
   const response = await axios.put(`${BASE_URL}/${requestId}`, { status: 'CLOSED' }, { headers });

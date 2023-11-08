@@ -19,7 +19,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const neighborhoodId = formData.get('neighborhoodId');
   const intent = formData.get('intent') as SingleRequestFormIntent;
 
-  let response: Request | null = null;
+  let response: Request | '' | null = null;
 
   if (intent === 'delete-request') {
     response = await requestServices.deleteRequest(requestId);

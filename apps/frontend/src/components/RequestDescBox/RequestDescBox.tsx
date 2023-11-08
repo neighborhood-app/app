@@ -74,6 +74,7 @@ export default function RequestDescBox({ request }: Props) {
           <CustomBtn
             className={styles.actionBtn}
             variant="primary"
+            // This will open up the response modal
             onClick={() => console.log('Helping!')}>
             Offer help
           </CustomBtn>
