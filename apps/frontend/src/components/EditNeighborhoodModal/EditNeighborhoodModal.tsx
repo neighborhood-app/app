@@ -7,25 +7,25 @@ import CustomBtn from '../CustomBtn/CustomBtn';
 interface Props {
   show: boolean;
   handleClose: () => void;
-  title: string;
+  name: string;
   description: string;
 }
 
-export default function EditNeighborhoodModal({ show, handleClose, title, description }: Props) {
+export default function EditNeighborhoodModal({ show, handleClose, name, description }: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [titleInput, setTitleInput] = useState(title);
+  const [nameInput, setNameInput] = useState(name);
   const [textAreaInput, setTextAreaInput] = useState(description);
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
   const closeModal = () => {
     handleClose();
-    setTitleInput(title);
+    setNameInput(name);
     setTextAreaInput(description);
   };
 
   function validateInput() {
-     return validInputPattern.test(textAreaInput) && validInputPattern.test(titleInput)
+     return validInputPattern.test(textAreaInput) && validInputPattern.test(nameInput)
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -38,12 +38,12 @@ export default function EditNeighborhoodModal({ show, handleClose, title, descri
 
     } else {
       submit(form, {
-        method: 'post',
+        method: 'put',
         action: `/neighborhoods/${neighborhoodId}`,
       });
       closeModal();
       setFormSubmitted(false);
-      setTitleInput("");
+      setNameInput("");
       setTextAreaInput("");
     }
   };
@@ -59,21 +59,21 @@ export default function EditNeighborhoodModal({ show, handleClose, title, descri
           noValidate
           onSubmit={handleSubmit}
           className={styles.createReqForm}>
-          <Form.Group className="mb-3" controlId="title">
+          <Form.Group className="mb-3" controlId="name">
             <Form.Label column="sm">
               Title<span className={styles.asterisk}>*</span>
             </Form.Label>
             <Form.Control
               type="text"
-              name="title"
-              value={titleInput}
+              name="name"
+              value={nameInput}
               minLength={4}
               isInvalid={
-                (!validInputPattern.test(titleInput)) && formSubmitted
+                (!validInputPattern.test(nameInput)) && formSubmitted
               }
-              isValid={validInputPattern.test(titleInput)}
+              isValid={validInputPattern.test(nameInput)}
               onChange={(event) => {
-                setTitleInput(event?.target.value);
+                setNameInput(event?.target.value);
                 setFormSubmitted(false);
               }}
               required
@@ -82,14 +82,14 @@ export default function EditNeighborhoodModal({ show, handleClose, title, descri
               Please choose a valid title.
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group className="mb-2" controlId="content">
+          <Form.Group className="mb-2" controlId="description">
             <Form.Label column="sm">
               Description<span className={styles.asterisk}>*</span>
             </Form.Label>
             <Form.Control
               as="textarea"
               rows={6}
-              name="content"
+              name="description"
               value={textAreaInput}
               isInvalid={
                 (!validInputPattern.test(textAreaInput)) && formSubmitted
@@ -102,7 +102,7 @@ export default function EditNeighborhoodModal({ show, handleClose, title, descri
               required
             />
             <Form.Control.Feedback type="invalid">
-              The content needs to be at least 4 characters long.
+              The description needs to be at least 4 characters long.
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3">
@@ -111,7 +111,7 @@ export default function EditNeighborhoodModal({ show, handleClose, title, descri
             </Form.Text>
           </Form.Group>
           <Form.Group>
-            <Form.Control type="hidden" name="intent" value="create-request" />
+            <Form.Control type="hidden" name="intent" value="edit-neighborhood" />
           </Form.Group>
           <Container className={styles.btnContainer} fluid>
             <Row className="gx-3 gy-2">
