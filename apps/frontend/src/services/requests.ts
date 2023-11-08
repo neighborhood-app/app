@@ -46,12 +46,11 @@ async function closeRequest(requestId: number): Promise<Request> {
 }
 
 async function deleteRequest(requestId: number) {
+  const user = getStoredUser();
   const headers: { authorization?: string } = {};
-  const { user }: { user?: string } = localStorage as StorageWithUser;
 
   if (user) {
-    const userObj: UserInfo = JSON.parse(user);
-    headers.authorization = `Bearer ${userObj.token}`;
+    headers.authorization = `Bearer ${user.token}`;
   }
 
   const response = await axios.delete(`${BASE_URL}/${requestId}`, { headers });

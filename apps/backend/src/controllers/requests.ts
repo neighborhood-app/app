@@ -46,7 +46,7 @@ requestsRouter.delete(
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const loggedUserId = req.loggedUserId as number;
-    const requestId = Number(req.params.id);
+    const requestId = Number(req.params.id);    
 
     const isOwnerUser = await requestServices.hasUserCreatedRequest(requestId, loggedUserId);
     if (!isOwnerUser) {

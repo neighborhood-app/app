@@ -2,10 +2,11 @@
 // import CustomBtn from '../CustomBtn/CustomBtn';
 // import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 // import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Col, Container, Image, Row } from 'react-bootstrap';
+import { Link, useSubmit } from 'react-router-dom';
+import { Col, Container, Form, Image, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { FormEvent } from 'react';
 import styles from './RequestDescBox.module.css';
 import { FullRequestData, StoredUserData } from '../../types';
 import { getStoredUser } from '../../utils/auth';
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export default function RequestDescBox({ request }: Props) {
+  const submit = useSubmit();
   const { user, neighborhood } = request;
   const requestDate = request.time_created.split('T')[0];
   let userName = '';
@@ -25,34 +27,27 @@ export default function RequestDescBox({ request }: Props) {
   if (user.first_name && user.last_name) userName = `${user.first_name} ${user.last_name}`;
   else userName = user.username;
 
-  // const [loading, setIsLoading] = useState(false);
-  // setIsLoading(true);
   // const [responseInput, setResponseInput] = useState('');
 
   const loggedUser = getStoredUser() as StoredUserData;
   const { username, id: loggedUserId } = loggedUser;
 
-  function handleCloseRequest() {
-    console.log('closing');
+  function handleCloseRequest(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-    // try {
-    //   setIsLoading(true);
-    //   await requestServices.closeRequest(String(request.id));
-    //   setIsLoading(false);
-    //   handleCloseModal();
-    //   revalidator.revalidate();
-    // } catch (e) {
-    //   setIsLoading(false);
-    //   console.log(e);
-    // }
+    submit(event.currentTarget, {
+      method: 'post',
+      action: `/requests/${request.id}`,
+    });
   }
 
-  function handleDeleteRequest() {
-    console.log('deleting');
+  function handleDeleteRequest(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-    // await requestServices.deleteRequest(String(request.id));
-    // handleCloseModal();
-    // revalidator.revalidate();
+    submit(event.currentTarget, {
+      method: 'post',
+      action: `/requests/${request.id}`,
+    });
   }
 
   const hasUserResponded = request.responses.some(
@@ -68,25 +63,43 @@ export default function RequestDescBox({ request }: Props) {
       return (
         <>
           <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-sm-4 mb-2">
-            <CustomBtn
-              className={styles.actionBtn}
-              variant="primary"
-              onClick={handleCloseRequest}>
-              Close request
-            </CustomBtn>
+            <Form method="post" onSubmit={handleCloseRequest}>
+              <Form.Group>
+                <Form.Control type="hidden" name="intent" value="close-request" />
+              </Form.Group>
+              <CustomBtn className={styles.actionBtn} variant="primary" type="submit">
+                Close request
+              </CustomBtn>
+            </Form>
           </Col>
           <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
-            <CustomBtn
-              className={styles.actionBtn}
-              variant="danger"
-              onClick={handleDeleteRequest}>
-              Delete request
-            </CustomBtn>
+            <Form method="post" onSubmit={handleDeleteRequest}>
+              <Form.Group>
+                <Form.Control type="hidden" name="intent" value="delete-request" />
+                <Form.Control type="hidden" name="neighborhoodId" value={neighborhood.id} />
+              </Form.Group>
+              <CustomBtn className={styles.actionBtn} variant="danger" type="submit">
+                Delete request
+              </CustomBtn>
+            </Form>
           </Col>
         </>
       );
-    }
-    if (request.status === 'OPEN' && !hasUserResponded) {
+    } else if (username === request.user.username) {
+      return (
+        <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
+          <Form method="post" onSubmit={handleDeleteRequest}>
+            <Form.Group>
+              <Form.Control type="hidden" name="intent" value="delete-request" />
+              <Form.Control type="hidden" name="neighborhoodId" value={neighborhood.id} />
+            </Form.Group>
+            <CustomBtn className={styles.actionBtn} variant="danger" type="submit">
+              Delete request
+            </CustomBtn>
+          </Form>
+        </Col>
+      );
+    } else if (request.status === 'OPEN' && !hasUserResponded) {
       return (
         <Col lg="2" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
           <CustomBtn

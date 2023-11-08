@@ -33,7 +33,7 @@ export default function DescriptionBox({
   const [showAlert, setShowAlert] = useState(false);
 
   const { id: neighborhoodId } = useParams();
-  console.log(showAlert);
+
   return (
     <div className={styles.container}>
       <Modal show={showAlert} onHide={() => setShowAlert(false)}>

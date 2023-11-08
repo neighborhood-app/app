@@ -15,12 +15,15 @@ import SingleNeighborhoodPage, {
   action as requestAction,
 } from './pages/SingleNeighborhoodPage/SingleNeighborhoodPage';
 
-import ErrorPage from './pages/ErrorPage/ErrorPage';
+import SingleRequestPage, {
+  loader as requestLoader,
+  action as singleRequestAction,
+} from './pages/SingleRequestPage/SingleRequestPage';
 
+import ErrorPage from './pages/ErrorPage/ErrorPage';
 import logoutLoader from './pages/LogoutPage/LogoutPage';
 import { redirectLoggedInUser, checkAuthLoader } from './utils/auth';
 import HomePage from './pages/HomePage/HomePage';
-import SingleRequestPage, { loader as requestLoader } from './pages/SingleRequestPage/SingleRequestPage';
 
 const router = createBrowserRouter([
   {
@@ -50,7 +53,7 @@ const router = createBrowserRouter([
           {
             path: 'requests/:id',
             loader: requestLoader,
-            // action: requestAction,
+            action: singleRequestAction,
             element: <SingleRequestPage />,
           },
           {
