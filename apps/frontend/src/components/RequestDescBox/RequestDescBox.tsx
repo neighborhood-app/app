@@ -1,12 +1,11 @@
 // import { useParams } from 'react-router';
 // import CustomBtn from '../CustomBtn/CustomBtn';
-// import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 // import { useState } from 'react';
-import { Link, useSubmit } from 'react-router-dom';
-import { Col, Container, Form, Image, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Col, Container, Image, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { FormEvent } from 'react';
+import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import styles from './RequestDescBox.module.css';
 import { FullRequestData, StoredUserData } from '../../types';
 import { getStoredUser } from '../../utils/auth';
@@ -19,7 +18,6 @@ interface Props {
 }
 
 export default function RequestDescBox({ request }: Props) {
-  const submit = useSubmit();
   const { user, neighborhood } = request;
   const requestDate = request.time_created.split('T')[0];
   let userName = '';
@@ -27,31 +25,25 @@ export default function RequestDescBox({ request }: Props) {
   if (user.first_name && user.last_name) userName = `${user.first_name} ${user.last_name}`;
   else userName = user.username;
 
-  // const [responseInput, setResponseInput] = useState('');
-
   const loggedUser = getStoredUser() as StoredUserData;
   const { username, id: loggedUserId } = loggedUser;
 
-  function handleCloseRequest(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    submit(event.currentTarget, {
-      method: 'post',
-      action: `/requests/${request.id}`,
-    });
-  }
-
-  function handleDeleteRequest(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    submit(event.currentTarget, {
-      method: 'post',
-      action: `/requests/${request.id}`,
-    });
-  }
-
   const hasUserResponded = request.responses.some(
     (response) => response.user_id === Number(loggedUserId),
+  );
+
+  const deleteBtnColumn = (
+    <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
+      <TriggerActionButton
+        id={neighborhood.id}
+        idInputName="neighborhoodId"
+        route={`/requests/${request.id}`}
+        variant="danger"
+        intent="delete-request"
+        text="Delete request"
+        className={styles.actionBtn}
+      />
+    </Col>
   );
 
   /**
@@ -63,42 +55,19 @@ export default function RequestDescBox({ request }: Props) {
       return (
         <>
           <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-sm-4 mb-2">
-            <Form method="post" onSubmit={handleCloseRequest}>
-              <Form.Group>
-                <Form.Control type="hidden" name="intent" value="close-request" />
-              </Form.Group>
-              <CustomBtn className={styles.actionBtn} variant="primary" type="submit">
-                Close request
-              </CustomBtn>
-            </Form>
+            <TriggerActionButton
+              route={`/requests/${request.id}`}
+              variant="primary"
+              intent="close-request"
+              text="Close request"
+              className={styles.actionBtn}
+            />
           </Col>
-          <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
-            <Form method="post" onSubmit={handleDeleteRequest}>
-              <Form.Group>
-                <Form.Control type="hidden" name="intent" value="delete-request" />
-                <Form.Control type="hidden" name="neighborhoodId" value={neighborhood.id} />
-              </Form.Group>
-              <CustomBtn className={styles.actionBtn} variant="danger" type="submit">
-                Delete request
-              </CustomBtn>
-            </Form>
-          </Col>
+          {deleteBtnColumn}
         </>
       );
     } else if (username === request.user.username) {
-      return (
-        <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
-          <Form method="post" onSubmit={handleDeleteRequest}>
-            <Form.Group>
-              <Form.Control type="hidden" name="intent" value="delete-request" />
-              <Form.Control type="hidden" name="neighborhoodId" value={neighborhood.id} />
-            </Form.Group>
-            <CustomBtn className={styles.actionBtn} variant="danger" type="submit">
-              Delete request
-            </CustomBtn>
-          </Form>
-        </Col>
-      );
+      return deleteBtnColumn;
     } else if (request.status === 'OPEN' && !hasUserResponded) {
       return (
         <Col lg="2" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
@@ -140,7 +109,6 @@ export default function RequestDescBox({ request }: Props) {
       <Row className="mb-3 gx-3 justify-content-sm-start justify-content-center">
         <Col sm="3"></Col>
         {displayRequestActions()}
-        {/* {loading ? <Spinner animation="border" /> : null} */}
       </Row>
     </Container>
   );

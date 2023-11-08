@@ -48,6 +48,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       return (
         <TriggerActionButton
           id={response.id}
+          idInputName={"responseId"}
           route={`/neighborhoods/${neighborhoodId}`}
           intent="accept-offer"
           text="Accept offer"
@@ -62,6 +63,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
             <div className={styles.btnContainer}>
               <TriggerActionButton
                 id={response.id}
+                idInputName="responseId"
                 route={`/neighborhoods/${neighborhoodId}`}
                 intent="delete-response"
                 text="Delete response"
@@ -74,6 +76,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       return (
         <TriggerActionButton
           id={response.id}
+          idInputName="responseId"
           route={`/neighborhoods/${neighborhoodId}`}
           intent="delete-response"
           text="Delete response"

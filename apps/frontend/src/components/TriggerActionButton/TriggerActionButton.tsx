@@ -2,10 +2,10 @@ import { FormEvent } from 'react';
 import { useSubmit } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import CustomBtn from '../CustomBtn/CustomBtn';
+import { SingleRequestFormIntent } from '../../types';
 
 /**
- * This is a custom button element that will trigger the action of the specified route. It's current use case
- * is to accept a Response offer or delete a Response.
+ * This is a custom button element that will trigger the action of the specified route.
  * @param id (optional) - id of the element for which the action is triggered (At the moment, just the Response ID)
  * @param route - url of the route that triggers the action
  * @param intent - decides which action to trigger based on the intent
@@ -17,8 +17,9 @@ import CustomBtn from '../CustomBtn/CustomBtn';
 interface Props {
   id?: number | null;
   route: string;
-  intent: 'accept-offer' | 'delete-response' | 'leave-neighborhood';
+  intent: 'accept-offer' | 'delete-response' | 'leave-neighborhood' | SingleRequestFormIntent;
   text: string;
+  idInputName?: string;
   variant?: 'primary' | 'outline-dark' | 'danger';
   className?: string;
 }
@@ -28,11 +29,13 @@ export default function TriggerActionButton({
   route,
   intent,
   text,
+  idInputName,
   variant = 'primary',
+  className,
 }: Props) {
   const submit = useSubmit();
 
-  function handleResponseAction(event: FormEvent<HTMLFormElement>) {
+  function handleAction(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     submit(event.currentTarget, {
@@ -42,12 +45,12 @@ export default function TriggerActionButton({
   }
 
   return (
-    <Form method="post" onSubmit={handleResponseAction}>
+    <Form method="post" onSubmit={handleAction}>
       <Form.Group>
         <Form.Control type="hidden" name="intent" value={intent} />
-        {id ? <Form.Control type="hidden" name="responseId" value={id} /> : null} 
+        {id ? <Form.Control type="hidden" name={idInputName} value={id} /> : null}
       </Form.Group>
-      <CustomBtn variant={variant} type="submit">
+      <CustomBtn className={className} variant={variant} type="submit">
         {text}
       </CustomBtn>
     </Form>
