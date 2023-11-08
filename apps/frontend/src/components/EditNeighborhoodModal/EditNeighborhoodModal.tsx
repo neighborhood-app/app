@@ -7,13 +7,15 @@ import CustomBtn from '../CustomBtn/CustomBtn';
 interface Props {
   show: boolean;
   handleClose: () => void;
+  title: string;
+  description: string;
 }
 
-export default function EditNeighborhoodModal({ show, handleClose }: Props) {
+export default function EditNeighborhoodModal({ show, handleClose, title, description }: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [titleInput, setTitleInput] = useState('');
-  const [textAreaInput, setTextAreaInput] = useState('');
+  const [titleInput, setTitleInput] = useState(title);
+  const [textAreaInput, setTextAreaInput] = useState(description);
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
   const closeModal = () => {
@@ -45,9 +47,9 @@ export default function EditNeighborhoodModal({ show, handleClose }: Props) {
   };
 
   return (
-    <Modal show={show} onHide={closeModal} animation={true} backdrop="static" centered>
+    <Modal size="xl" show={show} onHide={closeModal} animation={true} backdrop="static" centered>
       <Modal.Header closeButton>
-        <Modal.Title>Create a request</Modal.Title>
+        <Modal.Title>Edit Neighborhood</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form
@@ -62,6 +64,7 @@ export default function EditNeighborhoodModal({ show, handleClose }: Props) {
             <Form.Control
               type="text"
               name="title"
+              value={titleInput}
               minLength={4}
               isInvalid={
                 (!validInputPattern.test(titleInput)) && formSubmitted
@@ -79,12 +82,13 @@ export default function EditNeighborhoodModal({ show, handleClose }: Props) {
           </Form.Group>
           <Form.Group className="mb-2" controlId="content">
             <Form.Label column="sm">
-              Content<span className={styles.asterisk}>*</span>
+              Description<span className={styles.asterisk}>*</span>
             </Form.Label>
             <Form.Control
               as="textarea"
-              rows={4}
+              rows={6}
               name="content"
+              value={textAreaInput}
               isInvalid={
                 (!validInputPattern.test(textAreaInput)) && formSubmitted
               }

@@ -62,7 +62,7 @@ export default function DescriptionBox({
           </div>
         </Modal.Footer>
       </Modal>
-      <EditNeighborhoodModal show={show} handleClose={handleClose} />
+      <EditNeighborhoodModal show={show} handleClose={handleClose} title={name} description={description}/>
       <Row xs="1" sm="2">
         <Col className={styles.column}>
           <img className={styles.neighborhoodImg} src={neighborhoodImg} alt="Neighborhood" />
