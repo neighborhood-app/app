@@ -20,6 +20,8 @@ export default function EditNeighborhoodModal({ show, handleClose, title, descri
   const submit = useSubmit();
   const closeModal = () => {
     handleClose();
+    setTitleInput(title);
+    setTextAreaInput(description);
   };
 
   function validateInput() {
