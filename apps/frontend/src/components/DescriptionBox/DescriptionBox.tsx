@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
-// import JoinNeighborhoodForm from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
 import UserCircleStack from '../UserCircleStack/UserCircleStack';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import EditNeighborhoodModal from '../EditNeighborhoodModal/EditNeighborhoodModal';
