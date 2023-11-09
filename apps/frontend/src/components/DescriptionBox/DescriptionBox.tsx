@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
-import JoinNeighborhoodForm from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
+// import JoinNeighborhoodForm from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
 import UserCircleStack from '../UserCircleStack/UserCircleStack';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import EditNeighborhoodModal from '../EditNeighborhoodModal/EditNeighborhoodModal';
@@ -62,12 +62,16 @@ export default function DescriptionBox({
           </div>
         </Modal.Footer>
       </Modal>
-      <EditNeighborhoodModal show={show} handleClose={handleClose} name={name} description={description}/>
+      <EditNeighborhoodModal
+        show={show}
+        handleClose={handleClose}
+        name={name}
+        description={description}
+      />
       <Row xs="1" sm="2">
         <Col className={styles.column}>
           <img className={styles.neighborhoodImg} src={neighborhoodImg} alt="Neighborhood" />
           <h1 className={styles.neighborhoodTitle}>{name}</h1>
-          {showJoinBtn ? <JoinNeighborhoodForm></JoinNeighborhoodForm> : null}
         </Col>
         <Col>
           <div className={styles.membersContainer}>
@@ -86,6 +90,14 @@ export default function DescriptionBox({
       <Row>
         <div className={styles.neighborhoodDescription}>
           <p>{description}</p>
+          {showJoinBtn ? (
+            <TriggerActionButton
+              route={`/neighborhoods/${neighborhoodId}`}
+              variant="primary"
+              intent="join-neighborhood"
+              text="Join Neighborhood"
+            />
+          ) : null}
           {showEditBtn ? (
             <CustomBtn variant="outline-dark" className={styles.editBtn} onClick={handleShow}>
               Edit Neighborhood
