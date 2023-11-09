@@ -5,7 +5,7 @@
 
 .neighborhoodImg {
   min-width: 96px;
-  height: 96px;
+  max-height: 96px;
   border-radius: 100000px;
   background-position: center center;
   background-size: cover;
@@ -15,7 +15,6 @@
 .neighborhoodTitle {
   margin-left: 10px;
   color: #030303;
-  font-size: 32px;
   font-weight: 600;
   line-height: 40px;
 }
