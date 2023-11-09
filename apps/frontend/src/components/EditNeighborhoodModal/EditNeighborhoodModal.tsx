@@ -41,10 +41,8 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
         method: 'put',
         action: `/neighborhoods/${neighborhoodId}`,
       });
-      closeModal();
+      handleClose();
       setFormSubmitted(false);
-      setNameInput("");
-      setTextAreaInput("");
     }
   };
 
