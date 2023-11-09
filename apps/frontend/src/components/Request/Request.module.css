@@ -68,6 +68,11 @@
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
+  filter: contrast(70%);
+}
+
+.image:hover {
+  filter: contrast(100%);
 }
 
 .dividerVertical {
