@@ -6,7 +6,11 @@ import styles from './RequestBox.module.css';
 import { RequestWithUserAndResponses } from '../../types';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
-export default function RequestBox({ requests }: { requests: RequestWithUserAndResponses[] | null }) {
+export default function RequestBox({
+  requests,
+}: {
+  requests: RequestWithUserAndResponses[] | null;
+}) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -93,7 +97,7 @@ export default function RequestBox({ requests }: { requests: RequestWithUserAndR
         </Row>
       </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
-      <Row xs="1" lg="auto" className={styles.requestRow}>
+      <Row xs="1" sm="auto" className={styles.requestRow}>
         {requestBoxes.length !== 0 ? (
           requestBoxes
         ) : (

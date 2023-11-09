@@ -5,8 +5,8 @@
   border-radius: 12px;
   border: 1px solid #f0f0f0;
   box-sizing: border-box;
-  margin: 20px 50px 0 0;
-  max-width: 260px;
+  margin: 20px 0 0 0;
+  max-width: 240px;
 }
 
 .container:hover {
