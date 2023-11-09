@@ -46,7 +46,7 @@ export default function RequestBox({ requests }: { requests: RequestWithUserAndR
 
   const requestBoxes =
     requestList?.map((request: RequestWithUserAndResponses) => (
-      <Col className={styles.column}>
+      <Col className={styles.column} key={request.id}>
         <Request requestObj={request} key={request.id}></Request>
       </Col>
     )) || [];
