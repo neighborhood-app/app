@@ -28,7 +28,8 @@ export default function TriggerActionButton({
   route,
   intent,
   text,
-  variant = 'primary',
+  className,
+  variant = 'primary'
 }: Props) {
   const submit = useSubmit();
 
@@ -47,7 +48,7 @@ export default function TriggerActionButton({
         <Form.Control type="hidden" name="intent" value={intent} />
         {id ? <Form.Control type="hidden" name="responseId" value={id} /> : null}
       </Form.Group>
-      <CustomBtn variant={variant} type="submit">
+      <CustomBtn className={className} variant={variant} type="submit">
         {text}
       </CustomBtn>
     </Form>
