@@ -33,7 +33,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
 export default function SingleRequestPage() {
   const request = useLoaderData() as FullRequestData | null;
-  if (!request) return <div>Error</div>;
+  if (!request) return null;
 
   return (
     <div>
