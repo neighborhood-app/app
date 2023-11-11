@@ -1,5 +1,6 @@
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Form, Container } from 'react-bootstrap';
 import { useParams } from 'react-router';
+import { useState } from 'react';
 import { ResponseWithUser } from '@neighborhood/backend/src/types';
 import styles from './ResponseBox.module.css';
 import { getStoredUser } from '../../utils/auth';
@@ -24,6 +25,9 @@ function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
 export default function ResponseBox({ response, requestOwnerId }: Props) {
   const { id: neighborhoodId } = useParams();
 
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [content, setContent] = useState(response.content);
+
   const loggedUser = getStoredUser();
   const loggedUserId = loggedUser ? Number(loggedUser.id) : null;
 
@@ -39,6 +43,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       if (response.status === 'ACCEPTED') {
         return (
           <>
+            <hr className={styles.hr} />
             <p className={styles.p}>You've accepted this offer for help.</p>
             <p className={styles.p}>
               Contact at: <span>{response.user.email}</span>
@@ -60,6 +65,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       if (response.status === 'ACCEPTED') {
         return (
           <>
+            <hr className={styles.hr} />
             <p className={styles.p}>Your help offer has been accepted.</p>
             <div className={styles.btnContainer}>
               <TriggerActionButton
@@ -85,7 +91,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
             />
           </Col>
           <Col>
-            <CustomBtn variant="primary" className="px-4">
+            <CustomBtn variant="primary" className="px-4" onClick={() => setShowEditForm(true)}>
               Edit
             </CustomBtn>
           </Col>
@@ -110,9 +116,46 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         </div>
         <p className={styles.createdDate}>{date}</p>
       </div>
-      <p className={styles.p}>{response.content}</p>
-      <hr className={styles.hr} />
-      <div className={styles.contact}>{contactInfo}</div>
+      {showEditForm ? (
+        <Form>
+          <Form.Group className="mb-2" controlId="content">
+            <Form.Label column="sm">Write the details of your help offer:</Form.Label>
+            <Form.Control
+              type="text"
+              name="content"
+              className="mb-3"
+              value={content}
+              onChange={(event) => setContent(event.target.value)}
+            />
+            <Form.Control.Feedback type="invalid">
+              The content needs to be at least 4 characters long.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Container fluid className={styles.contact}>
+            <Row sm="2">
+              <Col>
+                <CustomBtn variant="primary" type="submit">
+                  Submit
+                </CustomBtn>
+              </Col>
+              <Col>
+                <CustomBtn
+                  variant="outline-dark"
+                  onClick={() => {
+                    setShowEditForm(false);
+                  }}>
+                  Cancel
+                </CustomBtn>
+              </Col>
+            </Row>
+          </Container>
+        </Form>
+      ) : (
+        <div>
+          <p className={styles.p}>{response.content}</p>
+          <div className={styles.contact}>{contactInfo}</div>
+        </div>
+      )}
     </div>
   );
 }
