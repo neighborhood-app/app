@@ -1,5 +1,5 @@
 import { User } from '@neighborhood/backend/src/types';
-import { Container, Row, Col, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Modal, Image } from 'react-bootstrap';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -67,30 +67,35 @@ export default function DescriptionBox({
         name={name}
         description={description}
       />
-      <Row>
-        <Col xs="2" className={styles.column}>
-          <img className={styles.neighborhoodImg} src={neighborhoodImg} alt="Neighborhood" />
+      <Row className="align-items-center gy-3">
+        <Col xs="auto" className="">
+          <Image
+            className={styles.neighborhoodImg}
+            roundedCircle
+            src={neighborhoodImg}
+            alt="Neighborhood"></Image>
         </Col>
-        <Col sm="10" className={styles.column}>
-          <h1 className={styles.neighborhoodTitle}>{name}</h1>
+        <Col xs="12" sm="auto" className="">
+          <h1>{name}</h1>
         </Col>
-        <Col>
-          <div className={styles.membersContainer}>
-            {showMembers ? <UserCircleStack usernames={usernames} /> : null}
-            {showLeaveBtn ? (
-              <FontAwesomeIcon
-                icon={faDoorOpen}
-                size="2xl"
-                className={styles.leaveIcon}
-                onClick={() => setShowAlert(true)}
-              />
-            ) : null}
-          </div>
+        <Col
+          xs="12"
+          md="2"
+          className={`${styles.membersContainer} justify-content-md-end ms-md-auto ms-3 pe-0`}>
+          {showMembers ? <UserCircleStack usernames={usernames} /> : null}
+          {showLeaveBtn ? (
+            <FontAwesomeIcon
+              icon={faDoorOpen}
+              size="2xl"
+              className={styles.leaveIcon}
+              onClick={() => setShowAlert(true)}
+            />
+          ) : null}
         </Col>
       </Row>
       <Row>
         <div className={styles.neighborhoodDescription}>
-          <p>{description}</p>
+          {description ? <p>{description}</p> : null}
           {showJoinBtn ? (
             <TriggerActionButton
               route={`/neighborhoods/${neighborhoodId}`}

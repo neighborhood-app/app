@@ -1,22 +1,6 @@
-.column {
-  display: flex;
-  align-items: center;
-}
-
 .neighborhoodImg {
-  min-width: 96px;
-  max-height: 96px;
-  border-radius: 100000px;
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.neighborhoodTitle {
-  margin-left: 10px;
-  color: #030303;
-  font-weight: 600;
-  line-height: 40px;
+  max-height: 5em;
+  min-width: 5em;
 }
 
 .neighborhoodDescription {
@@ -36,7 +20,6 @@
 
 .membersContainer {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
 }
 
@@ -47,11 +30,4 @@
 
 .leaveIcon:hover {
   cursor: pointer;
-}
-
-@media (max-width: 576px) {
-  .membersContainer {
-    justify-content: flex-start;
-    margin: 10px 0 0 22px;
-  }
 }
