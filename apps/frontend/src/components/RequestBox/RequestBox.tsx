@@ -50,19 +50,19 @@ export default function RequestBox({
 
   const requestBoxes =
     requestList?.map((request: RequestWithUserAndResponses) => (
-      <Col className={styles.column} key={request.id}>
+      <Col className={`${styles.requestCol} pe-0`} sm="6" md="4" lg="3" key={request.id}>
         <Request requestObj={request} key={request.id}></Request>
       </Col>
     )) || [];
 
   return (
-    <Container fluid className={styles.container}>
-      <Row>
+    <Container className="pe-0" fluid>
+      <Row className="me-0 mt-3 mb-1">
         <Col>
           <h2 className={styles.title}>Neighborhood Requests</h2>
         </Col>
       </Row>
-      <Row>
+      <Row className="me-0">
         <Col>
           <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>
             Create request
@@ -71,8 +71,8 @@ export default function RequestBox({
       </Row>
 
       <Form>
-        <Row className={styles.formRow} xs="1" sm="2" lg="3" xl="4">
-          <Col className={styles.column}>
+        <Row className="mt-1 gy-3" xs="1" sm="2" lg="3" xl="4">
+          <Col>
             <Form.Group>
               <Form.Control
                 type="text"
@@ -81,7 +81,7 @@ export default function RequestBox({
                 onChange={(event) => searchRequests(event.target.value)}></Form.Control>
             </Form.Group>
           </Col>
-          <Col className={`${styles.column} ${styles.statusColumn}`}>
+          <Col className={styles.statusColumn}>
             <Form.Group>
               <Form.Select
                 size="sm"
@@ -97,11 +97,14 @@ export default function RequestBox({
         </Row>
       </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
-      <Row xs="1" sm="auto" className={styles.requestRow}>
+      <Row
+        xs="1"
+        sm="auto"
+        className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-xl-start justify-content-lg-between justify-content-center">
         {requestBoxes.length !== 0 ? (
           requestBoxes
         ) : (
-          <p className="mt-2">Currently there are no requests that match your criteria!</p>
+          <p className="mt-4">Currently, there are no requests that match your criteria.</p>
         )}
       </Row>
     </Container>

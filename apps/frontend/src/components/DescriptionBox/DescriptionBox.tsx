@@ -67,9 +67,11 @@ export default function DescriptionBox({
         name={name}
         description={description}
       />
-      <Row xs="1" sm="2">
-        <Col className={styles.column}>
+      <Row>
+        <Col xs="2" className={styles.column}>
           <img className={styles.neighborhoodImg} src={neighborhoodImg} alt="Neighborhood" />
+        </Col>
+        <Col sm="10" className={styles.column}>
           <h1 className={styles.neighborhoodTitle}>{name}</h1>
         </Col>
         <Col>
