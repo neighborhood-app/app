@@ -1,8 +1,10 @@
+import { Row, Col } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { ResponseWithUser } from '@neighborhood/backend/src/types';
 import styles from './ResponseBox.module.css';
 import { getStoredUser } from '../../utils/auth';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
+import CustomBtn from '../CustomBtn/CustomBtn';
 
 const profilePic = require('./images/profile.jpg');
 
@@ -64,7 +66,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
                 id={response.id}
                 route={`/neighborhoods/${neighborhoodId}`}
                 intent="delete-response"
-                text="Delete response"
+                text="Delete"
               />
             </div>
           </>
@@ -72,12 +74,22 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       }
 
       return (
-        <TriggerActionButton
-          id={response.id}
-          route={`/neighborhoods/${neighborhoodId}`}
-          intent="delete-response"
-          text="Delete response"
-        />
+        <Row sm="2">
+          <Col>
+            <TriggerActionButton
+              id={response.id}
+              route={`/neighborhoods/${neighborhoodId}`}
+              intent="delete-response"
+              variant="danger"
+              text="Delete"
+            />
+          </Col>
+          <Col>
+            <CustomBtn variant="primary" className="px-4">
+              Edit
+            </CustomBtn>
+          </Col>
+        </Row>
       );
     }
 
