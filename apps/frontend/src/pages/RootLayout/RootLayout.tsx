@@ -5,7 +5,7 @@ import styles from './RootLayout.module.css';
 import MainNav from '../../components/MainNavigation/MainNav';
 
 const RootLayout = () => (
-  <Container fluid className={styles.container}>
+  <Container fluid>
     <Row>
       <Col className={`${styles.column} ${styles.sticky}`} sm="auto">
         <MainNav />
