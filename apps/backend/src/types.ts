@@ -134,10 +134,16 @@ export type CreateRequestData = Pick<Request, 'title' | 'content' | 'neighborhoo
 export type UpdateRequestData = Pick<Partial<Request>, 'title' | 'content' | 'status'>;
 
 /**
- * shape of the Response data, only with the required `content` and `request_id properties
+ * shape of the Response data, only with the required `content` and `request_id` properties
  * to create a Response
  */
 export type ResponseData = Pick<Response, 'content' | 'request_id'>;
+
+/**
+ * shape of the data required to edit a response, only with the required `content` and `id` properties
+ * to edit a Response
+ */
+export type EditResponseData = Pick<Response, 'content' | 'id'>;
 
 /**
  * shape of data for updating a Response

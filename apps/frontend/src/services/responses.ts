@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ResponseData } from '@neighborhood/backend/src/types';
+import { EditResponseData, ResponseData } from '@neighborhood/backend/src/types';
 import { getStoredUser } from '../utils/auth';
 
 const baseURL = '/api/responses';
@@ -41,4 +41,15 @@ async function createResponse(responseInput: ResponseData) {
   return response.data;
 }
 
-export default { acceptResponse, deleteResponse, createResponse };
+async function editResponse(responseId: string, responseInput: EditResponseData) {
+  const headers: { authorization?: string } = {};
+
+  if (user) {
+    headers.authorization = `Bearer ${user.token}`;
+  }
+  const response = await axios.put(`${baseURL}/${responseId}`, {content: responseInput.content}, { headers });
+
+  return response.data;
+}
+
+export default { acceptResponse, deleteResponse, createResponse, editResponse };

@@ -51,7 +51,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       event.stopPropagation();
     } else {
       submit(form, {
-        method: 'put',
+        method: 'post',
         action: `/neighborhoods/${neighborhoodId}`,
       });
       setShowEditForm(false);
@@ -160,6 +160,10 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
             <Form.Control.Feedback type="invalid">
               The content needs to be at least 4 characters long.
             </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group>
+            <Form.Control type="hidden" name="intent" value="edit-response" />
+            <Form.Control type="hidden" name="id" value={response.id} />
           </Form.Group>
           <Container fluid className={styles.contact}>
             <Row sm="2">
