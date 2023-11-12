@@ -1,44 +1,11 @@
-.container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.firstHalf {
-  max-width: 40vw;
-}
-
-.secondHalf {
-  display: flex;
-  justify-content: end;
-}
-
-.card {
-  display: flex;
-  align-items: center;
-}
-
 .neighborhoodImg {
-  min-width: 96px;
-  height: 96px;
-  border-radius: 100000px;
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  max-height: 5em;
+  min-width: 5em;
 }
 
-.neighborhoodTitle {
-  margin-left: 10px;
-  color: #030303;
-  font-size: 32px;
-  /* font-family: "Poppins"; */
-  font-weight: 600;
-  line-height: 40px;
-}
-
-.neighborhoodDescription {
-  max-width: 40vw;
-  margin: 10px;
-}
+/* .neighborhoodDescription {
+  margin: 10px 0px;
+} */
 
 .alertBtnContainer {
   margin: 1.5vh auto;
@@ -51,40 +18,16 @@
   margin: 0 5px;
 }
 
-/* .editBtn {
-  width: 150px;
-  height: 40px;
-  padding: 0px 8px;
-  border: 0;
-  box-sizing: border-box;
-  border-radius: 12px;
-  background-color: white;
-  color: black;
-  font-size: 14px;
-  font-family: "Poppins";
-  outline: none;
-  border: 1px solid black;
+.membersContainer {
+  display: flex;
+  align-items: center;
 }
 
- .leaveBtn {
-  width: 188px;
-  height: 40px;
-  padding: 0px 8px;
-  border: 0;
-  box-sizing: border-box;
-  border-radius: 12px;
-  background-color: white;
-  color: black;
-  font-size: 16px;
-  font-family: "Poppins";
-  font-weight: 600;
-  line-height: 24px;
-  outline: none;
-  border: 2px solid black;
+.leaveIcon {
+  margin-left: 8px;
+  color: #000000;
 }
 
-.leaveBtn:active,
-.leaveBtn:hover {
-  background-color: black;
-  color: white;
-} */
+.leaveIcon:hover {
+  cursor: pointer;
+}

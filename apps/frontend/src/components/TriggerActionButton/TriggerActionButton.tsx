@@ -17,7 +17,12 @@ import { SingleRequestFormIntent } from '../../types';
 interface Props {
   id?: number | null;
   route: string;
-  intent: 'accept-offer' | 'delete-response' | 'leave-neighborhood' | SingleRequestFormIntent;
+  intent:
+    | 'accept-offer'
+    | 'delete-response'
+    | 'leave-neighborhood'
+    | 'join-neighborhood'
+    | SingleRequestFormIntent;
   text: string;
   idInputName?: string;
   variant?: 'primary' | 'outline-dark' | 'danger';
