@@ -6,7 +6,11 @@ import styles from './RequestBox.module.css';
 import { RequestWithUserAndResponses } from '../../types';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
-export default function RequestBox({ requests }: { requests: RequestWithUserAndResponses[] | null }) {
+export default function RequestBox({
+  requests,
+}: {
+  requests: RequestWithUserAndResponses[] | null;
+}) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);

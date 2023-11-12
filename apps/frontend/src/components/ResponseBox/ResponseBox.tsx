@@ -1,6 +1,7 @@
 import { Row, Col, Form, Container } from 'react-bootstrap';
 import { useParams } from 'react-router';
-import { useState } from 'react';
+import { useSubmit } from 'react-router-dom';
+import { useState, FormEvent } from 'react';
 import { ResponseWithUser } from '@neighborhood/backend/src/types';
 import styles from './ResponseBox.module.css';
 import { getStoredUser } from '../../utils/auth';
@@ -27,11 +28,36 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
 
   const [showEditForm, setShowEditForm] = useState(false);
   const [content, setContent] = useState(response.content);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const submit = useSubmit();
 
   const loggedUser = getStoredUser();
   const loggedUserId = loggedUser ? Number(loggedUser.id) : null;
 
+  const validTextAreaPattern = /\s*(\S\s*){4,}/;
+  const validateTextArea = () => validTextAreaPattern.test(content);
+
   const date = String(response.time_created).split('T')[0];
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    setFormSubmitted(true);
+
+    if (!validateTextArea()) {
+      console.log('invalid');
+
+      event.stopPropagation();
+    } else {
+      submit(form, {
+        method: 'put',
+        action: `/neighborhoods/${neighborhoodId}`,
+      });
+      setShowEditForm(false);
+      setFormSubmitted(false);
+    }
+  };
 
   function displayContactInfo() {
     if (!loggedUserId) return null;
@@ -117,15 +143,19 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         <p className={styles.createdDate}>{date}</p>
       </div>
       {showEditForm ? (
-        <Form>
+        <Form noValidate onSubmit={handleSubmit} role="form">
           <Form.Group className="mb-2" controlId="content">
             <Form.Label column="sm">Write the details of your help offer:</Form.Label>
             <Form.Control
-              type="text"
+              as="textarea"
               name="content"
               className="mb-3"
               value={content}
               onChange={(event) => setContent(event.target.value)}
+              minLength={4}
+              required
+              isInvalid={!validTextAreaPattern.test(content) && formSubmitted}
+              isValid={validTextAreaPattern.test(content)}
             />
             <Form.Control.Feedback type="invalid">
               The content needs to be at least 4 characters long.
@@ -143,6 +173,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
                   variant="outline-dark"
                   onClick={() => {
                     setShowEditForm(false);
+                    setContent(response.content);
                   }}>
                   Cancel
                 </CustomBtn>
