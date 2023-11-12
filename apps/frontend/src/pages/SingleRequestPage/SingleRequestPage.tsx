@@ -1,9 +1,11 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
 import { Request } from '@neighborhood/backend/src/types';
 import { redirect } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 import requestServices from '../../services/requests';
 import RequestDescBox from '../../components/RequestDescBox/RequestDescBox';
 import { FullRequestData, SingleRequestFormIntent } from '../../types';
+import ResponsesGrid from '../../components/ResponsesGrid/ResponsesGrid';
 
 export async function loader({ params }: LoaderFunctionArgs): Promise<FullRequestData | null> {
   const { id } = params;
@@ -36,8 +38,9 @@ export default function SingleRequestPage() {
   if (!request) return null;
 
   return (
-    <div>
+    <Container fluid>
       <RequestDescBox request={request} />
-    </div>
+      <ResponsesGrid request={request}></ResponsesGrid>
+    </Container>
   );
 }

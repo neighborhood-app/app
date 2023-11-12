@@ -20,6 +20,8 @@ function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
 }
 
 export default function ResponseBox({ response, requestOwnerId }: Props) {
+  console.log(response);
+  
   const { id: neighborhoodId } = useParams();
 
   const loggedUser = getStoredUser();

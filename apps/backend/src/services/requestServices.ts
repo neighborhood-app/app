@@ -83,7 +83,11 @@ const getFullRequestData = async (requestId: number): Promise<FullRequestData> =
     },
     include: {
       user: true,
-      responses: true,
+      responses: {
+        include: {
+          user: true,
+        }
+      },
       neighborhood: {
         include: {
           users: true,
