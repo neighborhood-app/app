@@ -1,5 +1,6 @@
 import { useParams } from 'react-router';
 import { ResponseWithUser } from '@neighborhood/backend/src/types';
+import { Card, Image } from 'react-bootstrap';
 import styles from './ResponseBox.module.css';
 import { getStoredUser } from '../../utils/auth';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
@@ -21,7 +22,7 @@ function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
 
 export default function ResponseBox({ response, requestOwnerId }: Props) {
   console.log(response);
-  
+
   const { id: neighborhoodId } = useParams();
 
   const loggedUser = getStoredUser();
@@ -50,10 +51,12 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       return (
         <TriggerActionButton
           id={response.id}
-          idInputName={"responseId"}
+          idInputName={'responseId'}
           route={`/neighborhoods/${neighborhoodId}`}
           intent="accept-offer"
           text="Accept offer"
+          className={styles.acceptOfferBtn}
+          size="sm"
         />
       );
     }
@@ -91,21 +94,38 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
   const contactInfo = displayContactInfo();
 
   return (
-    <div className={styles.responseCard}>
-      <div className={styles.profileAndDate}>
-        <div className={styles.profileInfo}>
-          <img
-            className={styles.profileImg}
-            src={profilePic}
-            alt="active user on neighborhood app"
-          />
-          <p className={styles.p}>{response.user.username}</p>
-        </div>
-        <p className={styles.createdDate}>{date}</p>
-      </div>
-      <p className={styles.p}>{response.content}</p>
-      <hr className={styles.hr} />
-      <div className={styles.contact}>{contactInfo}</div>
-    </div>
+    // <div className={styles.responseCard}>
+    //   <div className={styles.profileAndDate}>
+    //     <div className={styles.profileInfo}>
+    //       <img
+    //         className={styles.profileImg}
+    //         src={profilePic}
+    //         alt="active user on neighborhood app"
+    //       />
+    //       <p className={styles.p}>{response.user.username}</p>
+    //     </div>
+    //     <p className={styles.createdDate}>{date}</p>
+    //   </div>
+    //   <p className={styles.p}>{response.content}</p>
+    //   <hr className={styles.hr} />
+    //   <div className={styles.contact}>{contactInfo}</div>
+    // </div>
+    <Card>
+      <Card.Header className={styles.profileAndDate}>
+        <Image
+          roundedCircle
+          className={styles.profileImg}
+          src={profilePic}
+          alt="active user on neighborhood app"></Image>
+        <p className="text-muted small">{response.user.username}</p>
+        <p className="text-muted small">{date}</p>
+      </Card.Header>
+      <Card.Body>
+        <Card.Text>
+          <p>{response.content}</p>
+        </Card.Text>
+      </Card.Body>
+      <Card.Footer className="text-center">{contactInfo}</Card.Footer>
+    </Card>
   );
 }

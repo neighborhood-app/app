@@ -1,4 +1,5 @@
-import { Col, Container, Row } from 'react-bootstrap';
+// import { Col } from 'react-bootstrap';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { ResponseWithUser } from '@neighborhood/backend/src/types';
 import { RequestWithUserAndResponses } from '../../types';
 import styles from './ResponsesGrid.module.css';
@@ -91,9 +92,12 @@ export default function ResponsesGrid({ request }: Props) {
 
   const responseColumns =
     request.responses.map((response: ResponseWithUser) => (
-      <Col className={`${styles.requestCol} pe-0`} sm="6" md="4" lg="3" key={request.id}>
+      // <Col
+      //   className={`${styles.responseCol} pe-0`}
+        // sm="6" md="4" lg="3"
+        // key={request.id}>
         <ResponseBox response={response} requestOwnerId={request.user_id} key={request.id} />
-      </Col>
+      // </Col>
     )) || [];
 
   const noResponsesText =
@@ -102,14 +106,14 @@ export default function ResponsesGrid({ request }: Props) {
       : 'There are no responses to display.';
 
   return (
-    <Container fluid>
-      <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
+    <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 4 }}>
+      <Masonry gutter='1.5rem'>
         {responseColumns.length !== 0 ? (
           responseColumns
         ) : (
           <p className={`${styles.noResponseText} mt-5`}>{noResponsesText}</p>
         )}
-      </Row>
-    </Container>
+      </Masonry>
+    </ResponsiveMasonry>
   );
 }

@@ -27,6 +27,7 @@ interface Props {
   idInputName?: string;
   variant?: 'primary' | 'outline-dark' | 'danger';
   className?: string;
+  size?: 'sm' | 'lg';
 }
 
 export default function TriggerActionButton({
@@ -37,6 +38,7 @@ export default function TriggerActionButton({
   idInputName,
   variant = 'primary',
   className,
+  size,
 }: Props) {
   const submit = useSubmit();
 
@@ -55,7 +57,7 @@ export default function TriggerActionButton({
         <Form.Control type="hidden" name="intent" value={intent} />
         {id ? <Form.Control type="hidden" name={idInputName} value={id} /> : null}
       </Form.Group>
-      <CustomBtn className={className} variant={variant} type="submit">
+      <CustomBtn className={className} variant={variant} size={size} type="submit">
         {text}
       </CustomBtn>
     </Form>
