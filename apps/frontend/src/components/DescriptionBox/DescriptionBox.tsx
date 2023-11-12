@@ -1,12 +1,14 @@
 import { User } from '@neighborhood/backend/src/types';
-import { Modal } from 'react-bootstrap';
+import { Container, Row, Col, Modal, Image } from 'react-bootstrap';
 import { useState } from 'react';
 import { useParams } from 'react-router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
-import JoinNeighborhoodForm from '../JoinNeighborhoodForm/JoinNeighborhoodForm';
 import UserCircleStack from '../UserCircleStack/UserCircleStack';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
+import EditNeighborhoodModal from '../EditNeighborhoodModal/EditNeighborhoodModal';
 
 const neighborhoodImg = require('./palm.jpeg');
 
@@ -32,9 +34,14 @@ export default function DescriptionBox({
   const usernames = users?.map((user) => user.username);
   const [showAlert, setShowAlert] = useState(false);
 
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const { id: neighborhoodId } = useParams();
   return (
-    <div className={styles.container}>
+    <Container fluid className={styles.container}>
       <Modal show={showAlert} onHide={() => setShowAlert(false)}>
         <Modal.Body>Are you sure you want to leave this neighborhood?</Modal.Body>
         <Modal.Footer>
@@ -54,29 +61,56 @@ export default function DescriptionBox({
           </div>
         </Modal.Footer>
       </Modal>
-      <div className={styles.firstHalf}>
-        <div className={styles.card}>
-          <img className={styles.neighborhoodImg} src={neighborhoodImg} alt="Neighborhood" />
-          <h1 className={styles.neighborhoodTitle}>{name}</h1>
-          {showJoinBtn ? <JoinNeighborhoodForm></JoinNeighborhoodForm> : null}
-        </div>
+      <EditNeighborhoodModal
+        show={show}
+        handleClose={handleClose}
+        name={name}
+        description={description}
+      />
+      <Row className="align-items-center gy-3">
+        <Col xs="auto" className="">
+          <Image
+            className={styles.neighborhoodImg}
+            roundedCircle
+            src={neighborhoodImg}
+            alt="Neighborhood"></Image>
+        </Col>
+        <Col xs="12" sm="auto" className="">
+          <h1>{name}</h1>
+        </Col>
+        <Col
+          xs="12"
+          md="2"
+          className={`${styles.membersContainer} justify-content-md-end ms-md-auto ms-3 pe-0`}>
+          {showMembers ? <UserCircleStack usernames={usernames} /> : null}
+          {showLeaveBtn ? (
+            <FontAwesomeIcon
+              icon={faDoorOpen}
+              size="2xl"
+              className={styles.leaveIcon}
+              onClick={() => setShowAlert(true)}
+            />
+          ) : null}
+        </Col>
+      </Row>
+      <Row className='mt-2 mt-md-4'>
         <div className={styles.neighborhoodDescription}>
-          <p>{description}</p>
+          {description ? <p>{description}</p> : null}
+          {showJoinBtn ? (
+            <TriggerActionButton
+              route={`/neighborhoods/${neighborhoodId}`}
+              variant="primary"
+              intent="join-neighborhood"
+              text="Join Neighborhood"
+            />
+          ) : null}
           {showEditBtn ? (
-            <CustomBtn variant="outline-dark" className={styles.editBtn}>
+            <CustomBtn variant="outline-dark" className={styles.editBtn} onClick={handleShow}>
               Edit Neighborhood
             </CustomBtn>
           ) : null}
-          {showLeaveBtn ? (
-            <CustomBtn variant="danger" onClick={() => setShowAlert(true)}>
-              Leave Neighborhood
-            </CustomBtn>
-          ) : null}
         </div>
-      </div>
-      <div className={styles.secondHalf}>
-        {showMembers ? <UserCircleStack usernames={usernames} /> : null}
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 }

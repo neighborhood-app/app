@@ -15,6 +15,8 @@ export interface NeighborhoodDetailsForMembers extends Neighborhood {
   requests: Array<RequestWithUserAndResponses> | null;
 }
 
+export type EditNeighborhoodData = Pick<NeighborhoodDetailsForNonMembers, "name" | "description">
+
 export type NeighborhoodType = NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers;
 
 export interface RequestWithUserAndResponses extends Omit<Request, 'time_created'> {

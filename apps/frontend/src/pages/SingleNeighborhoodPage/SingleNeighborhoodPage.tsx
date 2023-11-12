@@ -10,6 +10,7 @@ import requestServices from '../../services/requests';
 import responseServices from '../../services/responses';
 import { useUser } from '../../store/user-context';
 import {
+  EditNeighborhoodData,
   NeighborhoodDetailsForMembers,
   NeighborhoodType,
   SingleNeighborhoodFormIntent,
@@ -38,7 +39,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const neighborhoodId = Number(params.id);
 
   const intent = formData.get('intent') as SingleNeighborhoodFormIntent;
-
+  formData.delete("intent")
   // We should consider only returning success/error objects from all routes
   // where we don't need the new data
   let response: Request | Response | { success: string } | { error: string } | null = null;
@@ -65,6 +66,9 @@ export async function action({ params, request }: ActionFunctionArgs) {
     response = await responseServices.editResponse(String(responseData.id), responseData);
   } else if (intent === 'leave-neighborhood') {
     response = await neighborhoodsService.leaveNeighborhood(neighborhoodId);
+  } else if (intent === "edit-neighborhood") {
+    const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
+    response = await neighborhoodsService.editNeighborhood(neighborhoodId, neighborhoodData);
   }
 
   return response;
