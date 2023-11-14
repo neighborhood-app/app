@@ -30,6 +30,11 @@ const router = createBrowserRouter([
       {
         loader: checkAuthLoader,
         children: [
+          {
+            index: true,
+            path: '/',
+            element: <HomePage />,
+          },
           { path: 'logout', loader: logoutLoader },
           {
             path: 'test',
