@@ -94,22 +94,6 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
   const contactInfo = displayContactInfo();
 
   return (
-    // <div className={styles.responseCard}>
-    //   <div className={styles.profileAndDate}>
-    //     <div className={styles.profileInfo}>
-    //       <img
-    //         className={styles.profileImg}
-    //         src={profilePic}
-    //         alt="active user on neighborhood app"
-    //       />
-    //       <p className={styles.p}>{response.user.username}</p>
-    //     </div>
-    //     <p className={styles.createdDate}>{date}</p>
-    //   </div>
-    //   <p className={styles.p}>{response.content}</p>
-    //   <hr className={styles.hr} />
-    //   <div className={styles.contact}>{contactInfo}</div>
-    // </div>
     <Card>
       <Card.Header className={styles.cardHeader}>
         <Row>
