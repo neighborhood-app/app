@@ -1,12 +1,12 @@
-import NeighborhoodsBox from '../../components/NeighborhoodsBox/NeighborhoodsBox';
+import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
 
-const neighborhoodImg1 = require('./images/palm-tree.jpeg');
-const neighborhoodImg2 = require('./images/up-north.jpg');
+// const neighborhoodImg1 = require('./images/palm-tree.jpeg');
+// const neighborhoodImg2 = require('./images/up-north.jpg');
 
 export default function HomePage() {
   return (
     <>
-      <NeighborhoodsBox />
+      <NeighborhoodCard />
       <section>
         <h1>My active requests</h1>
         <div className="all-active-requests">
