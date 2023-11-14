@@ -49,7 +49,8 @@
 
 .hr {
   padding: 0;
-  margin: 0;
+  margin: 0 auto!important;
+  width: 87%;
 }
 
 .contact {
@@ -74,6 +75,18 @@
 .btn:active {
   background-color: #4b5563;
 } */
+
+.cardHeader {
+  background-color: inherit;
+  border-bottom: 0;
+  font-size: 0.9em;
+}
+
+.cardFooter {
+  background-color: inherit;
+  border: 0;
+  font-size: 0.9em;
+}
 
 .acceptOfferBtn {
   padding: 0.4em 1.5em;

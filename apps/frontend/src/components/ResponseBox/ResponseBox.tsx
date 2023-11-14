@@ -1,6 +1,6 @@
 import { useParams } from 'react-router';
 import { ResponseWithUser } from '@neighborhood/backend/src/types';
-import { Card, Image } from 'react-bootstrap';
+import { Card, Col, Image, Row } from 'react-bootstrap';
 import styles from './ResponseBox.module.css';
 import { getStoredUser } from '../../utils/auth';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
@@ -111,21 +111,28 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
     //   <div className={styles.contact}>{contactInfo}</div>
     // </div>
     <Card>
-      <Card.Header className={styles.profileAndDate}>
-        <Image
-          roundedCircle
-          className={styles.profileImg}
-          src={profilePic}
-          alt="active user on neighborhood app"></Image>
-        <p className="text-muted small">{response.user.username}</p>
-        <p className="text-muted small">{date}</p>
+      <Card.Header className={styles.cardHeader}>
+        <Row>
+          <Col className="pe-0" xs="auto">
+            <Image
+              roundedCircle
+              className={styles.profileImg}
+              src={profilePic}
+              alt="active user on neighborhood app"></Image>
+          </Col>
+          <Col className="pe-0 text-muted small" xs="auto">
+            {response.user.username}
+          </Col>
+          <Col className="text-end pe-1 pe-sm-2 text-muted small">{date}</Col>
+        </Row>
       </Card.Header>
       <Card.Body>
-        <Card.Text>
-          <p>{response.content}</p>
+        <Card.Text className="small">
+          <p className='mb-0'>{response.content}</p>
         </Card.Text>
       </Card.Body>
-      <Card.Footer className="text-center">{contactInfo}</Card.Footer>
+      <hr className={styles.hr} />
+      <Card.Footer className={`${styles.cardFooter} text-center`}>{contactInfo}</Card.Footer>
     </Card>
   );
 }
