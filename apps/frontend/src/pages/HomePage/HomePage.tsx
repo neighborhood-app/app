@@ -1,12 +1,35 @@
+import { Container, Row, Col } from 'react-bootstrap';
 import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
+
+import styles from "./HomePage.module.css"
 
 // const neighborhoodImg1 = require('./images/palm-tree.jpeg');
 // const neighborhoodImg2 = require('./images/up-north.jpg');
 
 export default function HomePage() {
   return (
-    <>
-      <NeighborhoodCard />
+    <div className={styles.wrapper}>
+      <section>
+        <h1>My neighborhoods</h1>
+        <Container className="p-0" fluid>
+          <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start"> 
+            <Col className={`pe-0`}>
+              <NeighborhoodCard />
+            </Col>
+            <Col>
+              <NeighborhoodCard />
+            </Col>
+            <Col>
+              <NeighborhoodCard />
+            </Col>
+            <Col>
+              <NeighborhoodCard />
+            </Col>
+          </Row>
+        </Container>
+        
+      </section>
+      
       <section>
         <h1>My active requests</h1>
         <div className="all-active-requests">
@@ -64,6 +87,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

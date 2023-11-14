@@ -6,7 +6,8 @@ const neighborhoodImg = require('./images/palm.jpeg');
 export default function NeighborhoodsBox() {
   return (
         <Figure className={styles.card}>
-          <Figure.Image src={neighborhoodImg} alt="neighborhood"  />
+          <Figure.Image src={neighborhoodImg} alt="neighborhood" className={styles.image}
+          />
           <Figure.Caption className={styles.figcaption}>
             <span className={styles.info}>
               <h2>
