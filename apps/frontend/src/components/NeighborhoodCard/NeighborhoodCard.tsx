@@ -1,21 +1,25 @@
-import { Figure } from "react-bootstrap";
-import styles from "./NeighborhoodCard.module.css";
+import { Figure } from 'react-bootstrap';
+import styles from './NeighborhoodCard.module.css';
 
 const neighborhoodImg = require('./images/palm.jpeg');
 
-export default function NeighborhoodsBox() {
+type Props = {
+  name: string;
+  description: string | null;
+};
+
+export default function NeighborhoodsBox({ name, description }: Props) {
   return (
-        <Figure className={styles.card}>
-          <Figure.Image src={neighborhoodImg} alt="neighborhood" className={styles.image}
-          />
-          <Figure.Caption className={styles.figcaption}>
-            <span className={styles.info}>
-              <h2>
-                Palm Springs <span>(Admin)</span>
-              </h2>
-              <p>You can join other neighborhoods!</p>
-            </span>
-          </Figure.Caption>
-        </Figure>
+    <Figure className={styles.card}>
+      <Figure.Image src={neighborhoodImg} alt="neighborhood" className={styles.image} />
+      <Figure.Caption className={styles.figcaption}>
+        <span className={styles.info}>
+          <h2>
+            {name} <span>(Admin)</span>
+          </h2>
+          <p>{description}</p>
+        </span>
+      </Figure.Caption>
+    </Figure>
   );
 }

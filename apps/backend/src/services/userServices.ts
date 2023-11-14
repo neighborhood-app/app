@@ -13,6 +13,7 @@ const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   dob: true,
   gender_id: true,
   bio: true,
+  neighborhoods: true,
 };
 
 // helpers

@@ -27,7 +27,7 @@ loginRouter.post(
 
     const token: string = await loginServices.generateToken(userInDb.username, userInDb.id);
     const responseData: LoginResponseData = {
-      id: userInDb.id,
+      id: String(userInDb.id),
       username: userInDb.username,
       token,
     };
