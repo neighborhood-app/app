@@ -4,6 +4,7 @@ import { getStoredUser } from '../utils/auth';
 const UserContext = createContext({
   username: '',
   token: '',
+  id: ''
 });
 
 export function useUser() {
@@ -13,6 +14,7 @@ export function useUser() {
 export const UserContextProvider = (props: PropsWithChildren) => {
   const [username, setUser] = useState('');
   const [token, setToken] = useState('');
+  const [id, setId] = useState('');
 
   useEffect(() => {
     const storedUserInfo = getStoredUser();
@@ -20,8 +22,9 @@ export const UserContextProvider = (props: PropsWithChildren) => {
     if (storedUserInfo) {
       setUser(storedUserInfo.username);
       setToken(storedUserInfo.token);
+      setId(storedUserInfo.id);
     }
   }, []);
 
-  return <UserContext.Provider value={{ username, token }}>{props.children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ username, token, id }}>{props.children}</UserContext.Provider>;
 };

@@ -156,7 +156,7 @@ export type UserStatusOnResponse = 'RESPONSE OWNER' | 'REQUEST OWNER';
  * Shape of data returned as a response after a successful login
  */
 export interface LoginResponseData {
-  id: number;
+  id: string;
   username: string;
   token: string;
 }
