@@ -13,16 +13,22 @@ export default function HomePage() {
         <h1>My neighborhoods</h1>
         <Container className="p-0" fluid>
           <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start"> 
-            <Col className={`pe-0`}>
+            <Col className='pe-0' sm="6" md="4" lg="3">
               <NeighborhoodCard />
             </Col>
-            <Col>
+            <Col className='pe-0' sm="6" md="4" lg="3">
               <NeighborhoodCard />
             </Col>
-            <Col>
+            <Col className='pe-0' sm="6" md="4" lg="3">
               <NeighborhoodCard />
             </Col>
-            <Col>
+            <Col className='pe-0' sm="6" md="4" lg="3">
+              <NeighborhoodCard />
+            </Col>
+            <Col className='pe-0' sm="6" md="4" lg="3">
+              <NeighborhoodCard />
+            </Col>
+            <Col className='pe-0' sm="6" md="4" lg="3">
               <NeighborhoodCard />
             </Col>
           </Row>
