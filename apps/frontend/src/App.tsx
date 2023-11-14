@@ -19,7 +19,8 @@ import ErrorPage from './pages/ErrorPage/ErrorPage';
 
 import logoutLoader from './pages/LogoutPage/LogoutPage';
 import { redirectLoggedInUser, checkAuthLoader } from './utils/auth';
-import HomePage from './pages/HomePage/HomePage';
+
+import HomePage, {loader as homePageLoader} from './pages/HomePage/HomePage';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
             index: true,
             path: '/',
             element: <HomePage />,
+            loader: homePageLoader,
           },
           { path: 'logout', loader: logoutLoader },
           {

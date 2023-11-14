@@ -2,9 +2,16 @@ import { Container, Row, Col } from 'react-bootstrap';
 import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
 
 import styles from "./HomePage.module.css"
+import { getStoredUser } from '../../utils/auth';
 
 // const neighborhoodImg1 = require('./images/palm-tree.jpeg');
 // const neighborhoodImg2 = require('./images/up-north.jpg');
+
+export async function loader() {
+  const user = getStoredUser();
+  console.log(user);
+  return user;
+}
 
 export default function HomePage() {
   return (
