@@ -11,7 +11,7 @@ export type Neighborhood = schema.Neighborhood;
  */
 export type UserWithoutPasswordHash = Omit<User, 'password_hash'>;
 
-export type UserWithNeighborhoods = UserWithoutPasswordHash & {neighborhoods: Neighborhood[]}
+export type UserWithRelatedData = UserWithoutPasswordHash & {neighborhoods: Neighborhood[], requests: Request[]}
 
 /**
  * format of user data, without id, to create entry in users table

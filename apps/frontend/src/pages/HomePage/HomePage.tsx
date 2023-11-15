@@ -1,5 +1,5 @@
 import { useLoaderData } from 'react-router';
-import { UserWithNeighborhoods } from '@neighborhood/backend/src/types';
+import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 
 import { Container, Row, Col } from 'react-bootstrap';
 import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
@@ -16,11 +16,12 @@ export async function loader() {
   const user = getStoredUser();
   if (!user) return null;
   const userData = await userServices.getUserData(user.id);
+  console.log(userData);
   return userData;
 }
 
 export default function HomePage() {
-  const userData = useLoaderData() as unknown as UserWithNeighborhoods;
+  const userData = useLoaderData() as unknown as UserWithRelatedData;
   const { neighborhoods } = userData;
   const neighborhoodCards =
     neighborhoods.length === 0 ? (
@@ -46,27 +47,7 @@ export default function HomePage() {
 
       <section>
         <h1>My active requests</h1>
-        <div className="all-active-requests">
-          <div className="request-card">
-            <img src="images/image.jpeg" alt="active request in neighborhood app" />
-
-            <div className="request-card-content">
-              <p>Help! My cat is drowning</p>
-              <p>Created 11 Mar 2022 in Palm Springs Neighborhood</p>
-              <p>2 responses</p>
-            </div>
-          </div>
-
-          <div className="request-card">
-            <img src="images/image.jpeg" alt="active requests on neighborhood app" />
-
-            <div className="request-card-content">
-              <p>Help with acute lazyness</p>
-              <p>Created 12 Mar 2022 in Up North Neighborhood</p>
-              <p>No responses</p>
-            </div>
-          </div>
-        </div>
+  
       </section>
 
       <section>

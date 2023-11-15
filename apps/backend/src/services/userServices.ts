@@ -14,6 +14,7 @@ const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   gender_id: true,
   bio: true,
   neighborhoods: true,
+  requests: true
 };
 
 // helpers

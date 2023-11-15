@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { UserWithoutPasswordHash } from '@neighborhood/backend/src/types';
+import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { StorageWithUser, UserInfo } from '../types';
 
 const baseURL = '/api/users';
 
-async function getUserData(id: string): Promise<UserWithoutPasswordHash> {
+async function getUserData(id: string): Promise<UserWithRelatedData> {
   const headers: { authorization?: string } = {};
   const { user }: { user?: string } = localStorage as StorageWithUser;
 
