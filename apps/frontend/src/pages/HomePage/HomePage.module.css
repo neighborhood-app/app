@@ -2,9 +2,14 @@
   padding: 50px;
 }
 
-
 @media (max-width: 576px) {
   .wrapper {
     padding: 30px;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .requestCol {
+    width: 20%;
   }
 }
