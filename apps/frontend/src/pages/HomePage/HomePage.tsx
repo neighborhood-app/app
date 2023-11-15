@@ -28,7 +28,7 @@ export default function HomePage() {
     ) : (
       neighborhoods.map((neighborhood) => (
         <Col className="pe-0" sm="6" md="4" lg="3">
-          <NeighborhoodCard name={neighborhood.name} description={neighborhood.description} isUserAdmin={neighborhood.admin_id === userData.id}/>
+          <NeighborhoodCard id={String(neighborhood.id)} name={neighborhood.name} description={neighborhood.description} isUserAdmin={neighborhood.admin_id === userData.id}/>
         </Col>
       ))
     );
