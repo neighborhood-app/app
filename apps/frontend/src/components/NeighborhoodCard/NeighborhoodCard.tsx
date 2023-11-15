@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Figure } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import styles from './NeighborhoodCard.module.css';
@@ -11,21 +12,42 @@ type Props = {
   isUserAdmin: boolean;
 };
 
-export default function NeighborhoodsBox({ id, name, description, isUserAdmin }: Props) {
 
+
+export default function NeighborhoodsBox({ id, name, description, isUserAdmin }: Props) {
+  const mql = window.matchMedia('(max-width: 576px)');
+
+  const [smallDisplay, setSmallDisplay] = useState(mql.matches);
+
+  mql.addEventListener('change', () => {
+    setSmallDisplay(mql.matches);
+  });
   return (
     <Link to={`neighborhoods/${id}`}>
-      <Figure className={styles.card}>
-        <Figure.Image src={neighborhoodImg} alt="neighborhood" className={styles.image} />
-        <Figure.Caption className={styles.figcaption}>
+      {smallDisplay ? 
+        (<div className={styles.container}>
           <span className={styles.info}>
             <h2>
               {name} <span>{isUserAdmin ? 'Admin' : null}</span>
             </h2>
-            <p>{description}</p>
+            {description ? <p>{description}</p> : null}
           </span>
-        </Figure.Caption>
-      </Figure>
+        </div>) :
+        (
+          <Figure className={styles.card}>
+            <Figure.Image src={neighborhoodImg} alt="neighborhood" className={styles.image} />
+            <Figure.Caption className={styles.figcaption}>
+              <span className={styles.info}>
+                <h2>
+                  {name} <span>{isUserAdmin ? 'Admin' : null}</span>
+                </h2>
+                {description ? <p>{description}</p> : null}
+              </span>
+            </Figure.Caption>
+          </Figure>
+        )
+        }
+      
     </Link>
   );
 }
