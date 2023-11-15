@@ -11,7 +11,13 @@ export type Neighborhood = schema.Neighborhood;
  */
 export type UserWithoutPasswordHash = Omit<User, 'password_hash'>;
 
-export type UserWithRelatedData = UserWithoutPasswordHash & {neighborhoods: Neighborhood[], requests: Request[]}
+export interface RequestWithUserAndResponses extends Omit<Request, 'time_created'> {
+  time_created: string;
+  user: User;
+  responses: ResponseWithUser[];
+}
+
+export type UserWithRelatedData = UserWithoutPasswordHash & {neighborhoods: Neighborhood[], requests: RequestWithUserAndResponses[]}
 
 /**
  * format of user data, without id, to create entry in users table

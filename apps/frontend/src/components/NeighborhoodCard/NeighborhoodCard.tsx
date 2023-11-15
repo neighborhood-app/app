@@ -12,8 +12,6 @@ type Props = {
   isUserAdmin: boolean;
 };
 
-
-
 export default function NeighborhoodsBox({ id, name, description, isUserAdmin }: Props) {
   const mql = window.matchMedia('(max-width: 576px)');
 

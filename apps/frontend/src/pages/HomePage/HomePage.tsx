@@ -8,6 +8,7 @@ import styles from './HomePage.module.css';
 import { getStoredUser } from '../../utils/auth';
 
 import userServices from '../../services/users';
+import Request from '../../components/Request/Request';
 
 // const neighborhoodImg1 = require('./images/palm-tree.jpeg');
 // const neighborhoodImg2 = require('./images/up-north.jpg');
@@ -47,7 +48,16 @@ export default function HomePage() {
 
       <section>
         <h1>My active requests</h1>
-  
+        <Container className='p-0' fluid>
+          <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
+            {userData.requests.length > 0 ? userData.requests.map(request => (
+              <Col>
+                <Request requestObj={request}/>
+              </Col>
+            )) : 
+            <p>You haven't created any requests yet!</p>}
+          </Row>
+        </Container>
       </section>
 
       <section>
