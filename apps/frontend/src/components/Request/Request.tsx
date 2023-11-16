@@ -7,6 +7,7 @@ import StatusHeader from "../StatusHeader/StatusHeader";
 const helpImg = require('./help_wanted.jpeg');
 
 export default function Request({ requestObj }: { requestObj: RequestWithUserAndResponses }) {  
+  console.log(requestObj);
   const date = requestObj.time_created.split('T')[0];
   const [show, setShow] = useState(false);
 

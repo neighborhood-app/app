@@ -22,7 +22,7 @@ export const UserContextProvider = (props: PropsWithChildren) => {
     if (storedUserInfo) {
       setUser(storedUserInfo.username);
       setToken(storedUserInfo.token);
-      setId(storedUserInfo.id);
+      setId(String(storedUserInfo.id));
     }
   }, []);
 

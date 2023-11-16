@@ -4,7 +4,7 @@ import { StorageWithUser, UserInfo } from '../types';
 
 const baseURL = '/api/users';
 
-async function getUserData(id: string): Promise<UserWithRelatedData> {
+async function getUserData(id: number): Promise<UserWithRelatedData> {
   const headers: { authorization?: string } = {};
   const { user }: { user?: string } = localStorage as StorageWithUser;
 
