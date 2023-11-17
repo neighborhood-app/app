@@ -8,11 +8,26 @@ interface Props {
   request: RequestWithUserAndResponses;
 }
 
+const sortByStatusAndDate = (res1: ResponseWithUser, res2: ResponseWithUser) => {
+  if (res1.status === 'ACCEPTED' && res2.status === 'ACCEPTED') {
+    if (res1.time_created > res2.time_created) return -1;
+    else return 1;
+  }
+
+  if (res1.status === 'ACCEPTED') return -1;
+  else if (res2.status === 'ACCEPTED') return 1;
+  else if (res1.time_created > res2.time_created) return -1;
+
+  return 0;
+};
+
 export default function ResponsesGrid({ request }: Props) {
   const responseColumns =
-    request.responses.map((response: ResponseWithUser) => (
-      <ResponseBox response={response} requestOwnerId={request.user_id} key={response.id} />
-    )) || [];
+    request.responses
+      .sort(sortByStatusAndDate)
+      .map((response: ResponseWithUser) => (
+        <ResponseBox response={response} requestOwnerId={request.user_id} key={response.id} />
+      )) || [];
 
   const noResponsesText =
     request.status === 'OPEN'
