@@ -24,21 +24,33 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
   let response: Request | '' | null = null;
 
-  if (intent === 'delete-request') {
-    response = await requestServices.deleteRequest(requestId);
-    return redirect(`/neighborhoods/${neighborhoodId}`);
-  } else if (intent === 'close-request') {
-    response = await requestServices.closeRequest(requestId);
-  } else if (intent === 'accept-offer') {
-    const responseId = formData.get('responseId');
-    response = await responseServices.acceptResponse(String(responseId));
-  } else if (intent === 'delete-response') {
-    const responseId = formData.get('responseId');
-    response = await responseServices.deleteResponse(String(responseId));
-  } else if (intent === 'create-response') {
-    const responseData = Object.fromEntries(formData) as unknown as ResponseData;
-    responseData.request_id = Number(responseData.request_id);
-    response = await responseServices.createResponse(responseData);
+  switch (intent) {
+    case 'delete-request':
+      response = await requestServices.deleteRequest(requestId);
+      return redirect(`/neighborhoods/${neighborhoodId}`);
+    case 'close-request':
+      response = await requestServices.closeRequest(requestId);
+      break;
+    case 'create-response': {
+      const responseData = Object.fromEntries(formData) as unknown as ResponseData;
+      responseData.request_id = Number(responseData.request_id);
+      response = await responseServices.createResponse(responseData);
+      break;
+    }
+    case 'delete-response': {
+      const responseId = formData.get('responseId') as string;
+      response = await responseServices.deleteResponse(responseId);
+      break;
+    }
+    case 'accept-offer': {
+      const responseId = formData.get('responseId') as string;
+      response = await responseServices.acceptResponse(responseId);
+      break;
+    }
+    default: {
+      const exhaustiveCheck: never = intent;
+      throw new Error(`Invalid form intent: ${JSON.stringify(exhaustiveCheck)}`);
+    }
   }
 
   return response;
