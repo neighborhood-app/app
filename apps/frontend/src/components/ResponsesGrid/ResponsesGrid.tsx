@@ -11,7 +11,7 @@ interface Props {
 export default function ResponsesGrid({ request }: Props) {
   const responseColumns =
     request.responses.map((response: ResponseWithUser) => (
-      <ResponseBox response={response} requestOwnerId={request.user_id} key={request.id} />
+      <ResponseBox response={response} requestOwnerId={request.user_id} key={response.id} />
     )) || [];
 
   const noResponsesText =
@@ -20,7 +20,7 @@ export default function ResponsesGrid({ request }: Props) {
       : 'There are no responses to display.';
 
   return responseColumns.length !== 0 ? (
-    <ResponsiveMasonry className="mt-4" columnsCountBreakPoints={{ 350: 1, 584: 2, 860: 3, 1084: 4, 1400: 5 }}>
+    <ResponsiveMasonry className="mt-4 mb-4 m-sm-3 p-2" columnsCountBreakPoints={{ 350: 1, 584: 2, 860: 3, 1084: 4, 1400: 5 }}>
       <Masonry gutter="1.5rem">{responseColumns}</Masonry>
     </ResponsiveMasonry>
   ) : (

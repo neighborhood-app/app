@@ -21,9 +21,7 @@ function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
 }
 
 export default function ResponseBox({ response, requestOwnerId }: Props) {
-  console.log(response);
-
-  const { id: neighborhoodId } = useParams();
+  const { id: requestId } = useParams();
 
   const loggedUser = getStoredUser();
   const loggedUserId = loggedUser ? Number(loggedUser.id) : null;
@@ -40,6 +38,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       if (response.status === 'ACCEPTED') {
         return (
           <>
+            <hr className={styles.hr} />
             <p className={styles.p}>You've accepted this offer for help.</p>
             <p className={styles.p}>
               Contact at: <span>{response.user.email}</span>
@@ -49,27 +48,31 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       }
 
       return (
-        <TriggerActionButton
-          id={response.id}
-          idInputName={'responseId'}
-          route={`/neighborhoods/${neighborhoodId}`}
-          intent="accept-offer"
-          text="Accept offer"
-          className={styles.acceptOfferBtn}
-          size="sm"
-        />
+        <>
+          <hr className={styles.hr} />
+          <TriggerActionButton
+            id={response.id}
+            idInputName={'responseId'}
+            route={`/requests/${requestId}`}
+            intent="accept-offer"
+            text="Accept offer"
+            className={styles.acceptOfferBtn}
+            size="sm"
+          />
+        </>
       );
     }
     if (responseOwner) {
       if (response.status === 'ACCEPTED') {
         return (
           <>
+            <hr className={styles.hr} />
             <p className={styles.p}>Your help offer has been accepted.</p>
             <div className={styles.btnContainer}>
               <TriggerActionButton
                 id={response.id}
                 idInputName="responseId"
-                route={`/neighborhoods/${neighborhoodId}`}
+                route={`/requests/${requestId}`}
                 intent="delete-response"
                 text="Delete response"
               />
@@ -79,13 +82,16 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       }
 
       return (
-        <TriggerActionButton
-          id={response.id}
-          idInputName="responseId"
-          route={`/neighborhoods/${neighborhoodId}`}
-          intent="delete-response"
-          text="Delete response"
-        />
+        <>
+          <hr className={styles.hr} />
+          <TriggerActionButton
+            id={response.id}
+            idInputName="responseId"
+            route={`/requests/${requestId}`}
+            intent="delete-response"
+            text="Delete response"
+          />
+        </>
       );
     }
 
@@ -111,11 +117,8 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         </Row>
       </Card.Header>
       <Card.Body>
-        <Card.Text className="small">
-          <p className='mb-0'>{response.content}</p>
-        </Card.Text>
+        <Card.Text className="small mb-0">{response.content}</Card.Text>
       </Card.Body>
-      <hr className={styles.hr} />
       <Card.Footer className={`${styles.cardFooter} text-center`}>{contactInfo}</Card.Footer>
     </Card>
   );

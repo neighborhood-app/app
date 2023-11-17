@@ -1,44 +1,38 @@
-.responseCard {
+/* .responseCard {
   display: flex;
   flex-direction: column;
   gap: 10px;
   background-color: rgb(235, 232, 232);
   border-radius: 10px;
   padding: 10px 20px;
-}
+} */
 
-.profileAndDate {
+/* .profileAndDate {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-}
+} */
 
-.profileInfo {
+/* .profileInfo {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-}
+} */
 
 .profileImg {
   width: 30px;
-  /* display: block;
-  object-fit: cover;
-  object-position: 50% 50%;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  margin-right: 10px; */
 }
 
-.pCreatedDate {
+/* .pCreatedDate {
   font-weight: 600;
-}
+} */
 
-.createdDate {
+/* .createdDate {
   font-size: 0.6rem;
   color: #9ca3af;
-}
+} */
 
 .p {
   font-size: 0.7rem;
@@ -48,8 +42,9 @@
 }
 
 .hr {
-  padding: 0;
   margin: 0 auto!important;
+  margin-bottom: 1em!important;
+  padding: 0;
   width: 87%;
 }
 
@@ -59,21 +54,16 @@
   align-items: center;
 }
 
-.btn {
+/* .btn {
   font-size: 0.7rem;
   cursor: pointer;
   width: 50%;
   margin: auto;
   margin-bottom: 5px;
-}
+} */
 
-.deleteResponseBtn {
+/* .deleteResponseBtn {
   justify-self: center;
-}
-
-/* .btn:hover,
-.btn:active {
-  background-color: #4b5563;
 } */
 
 .cardHeader {
