@@ -1,6 +1,6 @@
 // import { useParams } from 'react-router';
 // import CustomBtn from '../CustomBtn/CustomBtn';
-// import { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,6 +10,7 @@ import styles from './RequestDescBox.module.css';
 import { FullRequestData, StoredUserData } from '../../types';
 import { getStoredUser } from '../../utils/auth';
 import CustomBtn from '../CustomBtn/CustomBtn';
+import CreateResponseModal from '../CreateResponseModal/CreateResponseModal';
 
 const requestImg = require('../../assets/help_wanted.jpeg');
 
@@ -18,6 +19,10 @@ interface Props {
 }
 
 export default function RequestDescBox({ request }: Props) {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const { user, neighborhood } = request;
   const requestDate = request.time_created.split('T')[0];
   let userName = '';
@@ -71,11 +76,7 @@ export default function RequestDescBox({ request }: Props) {
     } else if (request.status === 'OPEN' && !hasUserResponded) {
       return (
         <Col lg="2" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
-          <CustomBtn
-            className={styles.actionBtn}
-            variant="primary"
-            // This will open up the response modal
-            onClick={() => console.log('Helping!')}>
+          <CustomBtn className={styles.actionBtn} variant="primary" onClick={handleShow}>
             Offer help
           </CustomBtn>
         </Col>
@@ -111,6 +112,7 @@ export default function RequestDescBox({ request }: Props) {
         <Col sm="3"></Col>
         {displayRequestActions()}
       </Row>
+      <CreateResponseModal show={show} handleClose={handleClose} />
     </Container>
   );
 }
