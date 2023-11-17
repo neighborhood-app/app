@@ -1,7 +1,8 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
-import { Request } from '@neighborhood/backend/src/types';
+import { Request, ResponseData } from '@neighborhood/backend/src/types';
 import { redirect } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
+import responseServices from '../../services/responses';
 import requestServices from '../../services/requests';
 import RequestDescBox from '../../components/RequestDescBox/RequestDescBox';
 import { FullRequestData, SingleRequestFormIntent } from '../../types';
@@ -28,6 +29,16 @@ export async function action({ params, request }: ActionFunctionArgs) {
     return redirect(`/neighborhoods/${neighborhoodId}`);
   } else if (intent === 'close-request') {
     response = await requestServices.closeRequest(requestId);
+  } else if (intent === 'accept-offer') {
+    const responseId = formData.get('responseId');
+    response = await responseServices.acceptResponse(String(responseId));
+  } else if (intent === 'delete-response') {
+    const responseId = formData.get('responseId');
+    response = await responseServices.deleteResponse(String(responseId));
+  } else if (intent === 'create-response') {
+    const responseData = Object.fromEntries(formData) as unknown as ResponseData;
+    responseData.request_id = Number(responseData.request_id);
+    response = await responseServices.createResponse(responseData);
   }
 
   return response;
