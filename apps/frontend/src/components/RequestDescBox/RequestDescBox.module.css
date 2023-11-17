@@ -37,3 +37,15 @@ padding-top: 0.4em;
 .actionBtn {
   width: 100%;
 }
+
+.iconClosed {
+  color: #ff2b009c;
+  margin-top: 0.2em;
+  margin-left: 0.5em;
+}
+
+.iconInactive {
+  color: #ff0054;
+  margin-top: 0.2em;
+  margin-left: 0.6em;
+}

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faBan, faCheck } from '@fortawesome/free-solid-svg-icons';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import styles from './RequestDescBox.module.css';
 import { FullRequestData, StoredUserData } from '../../types';
@@ -23,8 +23,17 @@ export default function RequestDescBox({ request }: Props) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
   const { user, neighborhood } = request;
   const requestDate = request.time_created.split('T')[0];
+  const requestStatusIcon =
+    // eslint-disable-next-line no-nested-ternary
+    request.status === 'CLOSED' ? (
+      <FontAwesomeIcon className={styles.iconClosed} icon={faCheck} size="sm" />
+    ) : request.status === 'INACTIVE' ? (
+      <FontAwesomeIcon className={styles.iconInactive} icon={faBan} size="sm" />
+    ) : null;
+
   let userName = '';
 
   if (user.first_name && user.last_name) userName = `${user.first_name} ${user.last_name}`;
@@ -97,10 +106,13 @@ export default function RequestDescBox({ request }: Props) {
       <Row className="gx-3">
         <Col sm="3">
           <Image className={styles.requestImg} rounded src={requestImg} alt="Request" />
-          <p className={`${styles.requestDate} small`}>Created at {requestDate}</p>
+          <p className={`${styles.requestDate} small`}>Created on {requestDate}</p>
         </Col>
         <Col className="me-sm-2">
-          <h3>{request.title}</h3>
+          <h3>
+            {request.title}
+            {requestStatusIcon}
+          </h3>
           <Link to="#">
             <Image className={styles.userIcon} roundedCircle src={requestImg} alt="Request" />
             <p className={`${styles.userName} text-muted`}>{userName}</p>
