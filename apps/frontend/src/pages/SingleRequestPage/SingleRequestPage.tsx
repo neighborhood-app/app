@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
-import { Request, ResponseData } from '@neighborhood/backend/src/types';
+import { Request, Response, ResponseData } from '@neighborhood/backend/src/types';
 import { redirect } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import responseServices from '../../services/responses';
@@ -22,7 +22,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const neighborhoodId = formData.get('neighborhoodId');
   const intent = formData.get('intent') as SingleRequestFormIntent;
 
-  let response: Request | '' | null = null;
+  let response: Request | Response | { error: string } | '' | null = null;
 
   switch (intent) {
     case 'delete-request':
