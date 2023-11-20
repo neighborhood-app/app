@@ -1,5 +1,10 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
-import { Request, ResponseData, CreateRequestData } from '@neighborhood/backend/src/types';
+import {
+  Request,
+  ResponseData,
+  CreateRequestData,
+  EditResponseData,
+} from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
 import responseServices from '../../services/responses';
@@ -25,7 +30,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
   const { id } = params;
   const neighborhood = await neighborhoodsService.getSingleNeighborhood(Number(id));
-  
+
   return neighborhood;
 }
 
@@ -55,6 +60,10 @@ export async function action({ params, request }: ActionFunctionArgs) {
     const responseData = Object.fromEntries(formData) as unknown as ResponseData;
     responseData.request_id = Number(responseData.request_id);
     response = await responseServices.createResponse(responseData);
+  } else if (intent === 'edit-response') {
+    const responseData = Object.fromEntries(formData) as unknown as EditResponseData;
+    console.log(responseData);
+    response = await responseServices.editResponse(String(responseData.id), responseData);
   } else if (intent === 'leave-neighborhood') {
     response = await neighborhoodsService.leaveNeighborhood(neighborhoodId);
   } else if (intent === "edit-neighborhood") {
@@ -74,7 +83,7 @@ export default function SingleNeighborhood() {
   // We just want to check the role and not do type-narrowing for Neighborhood
   function checkLoggedUserRole(userName: string, neighborhood: NeighborhoodType): UserRole {
     const checkForNeighborhoodDetails = (
-      neighborhood: NeighborhoodType
+      neighborhood: NeighborhoodType,
     ): neighborhood is NeighborhoodDetailsForMembers => Object.hasOwn(neighborhood, 'admin');
 
     if (checkForNeighborhoodDetails(neighborhood)) {

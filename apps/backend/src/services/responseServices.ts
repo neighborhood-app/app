@@ -149,7 +149,6 @@ const isUpdateResponseData = (obj: object): obj is UpdateResponseData => {
   if ('status' in obj && obj.status !== 'PENDING' && obj.status !== 'ACCEPTED') {
     return false;
   }
-
   return true;
 };
 
