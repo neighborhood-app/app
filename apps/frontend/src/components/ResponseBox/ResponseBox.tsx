@@ -2,11 +2,12 @@ import { useParams } from 'react-router';
 import { useSubmit } from 'react-router-dom';
 import { useState, FormEvent } from 'react';
 import { ResponseWithUser } from '@neighborhood/backend/src/types';
-import { Card, Col, Container, Form, Image, Row } from 'react-bootstrap';
+import { Card, Col, Image, Row } from 'react-bootstrap';
 import styles from './ResponseBox.module.css';
 import { getStoredUser } from '../../utils/auth';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import CustomBtn from '../CustomBtn/CustomBtn';
+import EditResponseForm from '../EditResponseForm/EditResponseForm';
 
 const profilePic = require('./images/profile.jpg');
 
@@ -111,72 +112,31 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       }
 
       return (
-        <Row sm="2">
-          <Col>
-            <TriggerActionButton
-              id={response.id}
-              idInputName="responseId"
-              route={`/requests/${requestId}`}
-              intent="delete-response"
-              text="Delete response"
-            />
-          </Col>
-          <Col>
-            <CustomBtn variant="primary" className="px-4" onClick={() => setShowEditForm(true)}>
-              Edit
-            </CustomBtn>
-          </Col>
-        </Row>
+        <>
+          <hr className={styles.hr} />
+          <Row className="gy-2">
+            <Col sm="auto">
+              <TriggerActionButton
+                id={response.id}
+                idInputName="responseId"
+                route={`/requests/${requestId}`}
+                intent="delete-response"
+                text="Delete response"
+              />
+            </Col>
+            <Col>
+              <CustomBtn variant="primary" className="px-4" onClick={() => setShowEditForm(true)}>
+                Edit
+              </CustomBtn>
+            </Col>
+          </Row>
+        </>
       );
     }
 
     return null;
   }
   const contactInfo = displayContactInfo();
-  const editForm = (
-    <Form noValidate onSubmit={handleSubmit} role="form">
-      <Form.Group className="mb-2" controlId="content">
-        <Form.Label column="sm">Write the details of your help offer:</Form.Label>
-        <Form.Control
-          as="textarea"
-          name="content"
-          className="mb-3"
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-          minLength={4}
-          required
-          isInvalid={!validTextAreaPattern.test(content) && formSubmitted}
-          isValid={validTextAreaPattern.test(content)}
-        />
-        <Form.Control.Feedback type="invalid">
-          The content needs to be at least 4 characters long.
-        </Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group>
-        <Form.Control type="hidden" name="intent" value="edit-response" />
-        <Form.Control type="hidden" name="id" value={response.id} />
-      </Form.Group>
-      <Container fluid className={styles.contact}>
-        <Row sm="2">
-          <Col>
-            <CustomBtn variant="primary" type="submit">
-              Submit
-            </CustomBtn>
-          </Col>
-          <Col>
-            <CustomBtn
-              variant="outline-dark"
-              onClick={() => {
-                setShowEditForm(false);
-                setContent(response.content);
-              }}>
-              Cancel
-            </CustomBtn>
-          </Col>
-        </Row>
-      </Container>
-    </Form>
-  );
 
   return (
     <Card>
@@ -195,10 +155,24 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
           <Col className="text-end pe-1 pe-sm-2 text-muted small">{date}</Col>
         </Row>
       </Card.Header>
-      <Card.Body>
-        <Card.Text className="small mb-0">{showEditForm ? editForm : response.content}</Card.Text>
-      </Card.Body>
-      <Card.Footer className={`${styles.cardFooter} text-center`}>{contactInfo}</Card.Footer>
+      {showEditForm ? (
+        <Card.Body>
+          <EditResponseForm
+            response={response}
+            handleSubmit={handleSubmit}
+            setShowEditForm={setShowEditForm}
+            setContent={setContent}
+            content={content}
+            formSubmitted={formSubmitted}></EditResponseForm>
+        </Card.Body>
+      ) : (
+        <>
+          <Card.Body>
+            <Card.Text className="small mb-0">{response.content}</Card.Text>
+          </Card.Body>
+          <Card.Footer className={`${styles.cardFooter} text-center`}>{contactInfo}</Card.Footer>
+        </>
+      )}
     </Card>
   );
 }

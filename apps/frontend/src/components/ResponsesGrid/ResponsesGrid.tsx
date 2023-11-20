@@ -35,7 +35,7 @@ export default function ResponsesGrid({ request }: Props) {
       : 'There are no responses to display.';
 
   return responseColumns.length !== 0 ? (
-    <ResponsiveMasonry className="mt-4 mb-4 m-sm-3 p-2" columnsCountBreakPoints={{ 350: 1, 584: 2, 860: 3, 1084: 4, 1400: 5 }}>
+    <ResponsiveMasonry className="mt-4 mb-4 m-sm-3 p-2" columnsCountBreakPoints={{ 350: 1, 584: 2, 860: 3, 1084: 4 }}>
       <Masonry gutter="1.5rem">{responseColumns}</Masonry>
     </ResponsiveMasonry>
   ) : (
