@@ -23,7 +23,7 @@ interface Props {
     | 'leave-neighborhood'
     | 'join-neighborhood'
     | SingleRequestFormIntent;
-  text: string;
+  text: string | JSX.Element;
   idInputName?: string;
   variant?: 'primary' | 'outline-dark' | 'danger';
   className?: string;

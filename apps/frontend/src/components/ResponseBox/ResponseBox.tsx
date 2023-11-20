@@ -3,6 +3,8 @@ import { useSubmit } from 'react-router-dom';
 import { useState, FormEvent } from 'react';
 import { ResponseWithUser } from '@neighborhood/backend/src/types';
 import { Card, Col, Image, Row } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencil, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import styles from './ResponseBox.module.css';
 import { getStoredUser } from '../../utils/auth';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
@@ -104,7 +106,8 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
                 idInputName="responseId"
                 route={`/requests/${requestId}`}
                 intent="delete-response"
-                text="Delete"
+                variant="danger"
+                text={<FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>}
               />
             </div>
           </>
@@ -114,19 +117,20 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       return (
         <>
           <hr className={styles.hr} />
-          <Row className="gy-2">
-            <Col sm="auto">
+          <Row className="gy-2 justify-content-center">
+            <Col xs="auto">
               <TriggerActionButton
                 id={response.id}
                 idInputName="responseId"
                 route={`/requests/${requestId}`}
                 intent="delete-response"
-                text="Delete response"
+                text={<FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>}
+                variant="danger"
               />
             </Col>
-            <Col>
-              <CustomBtn variant="primary" className="px-4" onClick={() => setShowEditForm(true)}>
-                Edit
+            <Col xs="auto">
+              <CustomBtn variant="primary" onClick={() => setShowEditForm(true)}>
+                <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>
               </CustomBtn>
             </Col>
           </Row>
