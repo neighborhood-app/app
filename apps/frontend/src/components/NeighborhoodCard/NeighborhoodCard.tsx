@@ -12,7 +12,7 @@ type Props = {
   isUserAdmin: boolean;
 };
 
-export default function NeighborhoodsBox({ id, name, description, isUserAdmin }: Props) {
+export default function NeighborhoodCard({ id, name, description, isUserAdmin }: Props) {
   const mql = window.matchMedia('(max-width: 576px)');
 
   const [smallDisplay, setSmallDisplay] = useState(mql.matches);
