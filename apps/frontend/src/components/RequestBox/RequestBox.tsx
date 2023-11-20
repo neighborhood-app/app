@@ -98,8 +98,6 @@ export default function RequestBox({
       </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
       <Row
-        // xs="1"
-        // sm="auto"
         className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
         {requestBoxes.length !== 0 ? (
           requestBoxes

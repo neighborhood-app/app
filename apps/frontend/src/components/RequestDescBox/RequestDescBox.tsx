@@ -1,5 +1,3 @@
-// import { useParams } from 'react-router';
-// import CustomBtn from '../CustomBtn/CustomBtn';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Col, Container, Image, Row } from 'react-bootstrap';

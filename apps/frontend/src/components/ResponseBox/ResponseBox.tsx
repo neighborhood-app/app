@@ -18,13 +18,11 @@ type Props = {
   requestOwnerId: number;
 };
 
-function isLoggedUserRequestOwner(userId: number, requestOwnerId: number) {
-  return userId === requestOwnerId;
-}
+const isLoggedUserRequestOwner = (userId: number, requestOwnerId: number) =>
+  userId === requestOwnerId;
 
-function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
-  return userId === responseOwnerId;
-}
+const isLoggedUserResponseOwner = (userId: number, responseOwnerId: number) =>
+  userId === responseOwnerId;
 
 export default function ResponseBox({ response, requestOwnerId }: Props) {
   const { id: requestId } = useParams();
