@@ -141,7 +141,6 @@ export type ResponseData = Pick<Response, 'content' | 'request_id'>;
 
 /**
  * shape of the data required to edit a response, only with the required `content` and `id` properties
- * to edit a Response
  */
 export type EditResponseData = Pick<Response, 'content' | 'id'>;
 
