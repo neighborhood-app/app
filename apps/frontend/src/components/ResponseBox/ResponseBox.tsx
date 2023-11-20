@@ -128,6 +128,55 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
     return null;
   }
   const contactInfo = displayContactInfo();
+  const editForm = showEditForm ? (
+    <Form noValidate onSubmit={handleSubmit} role="form">
+      <Form.Group className="mb-2" controlId="content">
+        <Form.Label column="sm">Write the details of your help offer:</Form.Label>
+        <Form.Control
+          as="textarea"
+          name="content"
+          className="mb-3"
+          value={content}
+          onChange={(event) => setContent(event.target.value)}
+          minLength={4}
+          required
+          isInvalid={!validTextAreaPattern.test(content) && formSubmitted}
+          isValid={validTextAreaPattern.test(content)}
+        />
+        <Form.Control.Feedback type="invalid">
+          The content needs to be at least 4 characters long.
+        </Form.Control.Feedback>
+      </Form.Group>
+      <Form.Group>
+        <Form.Control type="hidden" name="intent" value="edit-response" />
+        <Form.Control type="hidden" name="id" value={response.id} />
+      </Form.Group>
+      <Container fluid className={styles.contact}>
+        <Row sm="2">
+          <Col>
+            <CustomBtn variant="primary" type="submit">
+              Submit
+            </CustomBtn>
+          </Col>
+          <Col>
+            <CustomBtn
+              variant="outline-dark"
+              onClick={() => {
+                setShowEditForm(false);
+                setContent(response.content);
+              }}>
+              Cancel
+            </CustomBtn>
+          </Col>
+        </Row>
+      </Container>
+    </Form>
+  ) : (
+    <div>
+      <p className={styles.p}>{response.content}</p>
+      <div className={styles.contact}>{contactInfo}</div>
+    </div>
+  )
 
   return (
     <div className={styles.responseCard}>
@@ -142,55 +191,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
         </div>
         <p className={styles.createdDate}>{date}</p>
       </div>
-      {showEditForm ? (
-        <Form noValidate onSubmit={handleSubmit} role="form">
-          <Form.Group className="mb-2" controlId="content">
-            <Form.Label column="sm">Write the details of your help offer:</Form.Label>
-            <Form.Control
-              as="textarea"
-              name="content"
-              className="mb-3"
-              value={content}
-              onChange={(event) => setContent(event.target.value)}
-              minLength={4}
-              required
-              isInvalid={!validTextAreaPattern.test(content) && formSubmitted}
-              isValid={validTextAreaPattern.test(content)}
-            />
-            <Form.Control.Feedback type="invalid">
-              The content needs to be at least 4 characters long.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group>
-            <Form.Control type="hidden" name="intent" value="edit-response" />
-            <Form.Control type="hidden" name="id" value={response.id} />
-          </Form.Group>
-          <Container fluid className={styles.contact}>
-            <Row sm="2">
-              <Col>
-                <CustomBtn variant="primary" type="submit">
-                  Submit
-                </CustomBtn>
-              </Col>
-              <Col>
-                <CustomBtn
-                  variant="outline-dark"
-                  onClick={() => {
-                    setShowEditForm(false);
-                    setContent(response.content);
-                  }}>
-                  Cancel
-                </CustomBtn>
-              </Col>
-            </Row>
-          </Container>
-        </Form>
-      ) : (
-        <div>
-          <p className={styles.p}>{response.content}</p>
-          <div className={styles.contact}>{contactInfo}</div>
-        </div>
-      )}
+      {editForm}
     </div>
   );
 }
