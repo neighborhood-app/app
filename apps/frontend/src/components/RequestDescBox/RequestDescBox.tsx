@@ -65,7 +65,11 @@ export default function RequestDescBox({ request }: Props) {
   (OPEN or CLOSED) returns the corresponding JSX for the request modal.
   */
   const displayRequestActions = () => {
-    if (username === request.user.username && request.status === 'OPEN') {
+    if (
+      username === request.user.username &&
+      request.status === 'OPEN' &&
+      request.responses.length > 0
+    ) {
       return (
         <>
           <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-sm-4 mb-2">
