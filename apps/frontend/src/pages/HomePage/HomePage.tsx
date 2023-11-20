@@ -42,7 +42,7 @@ export default function HomePage() {
   return (
     <div className={styles.wrapper}>
       <section>
-        <h1>My neighborhoods</h1>
+        <h2>My neighborhoods</h2>
         <Container className="p-0 mb-4" fluid>
           <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
             {neighborhoodCards}
@@ -51,7 +51,7 @@ export default function HomePage() {
       </section>
 
       <section>
-        <h1>My active requests</h1>
+        <h2>My active requests</h2>
         <Container className="p-0 mb-4" fluid>
           <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
             {userData.requests.length > 0 ? (
