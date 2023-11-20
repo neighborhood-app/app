@@ -52,6 +52,7 @@ export type SingleRequestFormIntent =
   | 'close-request'
   | 'accept-offer'
   | 'create-response'
+  | 'edit-response'
   | 'delete-response'
   ;
 

@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
-import { Request, Response, ResponseData } from '@neighborhood/backend/src/types';
+import { EditResponseData, Request, Response, ResponseData } from '@neighborhood/backend/src/types';
 import { redirect } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import responseServices from '../../services/responses';
@@ -35,6 +35,11 @@ export async function action({ params, request }: ActionFunctionArgs) {
       const responseData = Object.fromEntries(formData) as unknown as ResponseData;
       responseData.request_id = Number(responseData.request_id);
       response = await responseServices.createResponse(responseData);
+      break;
+    }
+    case 'edit-response': {
+      const responseData = Object.fromEntries(formData) as unknown as EditResponseData;
+      response = await responseServices.editResponse(String(responseData.id), responseData);
       break;
     }
     case 'delete-response': {
