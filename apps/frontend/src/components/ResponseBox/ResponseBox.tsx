@@ -1,12 +1,15 @@
-import { Row, Col, Form, Container } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { useSubmit } from 'react-router-dom';
 import { useState, FormEvent } from 'react';
 import { ResponseWithUser } from '@neighborhood/backend/src/types';
+import { Card, Col, Image, Row } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencil, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import styles from './ResponseBox.module.css';
 import { getStoredUser } from '../../utils/auth';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import CustomBtn from '../CustomBtn/CustomBtn';
+import EditResponseForm from '../EditResponseForm/EditResponseForm';
 
 const profilePic = require('./images/profile.jpg');
 
@@ -15,16 +18,14 @@ type Props = {
   requestOwnerId: number;
 };
 
-function isLoggedUserRequestOwner(userId: number, requestOwnerId: number) {
-  return userId === requestOwnerId;
-}
+const isLoggedUserRequestOwner = (userId: number, requestOwnerId: number) =>
+  userId === requestOwnerId;
 
-function isLoggedUserResponseOwner(userId: number, responseOwnerId: number) {
-  return userId === responseOwnerId;
-}
+const isLoggedUserResponseOwner = (userId: number, responseOwnerId: number) =>
+  userId === responseOwnerId;
 
 export default function ResponseBox({ response, requestOwnerId }: Props) {
-  const { id: neighborhoodId } = useParams();
+  const { id: requestId } = useParams();
 
   const [showEditForm, setShowEditForm] = useState(false);
   const [content, setContent] = useState(response.content);
@@ -46,13 +47,11 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
     setFormSubmitted(true);
 
     if (!validateTextArea()) {
-      console.log('invalid');
-
       event.stopPropagation();
     } else {
       submit(form, {
         method: 'post',
-        action: `/neighborhoods/${neighborhoodId}`,
+        action: `/requests/${requestId}`,
       });
       setShowEditForm(false);
       setFormSubmitted(false);
@@ -79,12 +78,18 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       }
 
       return (
-        <TriggerActionButton
-          id={response.id}
-          route={`/neighborhoods/${neighborhoodId}`}
-          intent="accept-offer"
-          text="Accept offer"
-        />
+        <>
+          <hr className={styles.hr} />
+          <TriggerActionButton
+            id={response.id}
+            idInputName={'responseId'}
+            route={`/requests/${requestId}`}
+            intent="accept-offer"
+            text="Accept offer"
+            className={styles.acceptOfferBtn}
+            size="sm"
+          />
+        </>
       );
     }
     if (responseOwner) {
@@ -96,9 +101,11 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
             <div className={styles.btnContainer}>
               <TriggerActionButton
                 id={response.id}
-                route={`/neighborhoods/${neighborhoodId}`}
+                idInputName="responseId"
+                route={`/requests/${requestId}`}
                 intent="delete-response"
-                text="Delete"
+                variant="danger"
+                text={<FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>}
               />
             </div>
           </>
@@ -106,92 +113,68 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
       }
 
       return (
-        <Row sm="2">
-          <Col>
-            <TriggerActionButton
-              id={response.id}
-              route={`/neighborhoods/${neighborhoodId}`}
-              intent="delete-response"
-              variant="danger"
-              text="Delete"
-            />
-          </Col>
-          <Col>
-            <CustomBtn variant="primary" className="px-4" onClick={() => setShowEditForm(true)}>
-              Edit
-            </CustomBtn>
-          </Col>
-        </Row>
+        <>
+          <hr className={styles.hr} />
+          <Row className="gy-2 justify-content-center">
+            <Col xs="auto">
+              <TriggerActionButton
+                id={response.id}
+                idInputName="responseId"
+                route={`/requests/${requestId}`}
+                intent="delete-response"
+                text={<FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>}
+                variant="danger"
+              />
+            </Col>
+            <Col xs="auto">
+              <CustomBtn variant="primary" onClick={() => setShowEditForm(true)}>
+                <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>
+              </CustomBtn>
+            </Col>
+          </Row>
+        </>
       );
     }
 
     return null;
   }
   const contactInfo = displayContactInfo();
-  const editForm = showEditForm ? (
-    <Form noValidate onSubmit={handleSubmit} role="form">
-      <Form.Group className="mb-2" controlId="content">
-        <Form.Label column="sm">Write the details of your help offer:</Form.Label>
-        <Form.Control
-          as="textarea"
-          name="content"
-          className="mb-3"
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-          minLength={4}
-          required
-          isInvalid={!validTextAreaPattern.test(content) && formSubmitted}
-          isValid={validTextAreaPattern.test(content)}
-        />
-        <Form.Control.Feedback type="invalid">
-          The content needs to be at least 4 characters long.
-        </Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group>
-        <Form.Control type="hidden" name="intent" value="edit-response" />
-        <Form.Control type="hidden" name="id" value={response.id} />
-      </Form.Group>
-      <Container fluid className={styles.contact}>
-        <Row sm="2">
-          <Col>
-            <CustomBtn variant="primary" type="submit">
-              Submit
-            </CustomBtn>
-          </Col>
-          <Col>
-            <CustomBtn
-              variant="outline-dark"
-              onClick={() => {
-                setShowEditForm(false);
-                setContent(response.content);
-              }}>
-              Cancel
-            </CustomBtn>
-          </Col>
-        </Row>
-      </Container>
-    </Form>
-  ) : (
-    <div>
-      <p className={styles.p}>{response.content}</p>
-      <div className={styles.contact}>{contactInfo}</div>
-    </div>
-  )
 
   return (
-    <div className={styles.responseCard}>
-      <div className={styles.profileAndDate}>
-        <div className={styles.profileInfo}>
-          <img
-            className={styles.profileImg}
-            src={profilePic}
-            alt="active user on neighborhood app"
-          />
-          <p className={styles.p}>{response.user.username}</p>
-        </div>
-        <p className={styles.createdDate}>{date}</p>
-      </div>
-      {editForm}
-    </div>
+    <Card>
+      <Card.Header className={styles.cardHeader}>
+        <Row>
+          <Col className="pe-0" xs="auto">
+            <Image
+              roundedCircle
+              className={styles.profileImg}
+              src={profilePic}
+              alt="active user on neighborhood app"></Image>
+          </Col>
+          <Col className="pe-0 text-muted small" xs="auto">
+            {response.user.username}
+          </Col>
+          <Col className="text-end pe-1 pe-sm-2 text-muted small">{date}</Col>
+        </Row>
+      </Card.Header>
+      {showEditForm ? (
+        <Card.Body>
+          <EditResponseForm
+            response={response}
+            handleSubmit={handleSubmit}
+            setShowEditForm={setShowEditForm}
+            setContent={setContent}
+            content={content}
+            formSubmitted={formSubmitted}></EditResponseForm>
+        </Card.Body>
+      ) : (
+        <>
+          <Card.Body>
+            <Card.Text className="small mb-0">{response.content}</Card.Text>
+          </Card.Body>
+          <Card.Footer className={`${styles.cardFooter} text-center`}>{contactInfo}</Card.Footer>
+        </>
+      )}
+    </Card>
   );
 }

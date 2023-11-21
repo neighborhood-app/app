@@ -1,13 +1,7 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
-import {
-  Request,
-  ResponseData,
-  CreateRequestData,
-  EditResponseData,
-} from '@neighborhood/backend/src/types';
+import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
-import responseServices from '../../services/responses';
 import { useUser } from '../../store/user-context';
 import {
   EditNeighborhoodData,
@@ -39,7 +33,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const neighborhoodId = Number(params.id);
 
   const intent = formData.get('intent') as SingleNeighborhoodFormIntent;
-  formData.delete("intent")
+  formData.delete('intent');
   // We should consider only returning success/error objects from all routes
   // where we don't need the new data
   let response: Request | Response | { success: string } | { error: string } | null = null;
@@ -50,23 +44,9 @@ export async function action({ params, request }: ActionFunctionArgs) {
     response = await requestServices.createRequest(requestData);
   } else if (intent === 'join-neighborhood') {
     response = await neighborhoodsService.connectUserToNeighborhood(neighborhoodId);
-  } else if (intent === 'accept-offer') {
-    const responseId = formData.get('responseId');
-    response = await responseServices.acceptResponse(String(responseId));
-  } else if (intent === 'delete-response') {
-    const responseId = formData.get('responseId');
-    response = await responseServices.deleteResponse(String(responseId));
-  } else if (intent === 'create-response') {
-    const responseData = Object.fromEntries(formData) as unknown as ResponseData;
-    responseData.request_id = Number(responseData.request_id);
-    response = await responseServices.createResponse(responseData);
-  } else if (intent === 'edit-response') {
-    const responseData = Object.fromEntries(formData) as unknown as EditResponseData;
-    console.log(responseData);
-    response = await responseServices.editResponse(String(responseData.id), responseData);
   } else if (intent === 'leave-neighborhood') {
     response = await neighborhoodsService.leaveNeighborhood(neighborhoodId);
-  } else if (intent === "edit-neighborhood") {
+  } else if (intent === 'edit-neighborhood') {
     const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
     response = await neighborhoodsService.editNeighborhood(neighborhoodId, neighborhoodData);
   }

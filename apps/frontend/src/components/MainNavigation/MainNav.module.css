@@ -54,10 +54,11 @@
 
 @media (max-width: 576px) {
   .nav {
+    background-color: #fff;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    padding: 1.5vh 5vw;
+    padding: 1vh 5vw 0;
     height: 100%;
   }
 

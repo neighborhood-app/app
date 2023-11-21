@@ -40,6 +40,7 @@ export default function DescriptionBox({
   const handleShow = () => setShow(true);
 
   const { id: neighborhoodId } = useParams();
+
   return (
     <Container fluid className={styles.container}>
       <Modal show={showAlert} onHide={() => setShowAlert(false)}>

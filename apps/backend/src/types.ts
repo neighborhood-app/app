@@ -99,18 +99,35 @@ export type NeighborhoodDetailsForMembers = schema.Prisma.NeighborhoodGetPayload
 
 export type NeighborhoodType = NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers;
 
+/**
+ * Neighborhood type with users
+ */
 const neighborhoodWithUsers = schema.Prisma.validator<schema.Prisma.NeighborhoodArgs>()({
   include: {
     users: true,
   },
 });
 
-/**
- * Neighborhood type with users
- */
 export type NeighborhoodWithUsers = schema.Prisma.NeighborhoodGetPayload<
   typeof neighborhoodWithUsers
->;
+  >;
+
+/**
+ * Request type with full data: user, responses, and neighborhood with users
+ */
+const requestFullData = schema.Prisma.validator<schema.Prisma.RequestArgs>()({
+  include: {
+    user: true,
+    responses: true,
+    neighborhood: {
+      include: {
+        users: true,
+      }
+    }
+  },
+});
+
+export type FullRequestData = schema.Prisma.RequestGetPayload<typeof requestFullData>;
 
 /**
  * User type with Requests

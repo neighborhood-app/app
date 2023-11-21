@@ -15,10 +15,7 @@ requestsRouter.post(
     const loggedUserId: number = req.loggedUserId as number;
     const postData: CreateRequestData = await requestServices.parseCreateRequestData(req.body);
 
-    const request: RequestData = await requestServices.createRequest(
-      postData,
-      loggedUserId,
-    );
+    const request: RequestData = await requestServices.createRequest(postData, loggedUserId);
 
     return res.status(201).send(request);
   }),
@@ -33,16 +30,10 @@ requestsRouter.put(
     const userId = Number(req.loggedUserId);
     const requestId = Number(req.params.id);
 
-    const isOwnerUser = await requestServices.hasUserCreatedRequest(
-      requestId,
-      userId,
-    );
+    const isOwnerUser = await requestServices.hasUserCreatedRequest(requestId, userId);
     if (!isOwnerUser) return res.sendStatus(401);
 
-    const updatedRequest: RequestData = await requestServices.updateRequest(
-      req.body,
-      requestId,
-    );
+    const updatedRequest: RequestData = await requestServices.updateRequest(req.body, requestId);
 
     return res.status(200).json(updatedRequest);
   }),
@@ -55,12 +46,9 @@ requestsRouter.delete(
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const loggedUserId = req.loggedUserId as number;
-    const requestId = Number(req.params.id);
+    const requestId = Number(req.params.id);    
 
-    const isOwnerUser = await requestServices.hasUserCreatedRequest(
-      requestId,
-      loggedUserId,
-    );
+    const isOwnerUser = await requestServices.hasUserCreatedRequest(requestId, loggedUserId);
     if (!isOwnerUser) {
       const request = await requestServices.getRequestById(requestId);
       const isAdminOfNeighborhood = await neighborhoodServices.isUserAdminOfNeighborhood(
@@ -91,14 +79,12 @@ requestsRouter.get(
     );
 
     if (!hasUserAccessToRequest) {
-      return res
-        .status(401)
-        .send({ error: 'user does not have access to the neighborhood' });
+      return res.status(401).send({ error: 'user does not have access to the neighborhood' });
     }
 
-    const requestData: RequestData = await requestServices.getRequestById(
-      requestId,
-    );
+    const requestData: RequestData =
+      await requestServices.getFullRequestData(requestId);
+
     return res.status(200).send(requestData);
   }),
 );

@@ -113,7 +113,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   async function handleCloseRequest() {
     try {
       setIsLoading(true);
-      await requestServices.closeRequest(String(request.id));
+      await requestServices.closeRequest(request.id);
       setIsLoading(false);
       handleCloseModal();
       revalidator.revalidate();
@@ -124,7 +124,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
   }
 
   async function handleDeleteRequest() {
-    await requestServices.deleteRequest(String(request.id));
+    await requestServices.deleteRequest(request.id);
     handleCloseModal();
     revalidator.revalidate();
   }

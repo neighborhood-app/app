@@ -1,0 +1,51 @@
+.requestImg {
+  aspect-ratio: 4/3;
+  max-height: 100%;
+  max-width: 100%;
+  filter: contrast(70%);
+  transition: all 0.6s cubic-bezier(0.43, 0.41, 0.22, 0.91);
+}
+
+.requestImg:hover {
+  filter: contrast(100%);
+}
+
+.neighborhoodTitle {
+  display: inline-block;
+  font-weight: 400;
+  padding-left: 0.5em;
+}
+
+.backIcon {
+  margin-bottom: 0.04em;
+}
+
+.userName {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.userIcon {
+  height: 32px;
+  width: 32px;
+}
+
+.requestDate {
+padding-top: 0.4em;
+}
+
+.actionBtn {
+  width: 100%;
+}
+
+.iconClosed {
+  color: #08c72edd;
+  margin-top: 0.2em;
+  margin-left: 0.5em;
+}
+
+.iconInactive {
+  color: #ff0054;
+  margin-top: 0.2em;
+  margin-left: 0.6em;
+}

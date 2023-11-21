@@ -7,8 +7,13 @@ interface Props {
 }
 
 export default function StatusHeader({ status }: Props) {
-  if (status === 'OPEN') {
-    return null;
+  if (status === 'INACTIVE') {
+    return (
+      <div className={styles.statusHeader}>
+        <p className={styles.pInactive}>{status}</p>
+        <FontAwesomeIcon className={styles.iconInactive} icon={faBan} />
+      </div>
+    );
   } else if (status === 'CLOSED') {
     return (
       <div className={styles.statusHeader}>
@@ -16,12 +21,7 @@ export default function StatusHeader({ status }: Props) {
         <FontAwesomeIcon className={styles.iconClosed} icon={faCheck} size="xl" />
       </div>
     );
-  } else {
-    return (
-      <div className={styles.statusHeader}>
-        <p className={styles.pInactive}>{status}</p>
-        <FontAwesomeIcon className={styles.iconInactive} icon={faBan} />
-      </div>
-    );
   }
+
+  return null;
 }
