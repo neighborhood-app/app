@@ -14,12 +14,12 @@ export default function NeighborhoodCard({ id, name, description, isUserAdmin }:
     <Link to={`neighborhoods/${id}`}>
       <div className={styles.card}>
         <div className={styles.figcaption}>
-          <span className={styles.info}>
+          <div className={styles.cardText}>
             <h2>
               {name} <span>{isUserAdmin ? 'Admin' : null}</span>
             </h2>
             {description ? <p>{description}</p> : null}
-          </span>
+          </div>
         </div>
       </div>
     </Link>

@@ -4,11 +4,16 @@
   border-radius: 10px;
   background-size: cover;
   background-image: url('./images/palm.jpeg');
-  opacity: 1;
+  filter: contrast(90%);
+  transition: all 0.6s cubic-bezier(0.43, 0.41, 0.22, 0.91);
   box-shadow:
     0 6.7px 5.3px rgba(0, 0, 0, 0.03),
     0 22.3px 17.9px rgba(202, 150, 150, 0.05),
     0 100px 80px rgba(0, 0, 0, 0.07);
+}
+
+.card:hover {
+  filter: contrast(100%);
 }
 
 .image {
@@ -19,24 +24,31 @@
 .figcaption {
   width: 100%;
   height: 100%;
-  max-height: 100%;
-  padding: 15px 20px;
+  display: flex;
+  align-items: flex-end;
 }
 
-.info {
-  color: rgb(226, 226, 226);
-}
-
-.info > h2 {
+.cardText {
   color: white;
-  font-size: 1.2rem;
+  border-radius: 25px;
+  padding: 0 10px 0 10px;
+  backdrop-filter: blur(10px);
+}
+
+.cardText > h2 {
+  color: white;
+  font-size: 1.1rem;
   letter-spacing: 1px;
   margin-bottom: 2px;
 }
 
-.info > h2 > span {
+.cardText > h2 > span {
   color: #bd2893;
   font-size: 0.8rem;
+}
+
+.cardText > p {
+  font-size: 0.9rem;
 }
 
 @media (max-width: 950px) {
@@ -46,12 +58,12 @@
 }
 
 @media (max-width: 576px) {
-  .card:first-child {
-    margin-top: 2vh;
+  .card {
+    filter: none;
+    transition: none;
   }
 
-  .figcaption {
-    display: flex;
-    align-items: center;
+  .card:first-child {
+    margin-top: 2vh;
   }
 }
