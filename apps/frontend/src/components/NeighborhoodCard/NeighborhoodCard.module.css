@@ -1,27 +1,14 @@
 .card {
-  position: relative;
   width: min(100%, 400px);
   height: 240px;
   border-radius: 10px;
-  background-image: var(--image-src);
-  background-position: 50% 50%;
-  background-size:cover;
-  transition: background 800ms ease;
-  box-shadow: 0 6.7px 5.3px rgba(0, 0, 0, 0.03),
-    0 22.3px 17.9px rgba(202, 150, 150, 0.05), 0 100px 80px rgba(0, 0, 0, 0.07);
-  overflow: hidden;
-}
-
-.container {
-  max-width: 100%;
-  margin: 20px 0 0 0;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 10px;
+  background-size: cover;
+  background-image: url('./images/palm.jpeg');
+  opacity: 1;
   box-shadow:
-    0 3px 6px rgba(0, 0, 0, 0.16),
-    0 3px 6px rgba(0, 0, 0, 0.23);
-  border: 1px solid rgb(173, 173, 173, 0.5);
+    0 6.7px 5.3px rgba(0, 0, 0, 0.03),
+    0 22.3px 17.9px rgba(202, 150, 150, 0.05),
+    0 100px 80px rgba(0, 0, 0, 0.07);
 }
 
 .image {
@@ -29,28 +16,11 @@
   height: 100%;
 }
 
-.card:hover {
-  background-position: 50% 50%;
-}
-
-.card:hover > .figcaption {
-  bottom: -180px;
-  transform: translateY(-180px);
-  opacity: 1;
-}
-
 .figcaption {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: absolute;
-  background: #0009;
   width: 100%;
-  height:100%;
+  height: 100%;
   max-height: 100%;
   padding: 15px 20px;
-  transition: transform 1200ms ease;
-  opacity: 0;
 }
 
 .info {
@@ -65,7 +35,7 @@
 }
 
 .info > h2 > span {
-  color: #72cc60;
+  color: #bd2893;
   font-size: 0.8rem;
 }
 
@@ -76,23 +46,12 @@
 }
 
 @media (max-width: 576px) {
-  .info > h2 {
-    color: black;
-    margin-bottom: 0;
-  }
-
-  .info > p {
-    color: black;
-  }
-}
-
-@media (max-width: 400px) {
-  .card:hover > figcaption {
-    bottom: -130px;
-    transform: translateY(-130px);
+  .card:first-child {
+    margin-top: 2vh;
   }
 
   .figcaption {
-    padding: 15px 20px;
+    display: flex;
+    align-items: center;
   }
 }

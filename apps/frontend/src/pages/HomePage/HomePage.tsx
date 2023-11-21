@@ -56,13 +56,15 @@ export default function HomePage() {
           <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
             {userData.requests.length > 0 ? (
               userData.requests.map((request) => {
-                if (request.status === "OPEN") {
-                  return (<Col className={`${styles.requestCol} pe-0`} sm="6" md="4" lg="3">
-                  <Request requestObj={request} />
-                </Col>)
+                if (request.status === 'OPEN') {
+                  return (
+                    <Col className={`${styles.requestCol} pe-0`} sm="6" md="4" lg="3">
+                      <Request requestObj={request} />
+                    </Col>
+                  );
                 }
-                return <p>You don't have any active requests at the moment.</p>;         
-            })
+                return <p>You don't have any active requests at the moment.</p>;
+              })
             ) : (
               <p>You haven't created any requests yet!</p>
             )}
