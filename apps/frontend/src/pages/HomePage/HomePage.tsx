@@ -58,7 +58,12 @@ export default function HomePage() {
               userData.requests.map((request) => {
                 if (request.status === 'OPEN') {
                   return (
-                    <Col className={`${styles.requestCol} pe-0`} sm="6" md="4" lg="3">
+                    <Col
+                      className={`${styles.requestCol} pe-0`}
+                      sm="6"
+                      md="4"
+                      lg="3"
+                      key={request.id}>
                       <Request requestObj={request} />
                     </Col>
                   );
