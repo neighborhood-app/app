@@ -24,6 +24,7 @@ import ErrorPage from './pages/ErrorPage/ErrorPage';
 import logoutLoader from './pages/LogoutPage/LogoutPage';
 import { redirectLoggedInUser, checkAuthLoader } from './utils/auth';
 import HomePage from './pages/HomePage/HomePage';
+import ExplorePage, { loader as exploreLoader } from './pages/ExplorePage/ExplorePage';
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,11 @@ const router = createBrowserRouter([
           {
             path: 'test',
             element: <TestPage />,
+          },
+          {
+            path: 'explore',
+            element: <ExplorePage />,
+            loader: exploreLoader,
           },
           {
             path: 'neighborhoods',
