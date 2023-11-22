@@ -3,6 +3,7 @@ import {
   CreateRequestData,
   UpdateRequestData,
   NeighborhoodWithUsers,
+  FullRequestData,
 } from '../types';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
@@ -30,9 +31,7 @@ const isCreateRequestData = (obj: object): obj is CreateRequestData => (
  * @param body req.body
  * @returns Promise which resolves to parsed create request data
  */
-const parseCreateRequestData = async (
-  body: unknown,
-): Promise<CreateRequestData> => {
+const parseCreateRequestData = async (body: unknown): Promise<CreateRequestData> => {
   if (!middleware.isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
@@ -71,16 +70,43 @@ const getRequestById = async (requestId: number): Promise<Request> => {
 };
 
 /**
+ * - fetches request with associated user and responses
+ * - throws error if request not found
+ * @param requestId
+ * @returns
+ */
+// TODO: Add return type after refactoring merge
+const getFullRequestData = async (requestId: number): Promise<FullRequestData> => {
+  const request: FullRequestData = await prismaClient.request.findUniqueOrThrow({
+    where: {
+      id: requestId,
+    },
+    include: {
+      user: true,
+      responses: {
+        include: {
+          user: true,
+        }
+      },
+      neighborhood: {
+        include: {
+          users: true,
+        },
+      },
+    },
+  });
+
+  return request;
+};
+
+/**
  * - checks whether user created the request
  * - throws error if request with requestId is not found
  * @param requestId
  * @param userId
  * @returns true if request.requestId === userId
  */
-const hasUserCreatedRequest = async (
-  requestId: number,
-  userId: number,
-): Promise<boolean> => {
+const hasUserCreatedRequest = async (requestId: number, userId: number): Promise<boolean> => {
   const request: Request = await getRequestById(requestId);
 
   return request.user_id === userId;
@@ -113,10 +139,7 @@ const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
  * @param requestId - (number) must be an existing request id
  * @returns - Promise resolving to updated request
  */
-const updateRequest = async (
-  body: unknown,
-  requestId: number,
-): Promise<Request> => {
+const updateRequest = async (body: unknown, requestId: number): Promise<Request> => {
   if (!middleware.isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
@@ -141,9 +164,7 @@ const updateRequest = async (
  * - delete a request
  * @param requestId - (number) must be an existing request id
  */
-const deleteRequest = async (
-  requestId: number,
-) => {
+const deleteRequest = async (requestId: number) => {
   await prismaClient.request.delete({
     where: { id: requestId },
   });
@@ -156,10 +177,7 @@ const deleteRequest = async (
  * @param requestId
  * @returns Promise resolving to boolean
  */
-const hasUserAccessToRequest = async (
-  userId: number,
-  requestId: number,
-): Promise<boolean> => {
+const hasUserAccessToRequest = async (userId: number, requestId: number): Promise<boolean> => {
   const request: Request = await getRequestById(requestId);
 
   const neighborhoodId = request.neighborhood_id;
@@ -252,6 +270,7 @@ const createRequest = async (
 
 export default {
   getRequestById,
+  getFullRequestData,
   hasUserCreatedRequest,
   parseCreateRequestData,
   updateRequest,

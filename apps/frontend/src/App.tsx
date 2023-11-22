@@ -15,8 +15,12 @@ import SingleNeighborhoodPage, {
   action as requestAction,
 } from './pages/SingleNeighborhoodPage/SingleNeighborhoodPage';
 
-import ErrorPage from './pages/ErrorPage/ErrorPage';
+import SingleRequestPage, {
+  loader as requestLoader,
+  action as singleRequestAction,
+} from './pages/SingleRequestPage/SingleRequestPage';
 
+import ErrorPage from './pages/ErrorPage/ErrorPage';
 import logoutLoader from './pages/LogoutPage/LogoutPage';
 import { redirectLoggedInUser, checkAuthLoader } from './utils/auth';
 
@@ -52,6 +56,12 @@ const router = createBrowserRouter([
             loader: neighborhoodLoader,
             action: requestAction,
             element: <SingleNeighborhoodPage />,
+          },
+          {
+            path: 'requests/:id',
+            loader: requestLoader,
+            action: singleRequestAction,
+            element: <SingleRequestPage />,
           },
           {
             path: 'home',

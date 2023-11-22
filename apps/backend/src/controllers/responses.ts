@@ -93,7 +93,7 @@ responsesRouter.delete(
     );
 
     if (!userHasDeleteRights) {
-      return res.status(401).send("User doesn't have delete rights for this response.");
+      return res.status(401).send({ error: "User doesn't have delete rights for this response." });
     }
 
     await responseServices.deleteResponse(responseId);

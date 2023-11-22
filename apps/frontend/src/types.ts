@@ -6,6 +6,7 @@ import {
   NeighborhoodDetailsForNonMembers,
   LoginResponseData,
   ResponseWithUser,
+  NeighborhoodWithUsers,
 } from '@neighborhood/backend/src/types';
 
 export interface NeighborhoodDetailsForMembers extends Neighborhood {
@@ -25,6 +26,10 @@ export interface RequestWithUserAndResponses extends Omit<Request, 'time_created
   responses: ResponseWithUser[];
 }
 
+export interface FullRequestData extends RequestWithUserAndResponses {
+  neighborhood: NeighborhoodWithUsers
+}
+
 export interface StorageWithUser extends Storage {
   user?: string;
 }
@@ -38,9 +43,18 @@ export type UserInfo = Omit<StoredUserData, 'id'>;
 export type SingleNeighborhoodFormIntent =
   | 'create-request'
   | 'join-neighborhood'
-  | 'accept-offer'
-  | 'delete-response'
+  | 'leave-neighborhood'
+  | 'edit-neighborhood'
   | null;
+
+export type SingleRequestFormIntent =
+  | 'delete-request'
+  | 'close-request'
+  | 'accept-offer'
+  | 'create-response'
+  | 'edit-response'
+  | 'delete-response'
+  ;
 
 // this is a [bug](https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope)
 // eslint-disable-next-line no-shadow

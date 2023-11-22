@@ -2,6 +2,7 @@ import { Button } from 'react-bootstrap';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant: 'primary' | 'outline-dark' | 'danger';
+  size?: 'sm' | 'lg';
 }
 
 /**
