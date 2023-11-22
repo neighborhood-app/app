@@ -10,9 +10,6 @@ import { getStoredUser } from '../../utils/auth';
 import userServices from '../../services/users';
 import Request from '../../components/Request/Request';
 
-// const neighborhoodImg1 = require('./images/palm-tree.jpeg');
-// const neighborhoodImg2 = require('./images/up-north.jpg');
-
 export async function loader() {
   const user = getStoredUser();
   if (!user) return null;

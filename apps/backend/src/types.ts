@@ -17,7 +17,12 @@ export interface RequestWithUserAndResponses extends Omit<Request, 'time_created
   responses: ResponseWithUser[];
 }
 
-export type UserWithRelatedData = UserWithoutPasswordHash & {neighborhoods: Neighborhood[], requests: RequestWithUserAndResponses[]}
+export interface RequestWithUser extends Omit<Request, 'time_created'> {
+  time_created: string;
+  user: User;
+}
+
+export type UserWithRelatedData = UserWithoutPasswordHash & {neighborhoods: Neighborhood[], requests: RequestWithUser[]}
 
 /**
  * format of user data, without id, to create entry in users table

@@ -17,11 +17,6 @@ const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   requests: {
     include: {
       user: true,
-      responses: {
-        include: {
-          user: true
-        }
-      },
     }
   }
 };
