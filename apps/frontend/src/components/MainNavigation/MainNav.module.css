@@ -52,6 +52,33 @@
   font-weight: bold;
 }
 
+.compass:hover {
+  animation-name: rotate;
+  animation-duration: 2s;
+}
+
+.navIcon {
+  color: #ff4e2a;
+  font-size: 1.7rem;
+}
+
+.navIcon:hover {
+  color: #ff2b00;
+}
+
+.navIcon:active {
+  color: #e92700;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 576px) {
   .nav {
     background-color: #fff;

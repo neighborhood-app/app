@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCompass } from '@fortawesome/free-solid-svg-icons';
 import styles from './MainNav.module.css';
 
 const profilePic = require('./profile_placeholder.png');
@@ -11,6 +14,14 @@ const MainNav = () => {
 
   mql.addEventListener('change', () => {
     setSmallDisplay(mql.matches);
+  });
+
+  const compass = document.querySelector('.compass');
+
+  compass?.addEventListener('click', (_) => {
+    console.log('in listener');
+
+    compass.setAttribute('spin', '');
   });
 
   const profileIconLink = (
@@ -29,12 +40,11 @@ const MainNav = () => {
   );
 
   const exploreIconLink = (
-    <div className={styles.link}>
-      <svg className={styles.exploreLink} viewBox="0 0 24 24">
-        <path d="M0 0h24v24H0z" fill="none" />
-        <path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z" />
-      </svg>
-    </div>
+    <Link to={'/explore'}>
+      <div className={styles.link}>
+        <FontAwesomeIcon className={`${styles.compass} ${styles.navIcon}`} icon={faCompass}></FontAwesomeIcon>
+      </div>
+    </Link>
   );
 
   const notificationsIconLink = (
@@ -58,7 +68,7 @@ const MainNav = () => {
               <Nav.Link href="#pricing" className={styles.navbarCollapseLink}>
                 HOME
               </Nav.Link>
-              <Nav.Link href="#pricing" className={styles.navbarCollapseLink}>
+              <Nav.Link href="/explore" className={styles.navbarCollapseLink}>
                 EXPLORE
               </Nav.Link>
               <Nav.Link href="#pricing" className={styles.navbarCollapseLink}>
