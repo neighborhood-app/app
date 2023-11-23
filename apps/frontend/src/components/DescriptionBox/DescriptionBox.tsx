@@ -87,7 +87,6 @@ export default function DescriptionBox({
           {showLeaveBtn ? (
             <FontAwesomeIcon
               icon={faDoorOpen}
-              size="2xl"
               className={styles.leaveIcon}
               onClick={() => setShowAlert(true)}
             />

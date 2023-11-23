@@ -30,7 +30,7 @@ export default function NeighborhoodSearch({
 
   const neighborhoodBoxes =
     neighborhoodList?.map((neighborhood: Neighborhood) => (
-      <Col className={`${styles.requestCol} pe-0`} sm="6" md="4" lg="3" key={neighborhood.id}>
+      <Col className={`pe-0`} sm="6" md="4" lg="3" key={neighborhood.id}>
         {/* the Neighborhood card will go here */}
         {neighborhood.name}
       </Col>
