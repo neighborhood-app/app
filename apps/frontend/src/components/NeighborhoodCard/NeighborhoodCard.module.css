@@ -29,10 +29,11 @@
 }
 
 .cardText {
+  width: 100%;
   color: white;
-  border-radius: 25px;
   padding: 0 10px 0 10px;
   backdrop-filter: blur(10px);
+  border-radius: 10px;
 }
 
 .cardText > h2 {
