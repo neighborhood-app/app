@@ -2,6 +2,7 @@ import { useLoaderData } from 'react-router';
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 
 import { Container, Row, Col } from 'react-bootstrap';
+import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
 
 import styles from './HomePage.module.css';
@@ -41,7 +42,14 @@ export default function HomePage() {
     <div className={styles.wrapper}>
       <section>
         <h2>My neighborhoods</h2>
-        <Container className="p-0 mb-4" fluid>
+        <Container className="p-0 mb-4 mt-4" fluid>
+          <Row className="me-0">
+            <Col>
+              <CustomBtn variant="primary" className={styles.button} onClick={() => null}>
+                Create neighborhood
+              </CustomBtn>
+            </Col>
+          </Row>
           <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
             {neighborhoodCards}
           </Row>
