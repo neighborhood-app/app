@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 
 import { Container, Row, Col } from 'react-bootstrap';
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
-
+import CreateNeighborhoodModal from '../../components/CreateNeighborhoodModal/CreateNeighborhoodModal';
 import styles from './HomePage.module.css';
 import { getStoredUser } from '../../utils/auth';
 
@@ -21,6 +22,11 @@ export async function loader() {
 export default function HomePage() {
   const userData = useLoaderData() as unknown as UserWithRelatedData;
   const { neighborhoods } = userData;
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const activeRequests = userData.requests.filter((request) => request.status === 'OPEN');
   const neighborhoodCards =
     neighborhoods.length === 0 ? (
@@ -45,7 +51,7 @@ export default function HomePage() {
         <Container className="p-0 mb-4 mt-4" fluid>
           <Row className="me-0">
             <Col>
-              <CustomBtn variant="primary" className={styles.button} onClick={() => null}>
+              <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>
                 Create neighborhood
               </CustomBtn>
             </Col>
@@ -82,6 +88,7 @@ export default function HomePage() {
           </Row>
         </Container>
       </section>
+      <CreateNeighborhoodModal show={show} handleClose={handleClose} />
     </div>
   );
 }
