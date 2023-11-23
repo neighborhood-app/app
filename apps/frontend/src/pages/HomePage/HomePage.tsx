@@ -20,6 +20,7 @@ export async function loader() {
 export default function HomePage() {
   const userData = useLoaderData() as unknown as UserWithRelatedData;
   const { neighborhoods } = userData;
+  const activeRequests = userData.requests.filter((request) => request.status === 'OPEN');
   const neighborhoodCards =
     neighborhoods.length === 0 ? (
       <p>You haven't joined any neighborhoods yet!</p>
@@ -51,8 +52,8 @@ export default function HomePage() {
         <h2>My active requests</h2>
         <Container className="p-0 mb-4" fluid>
           <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
-            {userData.requests.length > 0 ? (
-              userData.requests.map((request) => {
+            {activeRequests.length > 0 ? (
+              activeRequests.map((request) => {
                 if (request.status === 'OPEN') {
                   return (
                     <Col
@@ -65,10 +66,10 @@ export default function HomePage() {
                     </Col>
                   );
                 }
-                return <p>You don't have any active requests at the moment.</p>;
+                return null;
               })
             ) : (
-              <p>You haven't created any requests yet!</p>
+              <p>You don't have any active requests at the moment.</p>
             )}
           </Row>
         </Container>
