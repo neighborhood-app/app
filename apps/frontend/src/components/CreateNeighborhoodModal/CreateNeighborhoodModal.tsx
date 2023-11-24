@@ -1,8 +1,9 @@
 import { Modal, Form, Container, Row, Col } from 'react-bootstrap';
-import { useParams, useSubmit } from 'react-router-dom';
+import { useSubmit } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
 import styles from './CreateNeighborhoodModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
+import { getStoredUser } from '../../utils/auth';
 
 interface Props {
   show: boolean;
@@ -14,8 +15,9 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [titleInput, setTitleInput] = useState('');
   const [textAreaInput, setTextAreaInput] = useState('');
-  const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
+  const user = getStoredUser();
+  const userId = user?.id;
   const closeModal = () => {
     handleClose();
   };
@@ -34,7 +36,7 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
     } else {
       submit(form, {
         method: 'post',
-        action: `/neighborhoods/${neighborhoodId}`,
+        // action: `/neighborhoods/${neighborhoodId}`,
       });
       closeModal();
       setFormSubmitted(false);
@@ -71,9 +73,7 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-2" controlId="content">
-            <Form.Label column="sm">
-              Description<span className={styles.asterisk}>*</span>
-            </Form.Label>
+            <Form.Label column="sm">Description</Form.Label>
             <Form.Control
               as="textarea"
               rows={4}
@@ -96,7 +96,8 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
             </Form.Text>
           </Form.Group>
           <Form.Group>
-            <Form.Control type="hidden" name="intent" value="create-request" />
+            <Form.Control type="hidden" name="intent" value="create-neighborhood" />
+            <Form.Control type="hidden" name="admin_id" value={userId} />
           </Form.Group>
           <Container className={styles.btnContainer} fluid>
             <Row className="gx-3 gy-2">

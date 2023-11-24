@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useLoaderData } from 'react-router';
-import { UserWithRelatedData } from '@neighborhood/backend/src/types';
-
+import { useLoaderData, ActionFunctionArgs } from 'react-router';
+import { CreateNeighborhoodData, UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Container, Row, Col } from 'react-bootstrap';
+import neighborhoodServices from '../../services/neighborhoods';
+
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
 import CreateNeighborhoodModal from '../../components/CreateNeighborhoodModal/CreateNeighborhoodModal';
@@ -17,6 +18,21 @@ export async function loader() {
   if (!user) return null;
   const userData = await userServices.getUserData(user.id);
   return userData;
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+
+  const intent = formData.get('intent');
+  formData.delete('intent');
+  let response: Request | Response | { success: string } | { error: string } | null = null;
+
+  if (intent === 'create-neighborhood') {
+    const neighborhoodData = Object.fromEntries(formData) as unknown as CreateNeighborhoodData;
+    response = await neighborhoodServices.createNeighborhood(neighborhoodData);
+  }
+
+  return response;
 }
 
 export default function HomePage() {

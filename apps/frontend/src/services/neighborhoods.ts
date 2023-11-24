@@ -1,6 +1,6 @@
 import { redirect } from 'react-router';
 import axios from 'axios';
-import { Neighborhood } from '@neighborhood/backend/src/types';
+import { CreateNeighborhoodData, Neighborhood } from '@neighborhood/backend/src/types';
 import { EditNeighborhoodData, NeighborhoodType } from '../types';
 import { getStoredUser } from '../utils/auth';
 
@@ -26,6 +26,18 @@ async function getSingleNeighborhood(
   }
 
   return null;
+}
+
+async function createNeighborhood(
+  neighborhoodData: CreateNeighborhoodData,
+): Promise<Response | { success: string } | { error: string }> {
+  const user = getStoredUser();
+  if (!user) return redirect('/login');
+
+  const headers = { authorization: `Bearer ${user.token}` };
+  const response = await axios.post(`${BASE_URL}`, neighborhoodData, { headers });
+
+  return response.data;
 }
 
 async function connectUserToNeighborhood(
@@ -70,5 +82,6 @@ export default {
   getSingleNeighborhood,
   connectUserToNeighborhood,
   leaveNeighborhood,
-  editNeighborhood
+  editNeighborhood,
+  createNeighborhood
 };
