@@ -82,7 +82,6 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
               rows={6}
               name="description"
               value={textAreaInput}
-              isValid={true}
               onChange={(event) => {
                 setTextAreaInput(event?.target.value);
                 setFormSubmitted(false);

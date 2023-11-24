@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLoaderData, ActionFunctionArgs } from 'react-router';
-import { CreateNeighborhoodData, UserWithRelatedData } from '@neighborhood/backend/src/types';
+import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Container, Row, Col } from 'react-bootstrap';
 import neighborhoodServices from '../../services/neighborhoods';
 
@@ -12,6 +12,7 @@ import { getStoredUser } from '../../utils/auth';
 
 import userServices from '../../services/users';
 import Request from '../../components/Request/Request';
+import { EditNeighborhoodData } from '../../types';
 
 export async function loader() {
   const user = getStoredUser();
@@ -28,7 +29,7 @@ export async function action({ request }: ActionFunctionArgs) {
   let response: Request | Response | { success: string } | { error: string } | null = null;
 
   if (intent === 'create-neighborhood') {
-    const neighborhoodData = Object.fromEntries(formData) as unknown as CreateNeighborhoodData;
+    const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
     response = await neighborhoodServices.createNeighborhood(neighborhoodData);
   }
 

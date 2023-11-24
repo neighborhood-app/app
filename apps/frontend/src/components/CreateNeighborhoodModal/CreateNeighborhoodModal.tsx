@@ -3,7 +3,6 @@ import { useSubmit } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
 import styles from './CreateNeighborhoodModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
-import { getStoredUser } from '../../utils/auth';
 
 interface Props {
   show: boolean;
@@ -16,8 +15,6 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
   const [titleInput, setTitleInput] = useState('');
   const [textAreaInput, setTextAreaInput] = useState('');
   const submit = useSubmit();
-  const user = getStoredUser();
-  const userId = user?.id;
   const closeModal = () => {
     handleClose();
   };
@@ -80,7 +77,6 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
               rows={4}
               name="description"
               value={textAreaInput}
-              isValid={true}
               onChange={(event) => {
                 setTextAreaInput(event?.target.value);
                 setFormSubmitted(false);
@@ -97,7 +93,6 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
           </Form.Group>
           <Form.Group>
             <Form.Control type="hidden" name="intent" value="create-neighborhood" />
-            <Form.Control type="hidden" name="admin_id" value={userId} />
           </Form.Group>
           <Container className={styles.btnContainer} fluid>
             <Row className="gx-3 gy-2">
