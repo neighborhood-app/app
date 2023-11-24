@@ -25,8 +25,8 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
   };
 
   function validateInput() {
-     return validInputPattern.test(textAreaInput) && validInputPattern.test(nameInput)
-  };
+    return validInputPattern.test(nameInput);
+  }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,7 +35,6 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
 
     if (!form.checkValidity() || !validateInput()) {
       event.stopPropagation();
-
     } else {
       submit(form, {
         method: 'put',
@@ -52,11 +51,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
         <Modal.Title>Edit Neighborhood</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form
-          role="form"
-          noValidate
-          onSubmit={handleSubmit}
-          className={styles.createReqForm}>
+        <Form role="form" noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label column="sm">
               Title<span className={styles.asterisk}>*</span>
@@ -66,9 +61,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
               name="name"
               value={nameInput}
               minLength={4}
-              isInvalid={
-                (!validInputPattern.test(nameInput)) && formSubmitted
-              }
+              isInvalid={!validInputPattern.test(nameInput) && formSubmitted}
               isValid={validInputPattern.test(nameInput)}
               onChange={(event) => {
                 setNameInput(event?.target.value);
@@ -89,15 +82,11 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
               rows={6}
               name="description"
               value={textAreaInput}
-              isInvalid={
-                (!validInputPattern.test(textAreaInput)) && formSubmitted
-              }
-              isValid={validInputPattern.test(textAreaInput)}
+              isValid={true}
               onChange={(event) => {
                 setTextAreaInput(event?.target.value);
                 setFormSubmitted(false);
               }}
-              required
             />
             <Form.Control.Feedback type="invalid">
               The description needs to be at least 4 characters long.
