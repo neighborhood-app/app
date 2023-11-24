@@ -1,0 +1,10 @@
+.alertBtnContainer {
+  margin: 1.5vh auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.alertBtn {
+  margin: 0 5px;
+}

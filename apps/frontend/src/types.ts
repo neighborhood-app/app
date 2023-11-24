@@ -45,7 +45,7 @@ export type SingleNeighborhoodFormIntent =
   | 'join-neighborhood'
   | 'leave-neighborhood'
   | 'edit-neighborhood'
-  | null;
+  | 'delete-neighborhood';
 
 export type SingleRequestFormIntent =
   | 'delete-request'
@@ -55,6 +55,8 @@ export type SingleRequestFormIntent =
   | 'edit-response'
   | 'delete-response'
   ;
+
+export type FormIntent = SingleNeighborhoodFormIntent | SingleRequestFormIntent
 
 // this is a [bug](https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope)
 // eslint-disable-next-line no-shadow
