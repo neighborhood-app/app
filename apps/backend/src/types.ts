@@ -69,7 +69,7 @@ export interface CreateUserData {
 /**
  * Format of data sent to POST /api/neighborhood to create new neighborhood
  */
-export type CreateNeighborhoodData = Pick<Neighborhood, 'admin_id' | 'name'>;
+export type CreateNeighborhoodData = Pick<Neighborhood, 'admin_id' | 'name' | 'description'>;
 
 /**
  * Request with token for authentication

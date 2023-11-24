@@ -23,7 +23,7 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
   };
 
   function validateInput() {
-    return validInputPattern.test(textAreaInput) && validInputPattern.test(titleInput);
+    return validInputPattern.test(titleInput);
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -36,7 +36,7 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
     } else {
       submit(form, {
         method: 'post',
-        // action: `/neighborhoods/${neighborhoodId}`,
+        action: '/',
       });
       closeModal();
       setFormSubmitted(false);
@@ -52,13 +52,14 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
       </Modal.Header>
       <Modal.Body>
         <Form role="form" noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
-          <Form.Group className="mb-3" controlId="title">
+          <Form.Group className="mb-3" controlId="name">
             <Form.Label column="sm">
-              Title<span className={styles.asterisk}>*</span>
+              Name<span className={styles.asterisk}>*</span>
             </Form.Label>
             <Form.Control
               type="text"
-              name="title"
+              name="name"
+              value={titleInput}
               minLength={4}
               isInvalid={!validInputPattern.test(titleInput) && formSubmitted}
               isValid={validInputPattern.test(titleInput)}
@@ -72,19 +73,18 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
               Please choose a valid title.
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group className="mb-2" controlId="content">
+          <Form.Group className="mb-2" controlId="description">
             <Form.Label column="sm">Description</Form.Label>
             <Form.Control
               as="textarea"
               rows={4}
-              name="content"
-              isInvalid={!validInputPattern.test(textAreaInput) && formSubmitted}
-              isValid={validInputPattern.test(textAreaInput)}
+              name="description"
+              value={textAreaInput}
+              isValid={true}
               onChange={(event) => {
                 setTextAreaInput(event?.target.value);
                 setFormSubmitted(false);
               }}
-              required
             />
             <Form.Control.Feedback type="invalid">
               The content needs to be at least 4 characters long.

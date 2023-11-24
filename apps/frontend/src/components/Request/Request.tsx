@@ -7,7 +7,6 @@ const helpImg = require('./help_wanted.jpeg');
 
 // can pass plain Request object here, without additional info
 export default function Request({ requestObj }: { requestObj: RequestWithUser }) {
-  console.log(requestObj);
   const date = requestObj.time_created.split('T')[0];
   const navigate = useNavigate();
 
