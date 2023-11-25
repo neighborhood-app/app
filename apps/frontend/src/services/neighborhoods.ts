@@ -28,6 +28,18 @@ async function getSingleNeighborhood(
   return null;
 }
 
+async function deleteNeighborhood(
+  id: number,
+): Promise<Response | { success: string } | { error: string }> {
+  const user = getStoredUser();
+  if (!user) return redirect('/login');
+
+  const headers = { authorization: `Bearer ${user.token}` };
+  await axios.delete(`${BASE_URL}/${id}`, { headers });
+    
+  return redirect('/')
+}
+
 async function createNeighborhood(
   neighborhoodData: EditNeighborhoodData,
 ): Promise<Response | { success: string } | { error: string }> {
@@ -80,6 +92,7 @@ async function editNeighborhood(
 export default {
   getAllNeighborhoods,
   getSingleNeighborhood,
+  deleteNeighborhood,
   connectUserToNeighborhood,
   leaveNeighborhood,
   editNeighborhood,

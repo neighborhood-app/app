@@ -10,6 +10,7 @@ import styles from './DescriptionBox.module.css';
 import UserCircleStack from '../UserCircleStack/UserCircleStack';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import EditNeighborhoodModal from '../EditNeighborhoodModal/EditNeighborhoodModal';
+import { FormIntent } from '../../types';
 
 const neighborhoodImg = require('./palm.jpeg');
 
@@ -24,6 +25,11 @@ interface Props {
   users?: Array<User> | null;
 }
 
+interface PromptDetails {
+  text: string;
+  intent: FormIntent;
+}
+
 export default function DescriptionBox({
   showJoinBtn,
   showEditBtn,
@@ -36,26 +42,48 @@ export default function DescriptionBox({
 }: Props) {
   const usernames = users?.map((user) => user.username);
   const [showAlert, setShowAlert] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
-  const [show, setShow] = useState(false);
+  const [promptDetails, setPromptDetails] = useState<PromptDetails>({
+    text: '',
+    intent: 'leave-neighborhood',
+  });
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleCloseForm = () => setShowForm(false);
+  const handleShowForm = () => setShowForm(true);
+
+  const handleCloseAlert = () => setShowAlert(false);
 
   const { id: neighborhoodId } = useParams();
+
+  function handleLeavePrompt() {
+    setPromptDetails({
+      text: 'Are you sure you want to leave this neighborhood?',
+      intent: 'leave-neighborhood',
+    });
+    setShowAlert(true);
+  }
+
+  function handleDeletePrompt() {
+    setPromptDetails({
+      text: 'Are you sure you want to do this? This will delete the neighborhood for you and all members!',
+      intent: 'delete-neighborhood',
+    });
+    setShowAlert(true);
+  }
 
   return (
     <Container fluid className={styles.container}>
       <Prompt
-        text="Are you sure you want to leave this neighborhood?"
-        intent="leave-neighborhood"
+        text={promptDetails.text}
+        intent={promptDetails.intent}
         route={`/neighborhoods/${neighborhoodId}`}
         status={showAlert}
-        hide={() => setShowAlert(false)}
+        handleClose={handleCloseAlert}
       />
       <EditNeighborhoodModal
-        show={show}
-        handleClose={handleClose}
+        show={showForm}
+        handleClose={handleCloseForm}
         name={name}
         description={description}
       />
@@ -80,7 +108,7 @@ export default function DescriptionBox({
               icon={faDoorOpen}
               size="2xl"
               className={styles.leaveIcon}
-              onClick={() => setShowAlert(true)}
+              onClick={handleLeavePrompt}
             />
           ) : null}
         </Col>
@@ -98,12 +126,12 @@ export default function DescriptionBox({
           ) : null}
           <div className={styles.buttonsContainer}>
             {showEditBtn ? (
-              <CustomBtn variant="outline-dark" className={styles.btn} onClick={handleShow}>
+              <CustomBtn variant="outline-dark" className={styles.btn} onClick={handleShowForm}>
                 Edit Neighborhood
               </CustomBtn>
             ) : null}
             {showDeleteBtn ? (
-              <CustomBtn variant="danger" className={styles.btn} onClick={() => setShowAlert(true)}>
+              <CustomBtn variant="danger" className={styles.btn} onClick={handleDeletePrompt}>
                 Delete Neighborhood
               </CustomBtn>
             ) : null}

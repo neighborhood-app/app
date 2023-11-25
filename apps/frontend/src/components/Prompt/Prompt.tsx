@@ -9,17 +9,17 @@ type Props = {
   intent: FormIntent;
   route: string;
   status: boolean;
-  hide: () => void;
+  handleClose: () => void;
 };
 
-export default function Prompt({ text, intent, route, status, hide }: Props) {
+export default function Prompt({ text, intent, route, status, handleClose }: Props) {
   return (
-    <Modal show={status} onHide={hide}>
+    <Modal show={status} onHide={handleClose}>
       <Modal.Body>{text}</Modal.Body>
       <Modal.Footer>
         <div className={styles.alertBtnContainer}>
           <TriggerActionButton route={route} variant="primary" intent={intent} text="Yes" />
-          <CustomBtn variant="outline-dark" className={styles.alertBtn} onClick={hide}>
+          <CustomBtn variant="outline-dark" className={styles.alertBtn} onClick={handleClose}>
             No
           </CustomBtn>
         </div>
