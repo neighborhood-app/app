@@ -20,6 +20,8 @@ import SingleRequestPage, {
   action as singleRequestAction,
 } from './pages/SingleRequestPage/SingleRequestPage';
 
+import ProfilePage, { loader as userLoader } from './pages/ProfilePage/ProfilePage';
+
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 import logoutLoader from './pages/LogoutPage/LogoutPage';
 import { redirectLoggedInUser, checkAuthLoader } from './utils/auth';
@@ -35,6 +37,7 @@ const router = createBrowserRouter([
         loader: checkAuthLoader,
         children: [
           { path: 'logout', loader: logoutLoader },
+          { path: 'users/:id', element: <ProfilePage />, loader: userLoader },
           {
             path: 'test',
             element: <TestPage />,
