@@ -45,7 +45,8 @@ export type SingleNeighborhoodFormIntent =
   | 'join-neighborhood'
   | 'leave-neighborhood'
   | 'edit-neighborhood'
-  | 'delete-neighborhood';
+  | 'delete-neighborhood'
+  ;
 
 export type SingleRequestFormIntent =
   | 'delete-request'

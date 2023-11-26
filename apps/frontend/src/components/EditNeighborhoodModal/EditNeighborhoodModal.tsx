@@ -46,7 +46,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
   };
 
   return (
-    <Modal size="xl" show={show} onHide={closeModal} animation={true} backdrop="static" centered>
+    <Modal show={show} onHide={closeModal} animation={true} backdrop="static" centered>
       <Modal.Header closeButton>
         <Modal.Title>Edit Neighborhood</Modal.Title>
       </Modal.Header>
