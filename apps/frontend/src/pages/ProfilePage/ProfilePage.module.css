@@ -1,0 +1,26 @@
+.container {
+  padding: 30px 0 0 30px;
+  margin: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profilePicture {
+  display: block;
+  max-width: 120px;
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+}
+
+.column {
+  max-width: fit-content;
+}
+
+.userName {
+  font-weight: 600;
+}
