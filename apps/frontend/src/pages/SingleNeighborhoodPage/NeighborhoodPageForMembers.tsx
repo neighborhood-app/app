@@ -12,6 +12,7 @@ const NeighborhoodPageForMembers = (props: { neighborhood: NeighborhoodDetailsFo
       <DescriptionBox
         showJoinBtn={false}
         showEditBtn={false}
+        showDeleteBtn={false}
         showLeaveBtn={true}
         showMembers={true}
         name={neighborhood.name}

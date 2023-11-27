@@ -2,7 +2,7 @@ import { FormEvent } from 'react';
 import { useSubmit } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import CustomBtn from '../CustomBtn/CustomBtn';
-import { SingleRequestFormIntent } from '../../types';
+import { SingleNeighborhoodFormIntent, SingleRequestFormIntent } from '../../types';
 
 /**
  * This is a custom button element that will trigger the action of the specified route.
@@ -20,8 +20,7 @@ interface Props {
   intent:
     | 'accept-offer'
     | 'delete-response'
-    | 'leave-neighborhood'
-    | 'join-neighborhood'
+    | SingleNeighborhoodFormIntent
     | SingleRequestFormIntent;
   text: string | JSX.Element;
   idInputName?: string;

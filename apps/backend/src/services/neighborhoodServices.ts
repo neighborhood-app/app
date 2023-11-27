@@ -214,10 +214,12 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
   }
 
   if ('admin_id' in object && typeof object.admin_id === 'number'
-    && 'name' in object && typeof object.name === 'string') {
+    && 'name' in object && typeof object.name === 'string'
+    && 'description' in object && typeof object.description === 'string') {
     const neighborhoodData: CreateNeighborhoodData = {
       admin_id: object.admin_id,
       name: object.name,
+      description: object.description
     };
 
     return neighborhoodData;

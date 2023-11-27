@@ -23,7 +23,11 @@ import SingleRequestPage, {
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 import logoutLoader from './pages/LogoutPage/LogoutPage';
 import { redirectLoggedInUser, checkAuthLoader } from './utils/auth';
-import HomePage from './pages/HomePage/HomePage';
+
+import HomePage, {
+  loader as homePageLoader,
+  action as homePageAction,
+} from './pages/HomePage/HomePage';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +38,13 @@ const router = createBrowserRouter([
       {
         loader: checkAuthLoader,
         children: [
+          {
+            index: true,
+            path: '/',
+            element: <HomePage />,
+            loader: homePageLoader,
+            action: homePageAction,
+          },
           { path: 'logout', loader: logoutLoader },
           {
             path: 'test',
