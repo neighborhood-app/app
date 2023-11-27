@@ -31,7 +31,7 @@ export default function NeighborhoodSearch({
 
   const neighborhoodBoxes =
     neighborhoodList?.map((neighborhood: Neighborhood) => (
-      <Col className={`pe-0`} sm="6" md="4" lg="3" key={neighborhood.id}>
+      <Col className="pe-sm-0" sm="6" md="4" lg="3" xxl="2" key={neighborhood.id}>
         <NeighborhoodCard
           id={neighborhood.id}
           name={neighborhood.name}
@@ -59,7 +59,7 @@ export default function NeighborhoodSearch({
         </Row>
       </Container>
       <Container className={styles.neighborhoodsContainer} fluid>
-        <Row className='gy-sm-3'>{neighborhoodBoxes}</Row>
+        <Row className="gy-sm-3">{neighborhoodBoxes}</Row>
       </Container>
     </>
   );
