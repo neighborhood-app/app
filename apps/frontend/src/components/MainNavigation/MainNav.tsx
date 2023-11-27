@@ -23,12 +23,14 @@ const MainNav = () => {
   );
 
   const homeIconLink = (
+    <Link to={'/'}>
     <div className={styles.link}>
       <FontAwesomeIcon
         className={`${styles.navIcon} ${styles.homeIcon}`}
         icon={faHouse}
         size="xl"></FontAwesomeIcon>
     </div>
+    </Link>
   );
 
   const exploreIconLink = (
@@ -59,7 +61,7 @@ const MainNav = () => {
               <Nav.Link href="#features" className={styles.navbarCollapseLink}>
                 MY PROFILE
               </Nav.Link>
-              <Nav.Link href="#pricing" className={styles.navbarCollapseLink}>
+              <Nav.Link href="/" className={styles.navbarCollapseLink}>
                 HOME
               </Nav.Link>
               <Nav.Link href="/explore" className={styles.navbarCollapseLink}>

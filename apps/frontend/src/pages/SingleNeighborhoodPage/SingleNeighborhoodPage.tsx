@@ -49,6 +49,8 @@ export async function action({ params, request }: ActionFunctionArgs) {
   } else if (intent === 'edit-neighborhood') {
     const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
     response = await neighborhoodsService.editNeighborhood(neighborhoodId, neighborhoodData);
+  } else if (intent === 'delete-neighborhood') {
+    response = await neighborhoodsService.deleteNeighborhood(neighborhoodId);
   }
 
   return response;

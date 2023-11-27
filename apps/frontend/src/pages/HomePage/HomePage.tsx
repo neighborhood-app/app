@@ -1,97 +1,111 @@
-const neighborhoodImg1 = require('./images/palm-tree.jpeg');
-const neighborhoodImg2 = require('./images/up-north.jpg');
+import { useState } from 'react';
+import { useLoaderData, ActionFunctionArgs } from 'react-router';
+import { UserWithRelatedData } from '@neighborhood/backend/src/types';
+import { Container, Row, Col } from 'react-bootstrap';
+import neighborhoodServices from '../../services/neighborhoods';
+
+import CustomBtn from '../../components/CustomBtn/CustomBtn';
+import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
+import CreateNeighborhoodModal from '../../components/CreateNeighborhoodModal/CreateNeighborhoodModal';
+import styles from './HomePage.module.css';
+import { getStoredUser } from '../../utils/auth';
+
+import userServices from '../../services/users';
+import Request from '../../components/Request/Request';
+import { EditNeighborhoodData } from '../../types';
+
+export async function loader() {
+  const user = getStoredUser();
+  if (!user) return null;
+  const userData = await userServices.getUserData(user.id);
+  return userData;
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+
+  const intent = formData.get('intent');
+  formData.delete('intent');
+  let response: Request | Response | { success: string } | { error: string } | null = null;
+
+  if (intent === 'create-neighborhood') {
+    const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
+    response = await neighborhoodServices.createNeighborhood(neighborhoodData);
+  }
+
+  return response;
+}
 
 export default function HomePage() {
+  const userData = useLoaderData() as unknown as UserWithRelatedData;
+  const { neighborhoods } = userData;
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const activeRequests = userData.requests.filter((request) => request.status === 'OPEN');
+  const neighborhoodCards =
+    neighborhoods.length === 0 ? (
+      <p>You haven't joined any neighborhoods yet!</p>
+    ) : (
+      neighborhoods.map((neighborhood) => (
+        <Col className="pe-0" sm="6" md="4" lg="3" key={neighborhood.id}>
+          <NeighborhoodCard
+            id={String(neighborhood.id)}
+            name={neighborhood.name}
+            description={neighborhood.description}
+            isUserAdmin={neighborhood.admin_id === userData.id}
+          />
+        </Col>
+      ))
+    );
+
   return (
-    <>
+    <div className={styles.wrapper}>
       <section>
-        <h1>My Neighborhoods</h1>
-        <div className="all-neighborhoods">
-          <figure className="card">
-            <img src={neighborhoodImg1} alt="neighborhood" />
-            <figcaption>
-              <span className="info">
-                <h2>
-                  Palm Springs <span>(Admin)</span>
-                </h2>
-                <p>You can join other neighborhoods!</p>
-              </span>
-              <button className="explore-neighborhood">Explore</button>
-            </figcaption>
-          </figure>
-
-          <figure className="card">
-            <img src={neighborhoodImg2} alt="neighborhood" />
-            <figcaption>
-              <span className="info">
-                <h2>
-                  Up North <span>(Member)</span>
-                </h2>
-                <p>You can join other neighborhoods!</p>
-              </span>
-              <button className="explore-neighborhood">Explore</button>
-            </figcaption>
-          </figure>
-        </div>
+        <h2>My neighborhoods</h2>
+        <Container className="p-0 mb-4 mt-4" fluid>
+          <Row className="me-0">
+            <Col>
+              <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>
+                Create neighborhood
+              </CustomBtn>
+            </Col>
+          </Row>
+          <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
+            {neighborhoodCards}
+          </Row>
+        </Container>
       </section>
 
       <section>
-        <h1>My active requests</h1>
-        <div className="all-active-requests">
-          <div className="request-card">
-            <img src="images/image.jpeg" alt="active request in neighborhood app" />
-
-            <div className="request-card-content">
-              <p>Help! My cat is drowning</p>
-              <p>Created 11 Mar 2022 in Palm Springs Neighborhood</p>
-              <p>2 responses</p>
-            </div>
-          </div>
-
-          <div className="request-card">
-            <img src="images/image.jpeg" alt="active requests on neighborhood app" />
-
-            <div className="request-card-content">
-              <p>Help with acute lazyness</p>
-              <p>Created 12 Mar 2022 in Up North Neighborhood</p>
-              <p>No responses</p>
-            </div>
-          </div>
-        </div>
+        <h2>My active requests</h2>
+        <Container className="p-0 mb-4" fluid>
+          <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
+            {activeRequests.length > 0 ? (
+              activeRequests.map((request) => {
+                if (request.status === 'OPEN') {
+                  return (
+                    <Col
+                      className={`${styles.requestCol} pe-0`}
+                      sm="6"
+                      md="4"
+                      lg="3"
+                      key={request.id}>
+                      <Request requestObj={request} />
+                    </Col>
+                  );
+                }
+                return null;
+              })
+            ) : (
+              <p>You don't have any active requests at the moment.</p>
+            )}
+          </Row>
+        </Container>
       </section>
-
-      <section>
-        <h1>Requests I've responded to</h1>
-        <div className="all-responded-requests">
-          <div className="responded-request-card">
-            <div className="profile-info">
-              <img src="images/profile-2.jpg" alt="active user on neighborhood app" />
-              <p>Laura Keith</p>
-            </div>
-
-            <img src="images/cat.jpg" alt="responded requests on neighborhood app" />
-
-            <div className="responded-request-card-content">
-              <p>Help! My cat is drowning</p>
-              <p>Created 11 Mar 2022 in Palm Springs Neighborhood</p>
-            </div>
-          </div>
-
-          <div className="responded-request-card">
-            <div className="profile-info">
-              <img src="images/profile.jpg" alt="active user on neighborhood app" />
-              <p>John Smith</p>
-            </div>
-
-            <img src="images/request.jpeg" alt="responded requests on neighborhood app" />
-
-            <div className="responded-request-card-content">
-              <p>Meeting 20.02.2022</p>
-              <p>Created 20 Feb 2022 in Palm Springs Neighborhood</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+      <CreateNeighborhoodModal show={show} handleClose={handleClose} />
+    </div>
   );
 }

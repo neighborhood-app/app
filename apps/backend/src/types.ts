@@ -11,6 +11,19 @@ export type Neighborhood = schema.Neighborhood;
  */
 export type UserWithoutPasswordHash = Omit<User, 'password_hash'>;
 
+export interface RequestWithUserAndResponses extends Omit<Request, 'time_created'> {
+  time_created: string;
+  user: User;
+  responses: ResponseWithUser[];
+}
+
+export interface RequestWithUser extends Omit<Request, 'time_created'> {
+  time_created: string;
+  user: User;
+}
+
+export type UserWithRelatedData = UserWithoutPasswordHash & {neighborhoods: Neighborhood[], requests: RequestWithUser[]}
+
 /**
  * format of user data, without id, to create entry in users table
  */
@@ -56,7 +69,7 @@ export interface CreateUserData {
 /**
  * Format of data sent to POST /api/neighborhood to create new neighborhood
  */
-export type CreateNeighborhoodData = Pick<Neighborhood, 'admin_id' | 'name'>;
+export type CreateNeighborhoodData = Pick<Neighborhood, 'admin_id' | 'name' | 'description'>;
 
 /**
  * Request with token for authentication
