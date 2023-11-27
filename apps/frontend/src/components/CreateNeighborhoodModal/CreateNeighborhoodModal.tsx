@@ -48,7 +48,11 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
         <Modal.Title>Create a new neighborhood</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form role="form" noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
+        <Form
+          role="form"
+          noValidate
+          onSubmit={handleSubmit}
+          className={styles.createNeighborhoodForm}>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label column="sm">
               Name<span className={styles.asterisk}>*</span>
