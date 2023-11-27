@@ -1,8 +1,11 @@
+.neighborhoodsContainer {
+  padding: 0 50px 30px;
+}
+
 .searchInput {
   border: none;
   border-bottom: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: 0;
-  color: #ff2a70;
   text-align: center;
   padding-bottom: .1rem;
 }
@@ -10,5 +13,10 @@
 .searchInput:focus {
   box-shadow: none;
   border-color: var(--bs-border-color);
-  color: #ff2a70;
+}
+
+@media (max-width: 576px) {
+  .neighborhoodsContainer {
+    padding: 0 30px 30px;
+  }
 }

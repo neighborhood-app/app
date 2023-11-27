@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood } from '@neighborhood/backend/src/types';
 import styles from './NeighborhoodSearch.module.css';
+import NeighborhoodCard from '../NeighborhoodCard/NeighborhoodCard';
 
 export default function NeighborhoodSearch({
   neighborhoods,
@@ -26,13 +27,16 @@ export default function NeighborhoodSearch({
 
   const searchNeighborhoods = (searchInput: string): void => {
     setSearchTerm(searchInput);
-  }
+  };
 
   const neighborhoodBoxes =
     neighborhoodList?.map((neighborhood: Neighborhood) => (
       <Col className={`pe-0`} sm="6" md="4" lg="3" key={neighborhood.id}>
-        {/* the Neighborhood card will go here */}
-        {neighborhood.name}
+        <NeighborhoodCard
+          id={neighborhood.id}
+          name={neighborhood.name}
+          description={neighborhood.description}
+          isUserAdmin={false}></NeighborhoodCard>
       </Col>
     )) || [];
 
@@ -48,14 +52,14 @@ export default function NeighborhoodSearch({
                   type="text"
                   placeholder="S e a r c h"
                   value={searchTerm}
-                  onChange={event => searchNeighborhoods(event.target.value)}></Form.Control>
+                  onChange={(event) => searchNeighborhoods(event.target.value)}></Form.Control>
               </Form.Group>
             </Form>
           </Col>
         </Row>
       </Container>
-      <Container>
-        <Row>{neighborhoodBoxes}</Row>
+      <Container className={styles.neighborhoodsContainer} fluid>
+        <Row className='gy-sm-3'>{neighborhoodBoxes}</Row>
       </Container>
     </>
   );
