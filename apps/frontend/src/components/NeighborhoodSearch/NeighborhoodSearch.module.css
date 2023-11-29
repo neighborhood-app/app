@@ -15,6 +15,10 @@
   border-color: var(--bs-border-color);
 }
 
+.noNhoodsText {
+  text-align: center;
+}
+
 @media (max-width: 576px) {
   .neighborhoodsContainer {
     padding: 0 30px 30px;
