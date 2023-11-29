@@ -19,7 +19,7 @@ export default function CreateResponseModal({ show, handleClose }: Props) {
   const closeModal = () => {
     handleClose();
     setTextAreaInput('');
-  }
+  };
 
   const validateInput = () => validInputPattern.test(textAreaInput);
 
