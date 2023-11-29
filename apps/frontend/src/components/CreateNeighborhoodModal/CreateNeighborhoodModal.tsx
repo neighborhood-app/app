@@ -62,6 +62,7 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
               name="name"
               value={titleInput}
               minLength={4}
+              maxLength={30}
               isInvalid={!validInputPattern.test(titleInput) && formSubmitted}
               isValid={validInputPattern.test(titleInput)}
               onChange={(event) => {
