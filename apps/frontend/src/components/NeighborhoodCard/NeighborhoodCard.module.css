@@ -34,6 +34,7 @@
   padding: 0 10px 0 10px;
   backdrop-filter: blur(10px);
   border-radius: 10px;
+  min-width: 0;
 }
 
 .cardText > h2 {
@@ -49,7 +50,11 @@
 }
 
 .cardText > p {
+  min-width: 0;
   font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 950px) {

@@ -81,6 +81,7 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
               as="textarea"
               rows={4}
               name="description"
+              maxLength={400}
               value={textAreaInput}
               onChange={(event) => {
                 setTextAreaInput(event?.target.value);
