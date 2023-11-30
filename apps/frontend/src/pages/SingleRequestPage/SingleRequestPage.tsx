@@ -25,6 +25,8 @@ export async function action({ params, request }: ActionFunctionArgs) {
   let response: Request | Response | { error: string } | '' | null = null;
 
   switch (intent) {
+    case 'edit-request':
+      break;
     case 'delete-request':
       response = await requestServices.deleteRequest(requestId);
       return redirect(`/neighborhoods/${neighborhoodId}`);

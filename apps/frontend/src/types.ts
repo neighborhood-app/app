@@ -49,6 +49,7 @@ export type SingleNeighborhoodFormIntent =
   ;
 
 export type SingleRequestFormIntent =
+  | 'edit-request'
   | 'delete-request'
   | 'close-request'
   | 'accept-offer'

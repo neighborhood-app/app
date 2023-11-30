@@ -9,6 +9,7 @@ import { FullRequestData, StoredUserData } from '../../types';
 import { getStoredUser } from '../../utils/auth';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import CreateResponseModal from '../CreateResponseModal/CreateResponseModal';
+import EditRequestModal from '../EditRequestModal/EditRequestModal';
 
 const requestImg = require('../../assets/help_wanted.jpeg');
 
@@ -17,10 +18,14 @@ interface Props {
 }
 
 export default function RequestDescBox({ request }: Props) {
-  const [show, setShow] = useState(false);
+  const [showCreateRes, setShowCreateRes] = useState(false);
+  const handleCloseCreateRes = () => setShowCreateRes(false);
+  const handleShowCreateRes = () => setShowCreateRes(true);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [showEditReq, setShowEditReq] = useState(false);
+  const handleCloseEditReq = () => setShowEditReq(false);
+  const handleShowEditReq = () => setShowEditReq(true);
+
 
   const { user, neighborhood } = request;
   const requestDate = request.time_created.split('T')[0];
@@ -79,6 +84,11 @@ export default function RequestDescBox({ request }: Props) {
               className={styles.actionBtn}
             />
           </Col>
+          <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-sm-4 mb-2">
+            <CustomBtn variant='outline-dark' onClick={handleShowEditReq}>
+              Edit
+            </CustomBtn>
+          </Col>
           {deleteBtnColumn}
         </>
       );
@@ -87,7 +97,7 @@ export default function RequestDescBox({ request }: Props) {
     } else if (request.status === 'OPEN' && !hasUserResponded) {
       return (
         <Col lg="2" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
-          <CustomBtn className={styles.actionBtn} variant="primary" onClick={handleShow}>
+          <CustomBtn className={styles.actionBtn} variant="primary" onClick={handleShowCreateRes}>
             Offer help
           </CustomBtn>
         </Col>
@@ -126,7 +136,8 @@ export default function RequestDescBox({ request }: Props) {
         <Col sm="3"></Col>
         {displayRequestActions()}
       </Row>
-      <CreateResponseModal show={show} handleClose={handleClose} />
+      <EditRequestModal show={showEditReq} handleClose={handleCloseEditReq} title={request.title} content={request.content}></EditRequestModal>
+      <CreateResponseModal show={showCreateRes} handleClose={handleCloseCreateRes} />
     </Container>
   );
 }
