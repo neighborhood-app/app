@@ -1,0 +1,16 @@
+.createReqForm {
+  margin: 0 auto 1.4rem;
+  max-width: 90%;
+}
+
+.asterisk {
+  color: #ff2a70;
+}
+
+.btnContainer {
+  padding: 0;
+}
+
+.btn {
+  width: 100%;
+}

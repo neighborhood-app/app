@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router';
+import { RequestWithUser } from '@neighborhood/backend/src/types';
 import styles from './Request.module.css';
-import { RequestWithUserAndResponses } from '../../types';
-import StatusHeader from "../StatusHeader/StatusHeader";
+import StatusHeader from '../StatusHeader/StatusHeader';
 
 const helpImg = require('./help_wanted.jpeg');
 
 // can pass plain Request object here, without additional info
-export default function Request({ requestObj }: { requestObj: RequestWithUserAndResponses }) {  
+export default function Request({ requestObj }: { requestObj: RequestWithUser }) {
   const date = requestObj.time_created.split('T')[0];
   const navigate = useNavigate();
 

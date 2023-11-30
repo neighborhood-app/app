@@ -1,31 +1,26 @@
 import { Modal, Form, Container, Row, Col } from 'react-bootstrap';
-import { useParams, useSubmit } from 'react-router-dom';
+import { useSubmit } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
-import styles from './EditNeighborhoodModal.module.css';
+import styles from './CreateNeighborhoodModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
 interface Props {
   show: boolean;
   handleClose: () => void;
-  name: string;
-  description: string;
 }
 
-export default function EditNeighborhoodModal({ show, handleClose, name, description }: Props) {
+export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [nameInput, setNameInput] = useState(name);
-  const [textAreaInput, setTextAreaInput] = useState(description);
-  const { id: neighborhoodId } = useParams();
+  const [titleInput, setTitleInput] = useState('');
+  const [textAreaInput, setTextAreaInput] = useState('');
   const submit = useSubmit();
   const closeModal = () => {
     handleClose();
-    setNameInput(name);
-    setTextAreaInput(description);
   };
 
   function validateInput() {
-    return validInputPattern.test(nameInput);
+    return validInputPattern.test(titleInput);
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -37,34 +32,36 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
       event.stopPropagation();
     } else {
       submit(form, {
-        method: 'put',
-        action: `/neighborhoods/${neighborhoodId}`,
+        method: 'post',
+        action: '/',
       });
-      handleClose();
+      closeModal();
       setFormSubmitted(false);
+      setTitleInput('');
+      setTextAreaInput('');
     }
   };
 
   return (
     <Modal show={show} onHide={closeModal} animation={true} backdrop="static" centered>
       <Modal.Header closeButton>
-        <Modal.Title>Edit Neighborhood</Modal.Title>
+        <Modal.Title>Create a new neighborhood</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form role="form" noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label column="sm">
-              Title<span className={styles.asterisk}>*</span>
+              Name<span className={styles.asterisk}>*</span>
             </Form.Label>
             <Form.Control
               type="text"
               name="name"
-              value={nameInput}
+              value={titleInput}
               minLength={4}
-              isInvalid={!validInputPattern.test(nameInput) && formSubmitted}
-              isValid={validInputPattern.test(nameInput)}
+              isInvalid={!validInputPattern.test(titleInput) && formSubmitted}
+              isValid={validInputPattern.test(titleInput)}
               onChange={(event) => {
-                setNameInput(event?.target.value);
+                setTitleInput(event?.target.value);
                 setFormSubmitted(false);
               }}
               required
@@ -74,12 +71,10 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-2" controlId="description">
-            <Form.Label column="sm">
-              Description<span className={styles.asterisk}>*</span>
-            </Form.Label>
+            <Form.Label column="sm">Description</Form.Label>
             <Form.Control
               as="textarea"
-              rows={6}
+              rows={4}
               name="description"
               value={textAreaInput}
               onChange={(event) => {
@@ -88,7 +83,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
               }}
             />
             <Form.Control.Feedback type="invalid">
-              The description needs to be at least 4 characters long.
+              The content needs to be at least 4 characters long.
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3">
@@ -97,7 +92,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
             </Form.Text>
           </Form.Group>
           <Form.Group>
-            <Form.Control type="hidden" name="intent" value="edit-neighborhood" />
+            <Form.Control type="hidden" name="intent" value="create-neighborhood" />
           </Form.Group>
           <Container className={styles.btnContainer} fluid>
             <Row className="gx-3 gy-2">
