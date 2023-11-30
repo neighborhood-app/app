@@ -19,14 +19,6 @@
   border-radius: 20px;
 }
 
-.profileDataText {
-  text-align: center;
-}
-
-.profileText {
-  text-align: justify;
-}
-
 .column {
   max-width: fit-content;
 }

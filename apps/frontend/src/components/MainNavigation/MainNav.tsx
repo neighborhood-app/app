@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
 import styles from './MainNav.module.css';
+import { getStoredUser } from '../../utils/auth';
 
 const profilePic = require('./profile_placeholder.png');
+
+const user = getStoredUser();
 
 const MainNav = () => {
   const mql = window.matchMedia('(max-width: 576px)');
@@ -14,20 +17,22 @@ const MainNav = () => {
     setSmallDisplay(mql.matches);
   });
 
-  const profileIconLink = (
-    <div className={styles.link}>
-      <img className={styles.profilePicture} src={profilePic} alt="User's profile" />
-    </div>
-  );
+  const profileIconLink = user ? (
+    <Link to={`/users/${user.id}`}>
+      <div className={styles.link}>
+        <img className={styles.profilePicture} src={profilePic} alt="User's profile" />
+      </div>
+    </Link>
+  ) : null;
 
   const homeIconLink = (
     <Link to={'/'}>
-    <div className={styles.link}>
-      <svg className={styles.homeLink} viewBox="0 0 24 24">
-        <path fill="none" d="M0 0h24v24H0z"></path>
-        <path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7zm-9 .7c0-1.1.9-2 2-2s2 .9 2 2h-4z"></path>
-      </svg>
-    </div>
+      <div className={styles.link}>
+        <svg className={styles.homeLink} viewBox="0 0 24 24">
+          <path fill="none" d="M0 0h24v24H0z"></path>
+          <path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7zm-9 .7c0-1.1.9-2 2-2s2 .9 2 2h-4z"></path>
+        </svg>
+      </div>
     </Link>
   );
 
@@ -55,9 +60,11 @@ const MainNav = () => {
           <Navbar.Toggle />
           <Navbar.Collapse>
             <Nav className="me-auto">
-              <Nav.Link href="#features" className={styles.navbarCollapseLink}>
-                MY PROFILE
-              </Nav.Link>
+              {user ? (
+                <Nav.Link href={`/users/${user.id}`} className={styles.navbarCollapseLink}>
+                  MY PROFILE
+                </Nav.Link>
+              ) : null}
               <Nav.Link href="/" className={styles.navbarCollapseLink}>
                 HOME
               </Nav.Link>
