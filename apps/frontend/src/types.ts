@@ -30,6 +30,8 @@ export interface FullRequestData extends RequestWithUserAndResponses {
   neighborhood: NeighborhoodWithUsers
 }
 
+export type EditRequestData = Pick<Partial<Request>, 'title' | 'content'>;
+
 export interface StorageWithUser extends Storage {
   user?: string;
 }

@@ -24,14 +24,14 @@ export default function EditRequestModal({ show, handleClose, title, content }: 
     setTextAreaInput(content);
   };
 
-  const validateInput = () =>validInputPattern.test(titleInput);
+  const validateInput = (input: string) => validInputPattern.test(input);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     setFormSubmitted(true);
 
-    if (!form.checkValidity() || !validateInput()) {
+    if (!form.checkValidity() || !validateInput(titleInput) || !validateInput(textAreaInput)) {
       event.stopPropagation();
     } else {
       submit(form, {
@@ -56,9 +56,10 @@ export default function EditRequestModal({ show, handleClose, title, content }: 
             </Form.Label>
             <Form.Control
               type="text"
-              name="name"
+              name="title"
               value={titleInput}
               minLength={4}
+              maxLength={50}
               isInvalid={!validInputPattern.test(titleInput) && formSubmitted}
               isValid={validInputPattern.test(titleInput)}
               onChange={(event) => {
@@ -73,13 +74,17 @@ export default function EditRequestModal({ show, handleClose, title, content }: 
           </Form.Group>
           <Form.Group className="mb-2" controlId="content">
             <Form.Label column="sm">
-              Description<span className={styles.asterisk}>*</span>
+              Content<span className={styles.asterisk}>*</span>
             </Form.Label>
             <Form.Control
               as="textarea"
               rows={6}
               name="content"
               value={textAreaInput}
+              minLength={4}
+              maxLength={1000}
+              isInvalid={!validateInput(textAreaInput) && formSubmitted}
+              isValid={validateInput(textAreaInput)}
               onChange={(event) => {
                 setTextAreaInput(event?.target.value);
                 setFormSubmitted(false);

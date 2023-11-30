@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
-import middleware from '../utils/middleware';
 import { CreateUserData, UserWithoutId, UserWithoutPasswordHash } from '../types';
 import prismaClient from '../../prismaClient';
+import { isObject } from '../utils/helpers';
 
 const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   id: true,
@@ -127,7 +127,7 @@ const isCreateUserData = (obj: object): obj is CreateUserData => (
  * @returns Promise resolving to user input for POST /users
  */
 const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
-  if (!middleware.isObject(body)) {
+  if (!isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;

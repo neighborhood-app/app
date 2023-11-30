@@ -6,8 +6,8 @@ import {
   FullRequestData,
 } from '../types';
 import prismaClient from '../../prismaClient';
-import middleware from '../utils/middleware';
 import neighborhoodServices from './neighborhoodServices';
+import { isObject, isString } from '../utils/helpers';
 
 /**
  * performs narrowing on object `obj`
@@ -16,14 +16,13 @@ import neighborhoodServices from './neighborhoodServices';
  * @param obj - request.body
  * @returns - type predicate (boolean)
  */
-const isCreateRequestData = (obj: object): obj is CreateRequestData => (
-  'title' in obj
-  && typeof obj.title === 'string'
-  && 'content' in obj
-  && typeof obj.content === 'string'
-  && 'neighborhood_id' in obj
-  && typeof obj.neighborhood_id === 'number'
-);
+const isCreateRequestData = (obj: object): obj is CreateRequestData =>
+  'title' in obj &&
+  typeof obj.title === 'string' &&
+  'content' in obj &&
+  typeof obj.content === 'string' &&
+  'neighborhood_id' in obj &&
+  typeof obj.neighborhood_id === 'number';
 
 /**
  * - parses data sent to POST /requests
@@ -32,7 +31,7 @@ const isCreateRequestData = (obj: object): obj is CreateRequestData => (
  * @returns Promise which resolves to parsed create request data
  */
 const parseCreateRequestData = async (body: unknown): Promise<CreateRequestData> => {
-  if (!middleware.isObject(body)) {
+  if (!isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
@@ -64,7 +63,7 @@ const getRequestById = async (requestId: number): Promise<Request> => {
     where: {
       id: requestId,
     },
-  });  
+  });
 
   return request;
 };
@@ -86,7 +85,7 @@ const getFullRequestData = async (requestId: number): Promise<FullRequestData> =
       responses: {
         include: {
           user: true,
-        }
+        },
       },
       neighborhood: {
         include: {
@@ -122,14 +121,39 @@ const hasUserCreatedRequest = async (requestId: number, userId: number): Promise
 const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
   const VALID_PROPS = ['title', 'content', 'status'];
   const props = Object.keys(obj);
+  console.log(obj);
 
   if (props.some((prop) => !VALID_PROPS.includes(prop))) return false;
   if ('title' in obj && typeof obj.title !== 'string') return false;
   if ('content' in obj && typeof obj.content !== 'string') return false;
-  if ('status' in obj && obj.status !== 'OPEN' && obj.status !== 'CLOSED') {
+  if (
+    'status' in obj &&
+    obj.status !== 'OPEN' &&
+    obj.status !== 'CLOSED' &&
+    obj.status !== 'INACTIVE'
+  ) {
     return false;
   }
 
+  return true;
+};
+
+/**
+ * checks that if title, content and/or status are present in the request object
+ * their values are valid
+ * @param req 
+ * @returns boolean indicating whether input data is valid Request data
+ */
+const validateUpdateReqData = (req: UpdateRequestData): boolean => {
+  if ('title' in req && isString(req.title) && req.title.length < 4) return false;
+  if ('content' in req && isString(req.content) && req.content.length < 4) return false;
+  if (
+    'status' in req &&
+    isString(req.status) &&
+    !['OPEN', 'CLOSED', 'INACTIVE'].includes(req.status)
+  )
+    return false;
+  
   return true;
 };
 
@@ -140,13 +164,13 @@ const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
  * @returns - Promise resolving to updated request
  */
 const updateRequest = async (body: unknown, requestId: number): Promise<Request> => {
-  if (!middleware.isObject(body)) {
+  if (!isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
   }
 
-  if (!isUpdateRequestData(body)) {
+  if (!isUpdateRequestData(body) || !validateUpdateReqData(body)) {
     const error = new Error('Title, content and/or status value is invalid');
     error.name = 'InvalidInputError';
     throw error;
@@ -247,10 +271,7 @@ const validateCreateRequestData = async (
  * @param userId - user must be a member of the neighborhood represented by neighborhoodId
  * @returns - Promise resolving to newly created request
  */
-const createRequest = async (
-  requestData: CreateRequestData,
-  userId: number,
-): Promise<Request> => {
+const createRequest = async (requestData: CreateRequestData, userId: number): Promise<Request> => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { neighborhood_id } = requestData;
   await validateCreateRequestData(requestData, userId, Number(neighborhood_id));
