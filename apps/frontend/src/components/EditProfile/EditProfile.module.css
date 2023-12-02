@@ -1,11 +1,18 @@
+.row {
+  margin-bottom: 10px;
+}
+
 .profileText {
   text-align: justify;
 }
 
-.emailField {
+.inputField {
   width: fit-content;
 }
 
-.dobField {
-  width: fit-content;
+.form {
+  width: 50%;
+}
+
+.datePicker {
 }
