@@ -23,6 +23,7 @@ interface Props {
     | SingleNeighborhoodFormIntent
     | SingleRequestFormIntent;
   text: string | JSX.Element;
+  title?: string;
   idInputName?: string;
   variant?: 'primary' | 'outline-dark' | 'danger';
   className?: string;
@@ -34,6 +35,7 @@ export default function TriggerActionButton({
   route,
   intent,
   text,
+  title,
   idInputName,
   variant = 'primary',
   className,
@@ -56,7 +58,7 @@ export default function TriggerActionButton({
         <Form.Control type="hidden" name="intent" value={intent} />
         {id ? <Form.Control type="hidden" name={idInputName} value={id} /> : null}
       </Form.Group>
-      <CustomBtn className={className} variant={variant} size={size} type="submit">
+      <CustomBtn className={className} variant={variant} size={size} title={title} type="submit">
         {text}
       </CustomBtn>
     </Form>

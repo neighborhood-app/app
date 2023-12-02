@@ -2,7 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faBan, faCheck } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAngleLeft,
+  faBan,
+  faCheck,
+  faPencil,
+  faTrashCan,
+} from '@fortawesome/free-solid-svg-icons';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import styles from './RequestDescBox.module.css';
 import { FullRequestData, StoredUserData } from '../../types';
@@ -25,7 +31,6 @@ export default function RequestDescBox({ request }: Props) {
   const [showEditReq, setShowEditReq] = useState(false);
   const handleCloseEditReq = () => setShowEditReq(false);
   const handleShowEditReq = () => setShowEditReq(true);
-
 
   const { user, neighborhood } = request;
   const requestDate = request.time_created.split('T')[0];
@@ -50,18 +55,28 @@ export default function RequestDescBox({ request }: Props) {
   );
 
   const deleteBtnColumn = (
-    <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
+    <Col className={`${styles.formBtn} pe-md-3`}>
       <TriggerActionButton
+        className={`${styles.formBtn} ${styles.circleBtn}`}
         id={neighborhood.id}
         idInputName="neighborhoodId"
         route={`/requests/${request.id}`}
         variant="danger"
         intent="delete-request"
-        text="Delete request"
-        className={styles.actionBtn}
+        title="Delete request"
+        text={<FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>}
       />
     </Col>
   );
+
+  const offerHelpBtn =
+    username !== request.user.username && request.status === 'OPEN' && !hasUserResponded ? (
+      <Col lg="2" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
+        <CustomBtn className={styles.actionBtn} variant="primary" onClick={handleShowCreateRes}>
+          Offer help
+        </CustomBtn>
+      </Col>
+    ) : null;
 
   /**
   * Based on the status of a user (creator, or viewer) and the status of the request 
@@ -75,32 +90,42 @@ export default function RequestDescBox({ request }: Props) {
     ) {
       return (
         <>
-          <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-sm-4 mb-2">
+          <Col className={`${styles.formBtn} pe-2`}>
             <TriggerActionButton
+              className={styles.circleBtn}
               route={`/requests/${request.id}`}
               variant="primary"
               intent="close-request"
-              text="Close request"
-              className={styles.actionBtn}
+              title="Close request"
+              text={<FontAwesomeIcon icon={faCheck} />}
             />
           </Col>
-          <Col xl="2" md="3" sm="3" xs="7" className="p-0 ps-sm-2 me-sm-4 mb-2">
-            <CustomBtn variant='outline-dark' onClick={handleShowEditReq}>
-              Edit
+          <Col className={`${styles.formBtn} pe-2`}>
+            <CustomBtn
+              className={styles.circleBtn}
+              variant="outline-dark"
+              title="Edit request"
+              onClick={handleShowEditReq}>
+              <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>
             </CustomBtn>
           </Col>
           {deleteBtnColumn}
         </>
       );
     } else if (username === request.user.username) {
-      return deleteBtnColumn;
-    } else if (request.status === 'OPEN' && !hasUserResponded) {
       return (
-        <Col lg="2" sm="3" xs="7" className="p-0 ps-sm-2 me-md-5">
-          <CustomBtn className={styles.actionBtn} variant="primary" onClick={handleShowCreateRes}>
-            Offer help
-          </CustomBtn>
-        </Col>
+        <>
+          <Col className={`${styles.formBtn} pe-2`}>
+            <CustomBtn
+              className={styles.circleBtn}
+              variant="outline-dark"
+              title="Edit request"
+              onClick={handleShowEditReq}>
+              <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>
+            </CustomBtn>
+          </Col>
+          {deleteBtnColumn}
+        </>
       );
     }
 
@@ -121,22 +146,33 @@ export default function RequestDescBox({ request }: Props) {
           <p className={`${styles.requestDate} small`}>Created on {requestDate}</p>
         </Col>
         <Col className="me-sm-2">
-          <h3>
-            {request.title}
-            {requestStatusIcon}
-          </h3>
-          <Link to="#">
+          <Row className="mb-2">
+            <Col>
+              <h3>
+                {request.title}
+                {requestStatusIcon}
+              </h3>
+            </Col>
+            <Col md="auto" sm="12">
+              {displayRequestActions()}
+            </Col>
+          </Row>
+          <Link to="#" className={styles.reqUserInfo}>
             <Image className={styles.userIcon} roundedCircle src={requestImg} alt="Request" />
             <p className={`${styles.userName} text-muted`}>{userName}</p>
           </Link>
-          <p>{request.content}</p>
+          <p className="pe-sm-3">{request.content}</p>
         </Col>
       </Row>
       <Row className="mb-3 gx-3 justify-content-sm-start justify-content-center">
         <Col sm="3"></Col>
-        {displayRequestActions()}
+        {offerHelpBtn}
       </Row>
-      <EditRequestModal show={showEditReq} handleClose={handleCloseEditReq} title={request.title} content={request.content}></EditRequestModal>
+      <EditRequestModal
+        show={showEditReq}
+        handleClose={handleCloseEditReq}
+        title={request.title}
+        content={request.content}></EditRequestModal>
       <CreateResponseModal show={showCreateRes} handleClose={handleCloseCreateRes} />
     </Container>
   );

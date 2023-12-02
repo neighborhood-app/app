@@ -20,6 +20,10 @@
   margin-bottom: 0.04em;
 }
 
+.reqUserInfo {
+  display: block;
+}
+
 .userName {
   display: inline-block;
   padding-left: 0.5em;
@@ -32,6 +36,15 @@
 
 .requestDate {
 padding-top: 0.4em;
+}
+
+.formBtn {
+  display: inline-block;
+}
+
+.circleBtn {
+  border-radius: 50%;
+  padding: 4px 10px;
 }
 
 .actionBtn {
