@@ -23,12 +23,6 @@ const requestLogger = (request: Request, _response: Response, next: NextFunction
   next();
 };
 
-/**
- * @param input - (unknown)
- * @returns - type predicate (boolean) indicating whether input is of type `Object`
- */
-const isObject = (input: unknown): input is Object => !!input && (typeof input === 'object');
-
 const unknownEndpoint = (_request: Request, response: Response): void => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
@@ -176,7 +170,6 @@ const userIdExtractorAndLoginValidator = catchError(async (
 export default {
   requestLogger,
   validateURLParams,
-  isObject,
   unknownEndpoint,
   errorHandler,
   tokenExtractor,

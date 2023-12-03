@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
-import { StorageWithUser, UserInfo, FullRequestData } from '../types';
+import { StorageWithUser, UserInfo, FullRequestData, EditRequestData } from '../types';
 import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/requests';
@@ -31,6 +31,19 @@ async function createRequest(requestData: CreateRequestData): Promise<Request> {
   return response.data;
 }
 
+async function editRequest(requestData: EditRequestData, requestId: number): Promise<Request> {
+  const headers: { authorization?: string } = {};
+  const user = getStoredUser();
+
+  if (user) {
+    headers.authorization = `Bearer ${user.token}`;
+  }
+
+  const response = await axios.put(`${BASE_URL}/${requestId}`, requestData, { headers });
+
+  return response.data;
+}
+
 async function closeRequest(requestId: number): Promise<Request> {
   const headers: { authorization?: string } = {};
   const user = getStoredUser();
@@ -57,4 +70,4 @@ async function deleteRequest(requestId: number) {
   return response.data;
 }
 
-export default { getSingleRequest, createRequest, closeRequest, deleteRequest };
+export default { getSingleRequest, createRequest, editRequest, closeRequest, deleteRequest };
