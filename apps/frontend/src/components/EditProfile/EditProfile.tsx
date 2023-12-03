@@ -19,8 +19,6 @@ export default function EditProfile({ profile, closeForm }: Props) {
     email: profile.email || '',
   });
 
-  console.log(formInput, setFormInput);
-
   return (
     <>
       <Form className={styles.form}>

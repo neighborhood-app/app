@@ -5,7 +5,7 @@
 .column {
   min-height: 100vh;
   padding: 0;
-  /* min-width: 0; */
+  min-width: 0;
 }
 
 .sticky {
@@ -16,6 +16,7 @@
 @media (max-width: 576px) {
   .column {
     min-height: 0;
+    min-width: unset;
     height: auto;
   }
 }
