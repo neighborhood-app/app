@@ -25,17 +25,30 @@ export default function EditProfile({ profile }: Props) {
         <Row className={styles.row}>
           <Col sm={12} md={6}>
             <h3>First name</h3>
-            <Form.Control value={formInput.firstName} type="text" name="first-name"></Form.Control>
+            <Form.Control
+              value={formInput.firstName}
+              type="text"
+              name="first-name"
+              maxLength={25}></Form.Control>
           </Col>
           <Col sm={12} md={6}>
             <h3>Last name</h3>
-            <Form.Control value={formInput.lastName} type="text" name="last-name"></Form.Control>
+            <Form.Control
+              value={formInput.lastName}
+              type="text"
+              name="last-name"
+              maxLength={25}></Form.Control>
           </Col>
         </Row>
         <Row className={styles.row}>
           <Col sm={12} md={12}>
             <h3>Bio</h3>
-            <Form.Control value={formInput.bio} as="textarea" rows={6} name="bio"></Form.Control>
+            <Form.Control
+              value={formInput.bio}
+              as="textarea"
+              rows={6}
+              name="bio"
+              maxLength={500}></Form.Control>
           </Col>
         </Row>
         <Row className={styles.row}>
@@ -49,7 +62,11 @@ export default function EditProfile({ profile }: Props) {
           </Col>
           <Col sm={12} md={6}>
             <h3>Email</h3>
-            <Form.Control value={formInput.email} type="text" name="email"></Form.Control>
+            <Form.Control
+              value={formInput.email}
+              type="text"
+              name="email"
+              maxLength={40}></Form.Control>
           </Col>
         </Row>
       </Form>
