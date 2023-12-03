@@ -6,9 +6,9 @@ import {
   UserStatusOnResponse,
 } from '../types';
 import prismaClient from '../../prismaClient';
-import middleware from '../utils/middleware';
 import requestServices from './requestServices';
 import neighborhoodServices from './neighborhoodServices';
+import { isObject } from '../utils/helpers';
 
 /**
  * performs narrowing on object `obj`
@@ -31,7 +31,7 @@ const isResponseData = (obj: object): obj is ResponseData =>
  * @returns Promise which resolves to parsed create response data
  */
 const parseCreateResponseData = async (body: unknown): Promise<ResponseData> => {
-  if (!middleware.isObject(body)) {
+  if (!isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
@@ -163,7 +163,7 @@ const updateResponse = async (
   responseId: number,
   userStatus: UserStatusOnResponse,
 ): Promise<Response> => {
-  if (!middleware.isObject(body)) {
+  if (!isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
     throw error;
