@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood } from '@neighborhood/backend/src/types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './NeighborhoodSearch.module.css';
 import NeighborhoodCard from '../NeighborhoodCard/NeighborhoodCard';
+import CustomBtn from '../CustomBtn/CustomBtn';
 
 export default function NeighborhoodSearch({
   neighborhoods,
@@ -42,9 +45,9 @@ export default function NeighborhoodSearch({
 
   return (
     <>
-      <Container className="mt-4 mb-5" fluid>
-        <Row className="mt-1 gy-3 justify-content-center">
-          <Col lg="4" sm="5" xs="7">
+      <Container className={`${styles.searchBox} mt-4 mb-5`} fluid>
+        <Row className="mt-1 gy-3 justify-content-center justify-content-sm-end">
+          <Col className={`mx-sm-auto ${styles.searchCol}`} lg="4" sm="5" xs="7">
             <Form>
               <Form.Group>
                 <Form.Control
@@ -55,6 +58,11 @@ export default function NeighborhoodSearch({
                   onChange={(event) => searchNeighborhoods(event.target.value)}></Form.Control>
               </Form.Group>
             </Form>
+          </Col>
+          <Col xs="2" sm="auto" className="">
+            <CustomBtn variant="primary" title="Create a new neighborhood">
+              <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+            </CustomBtn>
           </Col>
         </Row>
       </Container>

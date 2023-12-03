@@ -1,5 +1,14 @@
+.searchBox {
+  padding: 0 50px;
+}
+
 .neighborhoodsContainer {
   padding: 0 50px 30px;
+}
+
+.searchCol {
+  left: 40px;
+  position: relative;
 }
 
 .searchInput {
@@ -20,7 +29,15 @@
 }
 
 @media (max-width: 576px) {
+  .searchBox {
+    padding: 0 30px;
+  }
+
   .neighborhoodsContainer {
     padding: 0 30px 30px;
+  }
+
+  .searchCol {
+    position: static;
   }
 }
