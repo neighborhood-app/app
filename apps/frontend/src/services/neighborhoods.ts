@@ -1,7 +1,7 @@
 import { redirect } from 'react-router';
 import axios from 'axios';
 import { Neighborhood } from '@neighborhood/backend/src/types';
-import { EditNeighborhoodData, NeighborhoodType } from '../types';
+import { CreateNeighborhoodData, EditNeighborhoodData, NeighborhoodType } from '../types';
 import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/neighborhoods';
@@ -41,7 +41,7 @@ async function deleteNeighborhood(
 }
 
 async function createNeighborhood(
-  neighborhoodData: EditNeighborhoodData,
+  neighborhoodData: CreateNeighborhoodData,
 ): Promise<Response | { success: string } | { error: string }> {
   const user = getStoredUser();
   if (!user) return redirect('/login');

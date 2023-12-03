@@ -21,8 +21,8 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
   };
 
   function validateInput() {
-     return validInputPattern.test(textAreaInput) && validInputPattern.test(titleInput)
-  };
+    return validInputPattern.test(textAreaInput) && validInputPattern.test(titleInput);
+  }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,7 +31,6 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
 
     if (!form.checkValidity() || !validateInput()) {
       event.stopPropagation();
-
     } else {
       submit(form, {
         method: 'post',
@@ -39,8 +38,8 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
       });
       closeModal();
       setFormSubmitted(false);
-      setTitleInput("");
-      setTextAreaInput("");
+      setTitleInput('');
+      setTextAreaInput('');
     }
   };
 
@@ -50,11 +49,7 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
         <Modal.Title>Create a request</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form
-          role="form"
-          noValidate
-          onSubmit={handleSubmit}
-          className={styles.createReqForm}>
+        <Form role="form" noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
           <Form.Group className="mb-3" controlId="title">
             <Form.Label column="sm">
               Title<span className={styles.asterisk}>*</span>
@@ -63,9 +58,8 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
               type="text"
               name="title"
               minLength={4}
-              isInvalid={
-                (!validInputPattern.test(titleInput)) && formSubmitted
-              }
+              maxLength={50}
+              isInvalid={!validInputPattern.test(titleInput) && formSubmitted}
               isValid={validInputPattern.test(titleInput)}
               onChange={(event) => {
                 setTitleInput(event?.target.value);
@@ -85,9 +79,7 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
               as="textarea"
               rows={4}
               name="content"
-              isInvalid={
-                (!validInputPattern.test(textAreaInput)) && formSubmitted
-              }
+              isInvalid={!validInputPattern.test(textAreaInput) && formSubmitted}
               isValid={validInputPattern.test(textAreaInput)}
               onChange={(event) => {
                 setTextAreaInput(event?.target.value);

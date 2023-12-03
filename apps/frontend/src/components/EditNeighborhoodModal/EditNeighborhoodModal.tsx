@@ -61,6 +61,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
               name="name"
               value={nameInput}
               minLength={4}
+              maxLength={30}
               isInvalid={!validInputPattern.test(nameInput) && formSubmitted}
               isValid={validInputPattern.test(nameInput)}
               onChange={(event) => {
