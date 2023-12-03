@@ -16,7 +16,9 @@ export interface NeighborhoodDetailsForMembers extends Neighborhood {
   requests: Array<RequestWithUserAndResponses> | null;
 }
 
-export type EditNeighborhoodData = Pick<NeighborhoodDetailsForNonMembers, "name" | "description">
+export type CreateNeighborhoodData = Pick<NeighborhoodDetailsForNonMembers, "name" | "description">
+
+export type EditNeighborhoodData = CreateNeighborhoodData
 
 export type NeighborhoodType = NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers;
 
