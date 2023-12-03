@@ -48,7 +48,11 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
         <Modal.Title>Create a new neighborhood</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form role="form" noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
+        <Form
+          role="form"
+          noValidate
+          onSubmit={handleSubmit}
+          className={styles.createNeighborhoodForm}>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label column="sm">
               Name<span className={styles.asterisk}>*</span>
@@ -58,6 +62,7 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
               name="name"
               value={titleInput}
               minLength={4}
+              maxLength={30}
               isInvalid={!validInputPattern.test(titleInput) && formSubmitted}
               isValid={validInputPattern.test(titleInput)}
               onChange={(event) => {
@@ -76,6 +81,7 @@ export default function CreateNeighborhoodModal({ show, handleClose }: Props) {
               as="textarea"
               rows={4}
               name="description"
+              maxLength={400}
               value={textAreaInput}
               onChange={(event) => {
                 setTextAreaInput(event?.target.value);
