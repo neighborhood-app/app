@@ -1,7 +1,6 @@
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Col, Row, Form } from 'react-bootstrap';
 import { useState } from 'react';
-import DatePicker from 'react-date-picker';
 import styles from './EditProfile.module.css';
 
 type Props = {
@@ -27,10 +26,6 @@ export default function EditProfile({ profile }: Props) {
     email: profile.email || undefined,
   });
 
-  function changeDob(value: Date | undefined) {
-    formInput.dob = value;
-  }
-
   console.log(formInput, setFormInput);
 
   return (
@@ -55,14 +50,7 @@ export default function EditProfile({ profile }: Props) {
         <Row className={styles.row}>
           <Col sm={12} md={6}>
             <h3>Date of birth</h3>
-            {/* <Form.Control className={styles.inputField} type="date" name="dob"></Form.Control> */}
-            <DatePicker
-              className={styles.datePicker}
-              value={formInput.dob}
-              onChange={changeDob}
-              monthPlaceholder="mm"
-              dayPlaceholder="dd"
-            />
+            <Form.Control className={styles.inputField} type="date" name="dob"></Form.Control>
           </Col>
           <Col sm={12} md={6}>
             <h3>Email</h3>
