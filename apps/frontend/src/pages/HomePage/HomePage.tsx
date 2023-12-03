@@ -12,7 +12,7 @@ import { getStoredUser } from '../../utils/auth';
 
 import userServices from '../../services/users';
 import Request from '../../components/Request/Request';
-import { EditNeighborhoodData } from '../../types';
+import { CreateNeighborhoodData } from '../../types';
 
 export async function loader() {
   const user = getStoredUser();
@@ -29,7 +29,7 @@ export async function action({ request }: ActionFunctionArgs) {
   let response: Request | Response | { success: string } | { error: string } | null = null;
 
   if (intent === 'create-neighborhood') {
-    const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
+    const neighborhoodData = Object.fromEntries(formData) as unknown as CreateNeighborhoodData;
     response = await neighborhoodServices.createNeighborhood(neighborhoodData);
   }
 

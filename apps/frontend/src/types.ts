@@ -16,7 +16,9 @@ export interface NeighborhoodDetailsForMembers extends Neighborhood {
   requests: Array<RequestWithUserAndResponses> | null;
 }
 
-export type EditNeighborhoodData = Pick<NeighborhoodDetailsForNonMembers, "name" | "description">
+export type CreateNeighborhoodData = Pick<NeighborhoodDetailsForNonMembers, "name" | "description">
+
+export type EditNeighborhoodData = CreateNeighborhoodData
 
 export type NeighborhoodType = NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers;
 
@@ -29,6 +31,8 @@ export interface RequestWithUserAndResponses extends Omit<Request, 'time_created
 export interface FullRequestData extends RequestWithUserAndResponses {
   neighborhood: NeighborhoodWithUsers
 }
+
+export type EditRequestData = Pick<Partial<Request>, 'title' | 'content'>;
 
 export interface StorageWithUser extends Storage {
   user?: string;
@@ -49,6 +53,7 @@ export type SingleNeighborhoodFormIntent =
   ;
 
 export type SingleRequestFormIntent =
+  | 'edit-request'
   | 'delete-request'
   | 'close-request'
   | 'accept-offer'

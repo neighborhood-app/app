@@ -5,7 +5,7 @@ import { Container } from 'react-bootstrap';
 import responseServices from '../../services/responses';
 import requestServices from '../../services/requests';
 import RequestDescBox from '../../components/RequestDescBox/RequestDescBox';
-import { FullRequestData, SingleRequestFormIntent } from '../../types';
+import { EditRequestData, FullRequestData, SingleRequestFormIntent } from '../../types';
 import ResponsesGrid from '../../components/ResponsesGrid/ResponsesGrid';
 
 export async function loader({ params }: LoaderFunctionArgs): Promise<FullRequestData | null> {
@@ -25,6 +25,12 @@ export async function action({ params, request }: ActionFunctionArgs) {
   let response: Request | Response | { error: string } | '' | null = null;
 
   switch (intent) {
+    case 'edit-request': {
+      const requestData = Object.fromEntries(formData) as unknown as EditRequestData;
+      if ('intent' in requestData) delete requestData.intent;
+      response = await requestServices.editRequest(requestData, requestId);
+      break;
+    }
     case 'delete-request':
       response = await requestServices.deleteRequest(requestId);
       return redirect(`/neighborhoods/${neighborhoodId}`);

@@ -2,7 +2,6 @@ import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-rou
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
-import { useUser } from '../../store/user-context';
 import {
   EditNeighborhoodData,
   NeighborhoodDetailsForMembers,
@@ -13,15 +12,9 @@ import {
 import NeighborhoodPageForMembers from './NeighborhoodPageForMembers';
 import NeighborhoodPageForAdmin from './NeighborhoodPageForAdmin';
 import NeighborhoodPageForNonMembers from './NeighborhoodPageForNonMembers';
+import { getStoredUser } from '../../utils/auth';
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  // TODO: If unable to login because of token invalid or otherwise
-  // redirect to /login
-  // We can do this by sending request within a `try` block
-  // While catching error, we can redirect
-  // We will also need to modify `neighborhoodService.getSingleNeighborhood`
-  // to throw an Error if request is unsuccessfull
-
   const { id } = params;
   const neighborhood = await neighborhoodsService.getSingleNeighborhood(Number(id));
 
@@ -76,25 +69,27 @@ export default function SingleNeighborhood() {
 
   // Here we only need the username, we can easily access it from localStorage
   // context seems to be overengineered solution to a simple problem
-  const user = useUser();
+  const user = getStoredUser();
 
   const neighborhoodData = useLoaderData() as NeighborhoodType;
-  const userRole: UserRole = checkLoggedUserRole(user.username, neighborhoodData);
 
   // We are type-converting while passing `neighborhood` as argument
   // as `userRole` uniquely determines the type of `neighborhood`
   // I am not sure whether this is considered good practise or not
+
+  if (!user) {
+    return <NeighborhoodPageForNonMembers neighborhood={neighborhoodData} />;
+  }
+  const userRole: UserRole = checkLoggedUserRole(user.username, neighborhoodData);
   if (userRole === UserRole.MEMBER) {
     return (
       <NeighborhoodPageForMembers
         neighborhood={neighborhoodData as NeighborhoodDetailsForMembers}
       />
     );
-  } else if (userRole === UserRole.ADMIN) {
-    return (
-      <NeighborhoodPageForAdmin neighborhood={neighborhoodData as NeighborhoodDetailsForMembers} />
-    );
   }
-
-  return <NeighborhoodPageForNonMembers neighborhood={neighborhoodData} />;
+  // This is the version for admins
+  return (
+    <NeighborhoodPageForAdmin neighborhood={neighborhoodData as NeighborhoodDetailsForMembers} />
+  );
 }

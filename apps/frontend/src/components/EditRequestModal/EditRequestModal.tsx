@@ -1,55 +1,55 @@
 import { Modal, Form, Container, Row, Col } from 'react-bootstrap';
 import { useParams, useSubmit } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
-import styles from './CreateRequestModal.module.css';
+import styles from './EditRequestModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
 interface Props {
   show: boolean;
   handleClose: () => void;
+  title: string;
+  content: string;
 }
 
-export default function CreateRequestModal({ show, handleClose }: Props) {
+export default function EditRequestModal({ show, handleClose, title, content }: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [titleInput, setTitleInput] = useState('');
-  const [textAreaInput, setTextAreaInput] = useState('');
-  const { id: neighborhoodId } = useParams();
+  const [titleInput, setTitleInput] = useState(title);
+  const [textAreaInput, setTextAreaInput] = useState(content);
+  const { id: requestId } = useParams();
   const submit = useSubmit();
   const closeModal = () => {
     handleClose();
+    setTitleInput(title);
+    setTextAreaInput(content);
   };
 
-  function validateInput() {
-    return validInputPattern.test(textAreaInput) && validInputPattern.test(titleInput);
-  }
+  const validateInput = (input: string) => validInputPattern.test(input);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     setFormSubmitted(true);
 
-    if (!form.checkValidity() || !validateInput()) {
+    if (!form.checkValidity() || !validateInput(titleInput) || !validateInput(textAreaInput)) {
       event.stopPropagation();
     } else {
       submit(form, {
-        method: 'post',
-        action: `/neighborhoods/${neighborhoodId}`,
+        method: 'put',
+        action: `/requests/${requestId}`,
       });
-      closeModal();
+      handleClose();
       setFormSubmitted(false);
-      setTitleInput('');
-      setTextAreaInput('');
     }
   };
 
   return (
     <Modal show={show} onHide={closeModal} animation={true} backdrop="static" centered>
       <Modal.Header closeButton>
-        <Modal.Title>Create a request</Modal.Title>
+        <Modal.Title>Edit Request</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form role="form" noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
+        <Form role="form" noValidate onSubmit={handleSubmit} className={styles.editReqForm}>
           <Form.Group className="mb-3" controlId="title">
             <Form.Label column="sm">
               Title<span className={styles.asterisk}>*</span>
@@ -57,6 +57,7 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
             <Form.Control
               type="text"
               name="title"
+              value={titleInput}
               minLength={4}
               maxLength={50}
               isInvalid={!validInputPattern.test(titleInput) && formSubmitted}
@@ -77,15 +78,17 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
             </Form.Label>
             <Form.Control
               as="textarea"
-              rows={4}
+              rows={6}
               name="content"
-              isInvalid={!validInputPattern.test(textAreaInput) && formSubmitted}
-              isValid={validInputPattern.test(textAreaInput)}
+              value={textAreaInput}
+              minLength={4}
+              maxLength={1000}
+              isInvalid={!validateInput(textAreaInput) && formSubmitted}
+              isValid={validateInput(textAreaInput)}
               onChange={(event) => {
                 setTextAreaInput(event?.target.value);
                 setFormSubmitted(false);
               }}
-              required
             />
             <Form.Control.Feedback type="invalid">
               The content needs to be at least 4 characters long.
@@ -97,7 +100,7 @@ export default function CreateRequestModal({ show, handleClose }: Props) {
             </Form.Text>
           </Form.Group>
           <Form.Group>
-            <Form.Control type="hidden" name="intent" value="create-request" />
+            <Form.Control type="hidden" name="intent" value="edit-request" />
           </Form.Group>
           <Container className={styles.btnContainer} fluid>
             <Row className="gx-3 gy-2">

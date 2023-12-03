@@ -16,7 +16,7 @@ export default function Prompt({ text, intent, route, status, handleClose }: Pro
   return (
     <Modal show={status} onHide={handleClose}>
       <Modal.Body>{text}</Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer className={styles.footer}>
         <div className={styles.alertBtnContainer}>
           <TriggerActionButton route={route} variant="primary" intent={intent} text="Yes" />
           <CustomBtn variant="outline-dark" className={styles.alertBtn} onClick={handleClose}>
