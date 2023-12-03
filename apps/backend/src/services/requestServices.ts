@@ -121,7 +121,6 @@ const hasUserCreatedRequest = async (requestId: number, userId: number): Promise
 const isUpdateRequestData = (obj: object): obj is UpdateRequestData => {
   const VALID_PROPS = ['title', 'content', 'status'];
   const props = Object.keys(obj);
-  console.log(obj);
 
   if (props.some((prop) => !VALID_PROPS.includes(prop))) return false;
   if ('title' in obj && typeof obj.title !== 'string') return false;
