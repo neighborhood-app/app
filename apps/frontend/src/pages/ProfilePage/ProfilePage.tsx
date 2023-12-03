@@ -23,6 +23,10 @@ export default function ProfilePage() {
 
   const [edit, setEdit] = useState(false);
 
+  function closeForm() {
+    setEdit(false);
+  }
+
   let isUserAdmin: boolean | null;
   if (loggedUser) {
     isUserAdmin = loggedUser.id === profileData.id;
@@ -52,7 +56,11 @@ export default function ProfilePage() {
         </Col>
       </Row>
       <div>
-        {edit ? <EditProfile profile={profileData} /> : <ProfileInfo profile={profileData} />}
+        {edit ? (
+          <EditProfile profile={profileData} closeForm={closeForm} />
+        ) : (
+          <ProfileInfo profile={profileData} />
+        )}
       </div>
     </Container>
   );

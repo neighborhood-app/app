@@ -1,14 +1,16 @@
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Col, Row, Form } from 'react-bootstrap';
 import { useState } from 'react';
+import CustomBtn from '../CustomBtn/CustomBtn';
 import extractDate from '../../utils/utilityFunctions';
 import styles from './EditProfile.module.css';
 
 type Props = {
   profile: UserWithRelatedData;
+  closeForm: () => void;
 };
 
-export default function EditProfile({ profile }: Props) {
+export default function EditProfile({ profile, closeForm }: Props) {
   const [formInput, setFormInput] = useState({
     firstName: profile.first_name || '',
     lastName: profile.last_name || '',
@@ -67,6 +69,18 @@ export default function EditProfile({ profile }: Props) {
               type="text"
               name="email"
               maxLength={40}></Form.Control>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={6} className={'d-flex justify-content-end'}>
+            <CustomBtn variant="primary" type="submit">
+              Submit
+            </CustomBtn>
+          </Col>
+          <Col sm={6}>
+            <CustomBtn variant="outline-dark" onClick={closeForm} className={styles.btn}>
+              Cancel
+            </CustomBtn>
           </Col>
         </Row>
       </Form>
