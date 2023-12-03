@@ -22,6 +22,10 @@ export type EditNeighborhoodData = CreateNeighborhoodData
 
 export type NeighborhoodType = NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers;
 
+export type ProfileInfo = {
+  
+}
+
 export interface RequestWithUserAndResponses extends Omit<Request, 'time_created'> {
   time_created: string;
   user: User;

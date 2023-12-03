@@ -1,5 +1,6 @@
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Col, Row } from 'react-bootstrap';
+import extractDate from '../../utils/utilityFunctions';
 import styles from './ProfileInfo.module.css';
 
 type Props = {
@@ -10,7 +11,7 @@ export default function ProfileInfo({ profile }: Props) {
   const displayInfo = {
     name:
       profile.first_name || profile.last_name ? `${profile.first_name} ${profile.last_name}` : null,
-    dob: profile.dob ? String(profile.dob) : '-',
+    dob: profile.dob ? extractDate(profile.dob) : '-',
     bio: profile.bio || '-',
     email: profile.email,
   };
