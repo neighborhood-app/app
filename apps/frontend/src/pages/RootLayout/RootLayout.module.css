@@ -16,6 +16,7 @@
 @media (max-width: 576px) {
   .column {
     min-height: 0;
+    min-width: unset;
     height: auto;
   }
 }

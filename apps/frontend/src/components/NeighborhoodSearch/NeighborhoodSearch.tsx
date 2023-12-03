@@ -47,7 +47,7 @@ export default function NeighborhoodSearch({
     <>
       <Container className={`${styles.searchBox} mt-4 mb-5`} fluid>
         <Row className="mt-1 gy-3 justify-content-center justify-content-sm-end">
-          <Col className={`mx-sm-auto ${styles.searchCol}`} lg="4" sm="5" xs="7">
+          <Col className={`mx-sm-auto ${styles.searchCol}`} lg="4" sm="6" xs="auto">
             <Form>
               <Form.Group>
                 <Form.Control
@@ -59,8 +59,8 @@ export default function NeighborhoodSearch({
               </Form.Group>
             </Form>
           </Col>
-          <Col xs="2" sm="auto" className="">
-            <CustomBtn variant="primary" title="Create a new neighborhood">
+          <Col xs="auto" sm="auto" className="me-sm-4">
+            <CustomBtn className={styles.iconBtn} variant="primary" title="Create a new neighborhood">
               <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
             </CustomBtn>
           </Col>

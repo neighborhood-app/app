@@ -24,6 +24,11 @@
   border-color: var(--bs-border-color);
 }
 
+.iconBtn {
+  margin-top: .3rem;
+  padding: 3px 9px;
+}
+
 .noNhoodsText {
   text-align: center;
 }
@@ -38,6 +43,7 @@
   }
 
   .searchCol {
+    /* margin-left: 4vw; */
     position: static;
   }
 }
