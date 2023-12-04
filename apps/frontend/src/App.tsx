@@ -20,7 +20,10 @@ import SingleRequestPage, {
   action as singleRequestAction,
 } from './pages/SingleRequestPage/SingleRequestPage';
 
-import ProfilePage, { loader as userLoader } from './pages/ProfilePage/ProfilePage';
+import ProfilePage, {
+  loader as userLoader,
+  action as profileAction,
+} from './pages/ProfilePage/ProfilePage';
 
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 import logoutLoader from './pages/LogoutPage/LogoutPage';
@@ -48,7 +51,12 @@ const router = createBrowserRouter([
             action: homePageAction,
           },
           { path: 'logout', loader: logoutLoader },
-          { path: 'users/:id', element: <ProfilePage />, loader: userLoader },
+          {
+            path: 'users/:id',
+            element: <ProfilePage />,
+            loader: userLoader,
+            action: profileAction,
+          },
           {
             path: 'test',
             element: <TestPage />,

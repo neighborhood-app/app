@@ -22,9 +22,13 @@ export type EditNeighborhoodData = CreateNeighborhoodData
 
 export type NeighborhoodType = NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers;
 
-export type ProfileInfo = {
-  
-}
+export type EditProfileFormInput = {
+  firstName: string;
+  lastName: string;
+  bio: string;
+  dob?: string;
+  email: string;
+};
 
 export interface RequestWithUserAndResponses extends Omit<Request, 'time_created'> {
   time_created: string;

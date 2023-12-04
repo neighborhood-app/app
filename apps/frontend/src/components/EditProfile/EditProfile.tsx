@@ -1,6 +1,8 @@
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Col, Row, Form } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
+import { useSubmit } from 'react-router-dom';
+import { EditProfileFormInput } from '../../types';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import extractDate from '../../utils/utilityFunctions';
 import styles from './EditProfile.module.css';
@@ -19,9 +21,25 @@ export default function EditProfile({ profile, closeForm }: Props) {
     email: profile.email || '',
   });
 
+  const submit = useSubmit();
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form: EditProfileFormInput = { ...formInput };
+    if (!form.dob) {
+      delete form.dob;
+    }
+
+    submit(form, {
+      method: 'put',
+      action: `/users/${profile.id}`,
+    });
+    closeForm();
+  };
+
   return (
     <>
-      <Form className={styles.form}>
+      <Form className={styles.form} onSubmit={handleSubmit}>
         <Row className={styles.row}>
           <Col sm={12} md={6}>
             <h3>First name</h3>
@@ -79,7 +97,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
               onChange={(event) => {
                 setFormInput((formerInput) => ({ ...formerInput, email: event.target.value }));
               }}
-              type="text"
+              type="email"
               name="email"
               maxLength={40}></Form.Control>
           </Col>
