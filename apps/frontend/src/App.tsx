@@ -4,8 +4,6 @@ import RootLayout from './pages/RootLayout/RootLayout';
 import LoginPage, { action as loginAction } from './pages/LoginPage/LoginPage';
 import SignUpPage, { action as signUpAction } from './pages/SignUpPage/SignUpPage';
 
-import TestPage from './pages/Test/TestPage';
-
 import NeighborhoodsPage, {
   loader as neighborhoodsLoader,
 } from './pages/NeighborhoodsPage/NeighborhoodsPage';
@@ -58,10 +56,6 @@ const router = createBrowserRouter([
             action: profileAction,
           },
           {
-            path: 'test',
-            element: <TestPage />,
-          },
-          {
             path: 'neighborhoods',
             element: <NeighborhoodsPage />,
             loader: neighborhoodsLoader,
@@ -77,10 +71,6 @@ const router = createBrowserRouter([
             loader: requestLoader,
             action: singleRequestAction,
             element: <SingleRequestPage />,
-          },
-          {
-            path: 'home',
-            element: <HomePage />,
           },
         ],
       },
