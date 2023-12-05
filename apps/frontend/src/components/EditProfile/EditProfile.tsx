@@ -45,7 +45,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
             <Form.Control
               value={formInput.first_name}
               onChange={(event) => {
-                setFormInput((formerInput) => ({ ...formerInput, firstName: event.target.value }));
+                setFormInput((formerInput) => ({ ...formerInput, first_name: event.target.value }));
               }}
               type="text"
               name="first-name"
@@ -56,7 +56,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
             <Form.Control
               value={formInput.last_name}
               onChange={(event) => {
-                setFormInput((formerInput) => ({ ...formerInput, lastName: event.target.value }));
+                setFormInput((formerInput) => ({ ...formerInput, last_name: event.target.value }));
               }}
               type="text"
               name="last-name"
