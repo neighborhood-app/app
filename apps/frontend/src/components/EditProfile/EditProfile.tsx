@@ -1,8 +1,7 @@
-import { UserWithRelatedData } from '@neighborhood/backend/src/types';
+import { UserWithRelatedData, UpdateUserData } from '@neighborhood/backend/src/types';
 import { Col, Row, Form } from 'react-bootstrap';
 import { useState, FormEvent } from 'react';
 import { useSubmit } from 'react-router-dom';
-import { EditProfileFormInput } from '../../types';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import extractDate from '../../utils/utilityFunctions';
 import styles from './EditProfile.module.css';
@@ -14,8 +13,8 @@ type Props = {
 
 export default function EditProfile({ profile, closeForm }: Props) {
   const [formInput, setFormInput] = useState({
-    firstName: profile.first_name || '',
-    lastName: profile.last_name || '',
+    first_name: profile.first_name || '',
+    last_name: profile.last_name || '',
     bio: profile.bio || '',
     dob: extractDate(profile.dob) || '',
     email: profile.email || '',
@@ -25,7 +24,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form: EditProfileFormInput = { ...formInput };
+    const form: UpdateUserData = { ...formInput };
     if (!form.dob) {
       delete form.dob;
     }
@@ -44,7 +43,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
           <Col sm={12} md={6}>
             <h3>First name</h3>
             <Form.Control
-              value={formInput.firstName}
+              value={formInput.first_name}
               onChange={(event) => {
                 setFormInput((formerInput) => ({ ...formerInput, firstName: event.target.value }));
               }}
@@ -55,7 +54,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
           <Col sm={12} md={6}>
             <h3>Last name</h3>
             <Form.Control
-              value={formInput.lastName}
+              value={formInput.last_name}
               onChange={(event) => {
                 setFormInput((formerInput) => ({ ...formerInput, lastName: event.target.value }));
               }}

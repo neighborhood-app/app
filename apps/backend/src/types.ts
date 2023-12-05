@@ -67,6 +67,17 @@ export interface CreateUserData {
 }
 
 /**
+ * format of the data sent to `PUT /user/:id` to edit user
+ */
+export type UpdateUserData = {
+  first_name: string;
+  last_name: string;
+  bio: string;
+  dob?: string;
+  email: string;
+}
+
+/**
  * Format of data sent to POST /api/neighborhood to create new neighborhood
  */
 export type CreateNeighborhoodData = Pick<Neighborhood, 'admin_id' | 'name' | 'description'>;

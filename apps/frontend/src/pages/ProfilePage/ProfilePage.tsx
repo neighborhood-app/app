@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
 import { useState } from 'react';
-import { UserWithRelatedData } from '@neighborhood/backend/src/types';
+import { UpdateUserData, UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Container, Row, Col } from 'react-bootstrap';
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import styles from './ProfilePage.module.css';
@@ -8,7 +8,6 @@ import { getStoredUser } from '../../utils/auth';
 import usersServices from '../../services/users';
 import EditProfile from '../../components/EditProfile/EditProfile';
 import ProfileInfo from '../../components/ProfileInfo/ProfileInfo';
-import { EditProfileFormInput } from '../../types';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const userId = params.id;
@@ -20,7 +19,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const profileId = Number(params.id);
 
-  const profileData = Object.fromEntries(formData) as unknown as EditProfileFormInput;
+  const profileData = Object.fromEntries(formData) as unknown as UpdateUserData;
 
   const response = await usersServices.updateProfile(profileData, profileId);
   return response;

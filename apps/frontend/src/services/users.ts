@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { UserWithRelatedData } from '@neighborhood/backend/src/types';
+import { UserWithRelatedData, UpdateUserData } from '@neighborhood/backend/src/types';
 import { getStoredUser } from '../utils/auth';
-import { EditProfileFormInput } from '../types';
 
 const baseURL = '/api/users';
 
@@ -18,7 +17,7 @@ async function getUserData(id: number): Promise<UserWithRelatedData> {
   return response.data;
 }
 
-async function updateProfile(updateProfileData: EditProfileFormInput, userId: number) {
+async function updateProfile(updateProfileData: UpdateUserData, userId: number) {
   const headers: { authorization?: string } = {};
   const user = getStoredUser();
 

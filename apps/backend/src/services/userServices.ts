@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
-import { CreateUserData, UserWithoutId, UserWithoutPasswordHash } from '../types';
+import { CreateUserData, UpdateUserData, UserWithoutId, UserWithoutPasswordHash } from '../types';
 import prismaClient from '../../prismaClient';
-import { isObject } from '../utils/helpers';
+import { isObject,stringIsValidDate } from '../utils/helpers';
 
 const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   id: true,
@@ -207,9 +207,50 @@ const createUser = async (userData: CreateUserData): Promise<UserWithoutPassword
   return newUserWithoutPasswordHash;
 };
 
+const isUpdateProfileData = (obj: object): obj is UpdateUserData => {
+  const VALID_PROPS = ['first_name', 'last_name', 'email', 'dob', 'bio'];
+  const props = Object.keys(obj);
+
+  if (props.some((prop) => !VALID_PROPS.includes(prop))) return false;
+  if ('first_name' in obj && typeof obj.first_name !== 'string') return false;
+  if ('last_name' in obj && typeof obj.last_name !== 'string') return false;
+  if ('dob' in obj && typeof obj.dob !== 'string') return false;
+  if ('email' in obj && typeof obj.email !== 'string') return false;
+  if ('bio' in obj && typeof obj.bio !== 'string') return false;
+
+  return true;
+};
+
+const updateUser = async (body: unknown, userId: number) => {
+  if (!isObject(body)) {
+    const error = new Error('unable to parse data');
+    error.name = 'InvalidInputError';
+    throw error;
+  }
+
+  if (!isUpdateProfileData(body)) {
+    const error = new Error('Values are invalid');
+    error.name = 'InvalidInputError';
+    throw error;
+  } else if (body.dob && !stringIsValidDate(body.dob)) {
+    const error = new Error('Date is invalid');
+    error.name = 'InvalidDateError';
+    throw error;
+  }
+
+  const updatedProfile = await prismaClient.user.update({
+    where: { id: userId },
+    // @ts-ignore
+    data: { ...body, dob: new Date(body.dob) },
+  });
+
+  return updatedProfile;
+};
+
 export default {
   parseCreateUserData,
   getAllUsers,
   getUserById,
   createUser,
+  updateUser
 };
