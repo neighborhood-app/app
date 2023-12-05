@@ -66,7 +66,7 @@ export default function NeighborhoodSearch({
           </Col>
           <Col xs="auto" sm="auto" className="me-sm-4">
             <CustomBtn className={styles.iconBtn} variant="primary" title="Create a new neighborhood" onClick={handleShow}>
-              <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+              <FontAwesomeIcon className={styles.plusIcon} icon={faPlus}></FontAwesomeIcon>
             </CustomBtn>
           </Col>
         </Row>
