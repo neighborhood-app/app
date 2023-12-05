@@ -6,6 +6,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './NeighborhoodSearch.module.css';
 import NeighborhoodCard from '../NeighborhoodCard/NeighborhoodCard';
 import CustomBtn from '../CustomBtn/CustomBtn';
+import CreateNeighborhoodModal from '../CreateNeighborhoodModal/CreateNeighborhoodModal';
 
 export default function NeighborhoodSearch({
   neighborhoods,
@@ -14,6 +15,10 @@ export default function NeighborhoodSearch({
 }) {
   const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
   const [searchTerm, setSearchTerm] = useState('');
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     let filteredNeighborhoods = neighborhoods;
@@ -60,7 +65,7 @@ export default function NeighborhoodSearch({
             </Form>
           </Col>
           <Col xs="auto" sm="auto" className="me-sm-4">
-            <CustomBtn className={styles.iconBtn} variant="primary" title="Create a new neighborhood">
+            <CustomBtn className={styles.iconBtn} variant="primary" title="Create a new neighborhood" onClick={handleShow}>
               <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
             </CustomBtn>
           </Col>
@@ -77,6 +82,7 @@ export default function NeighborhoodSearch({
           )}
         </Row>
       </Container>
+      <CreateNeighborhoodModal show={show} handleClose={handleClose}></CreateNeighborhoodModal>
     </>
   );
 }
