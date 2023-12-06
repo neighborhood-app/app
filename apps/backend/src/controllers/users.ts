@@ -28,7 +28,7 @@ usersRouter.post('/', catchError(async (req: Request, res: Response) => {
 }));
 
 usersRouter.put(
-  '/:id',
+  '/',
   middleware.validateURLParams,
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
