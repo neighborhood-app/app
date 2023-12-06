@@ -229,11 +229,11 @@ const updateUser = async (body: unknown, userId: number) => {
   }
 
   if (!isUpdateProfileData(body)) {
-    const error = new Error('Values are invalid');
+    const error = new Error('Values provided are invalid');
     error.name = 'InvalidInputError';
     throw error;
   } else if (body.dob && !stringIsValidDate(body.dob)) {
-    const error = new Error('Date is invalid');
+    const error = new Error('Date is not valid');
     error.name = 'InvalidDateError';
     throw error;
   }

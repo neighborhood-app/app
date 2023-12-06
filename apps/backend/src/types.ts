@@ -77,6 +77,14 @@ export type UpdateUserData = {
   email: string;
 }
 
+export type UpdateUserDataBackend = {
+  first_name: string;
+  last_name: string;
+  bio: string;
+  dob?: Date;
+  email: string;
+}
+
 /**
  * Format of data sent to POST /api/neighborhood to create new neighborhood
  */

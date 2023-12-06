@@ -27,16 +27,13 @@ usersRouter.post('/', catchError(async (req: Request, res: Response) => {
   res.status(201).json(newUser);
 }));
 
-// Update request
 usersRouter.put(
   '/:id',
   middleware.validateURLParams,
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const userId = Number(req.loggedUserId);
-
     const updatedUser = await userServices.updateUser(req.body, userId);
-
     return res.status(200).json(updatedUser);
   }),
 );

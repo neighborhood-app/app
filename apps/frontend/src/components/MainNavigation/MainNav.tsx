@@ -6,10 +6,9 @@ import { getStoredUser } from '../../utils/auth';
 
 const profilePic = require('./profile_placeholder.png');
 
-const user = getStoredUser();
-
 const MainNav = () => {
   const mql = window.matchMedia('(max-width: 576px)');
+  const user = getStoredUser();
 
   const [smallDisplay, setSmallDisplay] = useState(mql.matches);
 
