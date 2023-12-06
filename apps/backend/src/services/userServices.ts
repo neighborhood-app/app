@@ -221,7 +221,7 @@ const isUpdateProfileData = (obj: object): obj is UpdateUserInput => {
   return true;
 };
 
-const updateUser = async (body: unknown, userId: number) => {
+const updateUser = async (body: unknown, userId: number): Promise<UserWithoutPasswordHash> => {
   if (!isObject(body)) {
     const error = new Error('unable to parse data');
     error.name = 'InvalidInputError';
@@ -247,9 +247,20 @@ const updateUser = async (body: unknown, userId: number) => {
     updateData = body;
   }
 
-  const updatedProfile = await prismaClient.user.update({
+  const updatedProfile: UserWithoutPasswordHash = await prismaClient.user.update({
     where: { id: userId },
     data: updateData,
+    // Ensures password hash isn't being sent
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      first_name: true,
+      last_name: true,
+      dob: true,
+      gender_id: true,
+      bio: true,
+    }
   });
 
   return updatedProfile;
