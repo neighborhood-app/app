@@ -28,11 +28,14 @@ usersRouter.post('/', catchError(async (req: Request, res: Response) => {
 }));
 
 usersRouter.put(
-  '/',
+  '/:id',
   middleware.validateURLParams,
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const userId = Number(req.loggedUserId);
+    const userId = Number(req.params.id);
+    if (!(userId === Number(req.loggedUserId))) {
+      return res.status(401).json('Logged user is not the owner of this profile')
+    }
     const updatedUser = await userServices.updateUser(req.body, userId);
     return res.status(200).json(updatedUser);
   }),

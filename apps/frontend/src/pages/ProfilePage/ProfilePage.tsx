@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
 import { useState } from 'react';
-import { UpdateUserData, UserWithRelatedData } from '@neighborhood/backend/src/types';
+import { UpdateUserInput, UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Container, Row, Col } from 'react-bootstrap';
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import styles from './ProfilePage.module.css';
@@ -19,7 +19,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const profileId = Number(params.id);
 
-  const profileData = Object.fromEntries(formData) as unknown as UpdateUserData;
+  const profileData = Object.fromEntries(formData) as unknown as UpdateUserInput;
 
   const response = await usersServices.updateProfile(profileData, profileId);
   return response;

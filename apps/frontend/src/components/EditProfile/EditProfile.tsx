@@ -1,4 +1,4 @@
-import { UserWithRelatedData, UpdateUserData } from '@neighborhood/backend/src/types';
+import { UserWithRelatedData, UpdateUserInput } from '@neighborhood/backend/src/types';
 import { Col, Row, Form } from 'react-bootstrap';
 import { useState, FormEvent } from 'react';
 import { useSubmit } from 'react-router-dom';
@@ -24,7 +24,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form: UpdateUserData = { ...formInput };
+    const form: UpdateUserInput = { ...formInput };
     if (!form.dob) {
       delete form.dob;
     }

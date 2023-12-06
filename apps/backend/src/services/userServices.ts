@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
-import { CreateUserData, UpdateUserData, UserWithoutId, UserWithoutPasswordHash } from '../types';
+import { CreateUserData, UpdateUserData, UpdateUserInput, UserWithoutId, UserWithoutPasswordHash } from '../types';
 import prismaClient from '../../prismaClient';
 import { isObject,stringIsValidDate } from '../utils/helpers';
 
@@ -207,7 +207,7 @@ const createUser = async (userData: CreateUserData): Promise<UserWithoutPassword
   return newUserWithoutPasswordHash;
 };
 
-const isUpdateProfileData = (obj: object): obj is UpdateUserData => {
+const isUpdateProfileData = (obj: object): obj is UpdateUserInput => {
   const VALID_PROPS = ['first_name', 'last_name', 'email', 'dob', 'bio'];
   const props = Object.keys(obj);
 
@@ -237,11 +237,19 @@ const updateUser = async (body: unknown, userId: number) => {
     error.name = 'InvalidDateError';
     throw error;
   }
+  let updateData: UpdateUserData | UpdateUserInput;
+
+  if (body.dob && typeof body.dob === 'string') {
+    updateData = {
+      ...body, dob: new Date(body.dob)
+    }
+  } else {
+    updateData = body;
+  }
 
   const updatedProfile = await prismaClient.user.update({
     where: { id: userId },
-    // @ts-ignore
-    data: { ...body, dob: new Date(body.dob) },
+    data: updateData,
   });
 
   return updatedProfile;

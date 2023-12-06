@@ -69,7 +69,7 @@ export interface CreateUserData {
 /**
  * format of the data sent to `PUT /user/:id` to edit user
  */
-export type UpdateUserData = {
+export type UpdateUserInput = {
   first_name: string;
   last_name: string;
   bio: string;
@@ -77,7 +77,7 @@ export type UpdateUserData = {
   email: string;
 }
 
-export type UpdateUserDataBackend = {
+export type UpdateUserData = {
   first_name: string;
   last_name: string;
   bio: string;
