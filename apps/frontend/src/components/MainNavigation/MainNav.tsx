@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
 import styles from './MainNav.module.css';
 import { getStoredUser } from '../../utils/auth';
+import UserCircle from '../UserCircle/UserCircle';
 
-const profilePic = require('./profile_placeholder.png');
+// const profilePic = require('./profile_placeholder.png');
 
 const MainNav = () => {
   const mql = window.matchMedia('(max-width: 576px)');
@@ -19,7 +20,8 @@ const MainNav = () => {
   const profileIconLink = user ? (
     <Link to={`/users/${user.id}`}>
       <div className={styles.link}>
-        <img className={styles.profilePicture} src={profilePic} alt="User's profile" />
+        {/* <img className={styles.profilePicture} src={profilePic} alt="User's profile" /> */}
+        <UserCircle username={user.username} isLast={true} inStack={false} />
       </div>
     </Link>
   ) : null;

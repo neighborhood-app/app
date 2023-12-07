@@ -1,16 +1,5 @@
+import UserCircle from '../UserCircle/UserCircle';
 import styles from './UserCircleStack.module.css';
-
-function UserCircle({ username, isLast = false }: { username: string; isLast?: boolean }) {
-  const firstTwoLetters = username.slice(0, 2).toUpperCase();
-
-  return (
-    <div
-      className={isLast ? styles.lastCircle : styles.circle}
-      style={{ '--i': 1 } as React.CSSProperties}>
-      <strong>{firstTwoLetters}</strong>
-    </div>
-  );
-}
 
 export default function UserCircleStack({ usernames }: { usernames?: string[] }) {
   if (Array.isArray(usernames)) {
