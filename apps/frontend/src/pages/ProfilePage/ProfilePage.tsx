@@ -57,8 +57,8 @@ export default function ProfilePage() {
         <Col className={styles.column}>
           <img src={profileImage} alt="Profile" className={styles.profilePicture} />
         </Col>
-        <Col className={styles.column}>
-          <h2 className={styles.userName}>{profileData.username}</h2>
+        <Col className={`${styles.column} ${styles.headerColumn}`}>
+          <h3 className={styles.userName}>@{profileData.username}</h3>
           {nameOfUser && <p>{nameOfUser}</p>}
           {showUpdateButton ? (
             <CustomBtn className={styles.btn} variant="primary" onClick={() => setEdit(true)}>

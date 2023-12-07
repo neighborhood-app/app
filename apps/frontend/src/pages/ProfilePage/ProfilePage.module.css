@@ -5,6 +5,13 @@
 
 .column {
   min-height: 100%;
+  max-width: fit-content;
+}
+
+.headerColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .header {
@@ -17,10 +24,6 @@
   max-width: 120px;
   aspect-ratio: 1 / 1;
   border-radius: 20px;
-}
-
-.column {
-  max-width: fit-content;
 }
 
 .userName {
