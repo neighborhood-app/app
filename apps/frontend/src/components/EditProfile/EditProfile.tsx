@@ -102,12 +102,12 @@ export default function EditProfile({ profile, closeForm }: Props) {
           </Col>
         </Row>
         <Row>
-          <Col sm={6} className={'d-flex justify-content-end'}>
-            <CustomBtn variant="primary" type="submit">
+          <Col sm={6} xs={6} className={'d-flex justify-content-end'}>
+            <CustomBtn variant="primary" type="submit" className={styles.btn}>
               Submit
             </CustomBtn>
           </Col>
-          <Col sm={6}>
+          <Col sm={6} xs={6}>
             <CustomBtn variant="outline-dark" onClick={closeForm} className={styles.btn}>
               Cancel
             </CustomBtn>

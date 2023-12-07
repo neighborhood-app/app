@@ -13,3 +13,13 @@
 .form {
   width: 50%;
 }
+
+@media (max-width: 576px) {
+  .form {
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
