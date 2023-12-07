@@ -113,7 +113,7 @@ export default function DescriptionBox({
           ) : null}
         </Col>
       </Row>
-      <Row className="mt-2 mt-md-4">
+      <Row className="mt-1 md-4">
         <div className={styles.neighborhoodDescription}>
           {description ? <p>{description}</p> : null}
           {showJoinBtn ? (
