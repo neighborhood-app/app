@@ -111,6 +111,7 @@ const extractUserId = async (
   if (token) {
     const secret: string = config.SECRET as string;
     const decodedToken = jsonwebtoken.verify(token, secret) as JwtPayload;
+    
     if (!decodedToken.id) {
       res.status(401).json({ error: 'Invalid token' });
     } else {

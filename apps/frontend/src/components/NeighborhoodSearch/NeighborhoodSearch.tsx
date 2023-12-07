@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLoaderData, useSearchParams } from 'react-router-dom';
+import { useLoaderData, useSubmit } from 'react-router-dom';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,55 +9,66 @@ import styles from './NeighborhoodSearch.module.css';
 import NeighborhoodCard from '../NeighborhoodCard/NeighborhoodCard';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import CreateNeighborhoodModal from '../CreateNeighborhoodModal/CreateNeighborhoodModal';
-// import neighborhoodServices from '../../services/neighborhoods';
 
 export default function NeighborhoodSearch({
   neighborhoods,
   hasNextPage,
+  lastCursor,
 }: {
   neighborhoods: Neighborhood[];
   hasNextPage: boolean;
+  lastCursor: string;
 }) {
-  // const submit = useSubmit();
+  const submit = useSubmit();
   const loaderData = useLoaderData() as { neighborhoods: Neighborhood[]; hasNextPage: boolean };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
   const [searchTerm, setSearchTerm] = useState('');
   const [show, setShow] = useState(false);
   const [partialNhoods, setPartialNhoods] = useState(neighborhoods || []);
-  const [cursor, setCursor] = useState(1);
+  const [cursor, setCursor] = useState(+lastCursor);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [searchParams, setSearchParams] = useSearchParams(`cursor=${cursor}`);
-  const [hasMore, setHasMore] = useState(hasNextPage);
+  // const [searchParams, setSearchParams] = useSearchParams(`cursor=${cursor}`);
+  
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   // const [error, setError]: [error: Error | null, setError: Dispatch<SetStateAction<null | Error>>] = useState(null);
-
+  
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  
+  // console.log({partialNhoods, neighborhoods, cursor, hasNextPage});
 
   const fetchData = async () => {
+    console.log({hasNextPage});
+    
     setIsLoading(true);
     // setError(null);
 
-    try {      
-      setSearchParams(`cursor=${cursor}`);
-      // const searchParams = new URLSearchParams();
-      // searchParams.append('limit', NHOODS_PER_PAGE);
-      // searchParams.append('cursor', String(cursor));
-      // submit(searchParams, {
-      //   action: '/explore',
-      // });
-
-      // const response = await neighborhoodServices.getNeighborhoodsPerPage(12, cursor);
-      console.log({searchParams, loaderData});
-
-      setPartialNhoods((prevItems) => [...prevItems, ...loaderData.neighborhoods ]);
-      setHasMore(loaderData.hasNextPage);
-      setCursor((_) => {
-        const lastNeighborhood = partialNhoods[partialNhoods.length - 1];
-        return lastNeighborhood ? lastNeighborhood.id : 0;
+    try {
+      // setSearchParams(`cursor=${cursor}`);
+      const searchParams = new URLSearchParams();
+      searchParams.append('cursor', String(cursor));
+      searchParams.append('limit', '12');
+      submit(searchParams, {
+        action: '/explore',
       });
+
+      console.log(searchParams.get('cursor'));
+
+      // ERROR: cursor is the same before and after resetting on 2nd fetch
+      console.log('cursor before resetting:', cursor);
+      setPartialNhoods((prevItems) => [...prevItems, ...loaderData.neighborhoods]);
+      setCursor((_) => {
+        const latestNhoods = loaderData.neighborhoods;
+        console.log({latestNhoods, cursor});
+        
+        const lastNeighborhood = latestNhoods[latestNhoods.length - 1];
+        return lastNeighborhood ? lastNeighborhood.id : 100; // replace this with a value indicating no more hoods exist
+      });
+
+      console.log("cursor after resetting:", cursor);
+      
     } catch (error) {
       // setError(error as Error);
     } finally {
@@ -65,9 +76,9 @@ export default function NeighborhoodSearch({
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     let filteredNeighborhoods = neighborhoods;
@@ -87,16 +98,22 @@ export default function NeighborhoodSearch({
     setSearchTerm(searchInput);
   };
 
-  const neighborhoodBoxes =
-    partialNhoods.map((neighborhood: Neighborhood) => (
-      <Col className="" sm="6" md="4" lg="3" key={neighborhood.id}>
-        <NeighborhoodCard
-          id={neighborhood.id}
-          name={neighborhood.name}
-          description={neighborhood.description}
-          isUserAdmin={false}></NeighborhoodCard>
-      </Col>
-    )) || [];
+  // eslint-disable-next-line arrow-body-style
+  const neighborhoodBoxes = partialNhoods.map((neighborhood: Neighborhood) => {
+    // console.log('key', neighborhood.id);
+
+    return (
+      (
+        <Col className="" sm="6" md="4" lg="3" key={neighborhood.id}>
+          <NeighborhoodCard
+            id={neighborhood.id}
+            name={neighborhood.name}
+            description={neighborhood.description}
+            isUserAdmin={false}></NeighborhoodCard>
+        </Col>
+      ) || []
+    );
+  });
 
   return (
     <>
@@ -128,9 +145,9 @@ export default function NeighborhoodSearch({
       <Container className={styles.neighborhoodsContainer} fluid>
         {neighborhoodBoxes.length > 0 ? (
           <InfiniteScroll
-            dataLength={12}
+            dataLength={12} // move this into a constant
             next={fetchData}
-            hasMore={hasMore}
+            hasMore={hasNextPage}
             loader={<p>Loading...</p>}
             endMessage={<p>You've seen all the Neighborhoods!</p>}>
             <Row className="gy-sm-4 gx-sm-4">{neighborhoodBoxes}</Row>

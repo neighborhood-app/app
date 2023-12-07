@@ -219,6 +219,46 @@ async function main() {
   });
 
   await connectUsertoNeighborhood(shwetank.id, shwetankNeighborhood.id);
+
+  const neighborhood1 = await prismaClient.neighborhood.create({
+    data: {
+      admin_id: bob.id,
+      name: "Neighborhood 1",
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+    },
+  });
+
+  await connectUsertoNeighborhood(bob.id, neighborhood1.id);
+
+  const neighborhood2 = await prismaClient.neighborhood.create({
+    data: {
+      admin_id: radu.id,
+      name: "Neighborhood 2",
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+    },
+  });
+
+  await connectUsertoNeighborhood(bob.id, neighborhood2.id);
+
+  const neighborhood3 = await prismaClient.neighborhood.create({
+    data: {
+      admin_id: maria.id,
+      name: "Neighborhood 3",
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+    },
+  });
+
+  await connectUsertoNeighborhood(bob.id, neighborhood3.id);
+
+  const neighborhood4 = await prismaClient.neighborhood.create({
+    data: {
+      admin_id: mike.id,
+      name: "Neighborhood 4",
+      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+    },
+  });
+
+  await connectUsertoNeighborhood(bob.id, neighborhood4.id);
 }
 
 main()

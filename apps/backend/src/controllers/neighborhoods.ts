@@ -14,18 +14,17 @@ import neighborhoodServices from '../services/neighborhoodServices';
 
 const neighborhoodsRouter = express.Router();
 
-// Get neighborhoods 
+// Get neighborhoods for current page
 neighborhoodsRouter.get(
   '/',
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
-    console.log({ cursor: req.params.cursor });
+    console.log("query", req.query);
     
-    const cursor = Number(req.params.cursor) || undefined;
-    const limit = Number(req.params.limit) || undefined;
+    const cursor = Number(req.query.cursor) || undefined;
+    const limit = Number(req.query.limit) || undefined;    
 
     const neighborhoodsAndNext = await neighborhoodServices.getNeighborhoodsPerPage(limit, cursor);
-    console.log('backend controller', neighborhoodsAndNext);
 
     return res.status(200).send(neighborhoodsAndNext);
   }),
@@ -40,6 +39,7 @@ neighborhoodsRouter.get(
 //   }),
 // );
 
+// We don't do login validation on this route
 neighborhoodsRouter.get(
   '/:id',
   middleware.userIdExtractor,

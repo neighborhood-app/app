@@ -7,7 +7,14 @@ import { getStoredUser } from '../utils/auth';
 const BASE_URL = '/api/neighborhoods';
 
 async function getAllNeighborhoods(): Promise<Neighborhood[]> {
-  const response = await axios.get(BASE_URL);
+  const user = getStoredUser();
+  const headers = { authorization: '' };
+
+  if (user) {
+    headers.authorization = `Bearer ${user.token}`;
+  }
+
+  const response = await axios.get(BASE_URL, { headers });
   return response.data;
 }
 
@@ -15,11 +22,14 @@ async function getNeighborhoodsPerPage(
   limit: number,
   cursor?: string | null,
 ): Promise<{ neighborhoods: Neighborhood[]; hasNextPage: boolean }> {
+  const user = getStoredUser();
+  const headers = { authorization: '' };
+
+  if (user) headers.authorization = `Bearer ${user.token}`;
   if (cursor === null) cursor = undefined;
 
-  const response = await axios.get(`${BASE_URL}?cursor=${cursor}&limit=${limit}`);
-  console.log("in frotnend services", response.data);
-  
+  const response = await axios.get(`${BASE_URL}?cursor=${cursor}&limit=${limit}`, { headers });
+
   return response.data;
 }
 
