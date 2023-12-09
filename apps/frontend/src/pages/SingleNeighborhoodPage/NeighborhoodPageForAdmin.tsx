@@ -2,6 +2,7 @@ import styles from './SingleNeighborhoodPage.module.css';
 import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
 import RequestBox from '../../components/RequestBox/RequestBox';
 import { NeighborhoodDetailsForMembers } from '../../types';
+import MapBox from '../../components/MapBox/MapBox';
 
 const NeighborhoodPageForAdmin = (props: { neighborhood: NeighborhoodDetailsForMembers }) => {
   const { neighborhood } = props;
@@ -18,6 +19,7 @@ const NeighborhoodPageForAdmin = (props: { neighborhood: NeighborhoodDetailsForM
         description={neighborhood.description ? neighborhood.description : ''}
         users={neighborhood.users}
       />
+      <MapBox />
       <RequestBox requests={neighborhood.requests} />
     </div>
   );
