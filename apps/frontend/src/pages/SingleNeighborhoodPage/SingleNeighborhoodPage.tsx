@@ -9,9 +9,10 @@ import {
   SingleNeighborhoodFormIntent,
   UserRole,
 } from '../../types';
-import NeighborhoodPageForMembers from './NeighborhoodPageForMembers';
-import NeighborhoodPageForAdmin from './NeighborhoodPageForAdmin';
-import NeighborhoodPageForNonMembers from './NeighborhoodPageForNonMembers';
+import styles from './SingleNeighborhoodPage.module.css';
+import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
+import RequestBox from '../../components/RequestBox/RequestBox';
+import MapBox from '../../components/MapBox/MapBox';
 import { getStoredUser } from '../../utils/auth';
 
 export async function loader({ params }: LoaderFunctionArgs) {
@@ -50,46 +51,41 @@ export async function action({ params, request }: ActionFunctionArgs) {
 }
 
 export default function SingleNeighborhood() {
-  // I have moved the function `checkLoggedUserRole` inside the component
-  // to make the component self-contained
-  // Please see if we can make this helper function uncluttered.
-  // Now we are planning to save userId in the localStorage. That is required to get userData from the backend.
-  // I think checking whether user is admin or not can be slighly easier if we have access to userId.
-  // We just want to check the role and not do type-narrowing for Neighborhood
-  function checkLoggedUserRole(userName: string, neighborhood: NeighborhoodType): UserRole {
-    const checkForNeighborhoodDetails = (
-      neighborhood: NeighborhoodType,
-    ): neighborhood is NeighborhoodDetailsForMembers => Object.hasOwn(neighborhood, 'admin');
+  const checkForNeighborhoodDetails = (
+    neighborhood: NeighborhoodType,
+  ): neighborhood is NeighborhoodDetailsForMembers => Object.hasOwn(neighborhood, 'admin');
 
+  function checkLoggedUserRole(
+    userName: string | undefined,
+    neighborhood: NeighborhoodType,
+  ): UserRole {
     if (checkForNeighborhoodDetails(neighborhood)) {
-      return neighborhood.admin.username === userName ? UserRole.ADMIN : UserRole.MEMBER;
+      return neighborhood.admin.username === userName ? 'ADMIN' : 'MEMBER';
     }
-    return UserRole['NON-MEMBER'];
+    return 'NON-MEMBER';
   }
 
-  // Here we only need the username, we can easily access it from localStorage
-  // context seems to be overengineered solution to a simple problem
   const user = getStoredUser();
-
   const neighborhoodData = useLoaderData() as NeighborhoodType;
+  const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
+  console.log(userRole);
 
-  // We are type-converting while passing `neighborhood` as argument
-  // as `userRole` uniquely determines the type of `neighborhood`
-  // I am not sure whether this is considered good practise or not
-
-  if (!user) {
-    return <NeighborhoodPageForNonMembers neighborhood={neighborhoodData} />;
-  }
-  const userRole: UserRole = checkLoggedUserRole(user.username, neighborhoodData);
-  if (userRole === UserRole.MEMBER) {
-    return (
-      <NeighborhoodPageForMembers
-        neighborhood={neighborhoodData as NeighborhoodDetailsForMembers}
-      />
-    );
-  }
-  // This is the version for admins
   return (
-    <NeighborhoodPageForAdmin neighborhood={neighborhoodData as NeighborhoodDetailsForMembers} />
+    <div className={styles.wrapper}>
+      <DescriptionBox
+        userRole={userRole}
+        name={neighborhoodData.name}
+        description={neighborhoodData.description ? neighborhoodData.description : ''}
+        users={checkForNeighborhoodDetails(neighborhoodData) ? neighborhoodData.users : null}
+      />
+      <MapBox />
+      {
+        <RequestBox
+          requests={
+            checkForNeighborhoodDetails(neighborhoodData) ? neighborhoodData.requests : null
+          }
+        />
+      }
+    </div>
   );
 }

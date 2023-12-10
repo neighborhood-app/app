@@ -66,11 +66,7 @@ export type FormIntent = SingleNeighborhoodFormIntent | SingleRequestFormIntent
 
 // this is a [bug](https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope)
 // eslint-disable-next-line no-shadow
-export enum UserRole {
-  'NON-MEMBER' = 'NON-MEMBER',
-  'MEMBER' = 'MEMBER',
-  'ADMIN' = 'ADMIN',
-}
+export type UserRole = 'NON-MEMBER' | 'MEMBER' | 'ADMIN'
 
 // RequestWithUserAndResponses or just Request?
 // export interface ResponseWithUserAndRequest extends Response {

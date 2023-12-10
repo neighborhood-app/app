@@ -10,16 +10,12 @@ import styles from './DescriptionBox.module.css';
 import UserCircleStack from '../UserCircleStack/UserCircleStack';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import EditNeighborhoodModal from '../EditNeighborhoodModal/EditNeighborhoodModal';
-import { FormIntent } from '../../types';
+import { FormIntent, UserRole } from '../../types';
 
 const neighborhoodImg = require('./palm.jpeg');
 
 interface Props {
-  showJoinBtn: boolean;
-  showEditBtn: boolean;
-  showDeleteBtn: boolean;
-  showLeaveBtn: boolean;
-  showMembers: boolean;
+  userRole: UserRole;
   name: string;
   description: string;
   users?: Array<User> | null;
@@ -30,16 +26,7 @@ interface PromptDetails {
   intent: FormIntent;
 }
 
-export default function DescriptionBox({
-  showJoinBtn,
-  showEditBtn,
-  showDeleteBtn,
-  showLeaveBtn,
-  showMembers,
-  name,
-  description,
-  users,
-}: Props) {
+export default function DescriptionBox({ userRole, name, description, users }: Props) {
   const usernames = users?.map((user) => user.username);
   const [showAlert, setShowAlert] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -102,8 +89,8 @@ export default function DescriptionBox({
           xs="12"
           md="2"
           className={`${styles.membersContainer} justify-content-md-end ms-md-auto ms-3 pe-0`}>
-          {showMembers ? <UserCircleStack usernames={usernames} /> : null}
-          {showLeaveBtn ? (
+          {userRole !== 'NON-MEMBER' ? <UserCircleStack usernames={usernames} /> : null}
+          {userRole === 'MEMBER' ? (
             <FontAwesomeIcon
               icon={faDoorOpen}
               size="2xl"
@@ -116,7 +103,7 @@ export default function DescriptionBox({
       <Row className="mt-2 mt-md-4">
         <div className={styles.neighborhoodDescription}>
           {description ? <p>{description}</p> : null}
-          {showJoinBtn ? (
+          {userRole === 'NON-MEMBER' ? (
             <TriggerActionButton
               route={`/neighborhoods/${neighborhoodId}`}
               variant="primary"
@@ -125,12 +112,12 @@ export default function DescriptionBox({
             />
           ) : null}
           <div className={styles.buttonsContainer}>
-            {showEditBtn ? (
+            {userRole === 'ADMIN' ? (
               <CustomBtn variant="outline-dark" className={styles.btn} onClick={handleShowForm}>
                 Edit Neighborhood
               </CustomBtn>
             ) : null}
-            {showDeleteBtn ? (
+            {userRole === 'ADMIN' ? (
               <CustomBtn variant="danger" className={styles.btn} onClick={handleDeletePrompt}>
                 Delete Neighborhood
               </CustomBtn>
