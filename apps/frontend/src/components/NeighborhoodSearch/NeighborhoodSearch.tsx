@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLoaderData, useSubmit } from 'react-router-dom';
+import { useActionData, useSubmit } from 'react-router-dom';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,55 +20,46 @@ export default function NeighborhoodSearch({
   lastCursor: string;
 }) {
   const submit = useSubmit();
-  const loaderData = useLoaderData() as { neighborhoods: Neighborhood[]; hasNextPage: boolean };
+  const actionData = useActionData() as {
+    neighborhoods: Neighborhood[];
+    hasNextPage: boolean;
+    newCursor: string;
+  };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
+  const [neighborhoodList, setNeighborhoodList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [show, setShow] = useState(false);
-  const [partialNhoods, setPartialNhoods] = useState(neighborhoods || []);
-  const [cursor, setCursor] = useState(+lastCursor);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const [searchParams, setSearchParams] = useSearchParams(`cursor=${cursor}`);
-  
+  const [partialNhoods, setPartialNhoods] = useState(neighborhoods);
+  const [cursor, setCursor] = useState(lastCursor);
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   // const [error, setError]: [error: Error | null, setError: Dispatch<SetStateAction<null | Error>>] = useState(null);
-  
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  
-  // console.log({partialNhoods, neighborhoods, cursor, hasNextPage});
 
   const fetchData = async () => {
-    console.log({hasNextPage});
-    
     setIsLoading(true);
     // setError(null);
-
     try {
-      // setSearchParams(`cursor=${cursor}`);
-      const searchParams = new URLSearchParams();
-      searchParams.append('cursor', String(cursor));
-      searchParams.append('limit', '12');
-      submit(searchParams, {
-        action: '/explore',
-      });
+      submit(
+        { cursor },
+        {
+          action: '/explore',
+          method: 'post',
+        },
+      );
 
-      console.log(searchParams.get('cursor'));
-
-      // ERROR: cursor is the same before and after resetting on 2nd fetch
-      console.log('cursor before resetting:', cursor);
-      setPartialNhoods((prevItems) => [...prevItems, ...loaderData.neighborhoods]);
+      setPartialNhoods((prevItems) => [...prevItems, ...actionData.neighborhoods]);
       setCursor((_) => {
-        const latestNhoods = loaderData.neighborhoods;
-        console.log({latestNhoods, cursor});
-        
-        const lastNeighborhood = latestNhoods[latestNhoods.length - 1];
-        return lastNeighborhood ? lastNeighborhood.id : 100; // replace this with a value indicating no more hoods exist
+        const { newCursor } = actionData;
+        console.log({ newCursor });
+
+        return newCursor; // newCursor could be undefined
       });
 
-      console.log("cursor after resetting:", cursor);
-      
+      console.log('cursor after resetting:', cursor);
     } catch (error) {
       // setError(error as Error);
     } finally {
@@ -77,22 +68,18 @@ export default function NeighborhoodSearch({
   };
 
   // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  //   let filteredNeighborhoods = neighborhoods;
 
-  useEffect(() => {
-    let filteredNeighborhoods = neighborhoods;
+  //   if (searchTerm !== '') {
+  //     filteredNeighborhoods =
+  //       filteredNeighborhoods?.filter((neighborhood) =>
+  //         neighborhood.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  //       ) || [];
+  //   }
 
-    if (searchTerm !== '') {
-      filteredNeighborhoods =
-        filteredNeighborhoods?.filter((neighborhood) =>
-          neighborhood.name.toLowerCase().includes(searchTerm.toLowerCase()),
-        ) || [];
-    }
-
-    setNeighborhoodList(filteredNeighborhoods);
-    setPartialNhoods(filteredNeighborhoods || []);
-  }, [neighborhoods, searchTerm]);
+  //   setNeighborhoodList(filteredNeighborhoods);
+  //   setPartialNhoods(filteredNeighborhoods || []);
+  // }, [neighborhoods, searchTerm]);
 
   const searchNeighborhoods = (searchInput: string): void => {
     setSearchTerm(searchInput);

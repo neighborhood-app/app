@@ -19,7 +19,7 @@ async function getAllNeighborhoods(): Promise<Neighborhood[]> {
 }
 
 async function getNeighborhoodsPerPage(
-  limit: number,
+  limit: string,
   cursor?: string | null,
 ): Promise<{ neighborhoods: Neighborhood[]; hasNextPage: boolean }> {
   const user = getStoredUser();
