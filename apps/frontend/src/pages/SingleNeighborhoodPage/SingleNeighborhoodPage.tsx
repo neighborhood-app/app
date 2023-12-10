@@ -68,7 +68,6 @@ export default function SingleNeighborhood() {
   const user = getStoredUser();
   const neighborhoodData = useLoaderData() as NeighborhoodType;
   const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
-  console.log(userRole);
 
   return (
     <div className={styles.wrapper}>
