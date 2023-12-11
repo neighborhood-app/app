@@ -82,7 +82,7 @@ export default function DescriptionBox({ userRole, name, description, users }: P
             src={neighborhoodImg}
             alt="Neighborhood"></Image>
         </Col>
-        <Col xs="12" sm="auto" className="">
+        <Col xs="12" sm="auto">
           <h1>{name}</h1>
         </Col>
         <Col

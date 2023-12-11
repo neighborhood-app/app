@@ -1,4 +1,5 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
+import { Container, Row } from 'react-bootstrap';
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
@@ -81,15 +82,20 @@ export default function SingleNeighborhood() {
   }
 
   return (
-    <div className={styles.wrapper}>
-      <DescriptionBox
-        userRole={userRole}
-        name={neighborhoodData.name}
-        description={neighborhoodData.description ? neighborhoodData.description : ''}
-        users={neighborhoodUsers}
-      />
-      <MapBox />
-      {<RequestBox requests={neighborhoodRequests} />}
-    </div>
+    <Container className={styles.wrapper} fluid>
+      <Row></Row>
+      <Row>
+        <DescriptionBox
+          userRole={userRole}
+          name={neighborhoodData.name}
+          description={neighborhoodData.description ? neighborhoodData.description : ''}
+          users={neighborhoodUsers}
+        />
+      </Row>
+      <Row>
+        <MapBox />
+      </Row>
+      <Row>{<RequestBox requests={neighborhoodRequests} />}</Row>
+    </Container>
   );
 }
