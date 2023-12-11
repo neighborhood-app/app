@@ -6,10 +6,6 @@ import SignUpPage, { action as signUpAction } from './pages/SignUpPage/SignUpPag
 
 import TestPage from './pages/Test/TestPage';
 
-import NeighborhoodsPage, {
-  loader as neighborhoodsLoader,
-} from './pages/NeighborhoodsPage/NeighborhoodsPage';
-
 import SingleNeighborhoodPage, {
   loader as neighborhoodLoader,
   action as requestAction,
@@ -49,11 +45,6 @@ const router = createBrowserRouter([
           {
             path: 'test',
             element: <TestPage />,
-          },
-          {
-            path: 'neighborhoods',
-            element: <NeighborhoodsPage />,
-            loader: neighborhoodsLoader,
           },
           {
             path: 'neighborhoods/:id',
