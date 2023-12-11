@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
-import { Container, Row } from 'react-bootstrap';
+import { Container, Row, Col, Image } from 'react-bootstrap';
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
@@ -51,6 +51,8 @@ export async function action({ params, request }: ActionFunctionArgs) {
   return response;
 }
 
+const neighborhoodImg = require('./palm.jpeg');
+
 export default function SingleNeighborhood() {
   const checkForNeighborhoodDetails = (
     neighborhood: NeighborhoodType,
@@ -83,7 +85,18 @@ export default function SingleNeighborhood() {
 
   return (
     <Container className={styles.wrapper} fluid>
-      <Row></Row>
+      <Row className="align-items-center gy-3">
+        <Col xs="auto">
+          <Image
+            className={styles.neighborhoodImg}
+            roundedCircle
+            src={neighborhoodImg}
+            alt="Neighborhood"></Image>
+        </Col>
+        <Col xs="12" sm="auto">
+          <h1>{neighborhoodData.name}</h1>
+        </Col>
+      </Row>
       <Row>
         <DescriptionBox
           userRole={userRole}

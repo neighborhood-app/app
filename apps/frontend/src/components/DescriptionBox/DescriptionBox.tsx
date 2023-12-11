@@ -1,5 +1,5 @@
 import { User } from '@neighborhood/backend/src/types';
-import { Container, Row, Col, Image } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,8 +11,6 @@ import UserCircleStack from '../UserCircleStack/UserCircleStack';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import EditNeighborhoodModal from '../EditNeighborhoodModal/EditNeighborhoodModal';
 import { FormIntent, UserRole } from '../../types';
-
-const neighborhoodImg = require('./palm.jpeg');
 
 interface Props {
   userRole: UserRole;
@@ -75,16 +73,6 @@ export default function DescriptionBox({ userRole, name, description, users }: P
         description={description}
       />
       <Row className="align-items-center gy-3">
-        <Col xs="auto" className="">
-          <Image
-            className={styles.neighborhoodImg}
-            roundedCircle
-            src={neighborhoodImg}
-            alt="Neighborhood"></Image>
-        </Col>
-        <Col xs="12" sm="auto">
-          <h1>{name}</h1>
-        </Col>
         <Col
           xs="12"
           md="2"

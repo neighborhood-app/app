@@ -2,6 +2,11 @@
   padding: 50px;
 }
 
+.neighborhoodImg {
+  max-height: 5em;
+  min-width: 5em;
+}
+
 @media (max-width: 576px) {
   .wrapper {
     padding: 30px;
