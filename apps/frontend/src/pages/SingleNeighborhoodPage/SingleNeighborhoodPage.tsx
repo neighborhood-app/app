@@ -69,22 +69,27 @@ export default function SingleNeighborhood() {
   const neighborhoodData = useLoaderData() as NeighborhoodType;
   const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
 
+  let neighborhoodUsers;
+  let neighborhoodRequests;
+
+  if (checkForNeighborhoodDetails(neighborhoodData)) {
+    neighborhoodUsers = neighborhoodData.users;
+    neighborhoodRequests = neighborhoodData.requests;
+  } else {
+    neighborhoodUsers = null;
+    neighborhoodRequests = null;
+  }
+
   return (
     <div className={styles.wrapper}>
       <DescriptionBox
         userRole={userRole}
         name={neighborhoodData.name}
         description={neighborhoodData.description ? neighborhoodData.description : ''}
-        users={checkForNeighborhoodDetails(neighborhoodData) ? neighborhoodData.users : null}
+        users={neighborhoodUsers}
       />
       <MapBox />
-      {
-        <RequestBox
-          requests={
-            checkForNeighborhoodDetails(neighborhoodData) ? neighborhoodData.requests : null
-          }
-        />
-      }
+      {<RequestBox requests={neighborhoodRequests} />}
     </div>
   );
 }
