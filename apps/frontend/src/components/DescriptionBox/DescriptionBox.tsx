@@ -1,10 +1,9 @@
 import { User } from '@neighborhood/backend/src/types';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useState } from 'react';
+import { SetStateAction, useState, Dispatch } from 'react';
 import { useParams } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
-import Prompt from '../Prompt/Prompt';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
 import UserCircleStack from '../UserCircleStack/UserCircleStack';
@@ -12,34 +11,32 @@ import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import EditNeighborhoodModal from '../EditNeighborhoodModal/EditNeighborhoodModal';
 import { FormIntent, UserRole } from '../../types';
 
-interface Props {
-  userRole: UserRole;
-  name: string;
-  description: string;
-  users?: Array<User> | null;
-}
-
 interface PromptDetails {
   show: boolean;
   text: string;
   intent: FormIntent;
 }
 
-export default function DescriptionBox({ userRole, name, description, users }: Props) {
-  const usernames = users?.map((user) => user.username);
-  // const [showAlert, setShowAlert] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+interface Props {
+  userRole: UserRole;
+  name: string;
+  description: string;
+  users?: Array<User> | null;
+  setPromptDetails: Dispatch<SetStateAction<PromptDetails>>;
+}
 
-  const [promptDetails, setPromptDetails] = useState<PromptDetails>({
-    show: false,
-    text: '',
-    intent: 'leave-neighborhood',
-  });
+export default function DescriptionBox({
+  userRole,
+  name,
+  description,
+  users,
+  setPromptDetails,
+}: Props) {
+  const usernames = users?.map((user) => user.username);
+  const [showForm, setShowForm] = useState(false);
 
   const handleCloseForm = () => setShowForm(false);
   const handleShowForm = () => setShowForm(true);
-
-  const handleCloseAlert = () => setPromptDetails(previousState => ({...previousState, show: false}));
 
   const { id: neighborhoodId } = useParams();
 
@@ -61,13 +58,6 @@ export default function DescriptionBox({ userRole, name, description, users }: P
 
   return (
     <Container fluid className={styles.container}>
-      <Prompt
-        text={promptDetails.text}
-        intent={promptDetails.intent}
-        route={`/neighborhoods/${neighborhoodId}`}
-        status={promptDetails.show}
-        handleClose={handleCloseAlert}
-      />
       <EditNeighborhoodModal
         show={showForm}
         handleClose={handleCloseForm}

@@ -1,4 +1,5 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
+import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData, useParams } from 'react-router';
+import { useState } from 'react';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
@@ -9,10 +10,12 @@ import {
   NeighborhoodType,
   SingleNeighborhoodFormIntent,
   UserRole,
+  FormIntent,
 } from '../../types';
 import styles from './SingleNeighborhoodPage.module.css';
 import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
 import RequestBox from '../../components/RequestBox/RequestBox';
+import Prompt from '../../components/Prompt/Prompt';
 import MapBox from '../../components/MapBox/MapBox';
 import { getStoredUser } from '../../utils/auth';
 
@@ -54,6 +57,24 @@ export async function action({ params, request }: ActionFunctionArgs) {
 const neighborhoodImg = require('./palm.jpeg');
 
 export default function SingleNeighborhood() {
+  interface PromptDetails {
+    show: boolean;
+    text: string;
+    intent: FormIntent;
+  }
+
+  const { id: neighborhoodId } = useParams();
+
+  const [promptDetails, setPromptDetails] = useState<PromptDetails>({
+    show: false,
+    text: '',
+    intent: 'leave-neighborhood',
+  });
+
+  function handleClosePrompt() {
+    setPromptDetails((previousState) => ({ ...previousState, show: false }));
+  }
+
   const checkForNeighborhoodDetails = (
     neighborhood: NeighborhoodType,
   ): neighborhood is NeighborhoodDetailsForMembers => Object.hasOwn(neighborhood, 'admin');
@@ -85,6 +106,13 @@ export default function SingleNeighborhood() {
 
   return (
     <Container className={styles.wrapper} fluid>
+      <Prompt
+        text={promptDetails.text}
+        intent={promptDetails.intent}
+        route={`/neighborhoods/${neighborhoodId}`}
+        status={promptDetails.show}
+        handleClose={handleClosePrompt}
+      />
       <Row className="align-items-center gy-3">
         <Col xs="auto">
           <Image
@@ -106,6 +134,7 @@ export default function SingleNeighborhood() {
           name={neighborhoodData.name}
           description={neighborhoodData.description ? neighborhoodData.description : ''}
           users={neighborhoodUsers}
+          setPromptDetails={setPromptDetails}
         />
       </Row>
       <Row>
