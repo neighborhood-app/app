@@ -96,6 +96,9 @@ export default function SingleNeighborhood() {
         <Col xs="12" sm="auto">
           <h1>{neighborhoodData.name}</h1>
         </Col>
+        <Col className="d-flex justify-content-end">
+          <p>Test</p>
+        </Col>
       </Row>
       <Row>
         <DescriptionBox
