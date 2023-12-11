@@ -20,16 +20,18 @@ interface Props {
 }
 
 interface PromptDetails {
+  show: boolean;
   text: string;
   intent: FormIntent;
 }
 
 export default function DescriptionBox({ userRole, name, description, users }: Props) {
   const usernames = users?.map((user) => user.username);
-  const [showAlert, setShowAlert] = useState(false);
+  // const [showAlert, setShowAlert] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
   const [promptDetails, setPromptDetails] = useState<PromptDetails>({
+    show: false,
     text: '',
     intent: 'leave-neighborhood',
   });
@@ -37,24 +39,24 @@ export default function DescriptionBox({ userRole, name, description, users }: P
   const handleCloseForm = () => setShowForm(false);
   const handleShowForm = () => setShowForm(true);
 
-  const handleCloseAlert = () => setShowAlert(false);
+  const handleCloseAlert = () => setPromptDetails(previousState => ({...previousState, show: false}));
 
   const { id: neighborhoodId } = useParams();
 
   function handleLeavePrompt() {
     setPromptDetails({
+      show: true,
       text: 'Are you sure you want to leave this neighborhood?',
       intent: 'leave-neighborhood',
     });
-    setShowAlert(true);
   }
 
   function handleDeletePrompt() {
     setPromptDetails({
+      show: true,
       text: 'Are you sure you want to do this? This will delete the neighborhood for you and all members!',
       intent: 'delete-neighborhood',
     });
-    setShowAlert(true);
   }
 
   return (
@@ -63,7 +65,7 @@ export default function DescriptionBox({ userRole, name, description, users }: P
         text={promptDetails.text}
         intent={promptDetails.intent}
         route={`/neighborhoods/${neighborhoodId}`}
-        status={showAlert}
+        status={promptDetails.show}
         handleClose={handleCloseAlert}
       />
       <EditNeighborhoodModal
