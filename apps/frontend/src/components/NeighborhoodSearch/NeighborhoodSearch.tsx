@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useActionData, useSubmit } from 'react-router-dom';
+import { useState } from 'react';
+import { useLoaderData, useSearchParams } from 'react-router-dom';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,19 +18,29 @@ export default function NeighborhoodSearch({
   neighborhoods: Neighborhood[];
   hasNextPage: boolean;
   lastCursor: string;
-}) {
-  const submit = useSubmit();
-  const actionData = useActionData() as {
+  }) {
+  const data = useLoaderData()  as {
     neighborhoods: Neighborhood[];
     hasNextPage: boolean;
-    newCursor: string;
+    cursor: string;
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [searchParams, setSearchParams] = useSearchParams() 
+  // const submit = useSubmit();
+  // const actionData = useActionData() as {
+  //   neighborhoods: Neighborhood[];
+  //   hasNextPage: boolean;
+  //   newCursor: string;
+  // };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [neighborhoodList, setNeighborhoodList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [show, setShow] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [partialNhoods, setPartialNhoods] = useState(neighborhoods);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cursor, setCursor] = useState(lastCursor);
+  // console.log('in component', { partialNhoods, cursor });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
@@ -39,32 +49,64 @@ export default function NeighborhoodSearch({
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  // fetch the next batch of data by triggering the action
+  // useEffect(() => {
+  //   try {
+  //     submit(
+  //       { cursor },
+  //       {
+  //         action: '/explore',
+  //         method: 'post',
+  //       },
+  //     );
+  //     // setPartialNhoods((prevItems) => [...prevItems, ...actionData.neighborhoods]);
+  //     // setCursor((_) => {
+  //     //   const { newCursor } = actionData;
+  //     //   console.log({ newCursor });
+
+  //     //   return newCursor; // newCursor could be undefined
+  //     // });
+
+  //     // console.log('cursor after resetting in outside action call:', cursor);
+  //   } catch (error) {
+  //     // setError(error as Error);
+  //   }
+  // }, [cursor])
+
   const fetchData = async () => {
     setIsLoading(true);
     // setError(null);
-    try {
-      submit(
-        { cursor },
-        {
-          action: '/explore',
-          method: 'post',
-        },
-      );
+    // try {
+    setSearchParams({ cursor });
+    setCursor(data.cursor);
+    setPartialNhoods((prevItems) => {
+      const uniqueNhoods = new Set<Neighborhood>(prevItems.concat(data.neighborhoods))
+      return [...uniqueNhoods]
+    });
 
-      setPartialNhoods((prevItems) => [...prevItems, ...actionData.neighborhoods]);
-      setCursor((_) => {
-        const { newCursor } = actionData;
-        console.log({ newCursor });
+    // submit(
+    //   { cursor },
+    //   {
+    //     action: '/explore',
+    //     method: 'post',
+    //   },
+    // );
 
-        return newCursor; // newCursor could be undefined
-      });
+    // setPartialNhoods((prevItems) => [...prevItems, ...actionData.neighborhoods]);
+    // setCursor((_) => {
+    //   const { newCursor } = actionData;
+    //   console.log({ newCursor });
 
-      console.log('cursor after resetting:', cursor);
-    } catch (error) {
-      // setError(error as Error);
-    } finally {
-      setIsLoading(false);
-    }
+    //   return newCursor; // newCursor could be undefined
+    // });
+    console.log('loader data', data);
+
+    // console.log('cursor after resetting:', cursor);
+    // } catch (error) {
+    //   // setError(error as Error);
+    // } finally {
+    setIsLoading(false);
+    // }
   };
 
   // useEffect(() => {
@@ -87,7 +129,7 @@ export default function NeighborhoodSearch({
 
   // eslint-disable-next-line arrow-body-style
   const neighborhoodBoxes = partialNhoods.map((neighborhood: Neighborhood) => {
-    // console.log('key', neighborhood.id);
+    if (neighborhood === undefined) console.log('here');
 
     return (
       (
