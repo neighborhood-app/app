@@ -2,6 +2,8 @@ import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData, useParams } from
 import { useState } from 'react';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
 import {
@@ -17,6 +19,8 @@ import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
 import RequestBox from '../../components/RequestBox/RequestBox';
 import Prompt from '../../components/Prompt/Prompt';
 import MapBox from '../../components/MapBox/MapBox';
+import UserCircleStack from '../../components/UserCircleStack/UserCircleStack';
+
 import { getStoredUser } from '../../utils/auth';
 
 export async function loader({ params }: LoaderFunctionArgs) {
@@ -89,18 +93,25 @@ export default function SingleNeighborhood() {
     return 'NON-MEMBER';
   }
 
+  function handleLeavePrompt() {
+    setPromptDetails({
+      show: true,
+      text: 'Are you sure you want to leave this neighborhood?',
+      intent: 'leave-neighborhood',
+    });
+  }
+
   const user = getStoredUser();
   const neighborhoodData = useLoaderData() as NeighborhoodType;
   const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
 
-  let neighborhoodUsers;
   let neighborhoodRequests;
+  let usernames;
 
   if (checkForNeighborhoodDetails(neighborhoodData)) {
-    neighborhoodUsers = neighborhoodData.users;
     neighborhoodRequests = neighborhoodData.requests;
+    usernames = neighborhoodData.users?.map((user) => user.username);
   } else {
-    neighborhoodUsers = null;
     neighborhoodRequests = null;
   }
 
@@ -124,18 +135,31 @@ export default function SingleNeighborhood() {
         <Col xs="12" sm="auto">
           <h1>{neighborhoodData.name}</h1>
         </Col>
-        <Col className="d-flex justify-content-end">
-          <p>Test</p>
+        <Col
+          xs="12"
+          md="2"
+          className={`${styles.membersContainer} justify-content-md-end ms-md-auto ms-3 pe-0`}>
+          {userRole !== 'NON-MEMBER' ? <UserCircleStack usernames={usernames} /> : null}
+          {userRole === 'MEMBER' ? (
+            <FontAwesomeIcon
+              icon={faDoorOpen}
+              size="2xl"
+              className={styles.leaveIcon}
+              onClick={handleLeavePrompt}
+            />
+          ) : null}
         </Col>
       </Row>
       <Row>
-        <DescriptionBox
-          userRole={userRole}
-          name={neighborhoodData.name}
-          description={neighborhoodData.description ? neighborhoodData.description : ''}
-          users={neighborhoodUsers}
-          setPromptDetails={setPromptDetails}
-        />
+        <Col>
+          <DescriptionBox
+            userRole={userRole}
+            name={neighborhoodData.name}
+            description={neighborhoodData.description ? neighborhoodData.description : ''}
+            setPromptDetails={setPromptDetails}
+          />
+        </Col>
+        
       </Row>
       <Row>
         <MapBox />

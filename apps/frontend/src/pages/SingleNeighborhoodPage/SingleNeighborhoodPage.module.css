@@ -7,6 +7,20 @@
   min-width: 5em;
 }
 
+.membersContainer {
+  display: flex;
+  align-items: center;
+}
+
+.leaveIcon {
+  margin-left: 8px;
+  color: #ff4e2a;
+}
+
+.leaveIcon:hover {
+  cursor: pointer;
+}
+
 @media (max-width: 576px) {
   .wrapper {
     padding: 30px;
