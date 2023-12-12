@@ -21,11 +21,6 @@
   cursor: pointer;
 }
 
-.mapContainer {
-  top: 200px;
-  position: sticky;
-}
-
 .row {
   display: block;
 }

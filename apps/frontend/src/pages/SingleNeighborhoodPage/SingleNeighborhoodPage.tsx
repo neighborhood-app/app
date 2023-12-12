@@ -23,7 +23,6 @@ import UserCircleStack from '../../components/UserCircleStack/UserCircleStack';
 
 import { getStoredUser } from '../../utils/auth';
 
-
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
   const neighborhood = await neighborhoodsService.getSingleNeighborhood(Number(id));
@@ -162,10 +161,8 @@ export default function SingleNeighborhood() {
         </Col>
       </Row>
       <Row>
-        <Col>
-          {<RequestBox requests={neighborhoodRequests} />} 
-        </Col>
-        <Col>
+        <Col>{<RequestBox requests={neighborhoodRequests} />}</Col>
+        <Col className="d-flex justify-content-center">
           <MapBox />
         </Col>
       </Row>
