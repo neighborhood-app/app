@@ -69,21 +69,27 @@ export interface CreateUserData {
 /**
  * format of the data sent to `PUT /user/:id` to edit user
  */
-export type UpdateUserInput = {
-  first_name: string;
-  last_name: string;
-  bio: string;
+// export type UpdateUserInput = {
+//   first_name: string;
+//   last_name: string;
+//   bio: string;
+//   dob?: string;
+//   email: string;
+// }
+
+// export type UpdateUserData = {
+//   first_name: string;
+//   last_name: string;
+//   bio: string;
+//   dob?: Date;
+//   email: string;
+// }
+
+export interface UpdateUserInput extends Omit<User, 'id' | 'username' | 'gender_id' | 'dob' | 'password_hash'> {
   dob?: string;
-  email: string;
 }
 
-export type UpdateUserData = {
-  first_name: string;
-  last_name: string;
-  bio: string;
-  dob?: Date;
-  email: string;
-}
+export interface UpdateUserData extends Omit<User, 'password_hash'> {}
 
 /**
  * Format of data sent to POST /api/neighborhood to create new neighborhood

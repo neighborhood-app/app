@@ -24,7 +24,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form: UpdateUserInput = { ...formInput };
+    const form: UpdateUserInput = formInput;
     if (!form.dob) {
       delete form.dob;
     }
