@@ -96,7 +96,7 @@ const MainNav = () => {
                   deleteStoredUser()
                   window.location.reload()
               }}>
-                LOG OUT
+                SIGN OUT
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
