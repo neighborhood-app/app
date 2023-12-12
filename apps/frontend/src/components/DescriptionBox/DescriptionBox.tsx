@@ -43,7 +43,7 @@ export default function DescriptionBox({
   }
 
   return (
-    <Container fluid className={styles.container}>
+    <Container className={styles.container}>
       <EditNeighborhoodModal
         show={showForm}
         handleClose={handleCloseForm}
@@ -51,7 +51,6 @@ export default function DescriptionBox({
         description={description}
       />
       <Row className="align-items-center gy-3">
-        
       </Row>
       <Row className="mt-2 mt-md-4">
         <div className={styles.neighborhoodDescription}>

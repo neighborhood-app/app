@@ -21,6 +21,15 @@
   cursor: pointer;
 }
 
+.mapContainer {
+  top: 200px;
+  position: sticky;
+}
+
+.row {
+  display: block;
+}
+
 @media (max-width: 576px) {
   .wrapper {
     padding: 30px;

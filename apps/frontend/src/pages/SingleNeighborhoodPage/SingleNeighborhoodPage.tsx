@@ -23,6 +23,7 @@ import UserCircleStack from '../../components/UserCircleStack/UserCircleStack';
 
 import { getStoredUser } from '../../utils/auth';
 
+
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
   const neighborhood = await neighborhoodsService.getSingleNeighborhood(Number(id));
@@ -159,12 +160,15 @@ export default function SingleNeighborhood() {
             setPromptDetails={setPromptDetails}
           />
         </Col>
-        
       </Row>
       <Row>
-        <MapBox />
+        <Col>
+          {<RequestBox requests={neighborhoodRequests} />} 
+        </Col>
+        <Col>
+          <MapBox />
+        </Col>
       </Row>
-      <Row>{<RequestBox requests={neighborhoodRequests} />}</Row>
     </Container>
   );
 }
