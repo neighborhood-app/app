@@ -1,10 +1,10 @@
-import { UserWithoutPasswordHash } from '@neighborhood/backend/src/types';
+import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Col, Row } from 'react-bootstrap';
 import extractDate from '../../utils/utilityFunctions';
 import styles from './ProfileInfo.module.css';
 
 type Props = {
-  profile: UserWithoutPasswordHash;
+  profile: UserWithRelatedData;
 };
 
 export default function ProfileInfo({ profile }: Props) {
