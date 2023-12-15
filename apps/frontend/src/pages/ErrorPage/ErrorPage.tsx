@@ -1,4 +1,5 @@
 import { useRouteError, isRouteErrorResponse } from 'react-router-dom';
+import { Container, Row, Col } from 'react-bootstrap';
 import MainNav from '../../components/MainNavigation/MainNav';
 import styles from './ErrorPage.module.css';
 
@@ -33,10 +34,14 @@ function ErrorPage() {
   );
 
   return (
-    <>
-      <MainNav />
-      {errorContent}
-    </>
+    <Container fluid>
+      <Row>
+        <Col className={`${styles.column} ${styles.sticky}`} sm="auto">
+          <MainNav />
+        </Col>
+        <Col className={`${styles.column} ${styles.errorColumn}`}>{errorContent}</Col>
+      </Row>
+    </Container>
   );
 }
 
