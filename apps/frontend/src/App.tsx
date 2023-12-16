@@ -26,7 +26,7 @@ import { redirectLoggedInUser, checkAuthLoader } from './utils/auth';
 
 import ExplorePage, {
   loader as exploreLoader,
-  action as exploreAction,
+  // action as exploreAction,
 } from './pages/ExplorePage/ExplorePage';
 
 import HomePage, {
@@ -59,7 +59,7 @@ const router = createBrowserRouter([
             path: 'explore',
             element: <ExplorePage />,
             loader: exploreLoader,
-            action: exploreAction,
+            // action: exploreAction,
           },
           {
             path: 'neighborhoods',

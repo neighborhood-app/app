@@ -59,7 +59,6 @@ const getNeighborhoodsPerPage = async (
     
     const firstNhood = await prismaClient.neighborhood.findFirst({});
     if (firstNhood !== null) [lastCursor, skip] = [firstNhood.id, 0];
-    console.log("first fetch", lastCursor);
   } 
   
   neighborhoods = await prismaClient.neighborhood.findMany({
@@ -73,21 +72,15 @@ const getNeighborhoodsPerPage = async (
   if (neighborhoods.length === 0) return { neighborhoods: [], hasNextPage: false };
 
   const newCursor = neighborhoods[neighborhoods.length - 1].id;
-  const nextPageNhoods = await prismaClient.neighborhood.findMany({
-    skip: 1, // skip the "cursor"
-    take: limit,
+  const nextPageNhood = await prismaClient.neighborhood.findMany({
+    skip: 1,
+    take: 1, // check if there's at least one more neighborhood
     cursor: {
       id: newCursor,
     },
   });
 
-  console.log({
-    currentBatch: neighborhoods.length,
-    hasNextPage: nextPageNhoods.length
-  });
-  
-
-  const hasNextPage = nextPageNhoods.length > 0;
+  const hasNextPage = nextPageNhood.length > 0;
 
   return { neighborhoods, hasNextPage };
 };

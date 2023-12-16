@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useLoaderData, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,36 +18,70 @@ export default function NeighborhoodSearch({
   neighborhoods: Neighborhood[];
   hasNextPage: boolean;
   lastCursor: string;
-  }) {
-  const data = useLoaderData()  as {
-    neighborhoods: Neighborhood[];
-    hasNextPage: boolean;
-    cursor: string;
-  };
+}) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [searchParams, setSearchParams] = useSearchParams() 
-  // const submit = useSubmit();
-  // const actionData = useActionData() as {
-  //   neighborhoods: Neighborhood[];
-  //   hasNextPage: boolean;
-  //   newCursor: string;
-  // };
+  const [searchParams, setSearchParams] = useSearchParams();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [neighborhoodList, setNeighborhoodList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [show, setShow] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [partialNhoods, setPartialNhoods] = useState(neighborhoods);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cursor, setCursor] = useState(lastCursor);
-  // console.log('in component', { partialNhoods, cursor });
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError]: [error: Error | null, setError: Dispatch<SetStateAction<null | Error>>] = useState(null);
+  // const [error, setError] = useState(null);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  console.log('the component is rendered', {
+    lastCursor,
+    neighborhoods,
+    hasNextPage,
+    partialNhoods,
+  });
+
+  // wait for the searchParams to be updated to the latest cursor on the first mount
+  useEffect(() => {    
+    setSearchParams({ cursor });
+  }, []);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    // setError(null);
+    // try {
+    setSearchParams({ cursor });
+    setCursor(lastCursor);
+    // The bug lies in the next line. `neighborhoods` is still the previous batch when this is called
+    // which results in duplicate entries. The loader will then load the new set of neighborhoods
+    // but `partialNhoods` will get that new set on the next scroll.
+    // Initializing `partialNhoods` as an empty array didn't work either. It didn't let me scroll at all.
+    setPartialNhoods([...partialNhoods, ...neighborhoods]);
+
+    // submit(
+    //   { cursor },
+    //   {
+    //     action: '/explore',
+    //     method: 'post',
+    //   },
+    // );
+
+    // setPartialNhoods((prevItems) => [...prevItems, ...actionData.neighborhoods]);
+    // setCursor((_) => {
+    //   const { newCursor } = actionData;
+    //   console.log({ newCursor });
+
+    //   return newCursor; // newCursor could be undefined
+    // });
+    // console.log('loader data', data);
+
+    // console.log('cursor after resetting:', cursor);
+    // } catch (error) {
+    //   // setError(error as Error);
+    // } finally {
+    setIsLoading(false);
+    // }
+  };
 
   // fetch the next batch of data by triggering the action
   // useEffect(() => {
@@ -73,42 +107,6 @@ export default function NeighborhoodSearch({
   //   }
   // }, [cursor])
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    // setError(null);
-    // try {
-    setSearchParams({ cursor });
-    setCursor(data.cursor);
-    setPartialNhoods((prevItems) => {
-      const uniqueNhoods = new Set<Neighborhood>(prevItems.concat(data.neighborhoods))
-      return [...uniqueNhoods]
-    });
-
-    // submit(
-    //   { cursor },
-    //   {
-    //     action: '/explore',
-    //     method: 'post',
-    //   },
-    // );
-
-    // setPartialNhoods((prevItems) => [...prevItems, ...actionData.neighborhoods]);
-    // setCursor((_) => {
-    //   const { newCursor } = actionData;
-    //   console.log({ newCursor });
-
-    //   return newCursor; // newCursor could be undefined
-    // });
-    console.log('loader data', data);
-
-    // console.log('cursor after resetting:', cursor);
-    // } catch (error) {
-    //   // setError(error as Error);
-    // } finally {
-    setIsLoading(false);
-    // }
-  };
-
   // useEffect(() => {
   //   let filteredNeighborhoods = neighborhoods;
 
@@ -127,11 +125,8 @@ export default function NeighborhoodSearch({
     setSearchTerm(searchInput);
   };
 
-  // eslint-disable-next-line arrow-body-style
-  const neighborhoodBoxes = partialNhoods.map((neighborhood: Neighborhood) => {
-    if (neighborhood === undefined) console.log('here');
-
-    return (
+  const neighborhoodBoxes = partialNhoods.map(
+    (neighborhood: Neighborhood) =>
       (
         <Col className="" sm="6" md="4" lg="3" key={neighborhood.id}>
           <NeighborhoodCard
@@ -140,9 +135,8 @@ export default function NeighborhoodSearch({
             description={neighborhood.description}
             isUserAdmin={false}></NeighborhoodCard>
         </Col>
-      ) || []
-    );
-  });
+      ) || [],
+  );
 
   return (
     <>
@@ -174,7 +168,7 @@ export default function NeighborhoodSearch({
       <Container className={styles.neighborhoodsContainer} fluid>
         {neighborhoodBoxes.length > 0 ? (
           <InfiniteScroll
-            dataLength={12} // move this into a constant
+            dataLength={neighborhoods.length} // not sure what this value should be, limit or total number of rendered neighborhoods?
             next={fetchData}
             hasMore={hasNextPage}
             loader={<p>Loading...</p>}

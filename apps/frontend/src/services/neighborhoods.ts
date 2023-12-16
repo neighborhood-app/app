@@ -20,13 +20,12 @@ async function getAllNeighborhoods(): Promise<Neighborhood[]> {
 
 async function getNeighborhoodsPerPage(
   limit: string,
-  cursor?: string | null,
+  cursor?: string,
 ): Promise<{ neighborhoods: Neighborhood[]; hasNextPage: boolean }> {
   const user = getStoredUser();
   const headers = { authorization: '' };
 
   if (user) headers.authorization = `Bearer ${user.token}`;
-  if (cursor === null) cursor = undefined;
 
   const response = await axios.get(`${BASE_URL}?cursor=${cursor}&limit=${limit}`, { headers });
 
