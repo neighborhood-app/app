@@ -1,8 +1,12 @@
-import { Modal, Form, Container, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Container, Row, Col, InputGroup } from 'react-bootstrap';
 import { useParams, useSubmit } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import styles from './EditNeighborhoodModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
+
+const provider = new OpenStreetMapProvider();
 
 interface Props {
   show: boolean;
@@ -16,6 +20,9 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [nameInput, setNameInput] = useState(name);
   const [textAreaInput, setTextAreaInput] = useState(description);
+  // const [locationInput, setLocationInput] = useState('');
+  const [locationList, setLocationList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
   const closeModal = () => {
@@ -70,6 +77,28 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
               }}
               required
             />
+            <Form.Control.Feedback type="invalid">
+              Please choose a valid title.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="location">
+            <Form.Label column="sm">
+              Location<span className={styles.asterisk}>*</span>
+            </Form.Label>
+            <InputGroup>
+              <AsyncTypeahead
+                id="location"
+                onSearch={async (query) => {
+                  setIsLoading(true);
+                  const locations = await provider.search({ query });
+                  // @ts-ignore
+                  setLocationList(locations);
+                  setIsLoading(false);
+                }}
+                isLoading={isLoading}
+                options={locationList.map((location: { label: any }) => location.label)}
+              />
+            </InputGroup>
             <Form.Control.Feedback type="invalid">
               Please choose a valid title.
             </Form.Control.Feedback>
