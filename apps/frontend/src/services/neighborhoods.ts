@@ -6,18 +6,17 @@ import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/neighborhoods';
 
-
 async function getAllNeighborhoods(
   cursor: number | undefined = undefined,
 ): Promise<Neighborhood[]> {
-    // const user = getStoredUser();
-    // const headers = { authorization: '' };
+  const user = getStoredUser();
+  const headers = { authorization: '' };
 
-    // if (user) {
-    //   headers.authorization = `Bearer ${user.token}`;
-    // }
+  if (user) {
+    headers.authorization = `Bearer ${user.token}`;
+  }
 
-  const response = await axios.get(BASE_URL, { params: { cursor } });
+  const response = await axios.get(BASE_URL, { params: { cursor }, headers });
   return response.data;
 }
 

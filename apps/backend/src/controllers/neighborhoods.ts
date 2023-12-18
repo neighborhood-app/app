@@ -14,40 +14,15 @@ import neighborhoodServices from '../services/neighborhoodServices';
 
 const neighborhoodsRouter = express.Router();
 
-// Get neighborhoods for current page
-// neighborhoodsRouter.get(
-//   '/',
-//   middleware.userIdExtractorAndLoginValidator,
-//   catchError(async (req: RequestWithAuthentication, res: Response) => {
-//     console.log("query", req.query);
-    
-//     const cursor = Number(req.query.cursor) || undefined;
-//     const limit = Number(req.query.limit) || undefined;    
-
-//     const neighborhoodsAndNext = await neighborhoodServices.getNeighborhoodsPerPage(limit, cursor);
-
-//     return res.status(200).send(neighborhoodsAndNext);
-//   }),
-// );
-
 neighborhoodsRouter.get(
   '/',
-  // middleware.userIdExtractorAndLoginValidator,
-  catchError(async (_req: Request, res: Response) => {
-    const cursor: string | undefined = (_req.query.cursor as string) || undefined;    
-    const neighborhoods = await neighborhoodServices.getAllNeighborhoods(Number(cursor));
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: Request, res: Response) => {
+    const { cursor } = req.query;    
+    const neighborhoods = await neighborhoodServices.getNeighborhoods(Number(cursor));
     res.status(200).send(neighborhoods);
   }),
 );
-
-// Add user authentication
-// neighborhoodsRouter.get(
-//   '/',
-//   catchError(async (_req: Request, res: Response) => {
-//     const neighborhoods = await neighborhoodServices.getAllNeighborhoods();
-//     res.status(200).send(neighborhoods);
-//   }),
-// );
 
 // We don't do login validation on this route
 neighborhoodsRouter.get(

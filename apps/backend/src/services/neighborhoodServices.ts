@@ -44,19 +44,25 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
 //   return neighborhoods;
 // };
 
-const getAllNeighborhoods = async (
+/**
+ * fetches the next 16 neighborhoods after the passed-in neighborhood id
+ * @param myCursor - the id of the last-displayed neighborhood from the previous batch or NaN
+ * @returns the requested neighborhoods, the current cursor
+ *  & a boolean indicating whether there is a next page
+ */
+const getNeighborhoods = async (
   myCursor: number,
 ): Promise<{ neighborhoods: Neighborhood[]; currentCursor: number; hasNextPage: boolean }> => {
-  console.log(myCursor);
+  const NHOODS_PER_PAGE = 16;
   let firstNhood: Neighborhood | null = null;
 
   if (Number.isNaN(myCursor)) {
     firstNhood = await prismaClient.neighborhood.findFirst({});
   }
-
+  
   const neighborhoods: Neighborhood[] = await prismaClient.neighborhood.findMany({
     skip: 1,
-    take: 16,
+    take: NHOODS_PER_PAGE,
     cursor: myCursor
       ? {
           id: myCursor,
@@ -79,46 +85,6 @@ const getAllNeighborhoods = async (
   const hasNextPage = nextPageNhood.length > 0;
 
   return { neighborhoods, currentCursor, hasNextPage };
-};
-
-/**
- * @param limit - dictates how many neighborhoods to fetch
- * @param lastCursor - the id of the last-displayed neighborhood from the previous batch
- * @returns the requested neighborhoods & a boolean indicating whether there is a next page
- */
-const getNeighborhoodsPerPage = async (
-  limit?: number,
-  lastCursor?: number,
-): Promise<{ neighborhoods: Neighborhood[]; hasNextPage: boolean }> => {
-  let skip = 1;
-  let neighborhoods = [];
-  if (typeof lastCursor !== 'number') {
-    const firstNhood = await prismaClient.neighborhood.findFirst({});
-    if (firstNhood !== null) [lastCursor, skip] = [firstNhood.id, 0];
-  }
-
-  neighborhoods = await prismaClient.neighborhood.findMany({
-    skip, // skip the "cursor"
-    take: limit,
-    cursor: {
-      id: lastCursor,
-    },
-  });
-
-  if (neighborhoods.length === 0) return { neighborhoods: [], hasNextPage: false };
-
-  const newCursor = neighborhoods[neighborhoods.length - 1].id;
-  const nextPageNhood = await prismaClient.neighborhood.findMany({
-    skip: 1,
-    take: 1, // check if there's at least one more neighborhood
-    cursor: {
-      id: newCursor,
-    },
-  });
-
-  const hasNextPage = nextPageNhood.length > 0;
-
-  return { neighborhoods, hasNextPage };
 };
 
 /**
@@ -442,8 +408,7 @@ const createNeighborhood = async (data: CreateNeighborhoodData): Promise<Neighbo
 };
 
 export default {
-  getAllNeighborhoods,
-  getNeighborhoodsPerPage,
+  getNeighborhoods,
   isUserMemberOfNeighborhood,
   getNeighborhoodDetailsForNonMembers,
   getNeighborhoodDetailsForMembers,
