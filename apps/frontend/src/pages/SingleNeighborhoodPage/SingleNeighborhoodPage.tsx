@@ -162,9 +162,11 @@ export default function SingleNeighborhood() {
       </Row>
       <Row>
         <Col>{<RequestBox requests={neighborhoodRequests} />}</Col>
-        <Col className="d-flex justify-content-center">
-          <MapBox />
-        </Col>
+        {neighborhoodData.location ? (
+          <Col className="d-flex justify-content-center">
+            <MapBox coordinates={JSON.parse(neighborhoodData.location)} />
+          </Col>
+        ) : null}
       </Row>
     </Container>
   );

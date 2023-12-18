@@ -40,17 +40,25 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    // event.preventDefault();
     const form = event.currentTarget;
     setFormSubmitted(true);
 
     if (!form.checkValidity() || !validateInput()) {
       event.stopPropagation();
     } else {
-      submit(form, {
-        method: 'put',
-        action: `/neighborhoods/${neighborhoodId}`,
-      });
+      submit(
+        {
+          name: nameInput,
+          description: textAreaInput,
+          location: JSON.stringify(locationInput),
+          intent: 'edit-neighborhood',
+        },
+        {
+          method: 'put',
+          action: `/neighborhoods/${neighborhoodId}`,
+        },
+      );
       handleClose();
       setFormSubmitted(false);
     }
