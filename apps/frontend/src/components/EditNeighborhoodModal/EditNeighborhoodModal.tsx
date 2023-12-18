@@ -90,6 +90,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
             </Form.Label>
             <InputGroup>
               <AsyncTypeahead
+                className="w-100"
                 id="location"
                 delay={500}
                 onSearch={async (query) => {
