@@ -1,6 +1,6 @@
 import { Modal, Form, Container, Row, Col, InputGroup } from 'react-bootstrap';
 import { useParams, useSubmit } from 'react-router-dom';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useRef } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import styles from './EditNeighborhoodModal.module.css';
@@ -18,10 +18,13 @@ interface Props {
 export default function EditNeighborhoodModal({ show, handleClose, name, description }: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
   const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const locationsRef = useRef([]);
+
   const [nameInput, setNameInput] = useState(name);
   const [textAreaInput, setTextAreaInput] = useState(description);
   // const [locationInput, setLocationInput] = useState('');
-  const [locationList, setLocationList] = useState([]);
+  // const [locationList, setLocationList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
@@ -88,15 +91,18 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
             <InputGroup>
               <AsyncTypeahead
                 id="location"
+                delay={500}
                 onSearch={async (query) => {
                   setIsLoading(true);
                   const locations = await provider.search({ query });
                   // @ts-ignore
-                  setLocationList(locations);
+                  locationsRef.current = locations;
                   setIsLoading(false);
                 }}
                 isLoading={isLoading}
-                options={locationList.map((location: { label: any }) => location.label)}
+                filterBy={() => true}
+                // @ts-ignore
+                options={locationsRef.current}
               />
             </InputGroup>
             <Form.Control.Feedback type="invalid">
