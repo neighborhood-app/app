@@ -6,6 +6,10 @@
   padding: 0 50px 30px;
 }
 
+.scrollBox {
+  overflow: unset!important;
+}
+
 .searchCol {
   left: 40px;
   position: relative;
@@ -24,15 +28,14 @@
   border-color: var(--bs-border-color);
 }
 
-.iconBtn {
-  margin-top: .3rem;
-  padding: 3px 9px;
-}
-
 .noNhoodsText {
   text-align: center;
 }
 
+.iconBtn {
+  margin-top: .3rem;
+  padding: 3px 9px;
+}
 
 .plusIcon:hover {
   animation: rotate 1.2s;

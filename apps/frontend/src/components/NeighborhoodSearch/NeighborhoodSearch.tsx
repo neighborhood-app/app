@@ -123,7 +123,9 @@ export default function NeighborhoodSearch({
             dataLength={neighborhoodBoxes.length}
             next={fetchData}
             hasMore={hasNextPage}
-            loader={<SpinWheel className={`mt-2 mx-auto`}></SpinWheel>}>
+            loader={<SpinWheel className={`mt-2 mx-auto`}></SpinWheel>}
+            endMessage={<p className={`${styles.noNhoodsText} mt-5`}>You've seen all the Neighborhoods.</p>}
+            className={styles.scrollBox}>
             <Row className="gy-sm-4 gx-sm-4">{neighborhoodBoxes}</Row>
           </InfiniteScroll>
         ) : (
