@@ -9,6 +9,7 @@ import {
   NeighborhoodType,
   NeighborhoodWithRelatedFields,
   RequestWithAuthentication,
+  NeighborhoodsPerPage,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
 
@@ -18,8 +19,10 @@ neighborhoodsRouter.get(
   '/',
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: Request, res: Response) => {
-    const { cursor } = req.query;    
-    const neighborhoods = await neighborhoodServices.getNeighborhoods(Number(cursor));
+    const { cursor } = req.query;
+    const neighborhoods: NeighborhoodsPerPage = await neighborhoodServices.getNeighborhoods(
+      Number(cursor),
+    );
     res.status(200).send(neighborhoods);
   }),
 );

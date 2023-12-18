@@ -1,38 +1,20 @@
 import { redirect } from 'react-router';
 import axios from 'axios';
-import { Neighborhood } from '@neighborhood/backend/src/types';
+import { NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
 import { CreateNeighborhoodData, EditNeighborhoodData, NeighborhoodType } from '../types';
 import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/neighborhoods';
 
-async function getAllNeighborhoods(
-  cursor: number | undefined = undefined,
-): Promise<Neighborhood[]> {
+async function getNeighborhoods(cursor?: number): Promise<NeighborhoodsPerPage> {
   const user = getStoredUser();
   const headers = { authorization: '' };
 
-  if (user) {
-    headers.authorization = `Bearer ${user.token}`;
-  }
+  if (user) headers.authorization = `Bearer ${user.token}`;
 
   const response = await axios.get(BASE_URL, { params: { cursor }, headers });
   return response.data;
 }
-
-// async function getNeighborhoodsPerPage(
-//   limit: string,
-//   cursor?: string,
-// ): Promise<{ neighborhoods: Neighborhood[]; hasNextPage: boolean }> {
-//   const user = getStoredUser();
-//   const headers = { authorization: '' };
-
-//   if (user) headers.authorization = `Bearer ${user.token}`;
-
-//   const response = await axios.get(`${BASE_URL}?cursor=${cursor}&limit=${limit}`, { headers });
-
-//   return response.data;
-// }
 
 // TODO: If unable to login because of token invalid or otherwise
 // throw Error
@@ -111,7 +93,7 @@ async function editNeighborhood(
 }
 
 export default {
-  getAllNeighborhoods,
+  getNeighborhoods,
   getSingleNeighborhood,
   deleteNeighborhood,
   connectUserToNeighborhood,

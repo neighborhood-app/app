@@ -5,6 +5,7 @@ import {
   CreateNeighborhoodData,
   NeighborhoodDetailsForNonMembers,
   NeighborhoodDetailsForMembers,
+  NeighborhoodsPerPage,
 } from '../types';
 
 // helpers
@@ -52,7 +53,7 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
  */
 const getNeighborhoods = async (
   myCursor: number,
-): Promise<{ neighborhoods: Neighborhood[]; currentCursor: number; hasNextPage: boolean }> => {
+): Promise<NeighborhoodsPerPage> => {
   const NHOODS_PER_PAGE = 16;
   let firstNhood: Neighborhood | null = null;
 

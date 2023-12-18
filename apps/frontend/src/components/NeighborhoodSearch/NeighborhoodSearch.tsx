@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Form, Container, Row, Col } from 'react-bootstrap';
-import { Neighborhood } from '@neighborhood/backend/src/types';
+import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -37,16 +37,16 @@ export default function NeighborhoodSearch({
   const handleShow = () => setShow(true);
 
   const fetchData = async function () {
-    const data = (await neighborhoodsService.getAllNeighborhoods(currentCursor)) as unknown as {
-      neighborhoods: Neighborhood[];
-      currentCursor: number;
-      hasNextPage: boolean;
-    };
+    setIsLoading(true);
+    const data = (await neighborhoodsService.getNeighborhoods(
+      currentCursor,
+    )) as unknown as NeighborhoodsPerPage;
     if (neighborhoodList) {
       setNeighborhoodList(neighborhoodList.concat(data.neighborhoods));
     }
     setCurrentCursor(data.currentCursor);
     setHasNextPage(data.hasNextPage);
+    setIsLoading(false);
   };
 
   // const fetchData = async () => {

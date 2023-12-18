@@ -195,3 +195,9 @@ export interface LoginResponseData {
   username: string;
   token: string;
 }
+
+export interface NeighborhoodsPerPage {
+  neighborhoods: Neighborhood[];
+  currentCursor: number;
+  hasNextPage: boolean;
+}
