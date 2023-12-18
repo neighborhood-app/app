@@ -10,6 +10,7 @@ import NeighborhoodCard from '../NeighborhoodCard/NeighborhoodCard';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import CreateNeighborhoodModal from '../CreateNeighborhoodModal/CreateNeighborhoodModal';
 import neighborhoodsService from '../../services/neighborhoods';
+import SpinWheel from '../SpinWheel/SpinWheel';
 
 export default function NeighborhoodSearch({
   neighborhoods,
@@ -122,7 +123,7 @@ export default function NeighborhoodSearch({
             dataLength={neighborhoodBoxes.length}
             next={fetchData}
             hasMore={hasNextPage}
-            loader={<h3>Loading more neighborhoods</h3>}>
+            loader={<SpinWheel className={`mt-2 mx-auto`}></SpinWheel>}>
             <Row className="gy-sm-4 gx-sm-4">{neighborhoodBoxes}</Row>
           </InfiniteScroll>
         ) : (

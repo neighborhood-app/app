@@ -196,6 +196,10 @@ export interface LoginResponseData {
   token: string;
 }
 
+/**
+ * Shape of data fetched when getting neighborhoods
+ * currentCursor and hasNextPage are used to implement infinite scrolling
+ */
 export interface NeighborhoodsPerPage {
   neighborhoods: Neighborhood[];
   currentCursor: number;

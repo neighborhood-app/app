@@ -4,9 +4,7 @@ import neighborhoodsService from '../../services/neighborhoods';
 import NeighborhoodSearch from '../../components/NeighborhoodSearch/NeighborhoodSearch';
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  const data = params.cursor
-    ? await neighborhoodsService.getNeighborhoods(Number(params.cursor))
-    : await neighborhoodsService.getNeighborhoods();
+  const data = await neighborhoodsService.getNeighborhoods(Number(params.cursor) || undefined);
   return data;
 }
 
