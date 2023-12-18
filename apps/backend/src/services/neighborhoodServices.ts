@@ -45,19 +45,26 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
 // };
 
 const getAllNeighborhoods = async (
-  myCursor?: number,
+  myCursor: number,
 ): Promise<{ neighborhoods: Neighborhood[]; currentCursor: number; hasNextPage: boolean }> => {
   console.log(myCursor);
+  let firstNhood: Neighborhood | null = null;
 
-  const neighborhoods: Array<Neighborhood> = await prismaClient.neighborhood.findMany({
+  if (Number.isNaN(myCursor)) {
+    firstNhood = await prismaClient.neighborhood.findFirst({});
+  }
+
+  const neighborhoods: Neighborhood[] = await prismaClient.neighborhood.findMany({
     skip: 1,
-    take: 12,
+    take: 16,
     cursor: myCursor
       ? {
           id: myCursor,
         }
       : undefined,
   });
+
+  if (firstNhood) neighborhoods.unshift(firstNhood);
 
   const currentCursor = neighborhoods.slice(-1)[0].id;
 
@@ -68,8 +75,6 @@ const getAllNeighborhoods = async (
       id: currentCursor,
     },
   });
-  console.log(currentCursor);
-  console.log(nextPageNhood);
 
   const hasNextPage = nextPageNhood.length > 0;
 
@@ -88,11 +93,10 @@ const getNeighborhoodsPerPage = async (
   let skip = 1;
   let neighborhoods = [];
   if (typeof lastCursor !== 'number') {
-    
     const firstNhood = await prismaClient.neighborhood.findFirst({});
     if (firstNhood !== null) [lastCursor, skip] = [firstNhood.id, 0];
-  } 
-  
+  }
+
   neighborhoods = await prismaClient.neighborhood.findMany({
     skip, // skip the "cursor"
     take: limit,
