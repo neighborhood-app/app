@@ -3,6 +3,7 @@ import { useParams, useSubmit } from 'react-router-dom';
 import { FormEvent, useState, useRef } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
+import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
 import styles from './EditNeighborhoodModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
@@ -19,7 +20,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
   const validInputPattern = /\s*(\S\s*){4,}/;
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const locationsRef = useRef();
+  const locationsRef = useRef<SearchResult[] | undefined>();
 
   const [nameInput, setNameInput] = useState(name);
   const [textAreaInput, setTextAreaInput] = useState(description);
@@ -96,7 +97,6 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
                 onSearch={async (query) => {
                   setIsLoading(true);
                   const locations = await provider.search({ query });
-                  // @ts-ignore
                   locationsRef.current = locations;
                   setIsLoading(false);
                 }}
