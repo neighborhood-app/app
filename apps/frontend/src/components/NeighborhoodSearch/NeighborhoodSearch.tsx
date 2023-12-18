@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood } from '@neighborhood/backend/src/types';
@@ -9,24 +9,26 @@ import styles from './NeighborhoodSearch.module.css';
 import NeighborhoodCard from '../NeighborhoodCard/NeighborhoodCard';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import CreateNeighborhoodModal from '../CreateNeighborhoodModal/CreateNeighborhoodModal';
+import neighborhoodsService from '../../services/neighborhoods';
 
 export default function NeighborhoodSearch({
   neighborhoods,
-  hasNextPage,
-  lastCursor,
+  cursor,
+  isNextPage,
 }: {
-  neighborhoods: Neighborhood[];
-  hasNextPage: boolean;
-  lastCursor: string;
+  neighborhoods: Neighborhood[] | null;
+  cursor: number;
+  isNextPage: boolean;
 }) {
+  const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
+  const [hasNextPage, setHasNextPage] = useState(isNextPage);
+  const [currentCursor, setCurrentCursor] = useState(cursor);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [neighborhoodList, setNeighborhoodList] = useState([]);
+  // const [neighborhoodList, setNeighborhoodList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [show, setShow] = useState(false);
-  const [partialNhoods, setPartialNhoods] = useState(neighborhoods);
-  const [cursor, setCursor] = useState(lastCursor);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState(null);
@@ -34,78 +36,29 @@ export default function NeighborhoodSearch({
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  console.log('the component is rendered', {
-    lastCursor,
-    neighborhoods,
-    hasNextPage,
-    partialNhoods,
-  });
-
-  // wait for the searchParams to be updated to the latest cursor on the first mount
-  useEffect(() => {    
-    setSearchParams({ cursor });
-  }, []);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    // setError(null);
-    // try {
-    setSearchParams({ cursor });
-    setCursor(lastCursor);
-    // The bug lies in the next line. `neighborhoods` is still the previous batch when this is called
-    // which results in duplicate entries. The loader will then load the new set of neighborhoods
-    // but `partialNhoods` will get that new set on the next scroll.
-    // Initializing `partialNhoods` as an empty array didn't work either. It didn't let me scroll at all.
-    setPartialNhoods([...partialNhoods, ...neighborhoods]);
-
-    // submit(
-    //   { cursor },
-    //   {
-    //     action: '/explore',
-    //     method: 'post',
-    //   },
-    // );
-
-    // setPartialNhoods((prevItems) => [...prevItems, ...actionData.neighborhoods]);
-    // setCursor((_) => {
-    //   const { newCursor } = actionData;
-    //   console.log({ newCursor });
-
-    //   return newCursor; // newCursor could be undefined
-    // });
-    // console.log('loader data', data);
-
-    // console.log('cursor after resetting:', cursor);
-    // } catch (error) {
-    //   // setError(error as Error);
-    // } finally {
-    setIsLoading(false);
-    // }
+  const fetchData = async function () {
+    const data = (await neighborhoodsService.getAllNeighborhoods(currentCursor)) as unknown as {
+      neighborhoods: Neighborhood[];
+      currentCursor: number;
+      hasNextPage: boolean;
+    };
+    if (neighborhoodList) {
+      setNeighborhoodList(neighborhoodList.concat(data.neighborhoods));
+    }
+    setCurrentCursor(data.currentCursor);
+    setHasNextPage(data.hasNextPage);
   };
 
-  // fetch the next batch of data by triggering the action
-  // useEffect(() => {
-  //   try {
-  //     submit(
-  //       { cursor },
-  //       {
-  //         action: '/explore',
-  //         method: 'post',
-  //       },
-  //     );
-  //     // setPartialNhoods((prevItems) => [...prevItems, ...actionData.neighborhoods]);
-  //     // setCursor((_) => {
-  //     //   const { newCursor } = actionData;
-  //     //   console.log({ newCursor });
-
-  //     //   return newCursor; // newCursor could be undefined
-  //     // });
-
-  //     // console.log('cursor after resetting in outside action call:', cursor);
-  //   } catch (error) {
-  //     // setError(error as Error);
-  //   }
-  // }, [cursor])
+  // const fetchData = async () => {
+  //   setIsLoading(true);
+  //   // setError(null);
+  //   // try {
+  //   // } catch (error) {
+  //   //   // setError(error as Error);
+  //   // } finally {
+  //   setIsLoading(false);
+  //   // }
+  // };
 
   // useEffect(() => {
   //   let filteredNeighborhoods = neighborhoods;
@@ -125,18 +78,16 @@ export default function NeighborhoodSearch({
     setSearchTerm(searchInput);
   };
 
-  const neighborhoodBoxes = partialNhoods.map(
-    (neighborhood: Neighborhood) =>
-      (
-        <Col className="" sm="6" md="4" lg="3" key={neighborhood.id}>
-          <NeighborhoodCard
-            id={neighborhood.id}
-            name={neighborhood.name}
-            description={neighborhood.description}
-            isUserAdmin={false}></NeighborhoodCard>
-        </Col>
-      ) || [],
-  );
+  const neighborhoodBoxes =
+    neighborhoodList?.map((neighborhood: Neighborhood) => (
+      <Col className="" sm="6" md="4" lg="3" key={neighborhood.id}>
+        <NeighborhoodCard
+          id={neighborhood.id}
+          name={neighborhood.name}
+          description={neighborhood.description}
+          isUserAdmin={false}></NeighborhoodCard>
+      </Col>
+    )) || [];
 
   return (
     <>
@@ -168,11 +119,10 @@ export default function NeighborhoodSearch({
       <Container className={styles.neighborhoodsContainer} fluid>
         {neighborhoodBoxes.length > 0 ? (
           <InfiniteScroll
-            dataLength={neighborhoods.length} // not sure what this value should be, limit or total number of rendered neighborhoods?
+            dataLength={neighborhoodBoxes.length}
             next={fetchData}
             hasMore={hasNextPage}
-            loader={<p>Loading...</p>}
-            endMessage={<p>You've seen all the Neighborhoods!</p>}>
+            loader={<h3>Loading more neighborhoods</h3>}>
             <Row className="gy-sm-4 gx-sm-4">{neighborhoodBoxes}</Row>
           </InfiniteScroll>
         ) : (

@@ -6,31 +6,34 @@ import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/neighborhoods';
 
-async function getAllNeighborhoods(): Promise<Neighborhood[]> {
-  const user = getStoredUser();
-  const headers = { authorization: '' };
 
-  if (user) {
-    headers.authorization = `Bearer ${user.token}`;
-  }
+async function getAllNeighborhoods(
+  cursor: number | undefined = undefined,
+): Promise<Neighborhood[]> {
+    // const user = getStoredUser();
+    // const headers = { authorization: '' };
 
-  const response = await axios.get(BASE_URL, { headers });
+    // if (user) {
+    //   headers.authorization = `Bearer ${user.token}`;
+    // }
+
+  const response = await axios.get(BASE_URL, { params: { cursor } });
   return response.data;
 }
 
-async function getNeighborhoodsPerPage(
-  limit: string,
-  cursor?: string,
-): Promise<{ neighborhoods: Neighborhood[]; hasNextPage: boolean }> {
-  const user = getStoredUser();
-  const headers = { authorization: '' };
+// async function getNeighborhoodsPerPage(
+//   limit: string,
+//   cursor?: string,
+// ): Promise<{ neighborhoods: Neighborhood[]; hasNextPage: boolean }> {
+//   const user = getStoredUser();
+//   const headers = { authorization: '' };
 
-  if (user) headers.authorization = `Bearer ${user.token}`;
+//   if (user) headers.authorization = `Bearer ${user.token}`;
 
-  const response = await axios.get(`${BASE_URL}?cursor=${cursor}&limit=${limit}`, { headers });
+//   const response = await axios.get(`${BASE_URL}?cursor=${cursor}&limit=${limit}`, { headers });
 
-  return response.data;
-}
+//   return response.data;
+// }
 
 // TODO: If unable to login because of token invalid or otherwise
 // throw Error
@@ -110,7 +113,6 @@ async function editNeighborhood(
 
 export default {
   getAllNeighborhoods,
-  getNeighborhoodsPerPage,
   getSingleNeighborhood,
   deleteNeighborhood,
   connectUserToNeighborhood,
