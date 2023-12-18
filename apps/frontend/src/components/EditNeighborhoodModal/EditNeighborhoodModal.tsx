@@ -19,12 +19,12 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
   const validInputPattern = /\s*(\S\s*){4,}/;
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const locationsRef = useRef([]);
+  const locationsRef = useRef();
 
   const [nameInput, setNameInput] = useState(name);
   const [textAreaInput, setTextAreaInput] = useState(description);
-  // const [locationInput, setLocationInput] = useState('');
-  // const [locationList, setLocationList] = useState([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [locationInput, setLocationInput] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
@@ -99,6 +99,10 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
                   // @ts-ignore
                   locationsRef.current = locations;
                   setIsLoading(false);
+                }}
+                onChange={(selected) => {
+                  // @ts-ignore
+                  setLocationInput(selected[0]);
                 }}
                 isLoading={isLoading}
                 filterBy={() => true}
