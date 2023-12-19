@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useActionData, useSubmit } from 'react-router-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './NeighborhoodSearch.module.css';
@@ -17,11 +16,10 @@ export default function NeighborhoodSearch({
   cursor,
   isNextPage,
 }: {
-  neighborhoods: Neighborhood[] | null;
+  neighborhoods: Neighborhood[];
   cursor: number;
   isNextPage: boolean;
-  }) {
-  const filteredNeighborhoods = useActionData() as unknown as Neighborhood[];
+}) {
   const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
   const [hasNextPage, setHasNextPage] = useState(isNextPage);
   const [currentCursor, setCurrentCursor] = useState(cursor);
@@ -31,7 +29,6 @@ export default function NeighborhoodSearch({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState(null);
-  const submit = useSubmit();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -41,9 +38,8 @@ export default function NeighborhoodSearch({
     const data = (await neighborhoodsService.getNeighborhoods(
       currentCursor,
     )) as unknown as NeighborhoodsPerPage;
-    if (neighborhoodList) {
-      setNeighborhoodList(neighborhoodList.concat(data.neighborhoods));
-    }
+
+    setNeighborhoodList(neighborhoodList.concat(data.neighborhoods));
     setCurrentCursor(data.currentCursor);
     setHasNextPage(data.hasNextPage);
     setIsLoading(false);
@@ -60,57 +56,37 @@ export default function NeighborhoodSearch({
   //   // }
   // };
 
+  // only execute this if the searchTerm changes
   useEffect(() => {
-    let filteredNeighborhoods: Neighborhood[] = [];
+    console.log({ searchTerm });
 
-    const timeout = setTimeout(() => {
-      if (searchTerm !== '') {
-        // console.log(searchTerm);
-        filteredNeighborhoods =
-          filteredNeighborhoods?.filter((neighborhood) =>
-            neighborhood.name.toLowerCase().includes(searchTerm.toLowerCase()),
-          ) || [];
+    let filteredNeighborhoods: Neighborhood[] | null = [];
+
+    const timeout = setTimeout(async () => {
+      if (searchTerm.length > 0) {
+        setIsLoading(true);
+        filteredNeighborhoods = await neighborhoodsService.filterByName(searchTerm);
+
         setNeighborhoodList(filteredNeighborhoods);
+        setIsLoading(false);
+      } else {
+        setCurrentCursor(neighborhoods.slice(-1)[0].id);
+        setNeighborhoodList(neighborhoods || []);
       }
-    }, 2000);
+    }, 1000);
+
     return () => clearTimeout(timeout);
   }, [searchTerm]);
 
-  const searchNeighborhoods = (searchInput: string): void => {
-    setSearchTerm(searchInput);
-  };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    searchNeighborhoods(e.target.value);
-    const form = document.querySelector('form');
-    const timeout = setTimeout(() => {
-      if (searchTerm !== '') {
-        console.log('hello!');
-        submit(form, {
-          method: "post"
-        });
-        
-        // filteredNeighborhoods =
-        //   filteredNeighborhoods?.filter((neighborhood) =>
-        //     neighborhood.name.toLowerCase().includes(searchTerm.toLowerCase()),
-        //   ) || [];
-        setNeighborhoodList(filteredNeighborhoods);
-      }
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  };
-
-  const neighborhoodBoxes =
-    neighborhoodList?.map((neighborhood: Neighborhood) => (
-      <Col className="" sm="6" md="4" lg="3" key={neighborhood.id}>
-        <NeighborhoodCard
-          id={neighborhood.id}
-          name={neighborhood.name}
-          description={neighborhood.description}
-          isUserAdmin={false}></NeighborhoodCard>
-      </Col>
-    )) || [];
+  const neighborhoodBoxes = neighborhoodList.map((neighborhood: Neighborhood) => (
+    <Col className="" sm="6" md="4" lg="3" key={neighborhood.id}>
+      <NeighborhoodCard
+        id={neighborhood.id}
+        name={neighborhood.name}
+        description={neighborhood.description}
+        isUserAdmin={false}></NeighborhoodCard>
+    </Col>
+  ));
 
   return (
     <>
@@ -125,7 +101,7 @@ export default function NeighborhoodSearch({
                   placeholder="S e a r c h"
                   value={searchTerm}
                   name="searchTerm"
-                  onChange={handleSearch}></Form.Control>
+                  onChange={(event) => setSearchTerm(event.target.value)}></Form.Control>
               </Form.Group>
             </Form>
           </Col>

@@ -194,12 +194,10 @@ const filterNeighborhoods = async (searchTerm: string): Promise<Neighborhood[]> 
     where: {
       name: {
         contains: searchTerm,
-        mode: "insensitive",
+        mode: 'insensitive',
       },
     },
   });
-
-  console.log(neighborhoods);
 
   return neighborhoods;
 };
