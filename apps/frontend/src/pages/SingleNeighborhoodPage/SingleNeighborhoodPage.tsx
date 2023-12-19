@@ -50,6 +50,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
     response = await neighborhoodsService.leaveNeighborhood(neighborhoodId);
   } else if (intent === 'edit-neighborhood') {
     const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
+    console.log(neighborhoodData);
     response = await neighborhoodsService.editNeighborhood(neighborhoodId, neighborhoodData);
   } else if (intent === 'delete-neighborhood') {
     response = await neighborhoodsService.deleteNeighborhood(neighborhoodId);
@@ -104,6 +105,9 @@ export default function SingleNeighborhood() {
   const user = getStoredUser();
   const neighborhoodData = useLoaderData() as NeighborhoodType;
   const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
+  const neighborhoodLocation = neighborhoodData.location
+    ? JSON.parse(neighborhoodData.location)
+    : null;
 
   let neighborhoodRequests;
   let usernames;
@@ -162,9 +166,9 @@ export default function SingleNeighborhood() {
       </Row>
       <Row>
         <Col>{<RequestBox requests={neighborhoodRequests} />}</Col>
-        {neighborhoodData.location ? (
+        {neighborhoodLocation ? (
           <Col className="d-flex justify-content-center">
-            <MapBox coordinates={JSON.parse(neighborhoodData.location)} />
+            <MapBox coordinates={neighborhoodLocation} />
           </Col>
         ) : null}
       </Row>

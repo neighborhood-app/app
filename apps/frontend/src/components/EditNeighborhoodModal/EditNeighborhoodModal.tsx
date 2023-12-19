@@ -20,12 +20,12 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
   const validInputPattern = /\s*(\S\s*){4,}/;
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const locationsRef = useRef<SearchResult[] | undefined>();
+  const locationsRef = useRef<SearchResult[] | null>();
 
   const [nameInput, setNameInput] = useState(name);
   const [textAreaInput, setTextAreaInput] = useState(description);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [locationInput, setLocationInput] = useState(undefined);
+  const [locationInput, setLocationInput] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
@@ -39,12 +39,22 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
     return validInputPattern.test(nameInput);
   }
 
+  function isValidLocation(location: {} | null): location is SearchResult {
+    return (
+      location === null ||
+      (Object.hasOwn(location, 'x') &&
+        Object.hasOwn(location, 'y') &&
+        Object.hasOwn(location, 'label') &&
+        Object.hasOwn(location, 'bounds'))
+    );
+  }
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    // event.preventDefault();
     const form = event.currentTarget;
     setFormSubmitted(true);
 
     if (!form.checkValidity() || !validateInput()) {
+      event.preventDefault();
       event.stopPropagation();
     } else {
       submit(
@@ -116,10 +126,12 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
                 filterBy={() => true}
                 // @ts-ignore
                 options={locationsRef.current}
+                isValid={isValidLocation(locationInput)}
+                isInvalid={!isValidLocation(locationInput)}
               />
             </InputGroup>
             <Form.Control.Feedback type="invalid">
-              Please choose a valid title.
+              Please choose a valid address!
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-2" controlId="description">
