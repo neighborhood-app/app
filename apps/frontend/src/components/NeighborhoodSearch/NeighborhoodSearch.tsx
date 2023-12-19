@@ -56,21 +56,25 @@ export default function NeighborhoodSearch({
   //   // }
   // };
 
-  // only execute this if the searchTerm changes
   useEffect(() => {
-    console.log({ searchTerm });
-
     let filteredNeighborhoods: Neighborhood[] | null = [];
 
     const timeout = setTimeout(async () => {
       if (searchTerm.length > 0) {
-        setIsLoading(true);
-        filteredNeighborhoods = await neighborhoodsService.filterByName(searchTerm);
+        try {
+          setIsLoading(true);
+          filteredNeighborhoods = await neighborhoodsService.filterByName(searchTerm);
 
-        setNeighborhoodList(filteredNeighborhoods);
-        setIsLoading(false);
+          setNeighborhoodList(filteredNeighborhoods);
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
+        }
       } else {
-        setCurrentCursor(neighborhoods.slice(-1)[0].id);
+        const lastNhoodId = neighborhoods.slice(-1)[0].id;
+        
+        setHasNextPage(true)
+        setCurrentCursor(lastNhoodId);
         setNeighborhoodList(neighborhoods || []);
       }
     }, 1000);

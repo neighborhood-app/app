@@ -52,7 +52,7 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
  *  & a boolean indicating whether there is a next page
  */
 const getNeighborhoods = async (myCursor: number): Promise<NeighborhoodsPerPage> => {
-  const NHOODS_PER_PAGE = 16;
+  const NHOODS_PER_PAGE = 16; // might make sense to increase this in production
   let firstNhood: Neighborhood | null = null;
 
   if (Number.isNaN(myCursor)) {
@@ -71,7 +71,8 @@ const getNeighborhoods = async (myCursor: number): Promise<NeighborhoodsPerPage>
 
   if (firstNhood) neighborhoods.unshift(firstNhood);
 
-  const currentCursor = neighborhoods.slice(-1)[0].id;
+  const currentCursor = neighborhoods.slice(-1)[0]?.id;
+  if (neighborhoods.length === 0) return { neighborhoods, currentCursor, hasNextPage: false };
 
   const nextPageNhood = await prismaClient.neighborhood.findMany({
     skip: 1,

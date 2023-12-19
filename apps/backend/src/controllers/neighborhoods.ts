@@ -22,8 +22,7 @@ neighborhoodsRouter.get(
     // Execute the next route if this was a search request
     if ('searchTerm' in req.query) return next();
     const { cursor } = req.query;
-    console.log("executing the first route");
-    
+
     const neighborhoods: NeighborhoodsPerPage = await neighborhoodServices.getNeighborhoods(
       Number(cursor),
     );
@@ -37,7 +36,6 @@ neighborhoodsRouter.get(
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: Request, res: Response) => {
     const { searchTerm } = req.query;
-    console.log('executing the second route');
 
     const neighborhoods: Neighborhood[] = await neighborhoodServices.filterNeighborhoods(
       searchTerm as string,

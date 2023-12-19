@@ -3,17 +3,13 @@ import { NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
 import neighborhoodsService from '../../services/neighborhoods';
 import NeighborhoodSearch from '../../components/NeighborhoodSearch/NeighborhoodSearch';
 
-export async function loader({ params }: LoaderFunctionArgs) {  
+export async function loader({ params }: LoaderFunctionArgs) {
   const data = await neighborhoodsService.getNeighborhoods(Number(params.cursor) || undefined);
   return data;
 }
 
 export default function ExplorePage() {
-  const neighborhoodsData = useLoaderData() as NeighborhoodsPerPage;
-
-  const { neighborhoods, currentCursor, hasNextPage } = neighborhoodsData;
-
-  console.log('in page', neighborhoods);
+  const { neighborhoods, currentCursor, hasNextPage } = useLoaderData() as NeighborhoodsPerPage;
 
   return (
     <NeighborhoodSearch
