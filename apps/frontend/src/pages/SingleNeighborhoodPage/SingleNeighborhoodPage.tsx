@@ -160,6 +160,7 @@ export default function SingleNeighborhood() {
             userRole={userRole}
             name={neighborhoodData.name}
             description={neighborhoodData.description ? neighborhoodData.description : ''}
+            location={neighborhoodLocation}
             setPromptDetails={setPromptDetails}
           />
         </Col>

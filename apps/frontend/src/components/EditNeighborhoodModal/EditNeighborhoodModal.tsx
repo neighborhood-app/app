@@ -14,9 +14,16 @@ interface Props {
   handleClose: () => void;
   name: string;
   description: string;
+  location: SearchResult | null;
 }
 
-export default function EditNeighborhoodModal({ show, handleClose, name, description }: Props) {
+export default function EditNeighborhoodModal({
+  show,
+  handleClose,
+  name,
+  description,
+  location = null,
+}: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -25,7 +32,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
   const [nameInput, setNameInput] = useState(name);
   const [textAreaInput, setTextAreaInput] = useState(description);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [locationInput, setLocationInput] = useState(null);
+  const [locationInput, setLocationInput] = useState(location);
   const [isLoading, setIsLoading] = useState(false);
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
@@ -39,9 +46,10 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
     return validInputPattern.test(nameInput);
   }
 
-  function isValidLocation(location: {} | null): location is SearchResult {
+  function isValidLocation(location: {} | null | undefined): location is SearchResult {
     return (
       location === null ||
+      location === undefined ||
       (Object.hasOwn(location, 'x') &&
         Object.hasOwn(location, 'y') &&
         Object.hasOwn(location, 'label') &&
@@ -126,6 +134,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
                 filterBy={() => true}
                 // @ts-ignore
                 options={locationsRef.current}
+                defaultInputValue={location ? location.label : undefined}
                 isValid={isValidLocation(locationInput)}
                 isInvalid={!isValidLocation(locationInput)}
               />
