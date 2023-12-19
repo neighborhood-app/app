@@ -51,16 +51,14 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
  * @returns the requested neighborhoods, the current cursor
  *  & a boolean indicating whether there is a next page
  */
-const getNeighborhoods = async (
-  myCursor: number,
-): Promise<NeighborhoodsPerPage> => {
+const getNeighborhoods = async (myCursor: number): Promise<NeighborhoodsPerPage> => {
   const NHOODS_PER_PAGE = 16;
   let firstNhood: Neighborhood | null = null;
 
   if (Number.isNaN(myCursor)) {
     firstNhood = await prismaClient.neighborhood.findFirst({});
   }
-  
+
   const neighborhoods: Neighborhood[] = await prismaClient.neighborhood.findMany({
     skip: 1,
     take: NHOODS_PER_PAGE,
@@ -182,6 +180,28 @@ const getNeighborhoodDetailsForMembers = async (
     });
 
   return neighborhood;
+};
+
+/**
+ * filters all neighborhoods based on argument string
+ * used to filter out the Explore page displayed data by the search term
+ * does not fetch data from joined tables
+ * @param searchTerm
+ * @returns Promise resolving to neighborhood details without admin_id
+ */
+const filterNeighborhoods = async (searchTerm: string): Promise<Neighborhood[]> => {
+  const neighborhoods = await prismaClient.neighborhood.findMany({
+    where: {
+      name: {
+        contains: searchTerm,
+        mode: "insensitive",
+      },
+    },
+  });
+
+  console.log(neighborhoods);
+
+  return neighborhoods;
 };
 
 const getNeighborhoodRequests = async (nhoodId: number): Promise<Request[]> => {
@@ -413,6 +433,7 @@ export default {
   isUserMemberOfNeighborhood,
   getNeighborhoodDetailsForNonMembers,
   getNeighborhoodDetailsForMembers,
+  filterNeighborhoods,
   isUserAdminOfNeighborhood,
   deleteNeighborhood,
   parseCreateNeighborhoodData,

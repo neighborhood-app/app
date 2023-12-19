@@ -18,11 +18,28 @@ const neighborhoodsRouter = express.Router();
 neighborhoodsRouter.get(
   '/',
   middleware.userIdExtractorAndLoginValidator,
-  catchError(async (req: Request, res: Response) => {
+  catchError(async (req: Request, res: Response, next) => {
+    // Execute the next route if this was a search request
+    if (req.query.searchTerm) return next();
     const { cursor } = req.query;
     const neighborhoods: NeighborhoodsPerPage = await neighborhoodServices.getNeighborhoods(
       Number(cursor),
     );
+
+    return res.status(200).send(neighborhoods);
+  }),
+);
+
+neighborhoodsRouter.get(
+  '/',
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: Request, res: Response) => {
+    const { searchTerm } = req.query;
+
+    const neighborhoods: Neighborhood[] = await neighborhoodServices.filterNeighborhoods(
+      searchTerm as string,
+    );
+
     res.status(200).send(neighborhoods);
   }),
 );

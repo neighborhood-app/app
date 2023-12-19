@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useActionData, useSubmit } from 'react-router-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './NeighborhoodSearch.module.css';
@@ -20,24 +20,23 @@ export default function NeighborhoodSearch({
   neighborhoods: Neighborhood[] | null;
   cursor: number;
   isNextPage: boolean;
-}) {
+  }) {
+  const filteredNeighborhoods = useActionData() as unknown as Neighborhood[];
   const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
   const [hasNextPage, setHasNextPage] = useState(isNextPage);
   const [currentCursor, setCurrentCursor] = useState(cursor);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [searchParams, setSearchParams] = useSearchParams();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const [neighborhoodList, setNeighborhoodList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [show, setShow] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState(null);
+  const submit = useSubmit();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const fetchData = async function () {
+  const fetchData = async function fetchData() {
     setIsLoading(true);
     const data = (await neighborhoodsService.getNeighborhoods(
       currentCursor,
@@ -61,22 +60,45 @@ export default function NeighborhoodSearch({
   //   // }
   // };
 
-  // useEffect(() => {
-  //   let filteredNeighborhoods = neighborhoods;
+  useEffect(() => {
+    let filteredNeighborhoods: Neighborhood[] = [];
 
-  //   if (searchTerm !== '') {
-  //     filteredNeighborhoods =
-  //       filteredNeighborhoods?.filter((neighborhood) =>
-  //         neighborhood.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  //       ) || [];
-  //   }
-
-  //   setNeighborhoodList(filteredNeighborhoods);
-  //   setPartialNhoods(filteredNeighborhoods || []);
-  // }, [neighborhoods, searchTerm]);
+    const timeout = setTimeout(() => {
+      if (searchTerm !== '') {
+        // console.log(searchTerm);
+        filteredNeighborhoods =
+          filteredNeighborhoods?.filter((neighborhood) =>
+            neighborhood.name.toLowerCase().includes(searchTerm.toLowerCase()),
+          ) || [];
+        setNeighborhoodList(filteredNeighborhoods);
+      }
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, [searchTerm]);
 
   const searchNeighborhoods = (searchInput: string): void => {
     setSearchTerm(searchInput);
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    searchNeighborhoods(e.target.value);
+    const form = document.querySelector('form');
+    const timeout = setTimeout(() => {
+      if (searchTerm !== '') {
+        console.log('hello!');
+        submit(form, {
+          method: "post"
+        });
+        
+        // filteredNeighborhoods =
+        //   filteredNeighborhoods?.filter((neighborhood) =>
+        //     neighborhood.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        //   ) || [];
+        setNeighborhoodList(filteredNeighborhoods);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timeout);
   };
 
   const neighborhoodBoxes =
@@ -102,7 +124,8 @@ export default function NeighborhoodSearch({
                   type="text"
                   placeholder="S e a r c h"
                   value={searchTerm}
-                  onChange={(event) => searchNeighborhoods(event.target.value)}></Form.Control>
+                  name="searchTerm"
+                  onChange={handleSearch}></Form.Control>
               </Form.Group>
             </Form>
           </Col>
@@ -124,7 +147,9 @@ export default function NeighborhoodSearch({
             next={fetchData}
             hasMore={hasNextPage}
             loader={<SpinWheel className={`mt-2 mx-auto`}></SpinWheel>}
-            endMessage={<p className={`${styles.noNhoodsText} mt-5`}>You've seen all the Neighborhoods.</p>}
+            endMessage={
+              <p className={`${styles.noNhoodsText} mt-5`}>You've seen all the Neighborhoods.</p>
+            }
             className={styles.scrollBox}>
             <Row className="gy-sm-4 gx-sm-4">{neighborhoodBoxes}</Row>
           </InfiniteScroll>

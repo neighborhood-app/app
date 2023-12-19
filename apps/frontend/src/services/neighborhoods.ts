@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { redirect } from 'react-router';
-import { NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
+import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
 import { CreateNeighborhoodData, EditNeighborhoodData, NeighborhoodType } from '../types';
 import { getStoredUser } from '../utils/auth';
 
@@ -13,6 +13,15 @@ async function getNeighborhoods(cursor?: number): Promise<NeighborhoodsPerPage> 
   if (user) headers.authorization = `Bearer ${user.token}`;
 
   const response = await axios.get(BASE_URL, { params: { cursor }, headers });
+  return response.data;
+}
+async function filterByName(searchTerm: string): Promise<Neighborhood[]> {
+  const user = getStoredUser();
+  const headers = { authorization: '' };
+
+  if (user) headers.authorization = `Bearer ${user.token}`;
+
+  const response = await axios.get(BASE_URL, { params: { searchTerm }, headers });
   return response.data;
 }
 
@@ -94,6 +103,7 @@ async function editNeighborhood(
 
 export default {
   getNeighborhoods,
+  filterByName,
   getSingleNeighborhood,
   deleteNeighborhood,
   connectUserToNeighborhood,
