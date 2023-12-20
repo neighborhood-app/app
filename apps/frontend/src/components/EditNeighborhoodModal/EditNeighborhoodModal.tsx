@@ -48,12 +48,12 @@ export default function EditNeighborhoodModal({
 
   function isValidLocation(location: {} | null | undefined): location is SearchResult {
     return (
-      location === null ||
-      location === undefined ||
-      (Object.hasOwn(location, 'x') &&
-        Object.hasOwn(location, 'y') &&
-        Object.hasOwn(location, 'label') &&
-        Object.hasOwn(location, 'bounds'))
+      location !== null &&
+      location !== undefined &&
+      Object.hasOwn(location, 'x') &&
+      Object.hasOwn(location, 'y') &&
+      Object.hasOwn(location, 'label') &&
+      Object.hasOwn(location, 'bounds')
     );
   }
 
@@ -61,7 +61,7 @@ export default function EditNeighborhoodModal({
     const form = event.currentTarget;
     setFormSubmitted(true);
 
-    if (!form.checkValidity() || !validateInput()) {
+    if (!form.checkValidity() || !validateInput() || !isValidLocation(locationInput)) {
       event.preventDefault();
       event.stopPropagation();
     } else {
@@ -130,18 +130,24 @@ export default function EditNeighborhoodModal({
                   // @ts-ignore
                   setLocationInput(selected[0]);
                 }}
+                onInputChange={(_text, _event) => {
+                  setLocationInput(null);
+                }}
                 isLoading={isLoading}
                 filterBy={() => true}
                 // @ts-ignore
                 options={locationsRef.current}
-                defaultInputValue={location ? location.label : undefined}
+                placeholder="Choose a location..."
+                // eslint-disable-next-line no-unneeded-ternary
                 isValid={isValidLocation(locationInput)}
                 isInvalid={!isValidLocation(locationInput)}
+                // @ts-ignore
+                defaultInputValue={location ? location.label : undefined}
               />
+              <Form.Control.Feedback type="invalid">
+                Please choose a valid address!
+              </Form.Control.Feedback>
             </InputGroup>
-            <Form.Control.Feedback type="invalid">
-              Please choose a valid address!
-            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-2" controlId="description">
             <Form.Label column="sm">
