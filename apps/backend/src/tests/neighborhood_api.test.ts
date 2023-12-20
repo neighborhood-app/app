@@ -10,6 +10,7 @@ import {
   LoginData,
   NeighborhoodDetailsForNonMembers,
   NeighborhoodDetailsForMembers,
+  NeighborhoodsPerPage,
 } from '../types';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -43,24 +44,50 @@ const loginUser = async (loginData: LoginData): Promise<Response> => {
 };
 
 describe('Tests for getting all neighborhoods: GET /neighborhoods', () => {
+  let token: string;
   beforeAll(async () => {
     await seed();
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    token = loginResponse.body.token;
   });
 
-  test('GET /neighborhoods returns all neighborhoods', async () => {
-    // Seeds the database to have existing neighborhoods to check.
-    const neighborhoods = await testHelpers.neighborhoodsInDb();
-    const numberOfNeighborhoods = neighborhoods.length;
-    const response: Response = await api.get('/api/neighborhoods');
+  test('GET /neighborhoods returns first batch of 17 neighborhoods', async () => {
+    const response: Response = await api
+      .get('/api/neighborhoods')
+      .set('Authorization', `Bearer ${token}`);
+
+    const nhoodData: NeighborhoodsPerPage = response.body;
     expect(response.status).toEqual(200);
-    expect(response.body.length).toEqual(numberOfNeighborhoods);
+    expect(nhoodData.neighborhoods.length).toBeLessThanOrEqual(17);
   });
 
-  test('GET /neighborhoods returns 200 even if no neighborhoods were created', async () => {
+  test('GET /neighborhoods returns neighborhoods, and next cursor and next page metadata', async () => {
+    const neighborhoods: Neighborhood[] = await testHelpers.neighborhoodsInDb();
+    const hasNextPage = neighborhoods.length > 17;
+
+    const response: Response = await api
+      .get('/api/neighborhoods')
+      .set('Authorization', `Bearer ${token}`);
+
+    const nhoodData: NeighborhoodsPerPage = response.body;
+    const lastNhoodId: number | undefined = nhoodData.neighborhoods.slice(-1)[0]?.id;
+    expect(response.status).toEqual(200);
+    expect(nhoodData.neighborhoods.length).toBeLessThanOrEqual(17);
+    expect(nhoodData.newCursor).toBe(hasNextPage ? lastNhoodId : undefined);
+    expect(nhoodData.hasNextPage).toBe(hasNextPage);
+  });
+
+  test('GET /neighborhoods returns 200 even if no neighborhoods exist', async () => {
     await testHelpers.removeAllData();
-    const response: Response = await api.get('/api/neighborhoods');
+    const response: Response = await api
+      .get('/api/neighborhoods')
+      .set('Authorization', `Bearer ${token}`);
+
+    const nhoodData: NeighborhoodsPerPage = response.body;
     expect(response.status).toEqual(200);
-    expect(response.body.length).toBe(0);
+    expect(nhoodData.neighborhoods.length).toBe(0);
+    expect(nhoodData.hasNextPage).toBe(false);
+    expect(nhoodData.newCursor).toBeUndefined();
   });
 });
 
@@ -171,11 +198,8 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
   // error was 'socket hang up'
   test('when user not logged in, unable to create neighborhood', async () => {
     const postResponse: Response = await api.post('/api/neighborhoods');
-    console.log(postResponse?.body);
-
     const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
     const numCurrentNeighborhoods = currentNeighborhoods.length;
-    console.log(currentNeighborhoods);
 
     expect(postResponse.status).toEqual(401);
     expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods);

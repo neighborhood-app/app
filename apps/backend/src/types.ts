@@ -202,6 +202,6 @@ export interface LoginResponseData {
  */
 export interface NeighborhoodsPerPage {
   neighborhoods: Neighborhood[];
-  currentCursor: number;
+  newCursor?: number;
   hasNextPage: boolean;
 }

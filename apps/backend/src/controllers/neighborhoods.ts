@@ -21,11 +21,10 @@ neighborhoodsRouter.get(
   catchError(async (req: Request, res: Response, next) => {
     // Execute the next route if this was a search request
     if ('searchTerm' in req.query) return next();
-    const { cursor } = req.query;
+    let { cursor }: { cursor?: string | number } = req.query;
+    cursor = cursor ? Number(cursor) : undefined;
 
-    const neighborhoods: NeighborhoodsPerPage = await neighborhoodServices.getNeighborhoods(
-      Number(cursor),
-    );
+    const neighborhoods: NeighborhoodsPerPage = await neighborhoodServices.getNeighborhoods(cursor);
 
     return res.status(200).send(neighborhoods);
   }),
