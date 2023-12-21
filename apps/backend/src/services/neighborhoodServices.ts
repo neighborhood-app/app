@@ -46,13 +46,15 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
 // };
 
 /**
- * fetches the next 16 neighborhoods after the passed-in neighborhood id
+ * fetches the next 16 (17 on first batch) neighborhoods after the passed-in neighborhood id
+ * if the cursor/neighborhood id is undefined, it fetches the first 17 neighborhoods
+ * if there aren't any more neighborhoods, returns an empty array
  * @param currCursor - the id of the last-displayed neighborhood from the previous batch or NaN
  * @returns the requested neighborhoods, the current cursor
  *  & a boolean indicating whether there is a next page
  */
 const getNeighborhoods = async (currCursor?: number): Promise<NeighborhoodsPerPage> => {
-  const NHOODS_PER_PAGE = 16; // might make sense to increase this in production
+  const NHOODS_PER_PAGE = 16; // might make sense to increase this number in production
   let firstNhood: Neighborhood | null = null;
 
   if (typeof currCursor !== 'number') {
@@ -81,7 +83,7 @@ const getNeighborhoods = async (currCursor?: number): Promise<NeighborhoodsPerPa
       id: newCursor,
     },
   });
-
+  
   const hasNextPage = nextPageNhood.length > 0;
   if (!hasNextPage) newCursor = undefined;
 

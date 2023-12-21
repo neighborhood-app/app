@@ -10,6 +10,7 @@ import CustomBtn from '../CustomBtn/CustomBtn';
 import CreateNeighborhoodModal from '../CreateNeighborhoodModal/CreateNeighborhoodModal';
 import neighborhoodsService from '../../services/neighborhoods';
 import SpinWheel from '../SpinWheel/SpinWheel';
+import AlertBox from '../AlertBox/AlertBox';
 
 export default function NeighborhoodSearch({
   neighborhoods,
@@ -35,9 +36,10 @@ export default function NeighborhoodSearch({
   const handleShow = () => setShow(true);
 
   const fetchData = async function fetchData() {
+    setError(null);
+    setIsLoading(true);
+
     try {
-      setError(null);
-      setIsLoading(true);
       const data = (await neighborhoodsService.getNeighborhoods(
         currentCursor,
       )) as unknown as NeighborhoodsPerPage;
@@ -45,11 +47,13 @@ export default function NeighborhoodSearch({
       setNeighborhoodList(neighborhoodList.concat(data.neighborhoods));
       setCurrentCursor(data.newCursor);
       setHasNextPage(data.hasNextPage);
-      setIsLoading(false);
     } catch (error) {
       console.error(error);
-      setError(error as Error);
+      setError(error as Error);      
+    } finally {
+      setIsLoading(false);
     }
+    
   };
 
   useEffect(() => {
@@ -57,16 +61,18 @@ export default function NeighborhoodSearch({
 
     const timeout = setTimeout(async () => {
       if (searchTerm.length > 0) {
+        setError(null);
+        setIsLoading(true);
+
         try {
-          setError(null)
-          setIsLoading(true);
           // TODO: paginate/infinite-scroll those results as well
           filteredNeighborhoods = await neighborhoodsService.filterByName(searchTerm);
           setNeighborhoodList(filteredNeighborhoods);
-          setIsLoading(false);
         } catch (error) {
           console.log(error);
           setError(error as Error);
+        } finally {
+          setIsLoading(false);
         }
       } else {
         const lastNhoodId: number | undefined = neighborhoods.slice(-1)[0]?.id;
@@ -89,6 +95,10 @@ export default function NeighborhoodSearch({
         isUserAdmin={false}></NeighborhoodCard>
     </Col>
   ));
+
+  const EndOfResults = (
+    <p className={`${styles.noNhoodsText} mt-5`}>You have seen all the Neighborhoods.</p>
+  );
 
   return (
     <>
@@ -119,16 +129,14 @@ export default function NeighborhoodSearch({
         </Row>
       </Container>
       <Container className={styles.neighborhoodsContainer} fluid>
-        {error && <p>Error: {error.message}</p>}
+        {error && <AlertBox text={error.message} variant="danger"></AlertBox>}
         {neighborhoodBoxes.length > 0 ? (
           <InfiniteScroll
             dataLength={neighborhoodBoxes.length}
             next={fetchData}
             hasMore={hasNextPage}
             loader={<SpinWheel className={`mt-2 mx-auto`}></SpinWheel>}
-            endMessage={
-              <p className={`${styles.noNhoodsText} mt-5`}>You've seen all the Neighborhoods.</p>
-            }
+            endMessage={EndOfResults}
             className={styles.scrollBox}>
             <Row className="gy-sm-4 gx-sm-4">{neighborhoodBoxes}</Row>
           </InfiniteScroll>

@@ -21,6 +21,7 @@ neighborhoodsRouter.get(
   catchError(async (req: Request, res: Response, next) => {    
     // Execute the next route if this was a search request
     if ('searchTerm' in req.query) return next();
+
     let { cursor }: { cursor?: string | number } = req.query;
     cursor = cursor ? Number(cursor) : undefined;
 

@@ -26,8 +26,6 @@ async function filterByName(searchTerm: string): Promise<Neighborhood[]> {
   return response.data;
 }
 
-// TODO: If unable to login because of token invalid or otherwise
-// throw Error
 async function getSingleNeighborhood(id: number): Promise<NeighborhoodType | null> {
   const userDataInLocalStorage = getStoredUser();
 
