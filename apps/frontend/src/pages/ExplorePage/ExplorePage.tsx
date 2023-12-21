@@ -9,12 +9,12 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export default function ExplorePage() {
-  const { neighborhoods, currentCursor, hasNextPage } = useLoaderData() as NeighborhoodsPerPage;
+  const { neighborhoods, newCursor, hasNextPage } = useLoaderData() as NeighborhoodsPerPage;
 
   return (
     <NeighborhoodSearch
       neighborhoods={neighborhoods}
-      cursor={currentCursor}
+      cursor={newCursor}
       isNextPage={hasNextPage}></NeighborhoodSearch>
   );
 }

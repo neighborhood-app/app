@@ -17,7 +17,7 @@ export default function NeighborhoodSearch({
   isNextPage,
 }: {
   neighborhoods: Neighborhood[];
-  cursor: number;
+  cursor?: number;
   isNextPage: boolean;
 }) {
   const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
@@ -40,7 +40,7 @@ export default function NeighborhoodSearch({
     )) as unknown as NeighborhoodsPerPage;
 
     setNeighborhoodList(neighborhoodList.concat(data.neighborhoods));
-    setCurrentCursor(data.currentCursor);
+    setCurrentCursor(data.newCursor);
     setHasNextPage(data.hasNextPage);
     setIsLoading(false);
   };
