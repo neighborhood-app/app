@@ -11,4 +11,15 @@ const isString = (value: unknown): value is string => typeof value === 'string';
  */
 const isObject = (input: unknown): input is Object => !!input && (typeof input === 'object');
 
-export { isString, isObject };
+
+function stringIsValidDate(input: string): boolean;
+function stringIsValidDate(input: undefined): undefined;
+function stringIsValidDate(input: string | undefined): boolean | undefined {
+  if (typeof input === 'string') {
+    const date = Date.parse(input);
+    return !Number.isNaN(date);
+  } 
+  return undefined;
+}
+
+export { isString, isObject, stringIsValidDate };

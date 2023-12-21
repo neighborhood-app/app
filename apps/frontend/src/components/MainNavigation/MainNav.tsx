@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Nav, Navbar } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faCompass, faHouse } from '@fortawesome/free-solid-svg-icons';
+import { Nav, Navbar } from 'react-bootstrap';
+import { faBell, faCompass, faHouse, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import styles from './MainNav.module.css';
+import { getStoredUser, deleteStoredUser } from '../../utils/auth';
+import UserCircle from '../UserCircle/UserCircle';
 
-const profilePic = require('./profile_placeholder.png');
+
+// const profilePic = require('./profile_placeholder.png');
 
 const MainNav = () => {
   const mql = window.matchMedia('(max-width: 576px)');
+  const user = getStoredUser();
 
   const [smallDisplay, setSmallDisplay] = useState(mql.matches);
 
@@ -16,11 +20,14 @@ const MainNav = () => {
     setSmallDisplay(mql.matches);
   });
 
-  const profileIconLink = (
-    <div className={styles.link}>
-      <img className={styles.profilePicture} src={profilePic} alt="User's profile" />
-    </div>
-  );
+  const profileIconLink = user ? (
+    <Link to={`/users/${user.id}`}>
+      <div className={styles.link}>
+        {/* <img className={styles.profilePicture} src={profilePic} alt="User's profile" /> */}
+        <UserCircle username={user.username} isLast={true} inStack={false} />
+      </div>
+    </Link>
+  ) : null;
 
   const homeIconLink = (
     <Link to={'/'} title='Home'>
@@ -49,6 +56,20 @@ const MainNav = () => {
         icon={faBell}
         className={`${styles.navIcon} ${styles.bellIcon}`}></FontAwesomeIcon>
     </div>
+  )
+
+  const logoutIconLink = (
+    <div className={styles.link}>
+      <FontAwesomeIcon
+              icon={faRightFromBracket}
+              size="2xl"
+              className={styles.leaveIcon}
+              onClick={() => {
+                deleteStoredUser()
+                window.location.reload()
+              }}
+            />
+    </div>
   );
 
   return (
@@ -58,9 +79,11 @@ const MainNav = () => {
           <Navbar.Toggle />
           <Navbar.Collapse>
             <Nav className="me-auto">
-              <Nav.Link href="#features" className={styles.navbarCollapseLink}>
-                MY PROFILE
-              </Nav.Link>
+              {user ? (
+                <Nav.Link href={`/users/${user.id}`} className={styles.navbarCollapseLink}>
+                  MY PROFILE
+                </Nav.Link>
+              ) : null}
               <Nav.Link href="/" className={styles.navbarCollapseLink}>
                 HOME
               </Nav.Link>
@@ -69,6 +92,12 @@ const MainNav = () => {
               </Nav.Link>
               <Nav.Link href="#pricing" className={styles.navbarCollapseLink}>
                 NOTIFICATIONS
+              </Nav.Link>
+              <Nav.Link className={styles.navbarCollapseLink} onClick={() => {
+                  deleteStoredUser()
+                  window.location.reload()
+              }}>
+                SIGN OUT
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
@@ -79,6 +108,7 @@ const MainNav = () => {
           {homeIconLink}
           {exploreIconLink}
           {notificationsIconLink}
+          {logoutIconLink}
         </>
       )}
     </Navbar>

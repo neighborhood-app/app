@@ -1,0 +1,29 @@
+.row {
+  margin-bottom: 10px;
+}
+
+.profileText {
+  text-align: justify;
+}
+
+.inputField {
+  width: fit-content;
+}
+
+.form {
+  width: 50%;
+}
+
+@media (max-width: 992px) {
+  .form {
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .inputField {
+    width: 100%;
+  }
+}
