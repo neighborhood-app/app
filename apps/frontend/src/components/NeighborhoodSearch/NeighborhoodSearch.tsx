@@ -28,33 +28,29 @@ export default function NeighborhoodSearch({
   const [show, setShow] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [error, setError] = useState<null | Error>(null);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const fetchData = async function fetchData() {
-    setIsLoading(true);
-    const data = (await neighborhoodsService.getNeighborhoods(
-      currentCursor,
-    )) as unknown as NeighborhoodsPerPage;
+    try {
+      setError(null);
+      setIsLoading(true);
+      const data = (await neighborhoodsService.getNeighborhoods(
+        currentCursor,
+      )) as unknown as NeighborhoodsPerPage;
 
-    setNeighborhoodList(neighborhoodList.concat(data.neighborhoods));
-    setCurrentCursor(data.newCursor);
-    setHasNextPage(data.hasNextPage);
-    setIsLoading(false);
+      setNeighborhoodList(neighborhoodList.concat(data.neighborhoods));
+      setCurrentCursor(data.newCursor);
+      setHasNextPage(data.hasNextPage);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setError(error as Error);
+    }
   };
-
-  // const fetchData = async () => {
-  //   setIsLoading(true);
-  //   // setError(null);
-  //   // try {
-  //   // } catch (error) {
-  //   //   // setError(error as Error);
-  //   // } finally {
-  //   setIsLoading(false);
-  //   // }
-  // };
 
   useEffect(() => {
     let filteredNeighborhoods: Neighborhood[] | null = [];
@@ -62,18 +58,20 @@ export default function NeighborhoodSearch({
     const timeout = setTimeout(async () => {
       if (searchTerm.length > 0) {
         try {
+          setError(null)
           setIsLoading(true);
+          // TODO: paginate/infinite-scroll those results as well
           filteredNeighborhoods = await neighborhoodsService.filterByName(searchTerm);
-
           setNeighborhoodList(filteredNeighborhoods);
           setIsLoading(false);
         } catch (error) {
           console.log(error);
+          setError(error as Error);
         }
       } else {
-        const lastNhoodId = neighborhoods.slice(-1)[0].id;
-        
-        setHasNextPage(true)
+        const lastNhoodId: number | undefined = neighborhoods.slice(-1)[0]?.id;
+
+        setHasNextPage(true);
         setCurrentCursor(lastNhoodId);
         setNeighborhoodList(neighborhoods || []);
       }
@@ -121,6 +119,7 @@ export default function NeighborhoodSearch({
         </Row>
       </Container>
       <Container className={styles.neighborhoodsContainer} fluid>
+        {error && <p>Error: {error.message}</p>}
         {neighborhoodBoxes.length > 0 ? (
           <InfiniteScroll
             dataLength={neighborhoodBoxes.length}
@@ -134,7 +133,6 @@ export default function NeighborhoodSearch({
             <Row className="gy-sm-4 gx-sm-4">{neighborhoodBoxes}</Row>
           </InfiniteScroll>
         ) : (
-          // {error && <p>Error: {error.message}</p>}
           <Col className={styles.noNhoodsText}>
             <p>Currently, there are no neighborhoods that match your criteria.</p>
           </Col>
