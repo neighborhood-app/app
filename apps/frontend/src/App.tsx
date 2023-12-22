@@ -4,10 +4,6 @@ import RootLayout from './pages/RootLayout/RootLayout';
 import LoginPage, { action as loginAction } from './pages/LoginPage/LoginPage';
 import SignUpPage, { action as signUpAction } from './pages/SignUpPage/SignUpPage';
 
-import NeighborhoodsPage, {
-  loader as neighborhoodsLoader,
-} from './pages/NeighborhoodsPage/NeighborhoodsPage';
-
 import SingleNeighborhoodPage, {
   loader as neighborhoodLoader,
   action as requestAction,
@@ -49,15 +45,11 @@ const router = createBrowserRouter([
             action: homePageAction,
           },
           { path: 'logout', loader: logoutLoader },
-
           {
-            path: 'test',
-            element: <TestPage />,
-          },
-          {
-            path: 'neighborhoods',
-            element: <NeighborhoodsPage />,
-            loader: neighborhoodsLoader,
+            path: 'users/:id',
+            element: <ProfilePage />,
+            loader: userLoader,
+            action: profileAction,
           },
           {
             path: 'neighborhoods/:id',
