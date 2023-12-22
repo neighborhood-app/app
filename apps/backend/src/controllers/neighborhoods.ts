@@ -67,7 +67,6 @@ neighborhoodsRouter.put('/:id', middleware.userIdExtractorAndLoginValidator, cat
   }
 
   const data = req.body;
-
   const updatedNeighborhood: Neighborhood = await prismaClient.neighborhood.update({
     where: { id: +req.params.id },
     data,

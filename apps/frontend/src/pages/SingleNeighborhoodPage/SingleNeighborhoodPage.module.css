@@ -21,10 +21,6 @@
   cursor: pointer;
 }
 
-.row {
-  display: block;
-}
-
 @media (max-width: 576px) {
   .wrapper {
     padding: 30px;

@@ -1,23 +1,18 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
 import styles from './MapBox.module.css';
 
-type Props = {
-  coordinates: SearchResult;
-};
-
-export default function MapBox({ coordinates }: Props) {
+export default function MapBox() {
   return (
     <MapContainer
       className={styles.mapContainer}
-      center={[coordinates.y, coordinates.x]}
+      center={[51.505, -0.09]}
       zoom={13}
       scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={[coordinates.y, coordinates.x]}>
+      <Marker position={[51.505, -0.09]}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
