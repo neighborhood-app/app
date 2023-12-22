@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import Request from '../Request/Request';
 import CreateRequestModal from '../CreateRequestModal/CreateRequestModal';
@@ -97,8 +98,7 @@ export default function RequestBox({
         </Row>
       </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
-      <Row
-        className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
+      <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
         {requestBoxes.length !== 0 ? (
           requestBoxes
         ) : (

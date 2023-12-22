@@ -166,12 +166,14 @@ export default function SingleNeighborhood() {
         </Col>
       </Row>
       <Row>
-        <Col>{<RequestBox requests={neighborhoodRequests} />}</Col>
         {neighborhoodLocation ? (
           <Col className="d-flex justify-content-center">
             <MapBox coordinates={neighborhoodLocation} />
           </Col>
         ) : null}
+      </Row>
+      <Row>
+        <RequestBox requests={neighborhoodRequests} />
       </Row>
     </Container>
   );
