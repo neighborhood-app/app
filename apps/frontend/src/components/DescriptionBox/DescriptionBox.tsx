@@ -53,7 +53,7 @@ export default function DescriptionBox({
       <Row className="align-items-center gy-3">
         
       </Row>
-      <Row className="mt-2 mt-md-4">
+      <Row className="mt-1 md-4">
         <div className={styles.neighborhoodDescription}>
           {description ? <p>{description}</p> : null}
           {userRole === 'NON-MEMBER' ? (

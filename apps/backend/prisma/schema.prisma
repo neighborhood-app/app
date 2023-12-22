@@ -45,14 +45,14 @@ model Request {
 }
 
 model Response {
-  id           Int              @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   request_id   Int
   user_id      Int
-  content      String           @db.VarChar(1000)
-  status       ResponseStatus   @default(PENDING)
-  time_created DateTime         @default(now()) @db.Timestamptz(6)
-  request      Request          @relation(fields: [request_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user         User             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  content      String         @db.VarChar(1000)
+  status       ResponseStatus @default(PENDING)
+  time_created DateTime       @default(now()) @db.Timestamptz(6)
+  request      Request        @relation(fields: [request_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user         User           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("responses")
 }

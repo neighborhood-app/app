@@ -4,7 +4,9 @@ import RootLayout from './pages/RootLayout/RootLayout';
 import LoginPage, { action as loginAction } from './pages/LoginPage/LoginPage';
 import SignUpPage, { action as signUpAction } from './pages/SignUpPage/SignUpPage';
 
-import TestPage from './pages/Test/TestPage';
+import NeighborhoodsPage, {
+  loader as neighborhoodsLoader,
+} from './pages/NeighborhoodsPage/NeighborhoodsPage';
 
 import SingleNeighborhoodPage, {
   loader as neighborhoodLoader,
@@ -15,6 +17,11 @@ import SingleRequestPage, {
   loader as requestLoader,
   action as singleRequestAction,
 } from './pages/SingleRequestPage/SingleRequestPage';
+
+import ProfilePage, {
+  loader as userLoader,
+  action as profileAction,
+} from './pages/ProfilePage/ProfilePage';
 
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 import logoutLoader from './pages/LogoutPage/LogoutPage';
@@ -42,9 +49,15 @@ const router = createBrowserRouter([
             action: homePageAction,
           },
           { path: 'logout', loader: logoutLoader },
+
           {
             path: 'test',
             element: <TestPage />,
+          },
+          {
+            path: 'neighborhoods',
+            element: <NeighborhoodsPage />,
+            loader: neighborhoodsLoader,
           },
           {
             path: 'neighborhoods/:id',
@@ -57,10 +70,6 @@ const router = createBrowserRouter([
             loader: requestLoader,
             action: singleRequestAction,
             element: <SingleRequestPage />,
-          },
-          {
-            path: 'home',
-            element: <HomePage />,
           },
         ],
       },
