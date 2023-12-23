@@ -59,16 +59,15 @@ const MainNav = () => {
   )
 
   const logoutIconLink = (
-    <div className={styles.link}>
+    <div className={styles.link} title='Log out'>
       <FontAwesomeIcon
-              icon={faRightFromBracket}
-              size="2xl"
-              className={styles.leaveIcon}
-              onClick={() => {
-                deleteStoredUser()
-                window.location.reload()
-              }}
-            />
+        icon={faRightFromBracket}
+        className={`${styles.navIcon} ${styles.logOutIcon}`}
+        onClick={() => {
+          deleteStoredUser();
+          window.location.reload();
+        }}
+      />
     </div>
   );
 

@@ -83,6 +83,14 @@
   animation: ring 0.2s;
 }
 
+.logOutIcon {
+  margin-left: 5px;
+}
+
+.logOutIcon:hover {
+  animation: leave 0.4s;
+}
+
 @keyframes flip {
   0% {
     transform:rotateY(0)
@@ -110,6 +118,18 @@
   }
   100% {
     transform: rotate(-10deg);
+  }
+}
+
+@keyframes leave {
+  0% {
+    transform: translateX(-1px)
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
   }
 }
 
