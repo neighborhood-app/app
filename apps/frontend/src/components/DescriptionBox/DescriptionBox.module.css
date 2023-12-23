@@ -1,3 +1,7 @@
+.container {
+  margin-top: 15px;
+}
+
 .neighborhoodImg {
   max-height: 5em;
   min-width: 5em;
