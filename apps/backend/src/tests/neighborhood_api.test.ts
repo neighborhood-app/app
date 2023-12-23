@@ -51,6 +51,13 @@ describe('Tests for getting all neighborhoods: GET /neighborhoods', () => {
     token = loginResponse.body.token;
   });
 
+  test('Cannot access neighborhoods without log-in token', async () => {
+    const response: Response = await api.get('/api/neighborhoods');
+
+    expect(response.status).toEqual(401);
+    expect(response.body.error).toBe('You must be signed in to do that.');
+  });
+
   test('/:cursor returns first batch of 17 neighborhoods', async () => {
     const response: Response = await api
       .get('/api/neighborhoods')
@@ -115,7 +122,7 @@ describe('Tests for getting all neighborhoods: GET /neighborhoods', () => {
     expect(resNhoods.every((nhood) => nhood.name.includes(searchTerm))).toBe(true);
   });
 
-  test.only('/?searchTerm=:searchTerm returns empty array if no neighborhoods match the search term', async () => {
+  test('/?searchTerm=:searchTerm returns empty array if no neighborhoods match the search term', async () => {
     const searchTerm = 'xksksjfjf';
     const neighborhoods: Neighborhood[] = await testHelpers.neighborhoodsInDb();
     const nhoodMatch = neighborhoods.find((nhood) => nhood.name.includes(searchTerm));
@@ -862,7 +869,7 @@ describe('Tests for getting requests associated with a n-hood GET /neighborhoods
     const response: Response = await api.get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests`);
 
     expect(response.status).toEqual(401);
-    expect(response.body.error).toBe('user not signed in');
+    expect(response.body.error).toBe('You must be signed in to do that.');
   });
 
   test('unable to fetch data when token invalid', async () => {
@@ -871,7 +878,7 @@ describe('Tests for getting requests associated with a n-hood GET /neighborhoods
       .set('Authorization', 'invalid-token');
 
     expect(response.status).toEqual(401);
-    expect(response.body.error).toBe('user not signed in');
+    expect(response.body.error).toBe('You must be signed in to do that.');
   });
 
   test('unable to fetch data when user not a member of neighborhood', async () => {

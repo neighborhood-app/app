@@ -15,6 +15,7 @@ async function getNeighborhoods(cursor?: number): Promise<NeighborhoodsPerPage> 
   const response = await axios.get(BASE_URL, { params: { cursor }, headers });
   return response.data;
 }
+
 async function filterByName(searchTerm: string): Promise<Neighborhood[]> {
   const user = getStoredUser();
   const headers = { authorization: '' };
@@ -22,7 +23,7 @@ async function filterByName(searchTerm: string): Promise<Neighborhood[]> {
   if (user) headers.authorization = `Bearer ${user.token}`;
 
   const response = await axios.get(BASE_URL, { params: { searchTerm }, headers });
-  
+
   return response.data;
 }
 

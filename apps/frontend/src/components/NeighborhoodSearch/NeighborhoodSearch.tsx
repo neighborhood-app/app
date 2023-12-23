@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AxiosError } from 'axios';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './NeighborhoodSearch.module.css';
@@ -11,6 +12,7 @@ import CreateNeighborhoodModal from '../CreateNeighborhoodModal/CreateNeighborho
 import neighborhoodsService from '../../services/neighborhoods';
 import SpinWheel from '../SpinWheel/SpinWheel';
 import AlertBox from '../AlertBox/AlertBox';
+import { ErrorObj } from '../../types';
 
 export default function NeighborhoodSearch({
   neighborhoods,
@@ -24,19 +26,17 @@ export default function NeighborhoodSearch({
   const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
   const [hasNextPage, setHasNextPage] = useState(isNextPage);
   const [currentCursor, setCurrentCursor] = useState(cursor);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchTerm, setSearchTerm] = useState('');
   const [show, setShow] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState<null | Error>(null);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const fetchData = async function fetchData() {
-    setError(null);
+    setErrorMsg('');
     setIsLoading(true);
 
     try {
@@ -48,12 +48,18 @@ export default function NeighborhoodSearch({
       setCurrentCursor(data.newCursor);
       setHasNextPage(data.hasNextPage);
     } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorResponse: ErrorObj = error.response?.data;
+        setErrorMsg(errorResponse.error);
+      } else if (error instanceof Error) {
+        setErrorMsg(error.message);
+      }
+
+      window.scrollTo(0, 0);
       console.error(error);
-      setError(error as Error);      
     } finally {
       setIsLoading(false);
     }
-    
   };
 
   useEffect(() => {
@@ -61,16 +67,29 @@ export default function NeighborhoodSearch({
 
     const timeout = setTimeout(async () => {
       if (searchTerm.length > 0) {
-        setError(null);
+        setErrorMsg('');
         setIsLoading(true);
+        // Prevent infinite scroll component from fetching more hoods when scrolling
+        // through the search results
+        setHasNextPage(false);
 
         try {
           // TODO: paginate/infinite-scroll those results as well
           filteredNeighborhoods = await neighborhoodsService.filterByName(searchTerm);
           setNeighborhoodList(filteredNeighborhoods);
         } catch (error) {
-          console.log(error);
-          setError(error as Error);
+          if (error instanceof AxiosError) {
+            const errorResponse: ErrorObj = error.response?.data;
+            setErrorMsg(errorResponse.error);
+          } else if (error instanceof Error) {
+            setErrorMsg(error.message);
+          }
+
+          window.scrollTo(0, 0);
+          console.error(error);
+
+          window.scrollTo(0, 0);
+          console.error(error);
         } finally {
           setIsLoading(false);
         }
@@ -80,6 +99,7 @@ export default function NeighborhoodSearch({
         setHasNextPage(true);
         setCurrentCursor(lastNhoodId);
         setNeighborhoodList(neighborhoods || []);
+        setIsLoading(false);
       }
     }, 1000);
 
@@ -129,13 +149,13 @@ export default function NeighborhoodSearch({
         </Row>
       </Container>
       <Container className={styles.neighborhoodsContainer} fluid>
-        {error && <AlertBox text={error.message} variant="danger"></AlertBox>}
+        {errorMsg && <AlertBox text={errorMsg} variant="danger"></AlertBox>}
         {neighborhoodBoxes.length > 0 ? (
           <InfiniteScroll
             dataLength={neighborhoodBoxes.length}
             next={fetchData}
             hasMore={hasNextPage}
-            loader={<SpinWheel className={`mt-2 mx-auto`}></SpinWheel>}
+            loader={<SpinWheel className={`mt-5 mx-auto`}></SpinWheel>}
             endMessage={EndOfResults}
             className={styles.scrollBox}>
             <Row className="gy-sm-4 gx-sm-4">{neighborhoodBoxes}</Row>

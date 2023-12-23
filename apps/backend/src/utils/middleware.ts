@@ -164,7 +164,7 @@ const userIdExtractorAndLoginValidator = catchError(async (
   if (token) {
     userIdExtractor(req, res, next);
   } else {
-    res.status(401).send({ error: 'user not signed in' });
+    res.status(401).send({ error: 'You must be signed in to do that.' });
   }
 });
 
