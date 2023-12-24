@@ -116,10 +116,6 @@ export default function NeighborhoodSearch({
     </Col>
   ));
 
-  const EndOfResults = (
-    <p className={`${styles.noNhoodsText} mt-5`}>You have seen all the Neighborhoods.</p>
-  );
-
   return (
     <>
       <Container className={`${styles.searchBox} mt-4 mb-5`} fluid>
@@ -156,7 +152,6 @@ export default function NeighborhoodSearch({
             next={fetchData}
             hasMore={hasNextPage}
             loader={<SpinWheel className={`mt-5 mx-auto`}></SpinWheel>}
-            endMessage={EndOfResults}
             className={styles.scrollBox}>
             <Row className="gy-sm-4 gx-sm-4">{neighborhoodBoxes}</Row>
           </InfiniteScroll>
