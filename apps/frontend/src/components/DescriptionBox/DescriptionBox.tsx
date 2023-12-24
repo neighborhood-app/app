@@ -1,6 +1,7 @@
 import { Container, Row } from 'react-bootstrap';
 import { SetStateAction, useState, Dispatch } from 'react';
 import { useParams } from 'react-router';
+import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
 
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
@@ -18,6 +19,7 @@ interface Props {
   userRole: UserRole;
   name: string;
   description: string;
+  location: SearchResult | null;
   setPromptDetails: Dispatch<SetStateAction<PromptDetails>>;
 }
 
@@ -25,6 +27,7 @@ export default function DescriptionBox({
   userRole,
   name,
   description,
+  location,
   setPromptDetails,
 }: Props) {
   const [showForm, setShowForm] = useState(false);
@@ -49,10 +52,9 @@ export default function DescriptionBox({
         handleClose={handleCloseForm}
         name={name}
         description={description}
+        location={location}
       />
-      <Row className="align-items-center gy-3">
-        
-      </Row>
+      <Row className="align-items-center gy-3"></Row>
       <Row className="mt-1 md-4">
         <div className={styles.neighborhoodDescription}>
           {description ? <p>{description}</p> : null}

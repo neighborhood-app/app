@@ -13,14 +13,22 @@ interface Props {
   handleClose: () => void;
   name: string;
   description: string;
+  location: SearchResult | null;
 }
 
-export default function EditNeighborhoodModal({ show, handleClose, name, description }: Props) {
+export default function EditNeighborhoodModal({
+  show,
+  handleClose,
+  name,
+  description,
+  location,
+}: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [nameInput, setNameInput] = useState(name);
-  const [locationInput, setLocationInput] = useState<Option | null>(null);
+
+  const [locationInput, setLocationInput] = useState<Option | null>(location);
   const [textAreaInput, setTextAreaInput] = useState(description);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -43,13 +51,20 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
+    const data = {
+      name,
+      location: locationInput ? JSON.stringify(locationInput) : textAreaInput,
+      description: textAreaInput,
+      intent: 'edit-neighborhood',
+    };
     setFormSubmitted(true);
 
     if (!form.checkValidity() || !validateInput()) {
       event.stopPropagation();
     } else {
-      submit(form, {
+      submit(data, {
         method: 'put',
+        encType: 'application/x-www-form-urlencoded',
         action: `/neighborhoods/${neighborhoodId}`,
       });
       handleClose();
@@ -103,7 +118,7 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
               isLoading={isLoading}
               onSearch={handleLocationSearch}
               options={options}
-              onChange={setLocationInput}
+              onChange={(option) => setLocationInput(option[0])}
               placeholder=""
               // labelKey={} ?????
               // isInvalid={!validInputPattern.test(nameInput) && formSubmitted}

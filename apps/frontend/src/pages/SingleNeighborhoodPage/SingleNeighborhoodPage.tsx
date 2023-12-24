@@ -103,6 +103,9 @@ export default function SingleNeighborhood() {
 
   const user = getStoredUser();
   const neighborhoodData = useLoaderData() as NeighborhoodType;
+  const neighborhoodLocation = neighborhoodData.location
+    ? JSON.parse(neighborhoodData.location)
+    : null;
   const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
 
   let neighborhoodRequests;
@@ -156,6 +159,7 @@ export default function SingleNeighborhood() {
             userRole={userRole}
             name={neighborhoodData.name}
             description={neighborhoodData.description ? neighborhoodData.description : ''}
+            location={neighborhoodLocation}
             setPromptDetails={setPromptDetails}
           />
         </Col>
