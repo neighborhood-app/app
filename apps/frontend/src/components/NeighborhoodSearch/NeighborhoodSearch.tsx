@@ -95,8 +95,8 @@ export default function NeighborhoodSearch({
         }
       } else {
         const lastNhoodId: number | undefined = neighborhoods.slice(-1)[0]?.id;
-
-        setHasNextPage(true);
+        
+        setHasNextPage(isNextPage);
         setCurrentCursor(lastNhoodId);
         setNeighborhoodList(neighborhoods || []);
         setIsLoading(false);
