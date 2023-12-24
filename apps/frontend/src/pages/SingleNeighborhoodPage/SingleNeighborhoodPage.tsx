@@ -4,6 +4,7 @@ import { Container, Row, Col, Image } from 'react-bootstrap';
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
+import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
 import {
@@ -104,7 +105,7 @@ export default function SingleNeighborhood() {
   const user = getStoredUser();
   const neighborhoodData = useLoaderData() as NeighborhoodType;
   const neighborhoodLocation = neighborhoodData.location
-    ? JSON.parse(neighborhoodData.location)
+    ? (JSON.parse(neighborhoodData.location) as SearchResult)
     : null;
   const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
 
@@ -127,6 +128,9 @@ export default function SingleNeighborhood() {
         status={promptDetails.show}
         handleClose={handleClosePrompt}
       />
+      {neighborhoodLocation ? (
+        <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
+      ) : null}
       <Row className="align-items-center gy-3">
         <Col xs="auto">
           <Image
@@ -163,9 +167,6 @@ export default function SingleNeighborhood() {
             setPromptDetails={setPromptDetails}
           />
         </Col>
-      </Row>
-      <Row>
-        <MapBox coordinates={{ lat: 51.505, lng: -0.09 }} />
       </Row>
       <Row>{<RequestBox requests={neighborhoodRequests} />}</Row>
     </Container>

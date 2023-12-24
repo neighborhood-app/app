@@ -49,7 +49,7 @@ export default function EditNeighborhoodModal({
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    // event.preventDefault();
     const form = event.currentTarget;
     const data = {
       name,
