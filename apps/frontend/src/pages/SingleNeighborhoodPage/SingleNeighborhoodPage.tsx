@@ -159,10 +159,9 @@ export default function SingleNeighborhood() {
             setPromptDetails={setPromptDetails}
           />
         </Col>
-        
       </Row>
       <Row>
-        <MapBox />
+        <MapBox coordinates={{ lat: 51.505, lng: -0.09 }} />
       </Row>
       <Row>{<RequestBox requests={neighborhoodRequests} />}</Row>
     </Container>

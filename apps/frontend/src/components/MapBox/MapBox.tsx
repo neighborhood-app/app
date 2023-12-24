@@ -1,11 +1,14 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { LatLngLiteral } from 'leaflet';
 import styles from './MapBox.module.css';
 
-export default function MapBox() {
+type Props = { coordinates: LatLngLiteral };
+
+export default function MapBox({ coordinates }: Props) {
   return (
     <MapContainer
       className={styles.mapContainer}
-      center={[51.505, -0.09]}
+      center={coordinates}
       zoom={13}
       scrollWheelZoom={false}>
       <TileLayer

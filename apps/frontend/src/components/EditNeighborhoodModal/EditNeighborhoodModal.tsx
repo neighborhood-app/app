@@ -1,6 +1,10 @@
 import { Modal, Form, Container, Row, Col } from 'react-bootstrap';
 import { useParams, useSubmit } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
+import { Option } from 'react-bootstrap-typeahead/types/types';
+import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from './EditNeighborhoodModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
 
@@ -13,9 +17,15 @@ interface Props {
 
 export default function EditNeighborhoodModal({ show, handleClose, name, description }: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
+
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [nameInput, setNameInput] = useState(name);
+  const [locationInput, setLocationInput] = useState<Option | null>(null);
   const [textAreaInput, setTextAreaInput] = useState(description);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [options, setOptions] = useState<SearchResult[]>([]);
+
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
   const closeModal = () => {
@@ -23,6 +33,8 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
     setNameInput(name);
     setTextAreaInput(description);
   };
+
+  const provider = new OpenStreetMapProvider();
 
   function validateInput() {
     return validInputPattern.test(nameInput);
@@ -43,6 +55,13 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
       handleClose();
       setFormSubmitted(false);
     }
+  };
+
+  const handleLocationSearch = async (query: string) => {
+    setIsLoading(true);
+    const results = await provider.search({ query });
+    setOptions(results);
+    setIsLoading(false);
   };
 
   return (
@@ -69,6 +88,26 @@ export default function EditNeighborhoodModal({ show, handleClose, name, descrip
                 setFormSubmitted(false);
               }}
               required
+            />
+            <Form.Control.Feedback type="invalid">
+              Please choose a valid title.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="location">
+            <Form.Label column="sm">
+              Location<span className={styles.asterisk}>*</span>
+            </Form.Label>
+            <AsyncTypeahead
+              id="location-search"
+              filterBy={() => true}
+              isLoading={isLoading}
+              onSearch={handleLocationSearch}
+              options={options}
+              onChange={setLocationInput}
+              placeholder=""
+              // labelKey={} ?????
+              // isInvalid={!validInputPattern.test(nameInput) && formSubmitted}
+              // isValid={validInputPattern.test(nameInput)}
             />
             <Form.Control.Feedback type="invalid">
               Please choose a valid title.
