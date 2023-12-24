@@ -28,6 +28,10 @@
   border-color: var(--bs-border-color);
 }
 
+.searchInput:focus::placeholder {
+  color: transparent;
+}
+
 .noNhoodsText {
   text-align: center;
 }
