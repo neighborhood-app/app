@@ -36,8 +36,8 @@ export default function NeighborhoodSearch({
   const handleShow = () => setShow(true);
 
   const fetchData = async function fetchData() {
-    setErrorMsg('');
     setIsLoading(true);
+    setErrorMsg('');
 
     try {
       const data = (await neighborhoodsService.getNeighborhoods(
@@ -56,7 +56,6 @@ export default function NeighborhoodSearch({
       }
 
       window.scrollTo(0, 0);
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -67,8 +66,8 @@ export default function NeighborhoodSearch({
 
     const timeout = setTimeout(async () => {
       if (searchTerm.length > 0) {
-        setErrorMsg('');
         setIsLoading(true);
+        setErrorMsg('')
         // Prevent infinite scroll component from fetching more hoods when scrolling
         // through the search results
         setHasNextPage(false);
@@ -86,10 +85,6 @@ export default function NeighborhoodSearch({
           }
 
           window.scrollTo(0, 0);
-          console.error(error);
-
-          window.scrollTo(0, 0);
-          console.error(error);
         } finally {
           setIsLoading(false);
         }
