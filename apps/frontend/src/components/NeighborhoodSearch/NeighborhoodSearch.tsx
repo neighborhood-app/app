@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,10 +22,10 @@ export default function NeighborhoodSearch({
   neighborhoods: Neighborhood[];
   cursor?: number;
   isNextPage: boolean;
-}) {
+  }) {
+  const cursorRef = useRef(cursor);
   const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
   const [hasNextPage, setHasNextPage] = useState(isNextPage);
-  const [currentCursor, setCurrentCursor] = useState(cursor);
   const [searchTerm, setSearchTerm] = useState('');
   const [show, setShow] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -41,11 +41,11 @@ export default function NeighborhoodSearch({
 
     try {
       const data = (await neighborhoodsService.getNeighborhoods(
-        currentCursor,
+        cursorRef.current,
       )) as unknown as NeighborhoodsPerPage;
 
       setNeighborhoodList(neighborhoodList.concat(data.neighborhoods));
-      setCurrentCursor(data.newCursor);
+      cursorRef.current = data.newCursor;
       setHasNextPage(data.hasNextPage);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -92,7 +92,7 @@ export default function NeighborhoodSearch({
         const lastNhoodId: number | undefined = neighborhoods.slice(-1)[0]?.id;
         
         setHasNextPage(isNextPage);
-        setCurrentCursor(lastNhoodId);
+        cursorRef.current = lastNhoodId;
         setNeighborhoodList(neighborhoods || []);
         setIsLoading(false);
       }
