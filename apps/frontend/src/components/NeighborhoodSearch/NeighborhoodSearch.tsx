@@ -24,8 +24,8 @@ export default function NeighborhoodSearch({
   isNextPage: boolean;
   }) {
   const cursorRef = useRef(cursor);
+  const nextPageRef = useRef(isNextPage);
   const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
-  const [hasNextPage, setHasNextPage] = useState(isNextPage);
   const [searchTerm, setSearchTerm] = useState('');
   const [show, setShow] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -46,7 +46,7 @@ export default function NeighborhoodSearch({
 
       setNeighborhoodList(neighborhoodList.concat(data.neighborhoods));
       cursorRef.current = data.newCursor;
-      setHasNextPage(data.hasNextPage);
+      nextPageRef.current = data.hasNextPage;
     } catch (error) {
       if (error instanceof AxiosError) {
         const errorResponse: ErrorObj = error.response?.data;
@@ -70,7 +70,7 @@ export default function NeighborhoodSearch({
         setErrorMsg('')
         // Prevent infinite scroll component from fetching more hoods when scrolling
         // through the search results
-        setHasNextPage(false);
+        nextPageRef.current = false;
 
         try {
           // TODO: paginate/infinite-scroll those results as well
@@ -91,7 +91,7 @@ export default function NeighborhoodSearch({
       } else {
         const lastNhoodId: number | undefined = neighborhoods.slice(-1)[0]?.id;
         
-        setHasNextPage(isNextPage);
+        nextPageRef.current = isNextPage;
         cursorRef.current = lastNhoodId;
         setNeighborhoodList(neighborhoods || []);
         setIsLoading(false);
@@ -145,7 +145,7 @@ export default function NeighborhoodSearch({
           <InfiniteScroll
             dataLength={neighborhoodBoxes.length}
             next={fetchData}
-            hasMore={hasNextPage}
+            hasMore={nextPageRef.current}
             loader={<SpinWheel className={`mt-5 mx-auto`}></SpinWheel>}
             className={styles.scrollBox}>
             <Row className="gy-sm-4 gx-sm-4">{neighborhoodBoxes}</Row>
