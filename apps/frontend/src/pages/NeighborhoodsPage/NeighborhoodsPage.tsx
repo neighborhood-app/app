@@ -3,7 +3,7 @@ import neighborhoodsService from '../../services/neighborhoods';
 import { NeighborhoodType } from '../../types';
 
 export async function loader() {
-  const neighborhoods = await neighborhoodsService.getAllNeighborhoods();
+  const neighborhoods = await neighborhoodsService.getNeighborhoods();
   return neighborhoods;
 }
 

@@ -1,27 +1,39 @@
-import { redirect } from 'react-router';
 import axios from 'axios';
-import { Neighborhood } from '@neighborhood/backend/src/types';
+import { redirect } from 'react-router';
+import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
 import { CreateNeighborhoodData, EditNeighborhoodData, NeighborhoodType } from '../types';
 import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/neighborhoods';
 
-async function getAllNeighborhoods(): Promise<Neighborhood[]> {
-  const response = await axios.get(BASE_URL);
+async function getNeighborhoods(cursor?: number): Promise<NeighborhoodsPerPage> {
+  const user = getStoredUser();
+  const headers = { authorization: '' };
+
+  if (user) headers.authorization = `Bearer ${user.token}`;
+
+  const response = await axios.get(BASE_URL, { params: { cursor }, headers });
   return response.data;
 }
 
-// TODO: If unable to login because of token invalid or otherwise
-// throw Error
-async function getSingleNeighborhood(
-  id: number,
-): Promise<NeighborhoodType | null> {
+async function filterByName(searchTerm: string): Promise<Neighborhood[]> {
+  const user = getStoredUser();
+  const headers = { authorization: '' };
+
+  if (user) headers.authorization = `Bearer ${user.token}`;
+
+  const response = await axios.get(BASE_URL, { params: { searchTerm }, headers });
+
+  return response.data;
+}
+
+async function getSingleNeighborhood(id: number): Promise<NeighborhoodType | null> {
   const userDataInLocalStorage = getStoredUser();
 
   if (userDataInLocalStorage) {
     const headers = { authorization: `Bearer ${userDataInLocalStorage.token}` };
     const response = await axios.get(`${BASE_URL}/${id}`, { headers });
-    
+
     return response.data;
   }
 
@@ -36,8 +48,8 @@ async function deleteNeighborhood(
 
   const headers = { authorization: `Bearer ${user.token}` };
   await axios.delete(`${BASE_URL}/${id}`, { headers });
-    
-  return redirect('/')
+
+  return redirect('/');
 }
 
 async function createNeighborhood(
@@ -90,11 +102,12 @@ async function editNeighborhood(
 }
 
 export default {
-  getAllNeighborhoods,
+  getNeighborhoods,
+  filterByName,
   getSingleNeighborhood,
   deleteNeighborhood,
   connectUserToNeighborhood,
   leaveNeighborhood,
   editNeighborhood,
-  createNeighborhood
+  createNeighborhood,
 };

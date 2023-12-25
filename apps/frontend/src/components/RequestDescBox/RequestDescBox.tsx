@@ -57,7 +57,7 @@ export default function RequestDescBox({ request }: Props) {
   const deleteBtnColumn = (
     <Col className={`${styles.formBtn} pe-md-3`}>
       <TriggerActionButton
-        className={`${styles.formBtn} ${styles.circleBtn}`}
+        className={`${styles.formBtn} ${styles.iconBtn}`}
         id={neighborhood.id}
         idInputName="neighborhoodId"
         route={`/requests/${request.id}`}
@@ -92,7 +92,7 @@ export default function RequestDescBox({ request }: Props) {
         <>
           <Col className={`${styles.formBtn} pe-2`}>
             <TriggerActionButton
-              className={styles.circleBtn}
+              className={styles.iconBtn}
               route={`/requests/${request.id}`}
               variant="primary"
               intent="close-request"
@@ -102,7 +102,7 @@ export default function RequestDescBox({ request }: Props) {
           </Col>
           <Col className={`${styles.formBtn} pe-2`}>
             <CustomBtn
-              className={styles.circleBtn}
+              className={styles.iconBtn}
               variant="outline-dark"
               title="Edit request"
               onClick={handleShowEditReq}>
@@ -117,7 +117,7 @@ export default function RequestDescBox({ request }: Props) {
         <>
           <Col className={`${styles.formBtn} pe-2`}>
             <CustomBtn
-              className={styles.circleBtn}
+              className={styles.iconBtn}
               variant="outline-dark"
               title="Edit request"
               onClick={handleShowEditReq}>
