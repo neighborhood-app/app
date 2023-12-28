@@ -50,7 +50,7 @@ export default function EditNeighborhoodModal({
   }
 
   function isValidAddress(address: unknown) {
-    return address === null || typeof address === 'object' && Object.hasOwn(address, 'label');
+    return address !== null && typeof address === 'object' && Object.hasOwn(address, 'label');
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -63,7 +63,7 @@ export default function EditNeighborhoodModal({
     };
     setFormSubmitted(true);
 
-    if (!form.checkValidity() || !validateInput()) {
+    if (!form.checkValidity() || !validateInput() || !isValidAddress(locationInput)) {
       event.preventDefault();
       event.stopPropagation();
     } else {
@@ -124,14 +124,14 @@ export default function EditNeighborhoodModal({
               onSearch={handleLocationSearch}
               options={options}
               onChange={(option) => setLocationInput(option[0])}
-              placeholder=""
+              placeholder="Type in the neighborhood's address"
               selected={locationDefaultValue}
               // labelKey={} ?????
               isInvalid={!isValidAddress(locationInput) && formSubmitted}
               isValid={isValidAddress(locationInput)}
             />
             <Form.Control.Feedback type="invalid">
-              Please choose a valid title.
+              Please choose a valid location from the list.
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-2" controlId="description">
