@@ -32,7 +32,7 @@ export default function EditNeighborhoodModal({
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState<SearchResult[]>([]);
 
-  const locationDefaultValue = locationInput ? [locationInput] : undefined;
+  const locationDefaultValue = locationInput ? [locationInput] : null;
 
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
@@ -50,7 +50,7 @@ export default function EditNeighborhoodModal({
   }
 
   function isValidAddress(address: unknown) {
-    return address !== null && typeof address === 'object' && Object.hasOwn(address, 'label');
+    return address === null || (typeof address === 'object' && Object.hasOwn(address, 'label'));
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -123,10 +123,15 @@ export default function EditNeighborhoodModal({
               isLoading={isLoading}
               onSearch={handleLocationSearch}
               options={options}
-              onChange={(option) => setLocationInput(option[0])}
-              placeholder="Type in the neighborhood's address"
+              onChange={(option) => {
+                setLocationInput(option[0]);
+              }}
+              onInputChange={(text, _event) => {
+                if (text === '') setLocationInput(null);
+              }}
+              placeholder="Type in your neighborhood's address"
+              // @ts-ignore
               selected={locationDefaultValue}
-              // labelKey={} ?????
               isInvalid={!isValidAddress(locationInput) && formSubmitted}
               isValid={isValidAddress(locationInput)}
             />
