@@ -27,15 +27,16 @@ export default function EditNeighborhoodModal({
 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [nameInput, setNameInput] = useState(name);
-
   const [locationInput, setLocationInput] = useState<Option | null>(location);
   const [textAreaInput, setTextAreaInput] = useState(description);
-
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState<SearchResult[]>([]);
 
+  const locationDefaultValue = locationInput ? [locationInput] : undefined;
+
   const { id: neighborhoodId } = useParams();
   const submit = useSubmit();
+
   const closeModal = () => {
     handleClose();
     setNameInput(name);
@@ -48,18 +49,22 @@ export default function EditNeighborhoodModal({
     return validInputPattern.test(nameInput);
   }
 
+  function isValidAddress(address: unknown) {
+    return address === null || typeof address === 'object' && Object.hasOwn(address, 'label');
+  }
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    // event.preventDefault();
     const form = event.currentTarget;
     const data = {
       name,
-      location: locationInput ? JSON.stringify(locationInput) : textAreaInput,
+      location: locationInput ? JSON.stringify(locationInput) : '',
       description: textAreaInput,
       intent: 'edit-neighborhood',
     };
     setFormSubmitted(true);
 
     if (!form.checkValidity() || !validateInput()) {
+      event.preventDefault();
       event.stopPropagation();
     } else {
       submit(data, {
@@ -120,9 +125,10 @@ export default function EditNeighborhoodModal({
               options={options}
               onChange={(option) => setLocationInput(option[0])}
               placeholder=""
+              selected={locationDefaultValue}
               // labelKey={} ?????
-              // isInvalid={!validInputPattern.test(nameInput) && formSubmitted}
-              // isValid={validInputPattern.test(nameInput)}
+              isInvalid={!isValidAddress(locationInput) && formSubmitted}
+              isValid={isValidAddress(locationInput)}
             />
             <Form.Control.Feedback type="invalid">
               Please choose a valid title.

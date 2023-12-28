@@ -95,6 +95,9 @@ async function editNeighborhood(
   const user = getStoredUser();
   if (!user) return redirect('/login');
 
+  // eslint-disable-next-line no-param-reassign
+  neighborhoodData.location = neighborhoodData.location ? neighborhoodData.location : null
+
   const headers = { authorization: `Bearer ${user.token}` };
   const response = await axios.put(`${BASE_URL}/${neighborhoodId}`, neighborhoodData, { headers });
 
