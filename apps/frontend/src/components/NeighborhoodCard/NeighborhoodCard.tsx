@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './NeighborhoodCard.module.css';
 
 type Props = {
-  id: string;
+  id: number;
   name: string;
   description: string | null;
   isUserAdmin: boolean;
@@ -11,7 +11,7 @@ type Props = {
 
 export default function NeighborhoodCard({ id, name, description, isUserAdmin }: Props) {
   return (
-    <Link to={`neighborhoods/${id}`}>
+    <Link to={`/neighborhoods/${id}`}>
       <div className={styles.card}>
         <div className={styles.figcaption}>
           <div className={styles.cardText}>

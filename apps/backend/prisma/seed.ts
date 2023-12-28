@@ -168,8 +168,6 @@ async function main() {
   await connectUsertoNeighborhood(maria.id, antoninaNeighborhood.id);
   await connectUsertoNeighborhood(leia.id, antoninaNeighborhood.id);
 
-  // The variable will be used in the future when we add responses.
-  // eslint-disable-next-line
   const raduRequest = await prismaClient.request.create({
     data: {
       neighborhood_id: antoninaNeighborhood.id,
@@ -219,6 +217,30 @@ async function main() {
   });
 
   await connectUsertoNeighborhood(shwetank.id, shwetankNeighborhood.id);
+
+  //---------------------------------------------------------
+
+  // More seed neighborhoods
+  const users = [bob, radu, shwetank, antonina, maria, mike, leia];
+  const neighborhoods = [];
+  for (let count = 1; count < 28;) {
+    for (let userIdx = 0; userIdx < users.length; userIdx += 1) {
+      const neighborhood = prismaClient.neighborhood.create({
+        data: {
+          admin_id: users[userIdx].id,
+          name: `Neighborhood ${count}`,
+          description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+        },
+      }).then(neighborhood => {
+        connectUsertoNeighborhood(users[userIdx].id, neighborhood.id);
+      });
+
+      neighborhoods.push(neighborhood);
+      count += 1;
+    }
+  }
+
+  await Promise.all(neighborhoods);
 }
 
 main()

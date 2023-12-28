@@ -23,6 +23,8 @@ import ErrorPage from './pages/ErrorPage/ErrorPage';
 import logoutLoader from './pages/LogoutPage/LogoutPage';
 import { redirectLoggedInUser, checkAuthLoader } from './utils/auth';
 
+import ExplorePage, { loader as exploreLoader } from './pages/ExplorePage/ExplorePage';
+
 import HomePage, {
   loader as homePageLoader,
   action as homePageAction,
@@ -50,6 +52,11 @@ const router = createBrowserRouter([
             element: <ProfilePage />,
             loader: userLoader,
             action: profileAction,
+          },
+          {
+            path: 'explore/:cursor?',
+            element: <ExplorePage />,
+            loader: exploreLoader,
           },
           {
             path: 'neighborhoods/:id',

@@ -66,7 +66,7 @@ describe('Tests for updating a response: PUT /responses/:id', () => {
     );
 
     expect(httpResponse.status).toBe(401);
-    expect(httpResponse.body.error).toBe('user not signed in');
+    expect(httpResponse.body.error).toBe('You must be signed in to do that.');
     expect(responseInDbAfterUpdate.content).not.toBe(newData.content);
   });
 
@@ -304,7 +304,7 @@ describe('Tests for deleting a response: DELETE /responses/:id', () => {
     );
 
     expect(httpResponse.status).toEqual(401);
-    expect(httpResponse.body.error).toBe('user not signed in');
+    expect(httpResponse.body.error).toBe('You must be signed in to do that.');
     expect(responseInDb).not.toBe(null);
   });
 
@@ -391,7 +391,7 @@ describe('Test for getting a single response at GET /responses/:id', () => {
     );
 
     expect(getResponse.status).toEqual(401);
-    expect(getResponse.body.error).toEqual('user not signed in');
+    expect(getResponse.body.error).toEqual('You must be signed in to do that.');
   });
 
   test('GET /responses/:id/ fails when user request not found', async () => {
@@ -449,7 +449,7 @@ describe('Tests for creating a new response at POST /responses', () => {
     const numberOfFinalResponses = await testHelpers.getNumberOfResponses();
 
     expect(httpResponse.status).toEqual(401);
-    expect(httpResponse.body.error).toEqual('user not signed in');
+    expect(httpResponse.body.error).toEqual('You must be signed in to do that.');
     expect(numberOfInitialResponses).toEqual(numberOfFinalResponses);
   });
 

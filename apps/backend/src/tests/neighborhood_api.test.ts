@@ -10,6 +10,7 @@ import {
   LoginData,
   NeighborhoodDetailsForNonMembers,
   NeighborhoodDetailsForMembers,
+  NeighborhoodsPerPage,
 } from '../types';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -43,24 +44,142 @@ const loginUser = async (loginData: LoginData): Promise<Response> => {
 };
 
 describe('Tests for getting all neighborhoods: GET /neighborhoods', () => {
+  let token: string;
   beforeAll(async () => {
     await seed();
+    const loginResponse = await loginUser(BOBS_LOGIN_DATA);
+    token = loginResponse.body.token;
   });
 
-  test('GET /neighborhoods returns all neighborhoods', async () => {
-    // Seeds the database to have existing neighborhoods to check.
-    const neighborhoods = await testHelpers.neighborhoodsInDb();
-    const numberOfNeighborhoods = neighborhoods.length;
+  test('Cannot access neighborhoods without log-in token', async () => {
     const response: Response = await api.get('/api/neighborhoods');
+
+    expect(response.status).toEqual(401);
+    expect(response.body.error).toBe('You must be signed in to do that.');
+  });
+
+  test('/:cursor returns first batch of 17 neighborhoods', async () => {
+    const response: Response = await api
+      .get('/api/neighborhoods')
+      .set('Authorization', `Bearer ${token}`);
+
+    const nhoodData: NeighborhoodsPerPage = response.body;
     expect(response.status).toEqual(200);
-    expect(response.body.length).toEqual(numberOfNeighborhoods);
+    expect(nhoodData.neighborhoods.length).toBeLessThanOrEqual(17);
   });
 
-  test('GET /neighborhoods returns 200 even if no neighborhoods were created', async () => {
-    await testHelpers.removeAllData();
-    const response: Response = await api.get('/api/neighborhoods');
+  test('/:cursor returns neighborhoods, and next cursor and next page metadata', async () => {
+    const neighborhoods: Neighborhood[] = await testHelpers.neighborhoodsInDb();
+    const hasNextPage = neighborhoods.length > 17;
+
+    const response: Response = await api
+      .get('/api/neighborhoods')
+      .set('Authorization', `Bearer ${token}`);
+
+    const nhoodData: NeighborhoodsPerPage = response.body;
+    const lastNhoodId: number | undefined = nhoodData.neighborhoods.slice(-1)[0]?.id;
+    expect(response.status).toEqual(200);
+    expect(nhoodData.neighborhoods.length).toBeLessThanOrEqual(17);
+    expect(nhoodData.newCursor).toBe(hasNextPage ? lastNhoodId : undefined);
+    expect(nhoodData.hasNextPage).toBe(hasNextPage);
+  });
+
+  test('/:cursor throws error if cursor is out of bounds', async () => {
+    const neighborhoods: Neighborhood[] = await testHelpers.neighborhoodsInDb();
+    const firstNhoodId: number | undefined = neighborhoods[0]?.id;
+    const lastNhoodId: number | undefined = neighborhoods.slice(-1)[0]?.id;
+    const leftOutOfBoundCursor = firstNhoodId ? firstNhoodId - 1 : 0;
+    const rightOutOfBoundCursor = lastNhoodId ? lastNhoodId + 1 : 1;
+
+    const res1: Response = await api
+      .get(`/api/neighborhoods/${rightOutOfBoundCursor}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    const res2: Response = await api
+      .get(`/api/neighborhoods/${leftOutOfBoundCursor}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res1.status).toEqual(404);
+    expect(res1.body).toEqual({ error: 'No Neighborhood found' });
+
+    expect(res2.status).toEqual(404);
+    expect(res2.body).toEqual({ error: 'No Neighborhood found' });
+  });
+
+  test('/?searchTerm=:searchTerm returns neighborhoods that match the search term', async () => {
+    const searchTerm = 'hood';
+    const neighborhoods: Neighborhood[] = await testHelpers.neighborhoodsInDb();
+    const filteredNhoods = neighborhoods.filter((nhood) => nhood.name.includes(searchTerm));
+
+    const response: Response = await api
+      .get(`/api/neighborhoods/`)
+      .query({ searchTerm })
+      .set('Authorization', `Bearer ${token}`);
+
+    const resNhoods: Neighborhood[] = response.body;
+    expect(response.status).toEqual(200);
+    expect(resNhoods.length).toBe(filteredNhoods.length);
+    expect(resNhoods.every((nhood) => nhood.name.includes(searchTerm))).toBe(true);
+  });
+
+  test('/?searchTerm=:searchTerm returns empty array if no neighborhoods match the search term', async () => {
+    const searchTerm = 'xksksjfjf';
+    const neighborhoods: Neighborhood[] = await testHelpers.neighborhoodsInDb();
+    const nhoodMatch = neighborhoods.find((nhood) => nhood.name.includes(searchTerm));
+
+    expect(nhoodMatch).toBeUndefined();
+
+    const response: Response = await api
+      .get(`/api/neighborhoods/`)
+      .query({ searchTerm })
+      .set('Authorization', `Bearer ${token}`);
+
     expect(response.status).toEqual(200);
     expect(response.body.length).toBe(0);
+  });
+
+  // TODO: have to test this with more seed data
+  test('/?searchTerm=:searchTerm match is case-insensitive', async () => {
+    const searchTerm = 'HoOd';
+    const neighborhoods: Neighborhood[] = await testHelpers.neighborhoodsInDb();
+    const filteredNhoods = neighborhoods.filter((nhood) =>
+      nhood.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+
+    const response: Response = await api
+      .get(`/api/neighborhoods/`)
+      .query({ searchTerm })
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toEqual(200);
+    expect(response.body.length).toBe(filteredNhoods.length);
+  });
+
+  // TODO: have to test this with more seed data
+  test('/?searchTerm=:searchTerm returns all neighborhoods if the search term is an empty string', async () => {
+    const searchTerm = '';
+    const neighborhoods: Neighborhood[] = await testHelpers.neighborhoodsInDb();
+
+    const response: Response = await api
+      .get(`/api/neighborhoods/`)
+      .query({ searchTerm })
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toEqual(200);
+    expect(response.body.length).toBe(neighborhoods.length);
+  });
+
+  test('GET /neighborhoods returns 200 even if no neighborhoods exist', async () => {
+    await testHelpers.removeAllData();
+    const response: Response = await api
+      .get('/api/neighborhoods')
+      .set('Authorization', `Bearer ${token}`);
+
+    const nhoodData: NeighborhoodsPerPage = response.body;
+    expect(response.status).toEqual(200);
+    expect(nhoodData.neighborhoods.length).toBe(0);
+    expect(nhoodData.hasNextPage).toBe(false);
+    expect(nhoodData.newCursor).toBeUndefined();
   });
 });
 
@@ -171,11 +290,8 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
   // error was 'socket hang up'
   test('when user not logged in, unable to create neighborhood', async () => {
     const postResponse: Response = await api.post('/api/neighborhoods');
-    console.log(postResponse?.body);
-
     const currentNeighborhoods = await testHelpers.neighborhoodsInDb();
     const numCurrentNeighborhoods = currentNeighborhoods.length;
-    console.log(currentNeighborhoods);
 
     expect(postResponse.status).toEqual(401);
     expect(numCurrentNeighborhoods).toEqual(numInitialNeighborhoods);
@@ -753,7 +869,7 @@ describe('Tests for getting requests associated with a n-hood GET /neighborhoods
     const response: Response = await api.get(`/api/neighborhoods/${BOBS_NHOOD_ID}/requests`);
 
     expect(response.status).toEqual(401);
-    expect(response.body.error).toBe('user not signed in');
+    expect(response.body.error).toBe('You must be signed in to do that.');
   });
 
   test('unable to fetch data when token invalid', async () => {
@@ -762,7 +878,7 @@ describe('Tests for getting requests associated with a n-hood GET /neighborhoods
       .set('Authorization', 'invalid-token');
 
     expect(response.status).toEqual(401);
-    expect(response.body.error).toBe('user not signed in');
+    expect(response.body.error).toBe('You must be signed in to do that.');
   });
 
   test('unable to fetch data when user not a member of neighborhood', async () => {

@@ -97,3 +97,9 @@ a {
   border-color: #ffeef3;
   box-shadow: 0 0 0 0.25rem rgb(255 155 128 / 9%);
 }
+
+.spinner-border {
+  border: 0.25em #ff2a70 solid;
+  border-right-color: transparent;
+  display: block;
+}
