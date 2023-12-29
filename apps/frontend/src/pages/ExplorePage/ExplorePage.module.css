@@ -1,11 +1,12 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .switchContainer {
   margin-top: 30px;
+  margin-right: 38px;
   display: flex;
   flex-direction: row;
   justify-content: center;

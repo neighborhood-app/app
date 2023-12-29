@@ -8,6 +8,7 @@ import { useState } from 'react';
 import styles from './ExplorePage.module.css';
 import neighborhoodsService from '../../services/neighborhoods';
 import NeighborhoodSearch from '../../components/NeighborhoodSearch/NeighborhoodSearch';
+import MapLarge from '../../components/MapLarge/MapLarge';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const data = await neighborhoodsService.getNeighborhoods(Number(params.cursor) || undefined);
@@ -50,7 +51,9 @@ export default function ExplorePage() {
         />
         <FontAwesomeIcon icon={faMap} size="lg" style={{ color: '#fe496f' }} />
       </div>
-      {checked ? null : (
+      {checked ? (
+        <MapLarge />
+      ) : (
         <NeighborhoodSearch
           neighborhoods={neighborhoods}
           cursor={newCursor}
