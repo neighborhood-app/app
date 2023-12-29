@@ -1,6 +1,9 @@
 import { useLoaderData, LoaderFunctionArgs } from 'react-router';
 import Switch from '@mui/material/Switch';
 import { NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
+import { faMap } from '@fortawesome/free-regular-svg-icons';
+import { faList } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import styles from './ExplorePage.module.css';
 import neighborhoodsService from '../../services/neighborhoods';
@@ -27,9 +30,25 @@ export default function ExplorePage() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.switchContainer}>
-        <p>List</p>
-        <Switch className={styles.switch} size="medium" checked={checked} onChange={handleChange} />
-        <p>Map</p>
+        <FontAwesomeIcon icon={faList} size="lg" style={{ color: '#fe496f' }} />
+        <Switch
+          className={styles.switch}
+          size="medium"
+          checked={checked}
+          onChange={handleChange}
+          sx={{
+            '& .MuiSwitch-track': {
+              backgroundColor: '#fe496f',
+            },
+            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+              backgroundColor: '#fe496f',
+            },
+            '& .MuiSwitch-thumb': {
+              backgroundColor: '#fe496f',
+            },
+          }}
+        />
+        <FontAwesomeIcon icon={faMap} size="lg" style={{ color: '#fe496f' }} />
       </div>
       {checked ? null : (
         <NeighborhoodSearch
