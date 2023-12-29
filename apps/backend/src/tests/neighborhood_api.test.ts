@@ -315,7 +315,7 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
     const createNeighborhoodResponse: Response = await api
       .post('/api/neighborhoods')
       .set('Authorization', `Bearer ${token}`)
-      .send({ name: NEW_NEIGHBORHOOD_NAME, description: '' })
+      .send({ name: NEW_NEIGHBORHOOD_NAME, description: '', location: '' })
       .expect(201)
       .expect('Content-Type', /application\/json/);
 

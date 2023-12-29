@@ -293,7 +293,7 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
     'description' in object &&
     typeof object.description === 'string' &&
     'location' in object &&
-    typeof object.location === 'string'
+    (typeof object.location === 'string' ||  object.location === null)
   ) {
     const neighborhoodData: CreateNeighborhoodData = {
       admin_id: object.admin_id,
