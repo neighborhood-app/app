@@ -7,21 +7,24 @@ import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from './EditNeighborhoodModal.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
+import { FormIntent } from '../../types';
 
 interface Props {
   show: boolean;
   handleClose: () => void;
+  intent: FormIntent;
   name: string;
   description: string;
-  location: SearchResult | null;
+  location?: SearchResult | null;
 }
 
 export default function EditNeighborhoodModal({
   show,
   handleClose,
-  name,
-  description,
-  location,
+  intent,
+  name = '',
+  description = '',
+  location = null,
 }: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
 
@@ -56,10 +59,10 @@ export default function EditNeighborhoodModal({
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
     const data = {
-      name,
+      name: nameInput,
       location: locationInput ? JSON.stringify(locationInput) : '',
       description: textAreaInput,
-      intent: 'edit-neighborhood',
+      intent,
     };
     setFormSubmitted(true);
 

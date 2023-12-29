@@ -50,6 +50,7 @@ export default function DescriptionBox({
       <EditNeighborhoodModal
         show={showForm}
         handleClose={handleCloseForm}
+        intent="edit-neighborhood"
         name={name}
         description={description}
         location={location}
