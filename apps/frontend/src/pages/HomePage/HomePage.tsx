@@ -6,7 +6,7 @@ import neighborhoodServices from '../../services/neighborhoods';
 
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
-import CreateNeighborhoodModal from '../../components/CreateNeighborhoodModal/CreateNeighborhoodModal';
+import NeighborhoodModalForm from '../../components/NeighborhoodModalForm/NeighborhoodModalForm';
 import styles from './HomePage.module.css';
 import { getStoredUser } from '../../utils/auth';
 
@@ -105,7 +105,12 @@ export default function HomePage() {
           </Row>
         </Container>
       </section>
-      <CreateNeighborhoodModal show={show} handleClose={handleClose} />
+      <NeighborhoodModalForm
+        show={show}
+        handleClose={handleClose}
+        intent="create-neighborhood"
+        action="/"
+      />
     </div>
   );
 }

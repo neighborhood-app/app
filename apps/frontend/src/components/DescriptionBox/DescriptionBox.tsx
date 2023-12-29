@@ -6,7 +6,7 @@ import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
-import EditNeighborhoodModal from '../EditNeighborhoodModal/EditNeighborhoodModal';
+import NeighborhoodModalForm from '../NeighborhoodModalForm/NeighborhoodModalForm';
 import { FormIntent, UserRole } from '../../types';
 
 interface PromptDetails {
@@ -47,10 +47,11 @@ export default function DescriptionBox({
 
   return (
     <Container fluid className={styles.container}>
-      <EditNeighborhoodModal
+      <NeighborhoodModalForm
         show={showForm}
         handleClose={handleCloseForm}
         intent="edit-neighborhood"
+        action={`/neighborhoods/${neighborhoodId}`}
         name={name}
         description={description}
         location={location}
