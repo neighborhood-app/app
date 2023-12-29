@@ -114,9 +114,7 @@ export default function EditNeighborhoodModal({
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3" controlId="location">
-            <Form.Label column="sm">
-              Location<span className={styles.asterisk}>*</span>
-            </Form.Label>
+            <Form.Label column="sm">Location</Form.Label>
             <AsyncTypeahead
               id="location-search"
               filterBy={() => true}
@@ -127,7 +125,9 @@ export default function EditNeighborhoodModal({
                 setLocationInput(option[0]);
               }}
               onInputChange={(text, _event) => {
-                if (text === '') setLocationInput(null);
+                if (text === '') {
+                  setLocationInput(null);
+                }
               }}
               placeholder="Type in your neighborhood's address"
               // @ts-ignore
