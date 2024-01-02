@@ -118,6 +118,7 @@ neighborhoodsRouter.put(
     }
 
     const data = req.body;
+    data.location = JSON.parse(data.location);
     const updatedNeighborhood: Neighborhood = await prismaClient.neighborhood.update({
       where: { id: +req.params.id },
       data,
@@ -132,7 +133,7 @@ neighborhoodsRouter.post(
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const loggedUserID = req.loggedUserId as number; // loggedUserId extracted by middleware
     req.body.admin_id = loggedUserID; // adding user_id as admin_id to request.body
-
+    console.log(req.body)
     const createNeighborhoodData: CreateNeighborhoodData =
       await neighborhoodServices.parseCreateNeighborhoodData(req.body);
 

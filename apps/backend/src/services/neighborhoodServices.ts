@@ -1,4 +1,4 @@
-import { Neighborhood, Request, Response } from '@prisma/client';
+import { Neighborhood, Request, Response, Prisma } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
   NeighborhoodWithRelatedFields,
@@ -206,18 +206,18 @@ const filterNeighborhoods = async (searchTerm: string): Promise<Neighborhood[]> 
   return neighborhoods;
 };
 
-const filterNeighborhoodsByLocation = async (bounds: string): Promise<Neighborhood[]> => {
-  const neighborhoods = await prismaClient.neighborhood.findMany({
-    where: {
-      location: {
-        contains: searchTerm,
-        mode: 'insensitive',
-      },
-    },
-  });
+// const filterNeighborhoodsByLocation = async (bounds: string): Promise<Neighborhood[]> => {
+//   const neighborhoods = await prismaClient.neighborhood.findMany({
+//     where: {
+//       location: {
+//         contains: searchTerm,
+//         mode: 'insensitive',
+//       },
+//     },
+//   });
 
-  return neighborhoods;
-};
+//   return neighborhoods;
+// };
 
 const getNeighborhoodRequests = async (nhoodId: number): Promise<Request[]> => {
   const neighborhood: NeighborhoodWithRelatedFields | null =
@@ -312,7 +312,7 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
       admin_id: object.admin_id,
       name: object.name,
       description: object.description,
-      location: object.location
+      location: object.location ? JSON.parse(object.location) : null
     };
 
     return neighborhoodData;
@@ -432,15 +432,17 @@ const removeUserFromNeighborhood = async (
  * @param data must include name, and adminId
  * @returns newly created neighborhod
  */
-const createNeighborhood = async (data: CreateNeighborhoodData): Promise<Neighborhood> => {
-  const createNeighborhoodDataValid = await isCreateNeighborhoodDataValid(data);
+const createNeighborhood = async (neighborhoodData: CreateNeighborhoodData): Promise<Neighborhood> => {
+  const createNeighborhoodDataValid = await isCreateNeighborhoodDataValid(neighborhoodData);
 
   if (!createNeighborhoodDataValid) {
     const error = new Error('Invalid data for creating neighborhood');
     error.name = 'InvalidInputError';
     throw error;
   } else {
-    const newNeighborhood: Neighborhood = await prismaClient.neighborhood.create({ data });
+    const newNeighborhood: Neighborhood = await prismaClient.neighborhood.create({ data: {
+      ...neighborhoodData, location: neighborhoodData.location ? neighborhoodData.location as Prisma.JsonObject : Prisma.JsonNull
+    } });
 
     return newNeighborhood;
   }

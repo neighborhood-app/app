@@ -105,7 +105,7 @@ export default function SingleNeighborhood() {
   const user = getStoredUser();
   const neighborhoodData = useLoaderData() as NeighborhoodType;
   const neighborhoodLocation = neighborhoodData.location
-    ? (JSON.parse(neighborhoodData.location) as SearchResult)
+    ? (neighborhoodData.location as unknown as SearchResult)
     : null;
   const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
 

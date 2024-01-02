@@ -59,6 +59,7 @@ export default function EditNeighborhoodModal({
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
+
     const data = {
       name: nameInput,
       location: locationInput ? JSON.stringify(locationInput) : '',
