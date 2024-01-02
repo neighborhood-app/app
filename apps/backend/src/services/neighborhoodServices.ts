@@ -206,6 +206,19 @@ const filterNeighborhoods = async (searchTerm: string): Promise<Neighborhood[]> 
   return neighborhoods;
 };
 
+const filterNeighborhoodsByLocation = async (bounds: string): Promise<Neighborhood[]> => {
+  const neighborhoods = await prismaClient.neighborhood.findMany({
+    where: {
+      location: {
+        contains: searchTerm,
+        mode: 'insensitive',
+      },
+    },
+  });
+
+  return neighborhoods;
+};
+
 const getNeighborhoodRequests = async (nhoodId: number): Promise<Request[]> => {
   const neighborhood: NeighborhoodWithRelatedFields | null =
     await prismaClient.neighborhood.findUnique({

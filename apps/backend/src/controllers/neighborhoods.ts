@@ -20,7 +20,7 @@ neighborhoodsRouter.get(
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: Request, res: Response, next) => {    
     // Execute the next route if this was a search request
-    if ('searchTerm' in req.query) return next();
+    if ('searchTerm' in req.query || 'boundary' in req.query) return next();
 
     let { cursor }: { cursor?: string | number } = req.query;
     cursor = cursor ? Number(cursor) : undefined;
@@ -35,12 +35,21 @@ neighborhoodsRouter.get(
   '/',
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: Request, res: Response) => {
-    const { searchTerm } = req.query;
+    const { searchTerm, boundary } = req.query;
 
-    const neighborhoods: Neighborhood[] = await neighborhoodServices.filterNeighborhoods(
-      searchTerm as string,
-    );
+    console.log(boundary);
 
+    let neighborhoods: Neighborhood[];
+
+    if (searchTerm) {
+      neighborhoods = await neighborhoodServices.filterNeighborhoods(
+        searchTerm as string,
+      );
+    }
+    else {
+      neighborhoods = [];
+    }
+    
     res.status(200).send(neighborhoods);
   }),
 );
