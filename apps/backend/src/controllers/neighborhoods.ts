@@ -37,8 +37,6 @@ neighborhoodsRouter.get(
   catchError(async (req: Request, res: Response) => {
     const { searchTerm, boundary } = req.query;
 
-    console.log(boundary);
-
     let neighborhoods: Neighborhood[];
 
     if (searchTerm) {
@@ -46,9 +44,11 @@ neighborhoodsRouter.get(
         searchTerm as string,
       );
     }
-    else {
-      neighborhoods = [];
+    else if (boundary) {
+      neighborhoods = await neighborhoodServices.filterNeighborhoodsByLocation()
     }
+
+    else neighborhoods = []
     
     res.status(200).send(neighborhoods);
   }),

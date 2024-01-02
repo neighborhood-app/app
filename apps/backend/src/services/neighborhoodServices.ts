@@ -206,18 +206,15 @@ const filterNeighborhoods = async (searchTerm: string): Promise<Neighborhood[]> 
   return neighborhoods;
 };
 
-// const filterNeighborhoodsByLocation = async (bounds: string): Promise<Neighborhood[]> => {
-//   const neighborhoods = await prismaClient.neighborhood.findMany({
-//     where: {
-//       location: {
-//         contains: searchTerm,
-//         mode: 'insensitive',
-//       },
-//     },
-//   });
+const filterNeighborhoodsByLocation = async (_bounds: string = ''): Promise<Neighborhood[]> => {
+  const neighborhoods = await prismaClient.neighborhood.findMany({
+    where: {
+      location: { not: Prisma.JsonNull},
+    },
+  });
 
-//   return neighborhoods;
-// };
+  return neighborhoods;
+};
 
 const getNeighborhoodRequests = async (nhoodId: number): Promise<Request[]> => {
   const neighborhood: NeighborhoodWithRelatedFields | null =
@@ -461,4 +458,5 @@ export default {
   connectUserToNeighborhood,
   removeUserFromNeighborhood,
   getNeighborhoodRequests,
+  filterNeighborhoodsByLocation
 };
