@@ -17,7 +17,7 @@ function ChangeView({ center }: { center: LatLngLiteral }) {
 }
 
 export default function MapBox() {
-  const [userLocation, setUserLocation] = useState({ lat: 40, lng: 30 });
+  const [userLocation, setUserLocation] = useState({ lat: 44.4265238, lng: 26.1022403 });
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
