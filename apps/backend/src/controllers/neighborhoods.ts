@@ -117,7 +117,9 @@ neighborhoodsRouter.put(
     }
 
     const data = req.body;
-    data.location = JSON.parse(data.location);
+    if (data.location) {
+      data.location = JSON.parse(data.location);
+    }
     const updatedNeighborhood: Neighborhood = await prismaClient.neighborhood.update({
       where: { id: +req.params.id },
       data,

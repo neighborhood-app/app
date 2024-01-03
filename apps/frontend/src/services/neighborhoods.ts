@@ -58,8 +58,7 @@ async function createNeighborhood(
   const user = getStoredUser();
   if (!user) return redirect('/login');
 
-   // eslint-disable-next-line no-param-reassign
-   neighborhoodData.location = neighborhoodData.location ? neighborhoodData.location : null
+  neighborhoodData.location = neighborhoodData.location ? neighborhoodData.location : null
 
   const headers = { authorization: `Bearer ${user.token}` };
   const response = await axios.post(`${BASE_URL}`, neighborhoodData, { headers });
