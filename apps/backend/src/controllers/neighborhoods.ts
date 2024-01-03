@@ -39,16 +39,15 @@ neighborhoodsRouter.get(
 
     let neighborhoods: Neighborhood[];
 
-    if (searchTerm) {
+    if (boundary) {
+      neighborhoods = await neighborhoodServices.filterNeighborhoodsByLocation()
+    }
+
+    else {
       neighborhoods = await neighborhoodServices.filterNeighborhoods(
         searchTerm as string,
       );
     }
-    else if (boundary) {
-      neighborhoods = await neighborhoodServices.filterNeighborhoodsByLocation()
-    }
-
-    else neighborhoods = []
     
     res.status(200).send(neighborhoods);
   }),
