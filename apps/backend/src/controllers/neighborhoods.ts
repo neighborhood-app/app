@@ -40,7 +40,7 @@ neighborhoodsRouter.get(
     let neighborhoods: Neighborhood[];
 
     if (boundary) {
-      neighborhoods = await neighborhoodServices.filterNeighborhoodsByLocation()
+      neighborhoods = await neighborhoodServices.filterNeighborhoodsByLocation(boundary as string)
     }
 
     else {

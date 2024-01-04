@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { Neighborhood, Request, Response, Prisma } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
@@ -206,11 +207,39 @@ const filterNeighborhoods = async (searchTerm: string): Promise<Neighborhood[]> 
   return neighborhoods;
 };
 
-const filterNeighborhoodsByLocation = async (_bounds: string = ''): Promise<Neighborhood[]> => {
+const filterNeighborhoodsByLocation = async (boundary: string): Promise<Neighborhood[]> => {
+  const objBoundary = JSON.parse(boundary);
+  const boundaryCoordinates = {
+    swLat: objBoundary._southWest.lat,
+    swLng: objBoundary._southWest.lng,
+    neLat: objBoundary._northEast.lat,
+    neLng: objBoundary._northEast.lng,
+  }
+  console.log(boundaryCoordinates);
   const neighborhoods = await prismaClient.neighborhood.findMany({
     where: {
-      location: { not: Prisma.JsonNull},
-    },
+        AND: [
+          {
+            location: { 
+              not: Prisma.JsonNull,
+            }
+          },
+          {
+            location: {
+              path: ['x'],
+              gt: boundaryCoordinates.swLng,
+              lt: boundaryCoordinates.neLng
+            }
+          }, 
+          {
+            location: {
+              path: ['y'],
+              gt: boundaryCoordinates.swLat,
+              lt: boundaryCoordinates.neLat
+            }
+          }
+        ]
+      },
   });
 
   return neighborhoods;
