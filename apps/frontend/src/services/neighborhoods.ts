@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { redirect } from 'react-router';
+import { LatLngBounds } from 'leaflet';
 import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
 import { CreateNeighborhoodData, EditNeighborhoodData, NeighborhoodType } from '../types';
 import { getStoredUser } from '../utils/auth';
@@ -23,6 +24,17 @@ async function filterByName(searchTerm: string): Promise<Neighborhood[]> {
   if (user) headers.authorization = `Bearer ${user.token}`;
 
   const response = await axios.get(BASE_URL, { params: { searchTerm }, headers });
+
+  return response.data;
+}
+
+async function filterByLocation(mapBounds: LatLngBounds): Promise<Neighborhood[]> {
+  const user = getStoredUser();
+  const headers = { authorization: '' };
+
+  if (user) headers.authorization = `Bearer ${user.token}`;
+
+  const response = await axios.get(BASE_URL, { params: { boundary: JSON.stringify(mapBounds) }, headers });
 
   return response.data;
 }
@@ -109,6 +121,7 @@ async function editNeighborhood(
 export default {
   getNeighborhoods,
   filterByName,
+  filterByLocation,
   getSingleNeighborhood,
   deleteNeighborhood,
   connectUserToNeighborhood,

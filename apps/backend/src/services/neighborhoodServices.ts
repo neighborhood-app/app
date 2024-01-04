@@ -215,7 +215,7 @@ const filterNeighborhoodsByLocation = async (boundary: string): Promise<Neighbor
     neLat: objBoundary._northEast.lat,
     neLng: objBoundary._northEast.lng,
   }
-  console.log(boundaryCoordinates);
+
   const neighborhoods = await prismaClient.neighborhood.findMany({
     where: {
         AND: [
