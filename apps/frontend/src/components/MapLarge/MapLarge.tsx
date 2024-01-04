@@ -1,19 +1,25 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import { useEffect, useState, useRef } from 'react';
-import { LatLngLiteral } from 'leaflet';
+import { LatLngBounds, LatLngLiteral } from 'leaflet';
 import styles from './MapLarge.module.css';
 import AlertBox from '../AlertBox/AlertBox';
 
-// @ts-ignore
-// function GetBounds({ map }) {
-//   const map = useMapEvents({
-//     moveend: () => {
-//       const bounds = map.getBounds();
-//       mapBounds.current = bounds;
-//     },
-//   });
-//   return null;
-// }
+let mapBounds: LatLngBounds | null = null;
+
+function GetBounds() {
+  const map = useMapEvents({
+    moveend: () => {
+      mapBounds = map.getBounds();
+      console.log(mapBounds);
+    },
+    load: () => {
+      mapBounds = map.getBounds();
+      console.log(mapBounds);
+    }
+  });
+  
+  return null;
+}
 
 function ChangeView({ center }: { center: LatLngLiteral }) {
   const map = useMap();
@@ -51,7 +57,7 @@ export default function MapBox() {
         scrollWheelZoom={false}
         ref={mapRef}>
         <ChangeView center={userLocation} />
-        {/* <GetBounds mapBounds={mapBounds} /> */}
+        <GetBounds />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
