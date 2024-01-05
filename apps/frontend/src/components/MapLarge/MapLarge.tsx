@@ -11,10 +11,17 @@ export default function MapBox() {
   const [map, setMap] = useState(null);
   const [visibleNeighborhoods, setVisibleNeighborhoods] = useState(null);
 
-  console.log(visibleNeighborhoods);
-
   useEffect(() => {
     if (!map) return;
+
+    map.locate({ setView: true }).on('locationerror', async () => {
+      setVisibleNeighborhoods(await neighborhoodsServices.filterByLocation(map.getBounds()));
+    });
+
+    map.on('locate', async () => {
+      setVisibleNeighborhoods(await neighborhoodsServices.filterByLocation(map.getBounds()));
+    });
+
     map.on('moveend', async () => {
       setVisibleNeighborhoods(await neighborhoodsServices.filterByLocation(map.getBounds()));
     });
