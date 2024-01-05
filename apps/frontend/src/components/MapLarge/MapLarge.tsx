@@ -1,65 +1,45 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import { useEffect, useState, useRef } from 'react';
-import { LatLngLiteral } from 'leaflet';
+// @ts-nocheck
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { useState, useEffect } from 'react';
+// import { LatLngLiteral } from 'leaflet';
+// import { Neighborhood } from '@prisma/client';
 import neighborhoodsServices from '../../services/neighborhoods';
 import styles from './MapLarge.module.css';
-import AlertBox from '../AlertBox/AlertBox';
-
-function GetBounds({ center }: { center: LatLngLiteral }) {
-  const mapReference = useMap();
-  const bounds = useRef(mapReference.getBounds());
-
-  mapReference.on('moveend', () => {
-    bounds.current = mapReference.getBounds()
-    neighborhoodsServices.filterByLocation(bounds.current).then(result => console.log(result));
-  });
-
-  useEffect(() => {
-    mapReference.setView(center);
-  }, [center, mapReference]);
-
-  return null;
-}
-
-// function ChangeView({ center }: { center: LatLngLiteral }) {
-//   const map = useMap();
-//   map.setView(center, 13);
-//   return null;
-// }
+// import AlertBox from '../AlertBox/AlertBox';
 
 export default function MapBox() {
-  const [userLocation, setUserLocation] = useState({ lat: 44.4265238, lng: 26.1022403 });
-  const [errorMsg, setErrorMsg] = useState('');
+  const [map, setMap] = useState(null);
+  const [visibleNeighborhoods, setVisibleNeighborhoods] = useState(null);
+
+  console.log(visibleNeighborhoods);
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-      });
-    } else {
-      setErrorMsg('Browser does not support geolocation');
-    }
-  }, []);
+    if (!map) return;
+    map.on('moveend', async () => {
+      setVisibleNeighborhoods(await neighborhoodsServices.filterByLocation(map.getBounds()));
+    });
+  }, [map]);
+
+  const markers = visibleNeighborhoods
+    ? visibleNeighborhoods.map((neighborhood) => (
+        <Marker position={{ lat: neighborhood.location.y, lng: neighborhood.location.x }}></Marker>
+      ))
+    : null;
 
   return (
     <>
-      {errorMsg && <AlertBox text={errorMsg} variant="danger" />}
+      {/* {errorMsg && <AlertBox text={errorMsg} variant="danger" />} */}
       <MapContainer
         className={styles.mapContainer}
-        center={userLocation}
+        center={{ lat: 44.4265238, lng: 26.1022403 }}
         zoom={13}
-        scrollWheelZoom={false}>
-        {/* <ChangeView center={userLocation} /> */}
-        <GetBounds center={userLocation} />
+        scrollWheelZoom={false}
+        ref={setMap}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={userLocation}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+        {markers}
       </MapContainer>
     </>
   );
