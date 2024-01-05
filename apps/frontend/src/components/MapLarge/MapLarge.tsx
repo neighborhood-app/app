@@ -8,14 +8,15 @@ import AlertBox from '../AlertBox/AlertBox';
 function GetBounds({ center }: { center: LatLngLiteral }) {
   const mapReference = useMap();
   const bounds = useRef(mapReference.getBounds());
-  console.log(bounds);
-  // eslint-disable-next-line no-return-assign
-  mapReference.on('moveend', () => (bounds.current = mapReference.getBounds()));
+
+  mapReference.on('moveend', () => {
+    bounds.current = mapReference.getBounds()
+    neighborhoodsServices.filterByLocation(bounds.current).then(result => console.log(result));
+  });
 
   useEffect(() => {
     mapReference.setView(center);
-    neighborhoodsServices.filterByLocation(bounds.current);
-  }, [center, mapReference, bounds.current]);
+  }, [center, mapReference]);
 
   return null;
 }
