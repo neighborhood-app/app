@@ -1,35 +1,42 @@
-// @ts-nocheck
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet';
+import { Map } from 'leaflet';
+import { Neighborhood } from '@neighborhood/backend/src/types';
 import { useState, useEffect } from 'react';
-// import { LatLngLiteral } from 'leaflet';
-// import { Neighborhood } from '@prisma/client';
 import neighborhoodsServices from '../../services/neighborhoods';
 import styles from './MapLarge.module.css';
-// import AlertBox from '../AlertBox/AlertBox';
 
 export default function MapBox() {
-  const [map, setMap] = useState(null);
-  const [visibleNeighborhoods, setVisibleNeighborhoods] = useState(null);
+  const [map, setMap] = useState<Map | null>(null);
+  const [visibleNeighborhoods, setVisibleNeighborhoods] = useState<Neighborhood[] | null>(null);
 
   useEffect(() => {
     if (!map) return;
 
-    map.locate({ setView: true }).on('locationerror', async () => {
-      setVisibleNeighborhoods(await neighborhoodsServices.filterByLocation(map.getBounds()));
+    map.locate({ setView: true }).on('locationerror', () => {
+      neighborhoodsServices
+        .filterByLocation(map.getBounds())
+        .then((result) => setVisibleNeighborhoods(result as unknown as Neighborhood[]));
     });
 
-    map.on('locate', async () => {
-      setVisibleNeighborhoods(await neighborhoodsServices.filterByLocation(map.getBounds()));
+    map.on('locate', () => {
+      neighborhoodsServices
+        .filterByLocation(map.getBounds())
+        .then((result) => setVisibleNeighborhoods(result as unknown as Neighborhood[]));
     });
 
-    map.on('moveend', async () => {
-      setVisibleNeighborhoods(await neighborhoodsServices.filterByLocation(map.getBounds()));
+    map.on('moveend', () => {
+      neighborhoodsServices
+        .filterByLocation(map.getBounds())
+        .then((result) => setVisibleNeighborhoods(result as unknown as Neighborhood[]));
     });
   }, [map]);
 
   const markers = visibleNeighborhoods
-    ? visibleNeighborhoods.map((neighborhood) => (
-        <Marker position={{ lat: neighborhood.location.y, lng: neighborhood.location.x }}></Marker>
+    ? visibleNeighborhoods.map((neighborhood: Neighborhood) => (
+        // @ts-ignore
+        <Marker position={{ lat: neighborhood.location.y, lng: neighborhood.location.x }}>
+          <Tooltip direction="top">{neighborhood.name}</Tooltip>
+        </Marker>
       ))
     : null;
 
