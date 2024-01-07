@@ -1,18 +1,27 @@
+/* eslint-disable global-require */
+import { useNavigate } from 'react-router';
 import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet';
-import { Map } from 'leaflet';
+import { Map, Icon } from 'leaflet';
 import { Neighborhood } from '@neighborhood/backend/src/types';
 import { useState, useEffect } from 'react';
 import neighborhoodsServices from '../../services/neighborhoods';
 import styles from './MapLarge.module.css';
 
+const markerIcon = new Icon({
+  iconUrl: require('../../assets/icons/location(1).png'),
+  iconSize: [40, 40],
+});
+
 export default function MapBox() {
+  const navigate = useNavigate();
+
   const [map, setMap] = useState<Map | null>(null);
   const [visibleNeighborhoods, setVisibleNeighborhoods] = useState<Neighborhood[] | null>(null);
 
   useEffect(() => {
     if (!map) return;
 
-    map.locate({ setView: true }).on('locationerror', () => {
+    map.locate({ setView: true, maxZoom: 15 }).on('locationerror', () => {
       neighborhoodsServices
         .filterByLocation(map.getBounds())
         .then((result) => setVisibleNeighborhoods(result as unknown as Neighborhood[]));
@@ -33,8 +42,15 @@ export default function MapBox() {
 
   const markers = visibleNeighborhoods
     ? visibleNeighborhoods.map((neighborhood: Neighborhood) => (
-        // @ts-ignore
-        <Marker position={{ lat: neighborhood.location.y, lng: neighborhood.location.x }}>
+        <Marker
+          // @ts-ignore
+          position={{ lat: neighborhood.location.y, lng: neighborhood.location.x }}
+          icon={markerIcon}
+          eventHandlers={{
+            click: () => {
+              navigate(`/neighborhoods/${neighborhood.id}`);
+            },
+          }}>
           <Tooltip direction="top">{neighborhood.name}</Tooltip>
         </Marker>
       ))
