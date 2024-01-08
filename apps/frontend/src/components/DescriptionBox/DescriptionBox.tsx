@@ -2,7 +2,9 @@ import { Container, Row } from 'react-bootstrap';
 import { SetStateAction, useState, Dispatch } from 'react';
 import { useParams } from 'react-router';
 import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './DescriptionBox.module.css';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
@@ -70,13 +72,16 @@ export default function DescriptionBox({
           ) : null}
           <div className={styles.buttonsContainer}>
             {userRole === 'ADMIN' ? (
-              <CustomBtn variant="outline-dark" className={styles.btn} onClick={handleShowForm}>
-                Edit Neighborhood
+              <CustomBtn
+                variant="outline-dark"
+                className={`${styles.editBtn}`}
+                onClick={handleShowForm}>
+                <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>
               </CustomBtn>
             ) : null}
             {userRole === 'ADMIN' ? (
-              <CustomBtn variant="danger" className={styles.btn} onClick={handleDeletePrompt}>
-                Delete Neighborhood
+              <CustomBtn className={styles.deleteBtn} variant="danger" onClick={handleDeletePrompt}>
+                <FontAwesomeIcon icon={faTrashCan} />
               </CustomBtn>
             ) : null}
           </div>

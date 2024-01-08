@@ -128,9 +128,6 @@ export default function SingleNeighborhood() {
         status={promptDetails.show}
         handleClose={handleClosePrompt}
       />
-      {neighborhoodLocation ? (
-        <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
-      ) : null}
       <Row className="align-items-center gy-3">
         <Col xs="auto">
           <Image
@@ -166,6 +163,11 @@ export default function SingleNeighborhood() {
             location={neighborhoodLocation}
             setPromptDetails={setPromptDetails}
           />
+        </Col>
+        <Col sm={6}>
+          {neighborhoodLocation ? (
+            <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
+          ) : null}
         </Col>
       </Row>
       <Row>{<RequestBox requests={neighborhoodRequests} />}</Row>
