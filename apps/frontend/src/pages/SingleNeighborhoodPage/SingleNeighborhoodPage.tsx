@@ -164,7 +164,7 @@ export default function SingleNeighborhood() {
             setPromptDetails={setPromptDetails}
           />
         </Col>
-        <Col sm={6}>
+        <Col xs={6}>
           {neighborhoodLocation ? (
             <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
           ) : null}
