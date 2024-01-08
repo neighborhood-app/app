@@ -10,6 +10,7 @@ import styles from './MapLarge.module.css';
 const markerIcon = new Icon({
   iconUrl: require('../../assets/icons/location(1).png'),
   iconSize: [40, 40],
+  iconAnchor: [20, 40],
 });
 
 export default function MapBox() {
