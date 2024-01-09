@@ -70,11 +70,19 @@ export default function SingleNeighborhood() {
 
   const { id: neighborhoodId } = useParams();
 
+  // const mql = window.matchMedia('(max-width: 800px)');
+
+  // const [smallDisplay, setSmallDisplay] = useState(mql.matches);
+
   const [promptDetails, setPromptDetails] = useState<PromptDetails>({
     show: false,
     text: '',
     intent: 'leave-neighborhood',
   });
+
+  // mql.addEventListener('change', () => {
+  //   setSmallDisplay(mql.matches);
+  // });
 
   function handleClosePrompt() {
     setPromptDetails((previousState) => ({ ...previousState, show: false }));
@@ -155,7 +163,7 @@ export default function SingleNeighborhood() {
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col className={styles.centeredColumn}>
           <DescriptionBox
             userRole={userRole}
             name={neighborhoodData.name}
@@ -164,11 +172,11 @@ export default function SingleNeighborhood() {
             setPromptDetails={setPromptDetails}
           />
         </Col>
-        <Col xs={6}>
-          {neighborhoodLocation ? (
+        {neighborhoodLocation ? (
+          <Col xs={6} className={styles.centeredColumn}>
             <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
-          ) : null}
-        </Col>
+          </Col>
+        ) : null}
       </Row>
       <Row>{<RequestBox requests={neighborhoodRequests} />}</Row>
     </Container>

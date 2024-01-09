@@ -12,6 +12,12 @@
   align-items: center;
 }
 
+.centeredColumn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .leaveIcon {
   margin-left: 8px;
   color: #ff4e2a;
