@@ -68,6 +68,14 @@ export default function SingleNeighborhood() {
     intent: FormIntent;
   }
 
+  const mql = window.matchMedia('(max-width: 576px)');
+
+  const [smallDisplay, setSmallDisplay] = useState(mql.matches);
+
+  mql.addEventListener('change', () => {
+    setSmallDisplay(mql.matches);
+  });
+
   const { id: neighborhoodId } = useParams();
 
   // const mql = window.matchMedia('(max-width: 800px)');
@@ -144,8 +152,8 @@ export default function SingleNeighborhood() {
             src={neighborhoodImg}
             alt="Neighborhood"></Image>
         </Col>
-        <Col xs="12" sm="auto">
-          <h1>{neighborhoodData.name}</h1>
+        <Col xs="auto" sm="auto" className={styles.nameColumn}>
+          <h1 className={styles.neighborhoodName}>{neighborhoodData.name}</h1>
         </Col>
         <Col
           xs="12"
@@ -171,9 +179,14 @@ export default function SingleNeighborhood() {
             location={neighborhoodLocation}
             setPromptDetails={setPromptDetails}
           />
+          {neighborhoodLocation && smallDisplay ? (
+            <Col xs={6} className={styles.centeredColumn}>
+              <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
+            </Col>
+          ) : null}
           <h2 className={styles.title}>Neighborhood Requests</h2>
         </Col>
-        {neighborhoodLocation ? (
+        {neighborhoodLocation && !smallDisplay ? (
           <Col xs={6} className={styles.centeredColumn}>
             <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
           </Col>

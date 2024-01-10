@@ -7,9 +7,19 @@
   min-width: 5em;
 }
 
+.nameColumn {
+  max-width: 400px;
+}
+
+.neighborhoodName {
+  text-wrap: wrap;
+  overflow-wrap: break-word;
+}
+
 .membersContainer {
+  margin-top: 10px;
   display: flex;
-  align-items: center;
+  align-self: flex-start;
 }
 
 .centeredColumn {
@@ -35,5 +45,13 @@
 @media (max-width: 576px) {
   .wrapper {
     padding: 30px;
+  }
+
+  .centeredColumn {
+    width: 89vw;
+  }
+
+  .membersContainer {
+    margin-top: 10px;
   }
 }
