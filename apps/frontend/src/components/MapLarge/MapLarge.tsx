@@ -48,6 +48,7 @@ export default function MapBox() {
           // @ts-ignore
           position={{ lat: neighborhood.location.y, lng: neighborhood.location.x }}
           icon={markerIcon}
+          key={neighborhood.id}
           eventHandlers={{
             click: () => {
               navigate(`/neighborhoods/${neighborhood.id}`);
