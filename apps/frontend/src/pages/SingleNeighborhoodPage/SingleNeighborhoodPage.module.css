@@ -18,6 +18,11 @@
   align-items: center;
 }
 
+.title {
+  /* padding: 0; */
+  /* margin-top: 30px; */
+}
+
 .leaveIcon {
   margin-left: 8px;
   color: #ff4e2a;

@@ -163,7 +163,7 @@ export default function SingleNeighborhood() {
         </Col>
       </Row>
       <Row>
-        <Col className={styles.centeredColumn}>
+        <Col className="d-flex flex-column justify-content-around">
           <DescriptionBox
             userRole={userRole}
             name={neighborhoodData.name}
@@ -171,6 +171,7 @@ export default function SingleNeighborhood() {
             location={neighborhoodLocation}
             setPromptDetails={setPromptDetails}
           />
+          <h2 className={styles.title}>Neighborhood Requests</h2>
         </Col>
         {neighborhoodLocation ? (
           <Col xs={6} className={styles.centeredColumn}>
