@@ -1,5 +1,11 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import {
+  NovuProvider,
+  PopoverNotificationCenter,
+  NotificationBell,
+} from '@novu/notification-center';
+
 import RootLayout from './pages/RootLayout/RootLayout';
 import LoginPage, { action as loginAction } from './pages/LoginPage/LoginPage';
 import SignUpPage, { action as signUpAction } from './pages/SignUpPage/SignUpPage';
@@ -33,6 +39,7 @@ import HomePage, {
   loader as homePageLoader,
   action as homePageAction,
 } from './pages/HomePage/HomePage';
+import { useUser } from './store/user-context';
 
 const router = createBrowserRouter([
   {
@@ -99,6 +106,17 @@ const router = createBrowserRouter([
   },
 ]);
 
-const App = () => <RouterProvider router={router} />;
+const App = () => {
+  const userData = useUser();
+
+  return (
+    <NovuProvider subscriberId={userData.id} applicationIdentifier={'bPm7zbb5KQz7'}>
+      <PopoverNotificationCenter colorScheme="dark">
+        {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
+      </PopoverNotificationCenter>
+      <RouterProvider router={router} />
+    </NovuProvider>
+  );
+};
 
 export default App;
