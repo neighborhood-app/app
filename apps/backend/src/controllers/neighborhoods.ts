@@ -62,7 +62,7 @@ neighborhoodsRouter.get(
       ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
       : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
-    res.status(200).send(neighborhood);
+    return res.status(200).send(neighborhood);
   }),
 );
 

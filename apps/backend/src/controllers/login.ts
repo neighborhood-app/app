@@ -32,6 +32,9 @@ loginRouter.post(
       token,
     };
 
+    // test trigger notification
+    // await triggerNotification(String(responseData.id));
+
     return response.status(200).json(responseData);
   }),
 );

@@ -202,9 +202,11 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
         },
       });
     const id = neighborhood?.id;
+
     const response: Response = await api
       .get(`/api/neighborhoods/${id}`)
       .set('Authorization', `Bearer ${token}`);
+
     expect(response.status).toEqual(200);
     expect(response.body.id).toEqual(id);
     expect(response.body).toHaveProperty('admin');

@@ -18,6 +18,10 @@ export async function loader() {
   const user = getStoredUser();
   if (!user) return null;
   const userData = await userServices.getUserData(user.id);
+  
+  // test trigger notification
+  // await triggerNotification(String(userData.id));
+
   return userData;
 }
 

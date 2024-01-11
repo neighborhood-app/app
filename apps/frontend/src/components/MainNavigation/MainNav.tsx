@@ -3,9 +3,17 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Nav, Navbar } from 'react-bootstrap';
 import { faBell, faCompass, faHouse, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+
+import {
+  NovuProvider,
+  PopoverNotificationCenter,
+  NotificationBell,
+} from '@novu/notification-center';
+
 import styles from './MainNav.module.css';
 import { getStoredUser, deleteStoredUser } from '../../utils/auth';
 import UserCircle from '../UserCircle/UserCircle';
+
 
 
 // const profilePic = require('./profile_placeholder.png');
@@ -19,6 +27,14 @@ const MainNav = () => {
   mql.addEventListener('change', () => {
     setSmallDisplay(mql.matches);
   });
+
+  const Notification = () =>  (
+    <NovuProvider subscriberId={String(user?.id)} applicationIdentifier={'bPm7zbb5KQz7'}>
+      <PopoverNotificationCenter colorScheme={'light'}>
+        {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
+      </PopoverNotificationCenter>
+    </NovuProvider>
+  );
 
   const profileIconLink = user ? (
     <Link to={`/users/${user.id}`}>
@@ -72,45 +88,50 @@ const MainNav = () => {
   );
 
   return (
-    <Navbar className={styles.nav} expand="sm">
-      {smallDisplay ? (
-        <>
-          <Navbar.Toggle />
-          <Navbar.Collapse>
-            <Nav className="me-auto">
-              {user ? (
-                <Nav.Link href={`/users/${user.id}`} className={styles.navbarCollapseLink}>
-                  MY PROFILE
+    <>
+      <Notification></Notification>
+      <Navbar className={styles.nav} expand="sm">
+        {smallDisplay ? (
+          <>
+            <Navbar.Toggle />
+            <Navbar.Collapse>
+              <Nav className="me-auto">
+                {user ? (
+                  <Nav.Link href={`/users/${user.id}`} className={styles.navbarCollapseLink}>
+                    MY PROFILE
+                  </Nav.Link>
+                ) : null}
+                <Nav.Link href="/" className={styles.navbarCollapseLink}>
+                  HOME
                 </Nav.Link>
-              ) : null}
-              <Nav.Link href="/" className={styles.navbarCollapseLink}>
-                HOME
-              </Nav.Link>
-              <Nav.Link href="/explore" className={styles.navbarCollapseLink}>
-                EXPLORE
-              </Nav.Link>
-              <Nav.Link href="#pricing" className={styles.navbarCollapseLink}>
-                NOTIFICATIONS
-              </Nav.Link>
-              <Nav.Link className={styles.navbarCollapseLink} onClick={() => {
-                  deleteStoredUser()
-                  window.location.reload()
-              }}>
-                SIGN OUT
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </>
-      ) : (
-        <>
-          {profileIconLink}
-          {homeIconLink}
-          {exploreIconLink}
-          {notificationsIconLink}
-          {logoutIconLink}
-        </>
-      )}
-    </Navbar>
+                <Nav.Link href="/explore" className={styles.navbarCollapseLink}>
+                  EXPLORE
+                </Nav.Link>
+                <Nav.Link href="#pricing" className={styles.navbarCollapseLink}>
+                  NOTIFICATIONS
+                </Nav.Link>
+                <Nav.Link
+                  className={styles.navbarCollapseLink}
+                  onClick={() => {
+                    deleteStoredUser();
+                    window.location.reload();
+                  }}>
+                  SIGN OUT
+                </Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </>
+        ) : (
+          <>
+            {profileIconLink}
+            {homeIconLink}
+            {exploreIconLink}
+            {notificationsIconLink}
+            {logoutIconLink}
+          </>
+        )}
+      </Navbar>
+    </>
   );
 };
 

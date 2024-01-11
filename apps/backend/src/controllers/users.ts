@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import catchError from '../utils/catchError';
 import userServices from '../services/userServices';
 import middleware from '../utils/middleware';
-import createSubscriber from '../utils/createSubscriber';
+import {createSubscriber} from '../utils/notifications';
 import { UserWithoutPasswordHash, RequestWithAuthentication } from '../types';
 
 const usersRouter = express.Router();
@@ -26,7 +26,7 @@ usersRouter.post('/', catchError(async (req: Request, res: Response) => {
   const newUser: UserWithoutPasswordHash = await userServices.createUser(createUserData);
 
   // create a new subscriber for notifications
-  await createSubscriber();
+  await createSubscriber(String(newUser.id), newUser.first_name || '', newUser.last_name || '');
 
   res.status(201).json(newUser);
 }));

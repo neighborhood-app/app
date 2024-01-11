@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import prismaClient from '../prismaClient';
+import {createSubscriber} from '../src/utils/notifications';
 
 const SAMPLE_PASSWORD = 'secret';
 
@@ -101,8 +102,16 @@ async function main() {
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
+
+  const users = [bob, radu, shwetank, antonina, maria, mike, leia];
   //---------------------------------------------------------
 
+  // Add users as notification subscribers
+  users.forEach(async user => {
+    await createSubscriber(String(user.id), user.first_name || '', user.last_name || '')
+  })
+
+  //---------------------------------------------------------
   // Bob's Neighborhood
   const bobNeighborhood = await prismaClient.neighborhood.create({
     data: {
@@ -153,6 +162,7 @@ async function main() {
       content: 'I need someone to cook breakfast and dinner for me everyday. I don\'t want to pay anything btw.',
     },
   });
+
   //---------------------------------------------------------
 
   // Antonina's Neighborhood
@@ -221,7 +231,6 @@ async function main() {
   //---------------------------------------------------------
 
   // More seed neighborhoods
-  const users = [bob, radu, shwetank, antonina, maria, mike, leia];
   const neighborhoods = [];
   for (let count = 1; count < 28;) {
     for (let userIdx = 0; userIdx < users.length; userIdx += 1) {
