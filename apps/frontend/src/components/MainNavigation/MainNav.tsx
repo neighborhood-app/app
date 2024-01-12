@@ -14,8 +14,6 @@ import styles from './MainNav.module.css';
 import { getStoredUser, deleteStoredUser } from '../../utils/auth';
 import UserCircle from '../UserCircle/UserCircle';
 
-
-
 // const profilePic = require('./profile_placeholder.png');
 
 const MainNav = () => {
@@ -28,8 +26,11 @@ const MainNav = () => {
     setSmallDisplay(mql.matches);
   });
 
-  const Notification = () =>  (
-    <NovuProvider subscriberId={String(user?.id)} applicationIdentifier={'bPm7zbb5KQz7'}>
+  const Notification = () => (
+    <NovuProvider
+      subscriberHash={user?.hashedSubscriberId}
+      subscriberId={String(user?.id)}
+      applicationIdentifier={'bPm7zbb5KQz7'}>
       <PopoverNotificationCenter colorScheme={'light'}>
         {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
       </PopoverNotificationCenter>

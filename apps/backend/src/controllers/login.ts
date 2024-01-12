@@ -3,6 +3,7 @@ import catchError from '../utils/catchError';
 import { User, LoginData, LoginResponseData, RequestWithAuthentication } from '../types';
 import loginServices from '../services/loginServices';
 import middleware from '../utils/middleware';
+import { hashSubscriberId } from '../utils/notifications';
 
 const loginRouter = express.Router();
 
@@ -26,14 +27,13 @@ loginRouter.post(
     }
 
     const token: string = await loginServices.generateToken(userInDb.username, userInDb.id);
+    const hashedSubscriberId = hashSubscriberId(String(userInDb.id));
     const responseData: LoginResponseData = {
       id: userInDb.id,
       username: userInDb.username,
       token,
+      hashedSubscriberId
     };
-
-    // test trigger notification
-    // await triggerNotification(String(responseData.id));
 
     return response.status(200).json(responseData);
   }),

@@ -213,6 +213,7 @@ export interface LoginResponseData {
   id: number;
   username: string;
   token: string;
+  hashedSubscriberId: string;
 }
 
 /**

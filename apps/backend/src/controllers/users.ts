@@ -28,7 +28,7 @@ usersRouter.post('/', catchError(async (req: Request, res: Response) => {
   // create a new subscriber for notifications
   await createSubscriber(String(newUser.id), newUser.first_name || '', newUser.last_name || '');
 
-  res.status(201).json(newUser);
+  return res.status(201).json(newUser);
 }));
 
 usersRouter.put(
