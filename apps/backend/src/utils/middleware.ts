@@ -161,6 +161,8 @@ const userIdExtractorAndLoginValidator = catchError(async (
 ) => {
   const { token } = req;
 
+  console.log(token);
+  
   if (token) {
     userIdExtractor(req, res, next);
   } else {

@@ -1,7 +1,8 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
-import neighborhoodsService from '../../services/neighborhoods';
-import requestServices from '../../services/requests';
+import notificationService from '../../services/notifications';
+import neighborhoodService from '../../services/neighborhoods';
+import requestService from '../../services/requests';
 import {
   EditNeighborhoodData,
   NeighborhoodDetailsForMembers,
@@ -12,12 +13,11 @@ import {
 import NeighborhoodPageForMembers from './NeighborhoodPageForMembers';
 import NeighborhoodPageForAdmin from './NeighborhoodPageForAdmin';
 import NeighborhoodPageForNonMembers from './NeighborhoodPageForNonMembers';
-import notificationTriggers from '../../utils/notifications';
 import { getStoredUser } from '../../utils/auth';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
-  const neighborhood = await neighborhoodsService.getSingleNeighborhood(Number(id));
+  const neighborhood = await neighborhoodService.getSingleNeighborhood(Number(id));
 
   return neighborhood;
 }
@@ -35,19 +35,17 @@ export async function action({ params, request }: ActionFunctionArgs) {
   if (intent === 'create-request') {
     const requestData = Object.fromEntries(formData) as unknown as CreateRequestData;
     requestData.neighborhood_id = neighborhoodId;
-    response = await requestServices.createRequest(requestData);
+    response = await requestService.createRequest(requestData);
   } else if (intent === 'join-neighborhood') {
-    const user = getStoredUser();
-
-    notificationTriggers.joinNeighborhood(String(user?.id), String(neighborhoodId));
-    // response = await neighborhoodsService.connectUserToNeighborhood(neighborhoodId);
+    response = await notificationService.joinNeighborhood(neighborhoodId);
+    // response = await neighborhoodService.connectUserToNeighborhood(neighborhoodId);
   } else if (intent === 'leave-neighborhood') {
-    response = await neighborhoodsService.leaveNeighborhood(neighborhoodId);
+    response = await neighborhoodService.leaveNeighborhood(neighborhoodId);
   } else if (intent === 'edit-neighborhood') {
     const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
-    response = await neighborhoodsService.editNeighborhood(neighborhoodId, neighborhoodData);
+    response = await neighborhoodService.editNeighborhood(neighborhoodId, neighborhoodData);
   } else if (intent === 'delete-neighborhood') {
-    response = await neighborhoodsService.deleteNeighborhood(neighborhoodId);
+    response = await neighborhoodService.deleteNeighborhood(neighborhoodId);
   }
 
   return response;
@@ -75,7 +73,6 @@ export default function SingleNeighborhood() {
   // as `userRole` uniquely determines the type of `neighborhood`
   // I am not sure whether this is considered good practise or not
   const userRole: UserRole = checkLoggedUserRole(neighborhoodData, user?.username);
-  console.log(user?.username, userRole);
 
   if (userRole === UserRole['NON-MEMBER']) {
     return <NeighborhoodPageForNonMembers neighborhood={neighborhoodData} />;

@@ -8,6 +8,7 @@ import {
   NovuProvider,
   PopoverNotificationCenter,
   NotificationBell,
+  IMessage,
 } from '@novu/notification-center';
 
 import styles from './MainNav.module.css';
@@ -26,16 +27,26 @@ const MainNav = () => {
     setSmallDisplay(mql.matches);
   });
 
-  const Notification = () => (
-    <NovuProvider
-      subscriberHash={user?.hashedSubscriberId}
-      subscriberId={String(user?.id)}
-      applicationIdentifier={'bPm7zbb5KQz7'}>
-      <PopoverNotificationCenter colorScheme={'light'}>
-        {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
-      </PopoverNotificationCenter>
-    </NovuProvider>
-  );
+  const Notification = () => {
+    const handlerOnNotificationClick = (message: IMessage) => {
+      if (message.cta?.data.url) {
+        window.location.href = message.cta.data.url;
+      }
+    };
+
+    return (
+      <NovuProvider
+        subscriberHash={user?.hashedSubscriberId}
+        subscriberId={String(user?.id)}
+        applicationIdentifier={'bPm7zbb5KQz7'}>
+        <PopoverNotificationCenter
+          colorScheme={'light'}
+          onNotificationClick={handlerOnNotificationClick}>
+          {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
+        </PopoverNotificationCenter>
+      </NovuProvider>
+    );
+  };
 
   const profileIconLink = user ? (
     <Link to={`/users/${user.id}`}>
@@ -47,18 +58,18 @@ const MainNav = () => {
   ) : null;
 
   const homeIconLink = (
-    <Link to={'/'} title='Home'>
-    <div className={styles.link}>
-      <FontAwesomeIcon
-        className={`${styles.navIcon} ${styles.homeIcon}`}
-        icon={faHouse}
-        size="xl"></FontAwesomeIcon>
-    </div>
+    <Link to={'/'} title="Home">
+      <div className={styles.link}>
+        <FontAwesomeIcon
+          className={`${styles.navIcon} ${styles.homeIcon}`}
+          icon={faHouse}
+          size="xl"></FontAwesomeIcon>
+      </div>
     </Link>
   );
 
   const exploreIconLink = (
-    <Link to={'/explore'} title='Explore neighborhoods'>
+    <Link to={'/explore'} title="Explore neighborhoods">
       <div className={styles.link}>
         <FontAwesomeIcon
           className={`${styles.compassIcon} ${styles.navIcon}`}
@@ -68,15 +79,15 @@ const MainNav = () => {
   );
 
   const notificationsIconLink = (
-    <div className={styles.link} title='Notifications'>
+    <div className={styles.link} title="Notifications">
       <FontAwesomeIcon
         icon={faBell}
         className={`${styles.navIcon} ${styles.bellIcon}`}></FontAwesomeIcon>
     </div>
-  )
+  );
 
   const logoutIconLink = (
-    <div className={styles.link} title='Log out'>
+    <div className={styles.link} title="Log out">
       <FontAwesomeIcon
         icon={faRightFromBracket}
         className={`${styles.navIcon} ${styles.logOutIcon}`}
