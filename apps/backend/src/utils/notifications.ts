@@ -38,15 +38,17 @@ export function hashSubscriberId(id: string) {
 /**
  * Sends a notification to an admin when a user asks to join their neighborhood
  * @param id (string) - subscriberId of the user requesting to join
+ * @param neighborhoodId (string) - the id of the neighborhood to join
  */
-export async function triggerJoinNhood(id: string) {
+export async function triggerJoinNhood(id: string, neighborhoodId: string) {
   try {
     const res = await novu.trigger('join-neighborhood', {
       to: {
         subscriberId: id,
       },
       payload: {
-        description: `User ${id} wants to join your neighborhood.`,
+        description: `User ${id} wants to join neighborhood ${neighborhoodId}.`,
+        neighborhoodId,
       },
     });
 
