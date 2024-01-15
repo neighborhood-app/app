@@ -1,7 +1,4 @@
 .mapContainer {
-  /* position: absolute;
-  top: 130px;
-  right: 60px; */
   width: 35vw;
   height: 25vh;
   border-radius: 10px;
@@ -12,10 +9,10 @@
   border: 1px solid rgb(173, 173, 173, 0.5);
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .mapContainer {
     width: 100vw;
-    height: 10vh;
+    height: 20vh;
     margin-top: 5px;
     margin-bottom: 5px;
   }

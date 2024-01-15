@@ -19,7 +19,7 @@ interface Props {
   location?: SearchResult | null;
 }
 
-export default function EditNeighborhoodModal({
+export default function NeighborhoodModalForm({
   show,
   handleClose,
   intent,
@@ -37,7 +37,7 @@ export default function EditNeighborhoodModal({
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState<SearchResult[]>([]);
 
-  const locationDefaultValue = locationInput ? [locationInput] : null;
+  // const locationDefaultValue = locationInput ? [locationInput] : null;
 
   const submit = useSubmit();
 
@@ -136,7 +136,7 @@ export default function EditNeighborhoodModal({
               }}
               placeholder="Type in your neighborhood's address"
               // @ts-ignore
-              selected={locationDefaultValue}
+              selected={[locationInput]}
               isInvalid={!isValidAddress(locationInput) && formSubmitted}
               isValid={isValidAddress(locationInput)}
             />

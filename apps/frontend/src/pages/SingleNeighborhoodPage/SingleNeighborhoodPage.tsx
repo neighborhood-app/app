@@ -68,7 +68,7 @@ export default function SingleNeighborhood() {
     intent: FormIntent;
   }
 
-  const mql = window.matchMedia('(max-width: 576px)');
+  const mql = window.matchMedia('(max-width: 768px)');
 
   const [smallDisplay, setSmallDisplay] = useState(mql.matches);
 
@@ -180,7 +180,7 @@ export default function SingleNeighborhood() {
             setPromptDetails={setPromptDetails}
           />
           {neighborhoodLocation && smallDisplay ? (
-            <Col xs={6} className={styles.centeredColumn}>
+            <Col xs={'auto'} className={styles.centeredColumn}>
               <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
             </Col>
           ) : null}
