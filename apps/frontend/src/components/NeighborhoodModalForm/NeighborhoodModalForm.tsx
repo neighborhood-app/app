@@ -93,7 +93,9 @@ export default function NeighborhoodModalForm({
   return (
     <Modal show={show} onHide={closeModal} animation={true} backdrop="static" centered>
       <Modal.Header closeButton>
-        <Modal.Title>Edit Neighborhood</Modal.Title>
+        <Modal.Title>
+          {intent === 'edit-neighborhood' ? 'Edit Neighborhood' : 'Create Neighborhood'}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form role="form" noValidate onSubmit={handleSubmit} className={styles.createReqForm}>
@@ -146,9 +148,7 @@ export default function NeighborhoodModalForm({
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-2" controlId="description">
-            <Form.Label column="sm">
-              Description<span className={styles.asterisk}>*</span>
-            </Form.Label>
+            <Form.Label column="sm">Description</Form.Label>
             <Form.Control
               as="textarea"
               rows={6}
