@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { redirect } from 'react-router';
 import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
-import { CreateNeighborhoodData, EditNeighborhoodData, NeighborhoodType } from '../types';
+import { CreateNeighborhoodData, EditNeighborhoodData, ErrorObj, NeighborhoodType } from '../types';
 import { getStoredUser } from '../utils/auth';
 
 const BASE_URL = '/api/neighborhoods';
@@ -65,13 +65,14 @@ async function createNeighborhood(
 }
 
 async function connectUserToNeighborhood(
+  userId: number,
   neighborhoodId: number,
-): Promise<Response | { success: string } | { error: string }> {
+): Promise<Response | { success: string } | ErrorObj> {
   const user = getStoredUser();
   if (!user) return redirect('/login');
-
+  
   const headers = { authorization: `Bearer ${user.token}` };
-  const response = await axios.post(`${BASE_URL}/${neighborhoodId}/join`, null, { headers });
+  const response = await axios.post(`${BASE_URL}/${neighborhoodId}/join/${userId}`, null, { headers });
 
   return response.data;
 }

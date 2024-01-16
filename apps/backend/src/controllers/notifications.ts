@@ -3,7 +3,7 @@ import express, { Response } from 'express';
 import catchError from '../utils/catchError';
 import middleware from '../utils/middleware';
 import { RequestWithAuthentication } from '../types';
-import { triggers } from '../services/notificationServices';
+import { triggers, markActionDone } from '../services/notificationServices';
 import neighborhoodServices from '../services/neighborhoodServices';
 
 // MOVE KEY TO .env file
@@ -12,7 +12,7 @@ import neighborhoodServices from '../services/neighborhoodServices';
 
 const notificationsRouter = express.Router();
 
-// Create request
+// Create notification request to join a neighborhood
 notificationsRouter.post(
   '/join-neighborhood/:neighborhoodId',
   middleware.userIdExtractorAndLoginValidator,
@@ -24,8 +24,21 @@ notificationsRouter.post(
     const neighborhood = await neighborhoodServices.getNeighborhoodDetailsForMembers(+neighborhoodId);
     const adminId = String(neighborhood.admin_id);
 
-    triggers.joinNeighborhood(adminId, String(loggedUserId), neighborhoodId);
-    return res.status(200);
+    await triggers.joinNeighborhood(adminId, String(loggedUserId), neighborhoodId);
+    return res.status(201);
+  }),
+);
+
+notificationsRouter.post(
+  '/mark-action-done',
+  middleware.userIdExtractorAndLoginValidator,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const loggedUserId: number = req.loggedUserId as number;
+    const { notificationId, btnType, status } = req.body;
+    
+    const resData = await markActionDone(loggedUserId, notificationId, status, btnType);
+
+    return res.status(201).send(resData);
   }),
 );
 

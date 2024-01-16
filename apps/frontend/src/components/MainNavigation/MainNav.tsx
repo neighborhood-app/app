@@ -9,10 +9,15 @@ import {
   PopoverNotificationCenter,
   NotificationBell,
   IMessage,
+  MessageActionStatusEnum,
+  useMarkNotificationsAs,
 } from '@novu/notification-center';
 
+import { AxiosError } from 'axios';
 import styles from './MainNav.module.css';
 import { getStoredUser, deleteStoredUser } from '../../utils/auth';
+import neighborhoodServices from '../../services/neighborhoods';
+import notificationServices from '../../services/notifications';
 import UserCircle from '../UserCircle/UserCircle';
 
 // const profilePic = require('./profile_placeholder.png');
@@ -20,6 +25,14 @@ import UserCircle from '../UserCircle/UserCircle';
 const MainNav = () => {
   const mql = window.matchMedia('(max-width: 576px)');
   const user = getStoredUser();
+  const { markNotificationsAs } = useMarkNotificationsAs({
+    onSuccess: () => {
+      console.log('Notification marked as read');
+    },
+    onError: (error) => {
+      console.error('Error marking notification as read', error);
+    },
+  });
 
   const [smallDisplay, setSmallDisplay] = useState(mql.matches);
 
@@ -28,20 +41,51 @@ const MainNav = () => {
   });
 
   const Notification = () => {
-    const handlerOnNotificationClick = (message: IMessage) => {
+    const handleOnNotificationClick = (message: IMessage) => {
       if (message.cta?.data.url) {
         window.location.href = message.cta.data.url;
       }
     };
 
+    const handleOnActionClick = async (temp: string, btnType: string, notification: IMessage) => {
+      if (temp === 'join-neighborhood' && btnType === 'primary') {
+        const { userId, neighborhoodId } = notification.payload;
+        try {
+          const res = await neighborhoodServices.connectUserToNeighborhood(
+            Number(userId),
+            Number(neighborhoodId),
+          );
+
+          if ('success' in res) notification.content = res.success;
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            notification.content = error.response?.data.error;
+          }
+          console.log(error);
+        } finally {
+          // eslint-disable-next-line no-underscore-dangle
+          markNotificationsAs({ messageId: notification._id, read: true, seen: true });
+
+          await notificationServices.updateAction(
+            // eslint-disable-next-line no-underscore-dangle
+            notification._id,
+            btnType,
+            MessageActionStatusEnum.DONE,
+          );
+        }
+      }
+    };
+
     return (
       <NovuProvider
+        initialFetchingStrategy={{ fetchNotifications: true }}
         subscriberHash={user?.hashedSubscriberId}
         subscriberId={String(user?.id)}
         applicationIdentifier={'bPm7zbb5KQz7'}>
         <PopoverNotificationCenter
           colorScheme={'light'}
-          onNotificationClick={handlerOnNotificationClick}>
+          onNotificationClick={handleOnNotificationClick}
+          onActionClick={handleOnActionClick}>
           {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
         </PopoverNotificationCenter>
       </NovuProvider>

@@ -309,7 +309,7 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
 
 /**
  * associates user with the neighborhood in the db
- * throws error if userId or neighborhoodId invalid
+ * throws error if user is not found in db
  * throws error if user already associated with the neighborhood
  * @param userId
  * @param neighborhoodId
@@ -320,14 +320,14 @@ const connectUserToNeighborhood = async (userId: number, neighborhoodId: number)
     include: { neighborhoods: true },
   });
 
-  const usersNeighborhoodsIds: Array<number> = userWithNeighborhood.neighborhoods.map((n) => n.id);
+  const usersNeighborhoodsIds: Number[] = userWithNeighborhood.neighborhoods.map((n) => n.id);
 
   if (usersNeighborhoodsIds.includes(neighborhoodId)) {
-    const error = new Error('User already associated with Neighborhood');
+    const error = new Error('User is already associated with this neighborhood.');
     error.name = 'InvalidInputError';
     throw error;
   }
-
+  
   await prismaClient.neighborhood.update({
     where: { id: neighborhoodId },
     data: {

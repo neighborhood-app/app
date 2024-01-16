@@ -18,7 +18,7 @@ const neighborhoodsRouter = express.Router();
 neighborhoodsRouter.get(
   '/',
   middleware.userIdExtractorAndLoginValidator,
-  catchError(async (req: Request, res: Response, next) => {    
+  catchError(async (req: Request, res: Response, next) => {
     // Execute the next route if this was a search request
     if ('searchTerm' in req.query) return next();
 
@@ -139,23 +139,28 @@ neighborhoodsRouter.post(
   }),
 );
 
-// Should probably be `put` instead
 // Join a neighborhood
 neighborhoodsRouter.post(
-  '/:id/join',
+  '/:id/join/:userId',
   middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const loggedUserId = req.loggedUserId as number; // user should be extracted by the middleware
+    // The logged user should be the admin of the neighborhood NOT the user to join
+    const loggedUserId = req.loggedUserId as number;
     const neighborhoodId = Number(req.params.id);
+    const userId = Number(req.params.userId);
 
-    // Just checking for presence and type of param id,
-    // rest validation will be done by neighborhoodServices
-    if (!neighborhoodId || Number.isNaN(neighborhoodId)) {
-      return res.status(400).send({ error: 'Unable to parse URL' });
-    }
+    const isAdminOfNeighborhood = await neighborhoodServices.isUserAdminOfNeighborhood(
+      loggedUserId,
+      neighborhoodId,
+    );
 
-    await neighborhoodServices.connectUserToNeighborhood(loggedUserId, neighborhoodId);
-    return res.status(201).send({ success: 'You have joined the neighborhood' });
+    if (!isAdminOfNeighborhood)
+      return res.status(401).send({ error: 'You are not authorized to do this.' });
+
+    await neighborhoodServices.connectUserToNeighborhood(userId, neighborhoodId);
+
+    return res.status(201).send({ success: 'Yay! Your neighborhood is growing.' });
   }),
 );
 
