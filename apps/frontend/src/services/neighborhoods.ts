@@ -108,8 +108,7 @@ async function editNeighborhood(
 ): Promise<Response | { success: string } | { error: string }> {
   const user = getStoredUser();
   if (!user) return redirect('/login');
-
-  // eslint-disable-next-line no-param-reassign
+  
   neighborhoodData.location = neighborhoodData.location ? neighborhoodData.location : null
 
   const headers = { authorization: `Bearer ${user.token}` };

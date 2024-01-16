@@ -59,6 +59,7 @@ export default function NeighborhoodModalForm({
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
+    event.preventDefault();
 
     const data = {
       name: nameInput,
@@ -166,9 +167,6 @@ export default function NeighborhoodModalForm({
             <Form.Text className="text-muted">
               Fields marked with <span className={styles.asterisk}>*</span> are required.
             </Form.Text>
-          </Form.Group>
-          <Form.Group>
-            <Form.Control type="hidden" name="intent" value="edit-neighborhood" />
           </Form.Group>
           <Container className={styles.btnContainer} fluid>
             <Row className="gx-3 gy-2">

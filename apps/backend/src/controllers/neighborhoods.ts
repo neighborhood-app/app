@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { Prisma } from '@prisma/client';
 import catchError from '../utils/catchError';
 import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
@@ -12,6 +13,7 @@ import {
   NeighborhoodsPerPage,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
+
 
 const neighborhoodsRouter = express.Router();
 
@@ -103,9 +105,10 @@ neighborhoodsRouter.put(
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const neighborhoodID = Number(req.params.id);
-
     // LoginValidator ensures that loggedUserId is present
     const loggedUserID = req.loggedUserId as number;
+
+    console.log('triggered');
 
     const isUserAdminOfNeighborhood = await neighborhoodServices.isUserAdminOfNeighborhood(
       loggedUserID,
@@ -119,6 +122,8 @@ neighborhoodsRouter.put(
     const data = req.body;
     if (data.location) {
       data.location = JSON.parse(data.location);
+    } else {
+      data.location = Prisma.JsonNull;
     }
     const updatedNeighborhood: Neighborhood = await prismaClient.neighborhood.update({
       where: { id: +req.params.id },
