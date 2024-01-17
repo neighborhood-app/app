@@ -15,21 +15,20 @@ async function joinNeighborhood(neighborhoodId: number) {
   return response.data;
 }
 
-async function updateAction(notificationId: string, btnType: string, status: string) {
-  const user = getStoredUser();
-  const headers = { authorization: '' };
-  const data = { notificationId, btnType, status };
+// async function updateAction(notificationId: string, btnType: string, status: string) {
+//   const user = getStoredUser();
+//   const headers = { authorization: '' };
+//   const data = { notificationId, btnType, status };
 
-  if (user) headers.authorization = `Bearer ${user.token}`;
+//   if (user) headers.authorization = `Bearer ${user.token}`;
 
-  const response = await axios.post(`${BASE_URL}/mark-action-done`, data, {
-    headers,
-  });
+//   const response = await axios.post(`${BASE_URL}/mark-action-done`, data, {
+//     headers,
+//   });
 
-  return response.data;
-}
+//   return response.data;
+// }
 
 export default {
   joinNeighborhood,
-  updateAction,
 };

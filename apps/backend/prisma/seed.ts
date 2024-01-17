@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import prismaClient from '../prismaClient';
-import {createSubscriber} from '../src/utils/notifications';
+import {createSubscriber} from '../src/services/notificationServices';
 
 const SAMPLE_PASSWORD = 'secret';
 
@@ -108,7 +108,7 @@ async function main() {
 
   // Add users as notification subscribers
   users.forEach(async user => {
-    await createSubscriber(String(user.id), user.first_name || '', user.last_name || '')
+    await createSubscriber(String(user.id), user.username, user.first_name || '', user.last_name || '')
   })
 
   //---------------------------------------------------------

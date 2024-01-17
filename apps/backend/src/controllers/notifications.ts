@@ -2,8 +2,8 @@ import express, { Response } from 'express';
 // import { Novu } from '@novu/node';
 import catchError from '../utils/catchError';
 import middleware from '../utils/middleware';
-import { RequestWithAuthentication } from '../types';
-import { triggers, markActionDone } from '../services/notificationServices';
+import { JoinNeighborhoodArgs, RequestWithAuthentication } from '../types';
+import { triggers } from '../services/notificationServices';
 import neighborhoodServices from '../services/neighborhoodServices';
 
 // MOVE KEY TO .env file
@@ -18,28 +18,36 @@ notificationsRouter.post(
   middleware.userIdExtractorAndLoginValidator,
   middleware.validateURLParams,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const loggedUserId: number = req.loggedUserId as number;
     const { neighborhoodId } = req.params;
+    const { loggedUserId, username } = req;
 
     const neighborhood = await neighborhoodServices.getNeighborhoodDetailsForMembers(+neighborhoodId);
     const adminId = String(neighborhood.admin_id);
+    const neighborhoodName = neighborhood.name;
+    const args: JoinNeighborhoodArgs = {
+      adminId,
+      userId: String(loggedUserId),
+      neighborhoodId,
+      neighborhoodName,
+      username: username || ''
+    }
 
-    await triggers.joinNeighborhood(adminId, String(loggedUserId), neighborhoodId);
+    await triggers.joinNeighborhood(args);
     return res.status(201);
   }),
 );
 
-notificationsRouter.post(
-  '/mark-action-done',
-  middleware.userIdExtractorAndLoginValidator,
-  catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const loggedUserId: number = req.loggedUserId as number;
-    const { notificationId, btnType, status } = req.body;
+// notificationsRouter.post(
+//   '/mark-action-done',
+//   middleware.userIdExtractorAndLoginValidator,
+//   catchError(async (req: RequestWithAuthentication, res: Response) => {
+//     const loggedUserId: number = req.loggedUserId as number;
+//     const { notificationId, btnType, status } = req.body;
     
-    const resData = await markActionDone(loggedUserId, notificationId, status, btnType);
+//     const resData = await markActionDone(loggedUserId, notificationId, status, btnType);
 
-    return res.status(201).send(resData);
-  }),
-);
+//     return res.status(201).send(resData);
+//   }),
+// );
 
 export default notificationsRouter;

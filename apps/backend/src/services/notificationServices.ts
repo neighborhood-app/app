@@ -1,5 +1,6 @@
 import { Novu } from '@novu/node';
 import { createHmac } from 'crypto';
+import { JoinNeighborhoodArgs } from '../types';
 
 // MOVE KEY TO .env file
 const NOVU_API_KEY = '9cc0a07918a5743da4558428c33d6558';
@@ -11,11 +12,14 @@ const novu = new Novu(NOVU_API_KEY);
  * @param firstName
  * @param lastName
  */
-export async function createSubscriber(id: string, firstName: string, lastName: string) {
+export async function createSubscriber(id: string, username: string, firstName: string, lastName: string) {
   try {
     await novu.subscribers.identify(id, {
       firstName,
       lastName,
+      data: {
+        username,
+      }
     });
   } catch (error) {
     console.error(error);
@@ -41,74 +45,56 @@ export function hashSubscriberId(id: string) {
  * @param btnType - the type of the button (primary/secondary)
  * @returns 
  */
-export async function markActionDone(
-  subscriberId: number,
-  notificationId: string,
-  status: string,
-  btnType: string,
-) {
-  const options = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `ApiKey ${NOVU_API_KEY}` },
-    body: JSON.stringify({ payload: {}, status }),
-  };
+// export async function markActionDone(
+//   subscriberId: number,
+//   notificationId: string,
+//   status: string,
+//   btnType: string,
+// ) {
+//   const options = {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json', Authorization: `ApiKey ${NOVU_API_KEY}` },
+//     body: JSON.stringify({ payload: {}, status }),
+//   };
 
-  const res = await fetch(
-    `https://api.novu.co/v1/subscribers/${subscriberId}/messages/${notificationId}/actions/${btnType}`,
-    options,
-  )
-    .then((response) => response.json())
-    .then((data) => data)
-    .catch((error) => console.error('Error:', error));
+//   const res = await fetch(
+//     `https://api.novu.co/v1/subscribers/${subscriberId}/messages/${notificationId}/actions/${btnType}`,
+//     options,
+//   )
+//     .then((response) => response.json())
+//     .then((data) => data)
+//     .catch((error) => console.error('Error:', error));
   
-  console.log('res from marking as done', res.data.cta);
+//   console.log('res from marking as done', res.data.cta);
   
-  return res;
-}
-
-/**
- * Sends a notification to an admin when a user asks to join their neighborhood
- * @param adminId (string) - id of the neighborhood admin
- * @param subscriberId (string) - subscriberId of the user requesting to join
- * @param neighborhoodId (string) - the id of the neighborhood to join
- */
-// export async function triggerJoinNhood(adminId: string, subscriberId: string, neighborhoodId: string) {
-//   try {
-//     await novu.trigger('join-neighborhood', {
-//       to: {
-//         subscriberId: adminId,
-//       },
-//       payload: {
-//         description: `User ${subscriberId} wants to join neighborhood ${neighborhoodId}.`,
-//       },
-//     });
-//   } catch (error) {
-//     console.error(error);
-//   }
+//   return res;
 // }
 
 export const triggers = {
   /**
-   * Sends a notification to an admin when a user asks to join their neighborhood
+   * Sends a notification to an admin when a user asks to join their neighborhood.
+   * The function receives an object with the following props:
    * @param adminId (string) - id of the neighborhood admin
-   * @param subscriberId (string) - subscriberId of the user requesting to join
+   * @param userId (string) - subscriberId of the user requesting to join
    * @param neighborhoodId (string) - the id of the neighborhood to join
+   * @param neighborhoodName (string)
+   * @param username (string) - username of the user requesting to join
    */
-  async joinNeighborhood(adminId: string, subscriberId: string, neighborhoodId: string) {
+  async joinNeighborhood({ adminId, userId, neighborhoodId, neighborhoodName, username }: JoinNeighborhoodArgs) {
     try {
-      const res = await novu.trigger('join-neighborhood', {
+      await novu.trigger('join-neighborhood', {
         to: {
           subscriberId: adminId,
         },
         payload: {
-          description: `User ${subscriberId} wants to join neighborhood ${neighborhoodId}.`,
           neighborhoodId,
-          userId: subscriberId,
+          neighborhoodName,
+          username,
+          userId,
         },
       });
-      console.log(res.data);
     } catch (error) {
-      console.error(error);
+      console.error('Failed to trigger join-neighborhood notification', error);
     }
   },
 };

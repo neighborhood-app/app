@@ -32,7 +32,7 @@ loginRouter.post(
       id: userInDb.id,
       username: userInDb.username,
       token,
-      hashedSubscriberId
+      hashedSubscriberId,
     };
 
     return response.status(200).json(responseData);

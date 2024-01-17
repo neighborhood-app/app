@@ -96,6 +96,7 @@ export type CreateNeighborhoodData = Pick<Neighborhood, 'admin_id' | 'name' | 'd
 export interface RequestWithAuthentication extends APIRequest {
   token?: string;
   loggedUserId?: number;
+  username?: string;
 }
 
 const neighborhoodWithRelatedFields = schema.Prisma.validator<schema.Prisma.NeighborhoodArgs>()({
@@ -224,4 +225,15 @@ export interface NeighborhoodsPerPage {
   neighborhoods: Neighborhood[];
   newCursor?: number;
   hasNextPage: boolean;
+}
+
+/**
+ * Shape of data required to trigger a notification for joining a neighborhood
+ */
+export interface JoinNeighborhoodArgs {
+  adminId: string;
+  userId: string;
+  neighborhoodId: string;
+  neighborhoodName: string;
+  username: string;
 }

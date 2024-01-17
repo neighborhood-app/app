@@ -5,6 +5,7 @@ import neighborhoodService from '../../services/neighborhoods';
 import requestService from '../../services/requests';
 import {
   EditNeighborhoodData,
+  ErrorObj,
   NeighborhoodDetailsForMembers,
   NeighborhoodType,
   SingleNeighborhoodFormIntent,
@@ -30,7 +31,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   formData.delete('intent');
   // We should consider only returning success/error objects from all routes
   // where we don't need the new data
-  let response: Request | Response | { success: string } | { error: string } | null = null;
+  let response: Request | Response | { success: string } | ErrorObj | null = null;
 
   if (intent === 'create-request') {
     const requestData = Object.fromEntries(formData) as unknown as CreateRequestData;
@@ -38,7 +39,6 @@ export async function action({ params, request }: ActionFunctionArgs) {
     response = await requestService.createRequest(requestData);
   } else if (intent === 'join-neighborhood') {
     response = await notificationService.joinNeighborhood(neighborhoodId);
-    // response = await neighborhoodService.connectUserToNeighborhood(neighborhoodId);
   } else if (intent === 'leave-neighborhood') {
     response = await neighborhoodService.leaveNeighborhood(neighborhoodId);
   } else if (intent === 'edit-neighborhood') {
