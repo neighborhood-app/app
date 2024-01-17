@@ -37,7 +37,7 @@ export default function NeighborhoodModalForm({
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState<SearchResult[]>([]);
 
-  const locationDefaultValue = locationInput ? [locationInput] : null;
+  const locationDefaultValue = locationInput || null;
 
   const submit = useSubmit();
 
@@ -59,7 +59,6 @@ export default function NeighborhoodModalForm({
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
-    event.preventDefault();
 
     const data = {
       name: nameInput,
@@ -135,11 +134,13 @@ export default function NeighborhoodModalForm({
               onInputChange={(text, _event) => {
                 if (text === '') {
                   setLocationInput(null);
+                } else {
+                  setLocationInput(text);
+                  handleLocationSearch(text);
                 }
               }}
-              placeholder="Type in your neighborhood's address"
               // @ts-ignore
-              selected={locationDefaultValue}
+              defaultInputValue={locationDefaultValue ? locationDefaultValue.label : ''}
               isInvalid={!isValidAddress(locationInput) && formSubmitted}
               isValid={isValidAddress(locationInput)}
             />
