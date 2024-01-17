@@ -56,14 +56,14 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
  */
 const getNeighborhoods = async (currCursor?: number): Promise<NeighborhoodsPerPage> => {
   const NHOODS_PER_PAGE = 16; // might make sense to increase this number in production
-  let firstNhood: Neighborhood | null = null;
+  // let firstNhood: Neighborhood | null = null;
 
-  if (typeof currCursor !== 'number') {
-    firstNhood = await prismaClient.neighborhood.findFirst({});
-  }
+  // if (typeof currCursor !== 'number') {
+  //   firstNhood = await prismaClient.neighborhood.findFirst({});
+  // }
 
   const neighborhoods: Neighborhood[] = await prismaClient.neighborhood.findMany({
-    skip: 1,
+    skip: currCursor ? 1 : 0,
     take: NHOODS_PER_PAGE,
     cursor: currCursor
       ? {
@@ -72,7 +72,7 @@ const getNeighborhoods = async (currCursor?: number): Promise<NeighborhoodsPerPa
       : undefined,
   });
 
-  if (firstNhood) neighborhoods.unshift(firstNhood);
+  // if (firstNhood) neighborhoods.unshift(firstNhood);
 
   let newCursor: number | undefined = neighborhoods.slice(-1)[0]?.id;
   if (neighborhoods.length === 0) return { neighborhoods, newCursor, hasNextPage: false };
