@@ -17,8 +17,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 export default function ExplorePage() {
   const { neighborhoods, newCursor, hasNextPage } = useLoaderData() as NeighborhoodsPerPage;
-
-  console.log(neighborhoods);
   /*
   If checked, page will display the map view, if unchecked it will display the list view;
   Default is list view.
