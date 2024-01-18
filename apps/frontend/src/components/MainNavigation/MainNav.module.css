@@ -139,7 +139,7 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    padding: 1vh 5vw 0;
+    padding: 1vh 5vw 1vh;
     height: 100%;
   }
 
