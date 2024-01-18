@@ -5,6 +5,7 @@ import { Option } from 'react-bootstrap-typeahead/types/types';
 import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import { debounce } from 'ts-debounce';
 import styles from './NeighborhoodModalForm.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import { FormIntent } from '../../types';
@@ -89,6 +90,8 @@ export default function NeighborhoodModalForm({
     setIsLoading(false);
   };
 
+  const debouncedSearch = debounce(handleLocationSearch, 1000);
+
   return (
     <Modal show={show} onHide={closeModal} animation={true} backdrop="static" centered>
       <Modal.Header closeButton>
@@ -135,8 +138,7 @@ export default function NeighborhoodModalForm({
                 if (text === '') {
                   setLocationInput(null);
                 } else {
-                  setLocationInput(text);
-                  handleLocationSearch(text);
+                  debouncedSearch(text);
                 }
               }}
               // @ts-ignore
