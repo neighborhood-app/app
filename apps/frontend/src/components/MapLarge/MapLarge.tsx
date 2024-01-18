@@ -66,7 +66,7 @@ export default function MapBox() {
         className={styles.mapContainer}
         center={{ lat: 44.4265238, lng: 26.1022403 }}
         zoom={13}
-        scrollWheelZoom={false}
+        scrollWheelZoom={true}
         ref={setMap}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
