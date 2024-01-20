@@ -40,15 +40,15 @@ export default function Notifications() {
             // TODO: display error in some manner
           }
           console.log(error);
-        } finally {
-          updateAction({
-            // eslint-disable-next-line no-underscore-dangle
-            messageId: notification._id,
-            actionButtonType: btnType,
-            status: MessageActionStatusEnum.DONE,
-          });
         }
       }
+
+      updateAction({
+        // eslint-disable-next-line no-underscore-dangle
+        messageId: notification._id,
+        actionButtonType: btnType,
+        status: MessageActionStatusEnum.DONE,
+      });
     };
 
     return (
