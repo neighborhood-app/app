@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Nav, Navbar } from 'react-bootstrap';
-import { faBell, faCompass, faHouse, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faCompass, faHouse, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import styles from './MainNav.module.css';
 import { getStoredUser, deleteStoredUser } from '../../utils/auth';
 import UserCircle from '../UserCircle/UserCircle';
@@ -50,13 +50,7 @@ const MainNav = () => {
     </Link>
   );
 
-  const notificationsIconLink = (
-    <div className={styles.link} title="Notifications">
-      <FontAwesomeIcon
-        icon={faBell}
-        className={`${styles.navIcon} ${styles.bellIcon}`}></FontAwesomeIcon>
-    </div>
-  );
+  const notificationsIconLink = <Notifications className={styles.link}></Notifications>;
 
   const logoutIconLink = (
     <div className={styles.link} title="Log out">
@@ -73,7 +67,6 @@ const MainNav = () => {
 
   return (
     <>
-      <Notifications></Notifications>
       <Navbar className={styles.nav} expand="sm">
         {smallDisplay ? (
           <>

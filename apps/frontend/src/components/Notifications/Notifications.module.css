@@ -1,0 +1,28 @@
+.navIcon {
+  color: #ff4e2a;
+  font-size: 1.7rem;
+}
+
+.navIcon:hover {
+  color: #ff2b00;
+}
+
+.navIcon:active {
+  color: #e92700;
+}
+
+.bellIcon:hover {
+  animation: ring 0.2s;
+}
+
+@keyframes ring {
+  0% {
+    transform:rotate(0%)
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(-10deg);
+  }
+}

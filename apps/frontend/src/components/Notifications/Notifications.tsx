@@ -10,8 +10,10 @@ import {
 import { AxiosError } from 'axios';
 import neighborhoodServices from '../../services/neighborhoods';
 import { getStoredUser } from '../../utils/auth';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faBell } from '@fortawesome/free-solid-svg-icons';
 
-export default function Notifications() {
+export default function Notifications({ className }: { className: string }) {
   const user = getStoredUser();
 
   const CustomNotificationCenter = () => {
@@ -61,13 +63,39 @@ export default function Notifications() {
     );
   };
 
+  const styles = {
+    bellButton: {
+      root: {
+        svg: {
+          color: '#ff4e2a',
+          fill: '#ff4e2a',
+          minWidth: '32px',
+          minHeight: '32px',
+        },
+      },
+      dot: {
+        rect: {
+          fill: '#45f400', // or #f80000 or black
+          strokeWidth: '0',
+          width: '4px',
+          height: '4px',
+          x: 12,
+          y: 1,
+        },
+      },
+    },
+  };
+
   return (
-    <NovuProvider
-      subscriberHash={user?.hashedSubscriberId}
-      subscriberId={String(user?.id)}
-      // TODO: move to .env file
-      applicationIdentifier={'bPm7zbb5KQz7'}>
-      <CustomNotificationCenter></CustomNotificationCenter>
-    </NovuProvider>
+    <div className={className} title="Notifications">
+      <NovuProvider
+        subscriberHash={user?.hashedSubscriberId}
+        subscriberId={String(user?.id)}
+        // TODO: move to .env file
+        applicationIdentifier={'bPm7zbb5KQz7'}
+        styles={styles}>
+        <CustomNotificationCenter></CustomNotificationCenter>
+      </NovuProvider>
+    </div>
   );
 }
