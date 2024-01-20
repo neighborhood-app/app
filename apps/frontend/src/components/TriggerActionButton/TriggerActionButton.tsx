@@ -46,6 +46,11 @@ export default function TriggerActionButton({
   function handleAction(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (intent === 'join-neighborhood') {
+      const button = event.currentTarget.querySelector('button');
+      if (button) button.disabled = true;
+    }
+
     submit(event.currentTarget, {
       method: 'post',
       action: route,
