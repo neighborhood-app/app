@@ -662,27 +662,30 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
   });
 });
 
-describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', () => {
-  // We are testing to join the user Bob to Antonina's Neighborhood
+describe.only('Tests for user joining a neighborhood: POST /neighborhood/:id/join', () => {
   let token: string;
+  let userId: number;
 
   beforeAll(async () => {
     const loginResponse = await loginUser(BOBS_LOGIN_DATA);
     token = loginResponse.body.token;
+    userId = loginResponse.body.id;
   });
 
   beforeEach(async () => {
     await seed();
   });
 
-  test('able to join user to neighborhood with valid data', async () => {
-    // we are trying to join Bob to Antonina's neighborhood
+  test('Able to join user to neighborhood with valid data', async () => {
+    // We are trying to join Bob to Antonina's neighborhood
+    const adminLogin = await loginUser(ANTONINA_LOGIN_DATA);
+    const { token: adminToken } = adminLogin.body;
     const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
-    const numInitialUsers = initialUsers?.length as number; // We are passing a valid n_hood id
+    const numInitialUsers = initialUsers?.length as number; // We are passing a valid nHood id
 
     await api
-      .post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join`)
-      .set('Authorization', `Bearer ${token}`)
+      .post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join/${userId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
@@ -693,24 +696,38 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
     expect(finalUserNamesInDb).toContain(BOBS_LOGIN_DATA.username);
   });
 
-  test('when user not logged in, error occurs', async () => {
+  test('When user not logged in, error occurs, even if valid ID is provided in URL', async () => {
     const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
 
-    const joinResponse = await api.post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join`);
+    const joinResponse = await api.post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join/${userId}`);
 
     expect(joinResponse.status).toEqual(401);
 
     const finalUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
-
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 
-  test('when user logged in and invalid neighborhood ID, error occurs', async () => {
+  test('When user not logged in as admin, error occurs', async () => {
+    const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
+
+    const joinResponse = await api
+      .post(`/api/neighborhoods/${ANTONINAS_NHOOD_ID}/join/${userId}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(joinResponse.status).toEqual(401);
+
+    const finalUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
+    expect(finalUsers?.length).toBe(initialUsers?.length);
+  });
+
+  test('When invalid neighborhood ID is passed, error occurs', async () => {
+    const adminLogin = await loginUser(ANTONINA_LOGIN_DATA);
+    const { token: adminToken } = adminLogin.body;
     const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
 
     await api
-      .post('/api/neighborhoods/xyz/join')
-      .set('Authorization', `Bearer ${token}`)
+      .post(`/api/neighborhoods/xyz/join/${userId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
@@ -719,30 +736,32 @@ describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', (
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 
-  test('when user logged in and non-existend neighborhood ID, error occurs', async () => {
+  test('When non-existent neighborhood ID is passed, error occurs', async () => {
+    const adminLogin = await loginUser(ANTONINA_LOGIN_DATA);
+    const { token: adminToken } = adminLogin.body;
     const initialUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
+
     await api
-      .post(`/api/neighborhoods/${NONEXISTENT_NHOOD_ID}/join`)
-      .set('Authorization', `Bearer ${token}`)
-      .expect(400)
+      .post(`/api/neighborhoods/${NONEXISTENT_NHOOD_ID}/join/${userId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(404)
       .expect('Content-Type', /application\/json/);
 
     const finalUsers = await testHelpers.getNeighborhoodUsers(ANTONINAS_NHOOD_ID);
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 
-  test('when user logged in and user already added to the neighborhood, error occurs', async () => {
-    // we are trying to add Bob to Bob's neighborhood
+  test('When user logged in and user already added to the neighborhood, error occurs', async () => {
+    // We are trying to add Bob to Bob's neighborhood
     const initialUsers = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
 
     await api
-      .post(`/api/neighborhoods/${BOBS_NHOOD_ID}/join`)
+      .post(`/api/neighborhoods/${BOBS_NHOOD_ID}/join/${userId}`)
       .set('Authorization', `Bearer ${token}`)
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
     const finalUsers = await testHelpers.getNeighborhoodUsers(BOBS_NHOOD_ID);
-
     expect(finalUsers?.length).toBe(initialUsers?.length);
   });
 });

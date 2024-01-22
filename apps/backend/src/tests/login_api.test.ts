@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */ // Need to access response._body
 import app from '../app';
 import { CreateUserData, LoginData } from '../types';
+import main from './seed';
 import testHelpers from './testHelpers';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -24,6 +25,10 @@ beforeAll(async () => {
   await api
     .post('/api/users')
     .send(newUser);
+});
+
+afterAll(async () => {
+  await main();
 });
 
 describe('Tests for logging in the app: POST /login', () => {

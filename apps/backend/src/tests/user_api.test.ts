@@ -3,6 +3,7 @@ import app from '../app';
 import prismaClient from '../../prismaClient';
 import testHelpers from './testHelpers';
 import { CreateUserData, UserWithoutPasswordHash } from '../types';
+import main from './seed';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
@@ -13,12 +14,16 @@ beforeAll(async () => {
   await testHelpers.removeAllData();
 });
 
+afterAll(async () => {
+  await main();
+});
+
 describe('When there is initially no user in db', () => {
   beforeEach(async () => {
     await prismaClient.user.deleteMany({});
   });
 
-  test('Creating User succeeds with valid data', async () => {
+  test.only('Creating User succeeds with valid data', async () => {
     const newUser: CreateUserData = {
       username: 'johnsmith',
       email: 'johnsmith@example.com',
@@ -129,8 +134,10 @@ describe('When there is initially one user in db', () => {
     expect(response._body.error).toBe('A user with that username already exists.');
   });
 
-  test('Able to create user with different username and valid data', async () => {
+  test.only('Able to create user with different username and valid data', async () => {
     const usersBeforeTest = await testHelpers.usersInDb();
+    console.log(usersBeforeTest);
+    
     const newUser: CreateUserData = {
       username: 'drewneil',
       email: 'drewneil@gmail.com',
@@ -144,6 +151,9 @@ describe('When there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/);
 
     const body: UserWithoutPasswordHash = response._body;
+
+    console.log(body);
+    
     expect(body.username).toBe('drewneil');
     expect(body.email).toBe('drewneil@gmail.com');
 

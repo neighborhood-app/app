@@ -29,10 +29,7 @@ export async function createSubscriber(id: string, firstName: string, lastName: 
  * @returns the encrypter subscriber id
  */
 export function hashSubscriberId(id: string) {
-  const hmacHash = createHmac('sha256', NOVU_API_KEY).update(id).digest('hex');
-  console.log(hmacHash);
-
-  return hmacHash;
+  return createHmac('sha256', NOVU_API_KEY).update(id).digest('hex');
 }
 
 /**
