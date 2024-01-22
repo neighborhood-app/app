@@ -60,6 +60,7 @@ export default function NeighborhoodModalForm({
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
+    event.preventDefault();
 
     const data = {
       name: nameInput,
@@ -70,7 +71,6 @@ export default function NeighborhoodModalForm({
     setFormSubmitted(true);
 
     if (!form.checkValidity() || !validateInput() || !isValidAddress(locationInput)) {
-      event.preventDefault();
       event.stopPropagation();
     } else {
       submit(data, {

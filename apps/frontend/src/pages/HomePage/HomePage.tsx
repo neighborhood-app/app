@@ -30,7 +30,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (intent === 'create-neighborhood') {
     const neighborhoodData = Object.fromEntries(formData) as unknown as CreateNeighborhoodData;
-    response = await neighborhoodServices.createNeighborhood(neighborhoodData);
+    try {
+      response = await neighborhoodServices.createNeighborhood(neighborhoodData);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return response;

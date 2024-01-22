@@ -460,7 +460,6 @@ const removeUserFromNeighborhood = async (
  */
 const createNeighborhood = async (neighborhoodData: CreateNeighborhoodData): Promise<Neighborhood> => {
   const createNeighborhoodDataValid = await isCreateNeighborhoodDataValid(neighborhoodData);
-
   if (!createNeighborhoodDataValid) {
     const error = new Error('Invalid data for creating neighborhood');
     error.name = 'InvalidInputError';

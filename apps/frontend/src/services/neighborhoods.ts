@@ -74,7 +74,7 @@ async function createNeighborhood(
 
   const headers = { authorization: `Bearer ${user.token}` };
   const response = await axios.post(`${BASE_URL}`, neighborhoodData, { headers });
-
+  
   return response.data;
 }
 
