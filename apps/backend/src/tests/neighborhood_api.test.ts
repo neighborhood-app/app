@@ -662,7 +662,7 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
   });
 });
 
-describe.only('Tests for user joining a neighborhood: POST /neighborhood/:id/join', () => {
+describe('Tests for user joining a neighborhood: POST /neighborhood/:id/join', () => {
   let token: string;
   let userId: number;
 

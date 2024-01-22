@@ -33,7 +33,7 @@ usersRouter.post(
     const createUserData = await userServices.parseCreateUserData(req.body);
     const newUser: UserWithoutPasswordHash = await userServices.createUser(createUserData);
 
-    // create a new subscriber for notifications
+    // Create a new subscriber for notifications
     await createSubscriber(
       String(newUser.id),
       newUser.username,

@@ -2,7 +2,7 @@
 import app from '../app';
 import prismaClient from '../../prismaClient';
 import testHelpers from './testHelpers';
-import { CreateUserData, UserWithoutPasswordHash } from '../types';
+import { CreateUserData, User, UserWithoutPasswordHash } from '../types';
 import main from './seed';
 
 const supertest = require('supertest'); // eslint-disable-line
@@ -23,7 +23,7 @@ describe('When there is initially no user in db', () => {
     await prismaClient.user.deleteMany({});
   });
 
-  test.only('Creating User succeeds with valid data', async () => {
+  test('Creating user succeeds with valid data', async () => {
     const newUser: CreateUserData = {
       username: 'johnsmith',
       email: 'johnsmith@example.com',
@@ -35,7 +35,7 @@ describe('When there is initially no user in db', () => {
       .send(newUser)
       .expect(201)
       .expect('Content-Type', /application\/json/);
-
+    
     const body: UserWithoutPasswordHash = response._body;
     expect(body.username).toBe('johnsmith');
     expect(body.email).toBe('johnsmith@example.com');
@@ -43,7 +43,7 @@ describe('When there is initially no user in db', () => {
     const users = await testHelpers.usersInDb();
     expect(users).toHaveLength(1);
     expect(users[0].username).toBe('johnsmith');
-  });
+  }, 7000);
 
   test('Creating User fails with proper statuscode and message if username or password missing', async () => {
     const dataWithoutUsername = {
@@ -134,10 +134,8 @@ describe('When there is initially one user in db', () => {
     expect(response._body.error).toBe('A user with that username already exists.');
   });
 
-  test.only('Able to create user with different username and valid data', async () => {
-    const usersBeforeTest = await testHelpers.usersInDb();
-    console.log(usersBeforeTest);
-    
+  test('Able to create user with different username and valid data', async () => {
+    const usersBeforeTest: User[] = await testHelpers.usersInDb();    
     const newUser: CreateUserData = {
       username: 'drewneil',
       email: 'drewneil@gmail.com',
@@ -151,8 +149,6 @@ describe('When there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/);
 
     const body: UserWithoutPasswordHash = response._body;
-
-    console.log(body);
     
     expect(body.username).toBe('drewneil');
     expect(body.email).toBe('drewneil@gmail.com');
@@ -162,5 +158,5 @@ describe('When there is initially one user in db', () => {
 
     const usernames = usersAfterTest.map(user => user.username);
     expect(usernames).toContain('drewneil');
-  });
+  }, 7000);
 });

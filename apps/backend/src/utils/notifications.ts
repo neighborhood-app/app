@@ -39,7 +39,7 @@ export function hashSubscriberId(id: string) {
  */
 export async function triggerJoinNhood(id: string, neighborhoodId: string) {
   try {
-    const res = await novu.trigger('join-neighborhood', {
+    await novu.trigger('join-neighborhood', {
       to: {
         subscriberId: id,
       },
@@ -48,8 +48,6 @@ export async function triggerJoinNhood(id: string, neighborhoodId: string) {
         neighborhoodId,
       },
     });
-
-    console.log(res.data)
   } catch (error) {
     console.log(error)
   }
