@@ -1,20 +1,18 @@
 import { useState } from 'react';
-import { useLoaderData, useActionData, ActionFunctionArgs } from 'react-router';
+import { useLoaderData, ActionFunctionArgs } from 'react-router';
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Container, Row, Col } from 'react-bootstrap';
-import { AxiosError } from 'axios';
 import neighborhoodServices from '../../services/neighborhoods';
 
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
 import NeighborhoodModalForm from '../../components/NeighborhoodModalForm/NeighborhoodModalForm';
-import AlertBox from '../../components/AlertBox/AlertBox';
 import styles from './HomePage.module.css';
 import { getStoredUser } from '../../utils/auth';
 
 import userServices from '../../services/users';
 import Request from '../../components/Request/Request';
-import { CreateNeighborhoodData, ErrorObj } from '../../types';
+import { CreateNeighborhoodData } from '../../types';
 
 export async function loader() {
   const user = getStoredUser();
@@ -44,9 +42,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function HomePage() {
   const userData = useLoaderData() as unknown as UserWithRelatedData;
-  const error = useActionData() as AxiosError;
-
-  const errorResponse = error ? (error.response?.data as ErrorObj) : null;
 
   const { neighborhoods } = userData;
   const [show, setShow] = useState(false);
@@ -73,7 +68,6 @@ export default function HomePage() {
 
   return (
     <div className={styles.wrapper}>
-      {errorResponse && <AlertBox text={errorResponse.error} variant="danger"></AlertBox>}
       <section>
         <h2>My neighborhoods</h2>
         <Container className="p-0 mb-4 mt-4" fluid>
