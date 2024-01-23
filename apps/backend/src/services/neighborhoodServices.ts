@@ -16,23 +16,19 @@ import {
  * @param data
  * @returns Promise resolving to true if data is valid
  */
-const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Promise<boolean> => {
-  const MINIMUM_NAME_LENGTH = 4;
-  const neighborhoodName = data.name;
 
-  // we do not want to throw an error if neighborhood does not exist
-  // hence not using findUniqueOrThrow
+
+const isNeighborhoodDuplicate = async (neighborhoodName: string): Promise<boolean> => {
   const existingNeighborhood: Neighborhood | null = await prismaClient.neighborhood.findUnique({
     where: {
       name: neighborhoodName,
     },
   });
 
-  if (neighborhoodName.length < MINIMUM_NAME_LENGTH || existingNeighborhood) {
+  if (existingNeighborhood) {
+    return true;
+  } 
     return false;
-  }
-
-  return true;
 };
 
 // neighborhood services
@@ -459,9 +455,12 @@ const removeUserFromNeighborhood = async (
  * @returns newly created neighborhod
  */
 const createNeighborhood = async (neighborhoodData: CreateNeighborhoodData): Promise<Neighborhood> => {
-  const createNeighborhoodDataValid = await isCreateNeighborhoodDataValid(neighborhoodData);
-  if (!createNeighborhoodDataValid) {
-    const error = new Error('Invalid data for creating neighborhood');
+  if (await isNeighborhoodDuplicate(neighborhoodData.name)) {
+    const error = new Error('There is already a neighborhood with that name. Try something else!');
+    error.name = 'InvalidInputError';
+    throw error;
+  } else if (neighborhoodData.name.length < 4) {
+    const error = new Error('Neighborhood name must have at least 4 characters');
     error.name = 'InvalidInputError';
     throw error;
   } else {

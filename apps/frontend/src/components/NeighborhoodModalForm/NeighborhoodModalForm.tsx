@@ -44,8 +44,8 @@ export default function NeighborhoodModalForm({
 
   const closeModal = () => {
     handleClose();
-    setNameInput(name);
-    setTextAreaInput(description);
+    setNameInput('');
+    setTextAreaInput('');
   };
 
   const provider = new OpenStreetMapProvider();
