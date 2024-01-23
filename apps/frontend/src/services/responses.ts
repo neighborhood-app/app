@@ -13,6 +13,8 @@ async function createResponse(responseInput: ResponseData): Promise<Response | {
   }
 
   const response = await axios.post(baseURL, responseInput, { headers });
+  console.log(response);
+  
 
   return response.data;
 }

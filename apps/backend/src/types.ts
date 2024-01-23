@@ -237,3 +237,20 @@ export interface JoinNeighborhoodArgs {
   neighborhoodName: string;
   username: string;
 }
+
+/**
+ * Shape of a Novu subcriber 
+ */
+export interface Subscriber {
+  _id: string;
+  _organizationId: string;
+  _environmentId: string;
+  firstName: string;
+  lastName: string;
+  subscriberId: string;
+  channels: [];
+  deleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}

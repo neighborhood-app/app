@@ -1,6 +1,6 @@
 import { Novu } from '@novu/node';
 import { createHmac } from 'crypto';
-import { JoinNeighborhoodArgs } from '../types';
+import { JoinNeighborhoodArgs, Subscriber } from '../types';
 
 // MOVE KEY TO .env file
 const NOVU_API_KEY = '9cc0a07918a5743da4558428c33d6558';
@@ -12,16 +12,39 @@ const novu = new Novu(NOVU_API_KEY);
  * @param firstName
  * @param lastName
  */
-export async function createSubscriber(id: string, username: string, firstName: string, lastName: string) {
+export async function createSubscriber(
+  id: string,
+  username: string,
+  firstName: string,
+  lastName: string,
+) {
   try {
     await novu.subscribers.identify(id, {
       firstName,
       lastName,
       data: {
         username,
-      }
+      },
     });
   } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getAllSubscribers() {
+  const options = { method: 'GET', headers: { Authorization: `ApiKey ${NOVU_API_KEY}` } };
+  const subscribers: Subscriber[] = await fetch('https://api.novu.co/v1/subscribers', options)
+    .then((res) => res.json())
+    .then((res) => res.data)
+    .catch(console.error);
+
+  return subscribers;
+}
+
+export async function deleteSubscriber(subscriberId: string) {
+  try {
+    await novu.subscribers.delete(subscriberId);
+  } catch (error: unknown) {
     console.error(error);
   }
 }
@@ -38,12 +61,12 @@ export function hashSubscriberId(id: string) {
 }
 
 /**
- * 
+ *
  * @param subscriberId (number)
  * @param notificationId (string) - the id of the associated notification
  * @param status (string) - the status to set the action to
  * @param btnType - the type of the button (primary/secondary)
- * @returns 
+ * @returns
  */
 // export async function markActionDone(
 //   subscriberId: number,
@@ -64,9 +87,9 @@ export function hashSubscriberId(id: string) {
 //     .then((response) => response.json())
 //     .then((data) => data)
 //     .catch((error) => console.error('Error:', error));
-  
+
 //   console.log('res from marking as done', res.data.cta);
-  
+
 //   return res;
 // }
 
@@ -80,7 +103,13 @@ export const triggers = {
    * @param neighborhoodName (string)
    * @param username (string) - username of the user requesting to join
    */
-  async joinNeighborhood({ adminId, userId, neighborhoodId, neighborhoodName, username }: JoinNeighborhoodArgs) {
+  async joinNeighborhood({
+    adminId,
+    userId,
+    neighborhoodId,
+    neighborhoodName,
+    username,
+  }: JoinNeighborhoodArgs) {
     try {
       await novu.trigger('join-neighborhood', {
         to: {
@@ -93,8 +122,24 @@ export const triggers = {
           userId,
         },
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to trigger join-neighborhood notification', error);
+    }
+  },
+  async receiveResponse(subscriberId: string, requestId: string) {
+    try {
+      novu
+        .trigger('receive-response', {
+          to: {
+            subscriberId,
+          },
+          payload: {
+            requestId,
+          },
+        })
+        .then((res) => console.log(res.data));
+    } catch (error: unknown) {
+      console.error('Failed to trigger receive-response notification', error);
     }
   },
 };

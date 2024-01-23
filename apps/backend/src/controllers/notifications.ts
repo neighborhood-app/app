@@ -12,7 +12,7 @@ import neighborhoodServices from '../services/neighborhoodServices';
 
 const notificationsRouter = express.Router();
 
-// Create notification request to join a neighborhood
+// User requested to join a neighborhood
 notificationsRouter.post(
   '/join-neighborhood/:neighborhoodId',
   middleware.userIdExtractorAndLoginValidator,
@@ -33,6 +33,20 @@ notificationsRouter.post(
     }
 
     await triggers.joinNeighborhood(args);
+    return res.status(201);
+  }),
+);
+
+// User received a response to their request
+notificationsRouter.post(
+  '/receive-response/:requestId',
+  middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const { requestId } = req.params;
+    const { loggedUserId } = req;
+
+    await triggers.receiveResponse(String(loggedUserId), requestId);
     return res.status(201);
   }),
 );

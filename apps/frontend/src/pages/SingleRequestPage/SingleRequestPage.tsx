@@ -4,6 +4,7 @@ import { redirect } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import responseServices from '../../services/responses';
 import requestServices from '../../services/requests';
+import notificationServices from '../../services/notifications';
 import RequestDescBox from '../../components/RequestDescBox/RequestDescBox';
 import { EditRequestData, FullRequestData, SingleRequestFormIntent } from '../../types';
 import ResponsesGrid from '../../components/ResponsesGrid/ResponsesGrid';
@@ -41,6 +42,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
       const responseData = Object.fromEntries(formData) as unknown as ResponseData;
       responseData.request_id = Number(responseData.request_id);
       response = await responseServices.createResponse(responseData);
+      await notificationServices.receiveResponse(requestId);
       break;
     }
     case 'edit-response': {

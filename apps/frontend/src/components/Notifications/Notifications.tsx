@@ -10,8 +10,6 @@ import {
 import { AxiosError } from 'axios';
 import neighborhoodServices from '../../services/neighborhoods';
 import { getStoredUser } from '../../utils/auth';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faBell } from '@fortawesome/free-solid-svg-icons';
 
 export default function Notifications({ className }: { className: string }) {
   const user = getStoredUser();

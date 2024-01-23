@@ -15,6 +15,19 @@ async function joinNeighborhood(neighborhoodId: number) {
   return response.data;
 }
 
+async function receiveResponse(requestId: number) {
+  const user = getStoredUser();
+  const headers = { authorization: '' };
+
+  if (user) headers.authorization = `Bearer ${user.token}`;
+
+  const response = await axios.post(`${BASE_URL}/receive-response/${requestId}`, null, {
+    headers,
+  });
+
+  return response.data;
+}
+
 // async function updateAction(notificationId: string, btnType: string, status: string) {
 //   const user = getStoredUser();
 //   const headers = { authorization: '' };
@@ -31,4 +44,5 @@ async function joinNeighborhood(neighborhoodId: number) {
 
 export default {
   joinNeighborhood,
+  receiveResponse,
 };

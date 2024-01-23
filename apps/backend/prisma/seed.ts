@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import prismaClient from '../prismaClient';
-import {createSubscriber} from '../src/services/notificationServices';
+import {createSubscriber, deleteSubscriber, getAllSubscribers} from '../src/services/notificationServices';
 
 const SAMPLE_PASSWORD = 'secret';
 
@@ -106,10 +106,23 @@ async function main() {
   const users = [bob, radu, shwetank, antonina, maria, mike, leia];
   //---------------------------------------------------------
 
+  // Delete all existing subscribers
+  const subscribers = await getAllSubscribers();
+  const deletePromises: Promise<void>[] = [];
+
+  subscribers.forEach(async subscriber => {
+    deletePromises.push(deleteSubscriber(subscriber.subscriberId));
+  });
+
+  await Promise.all(deletePromises);
+
   // Add users as notification subscribers
+  const addSubscriberPromises: Promise<void>[] = [];
   users.forEach(async user => {
-    await createSubscriber(String(user.id), user.username, user.first_name || '', user.last_name || '')
-  })
+    addSubscriberPromises.push(createSubscriber(String(user.id), user.username, user.first_name || '', user.last_name || ''));
+  });
+
+  await Promise.all(addSubscriberPromises)
 
   //---------------------------------------------------------
   // Bob's Neighborhood
