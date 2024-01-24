@@ -16,16 +16,17 @@ async function joinNeighborhood(neighborhoodId: number) {
 }
 
 async function receiveResponse(requestId: number) {
-  const user = getStoredUser();
-  const headers = { authorization: '' };
+  try {
+    const user = getStoredUser();
+    const headers = { authorization: '' };
 
-  if (user) headers.authorization = `Bearer ${user.token}`;
-
-  const response = await axios.post(`${BASE_URL}/receive-response/${requestId}`, null, {
-    headers,
-  });
-
-  return response.data;
+    if (user) headers.authorization = `Bearer ${user.token}`;
+    await axios.post(`${BASE_URL}/receive-response/${requestId}`, null, {
+      headers,
+    });
+  } catch (error: unknown) {
+    console.error(error);
+  }
 }
 
 // async function updateAction(notificationId: string, btnType: string, status: string) {

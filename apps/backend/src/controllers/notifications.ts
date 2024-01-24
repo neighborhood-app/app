@@ -46,7 +46,7 @@ notificationsRouter.post(
     const { requestId } = req.params;
     const { loggedUserId } = req;
 
-    await triggers.receiveResponse(String(loggedUserId), requestId);
+    await triggers.receiveResponse(requestId, String(loggedUserId));
     return res.status(201);
   }),
 );

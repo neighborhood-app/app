@@ -1,6 +1,7 @@
 import { Novu } from '@novu/node';
 import { createHmac } from 'crypto';
-import { JoinNeighborhoodArgs, Subscriber } from '../types';
+import { JoinNeighborhoodArgs, Request, Subscriber } from '../types';
+import requestServices from './requestServices';
 
 // MOVE KEY TO .env file
 const NOVU_API_KEY = '9cc0a07918a5743da4558428c33d6558';
@@ -31,16 +32,42 @@ export async function createSubscriber(
   }
 }
 
+/**
+ * Retrieves a single subcriber by id.
+ * @param subscriberId (string) - the id of the subscriber to retrieve
+ * @returns the subcriber object or a custom error object if an error occurs
+ */
+export async function getSubscriber(subscriberId: string) {
+  try {
+    const response = await novu.subscribers.get(subscriberId);
+    return response.data;
+  } catch (error: unknown) {
+    console.error(`Could not retrieve subscriber with id ${subscriberId}`, error);
+    return { error: `Could not retrieve subscriber with id ${subscriberId}` };
+  }
+}
+
+/**
+ * Retrieves all subscribers.
+ * @returns all subcribers or a custom error object if an error occurs
+ */
 export async function getAllSubscribers() {
   const options = { method: 'GET', headers: { Authorization: `ApiKey ${NOVU_API_KEY}` } };
   const subscribers: Subscriber[] = await fetch('https://api.novu.co/v1/subscribers', options)
     .then((res) => res.json())
     .then((res) => res.data)
-    .catch(console.error);
+    .catch((error) => {
+      console.error('Could not retrieve subscribers.', error);
+      return { error: 'Could not retrieve subscribers.' };
+    });
 
   return subscribers;
 }
 
+/**
+ * Deletes a single subcriber by id.
+ * @param subscriberId (string) - the id of the subscriber to delete
+ */
 export async function deleteSubscriber(subscriberId: string) {
   try {
     await novu.subscribers.delete(subscriberId);
@@ -126,18 +153,25 @@ export const triggers = {
       console.error('Failed to trigger join-neighborhood notification', error);
     }
   },
-  async receiveResponse(subscriberId: string, requestId: string) {
+  /**
+   * Sends a notification to the requester when a user responds to them.
+   * @param requestId (string) - id of the request the user received a repsonse for
+   * @param subscriberId (string) - the subscriber id of the user who responded
+   */
+  async receiveResponse(requestId: string, subscriberId: string) {
     try {
-      novu
-        .trigger('receive-response', {
-          to: {
-            subscriberId,
-          },
-          payload: {
-            requestId,
-          },
-        })
-        .then((res) => console.log(res.data));
+      const request: Request = await requestServices.getRequestById(+requestId);
+      const reqAuthorId = String(request.user_id);
+
+      await novu.trigger('receive-response', {
+        to: {
+          subscriberId: reqAuthorId,
+        },
+        actor: { subscriberId },
+        payload: {
+          requestId,
+        },
+      });
     } catch (error: unknown) {
       console.error('Failed to trigger receive-response notification', error);
     }
