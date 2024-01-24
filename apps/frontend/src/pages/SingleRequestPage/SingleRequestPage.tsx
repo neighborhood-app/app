@@ -41,8 +41,9 @@ export async function action({ params, request }: ActionFunctionArgs) {
     case 'create-response': {
       const responseData = Object.fromEntries(formData) as unknown as ResponseData;
       responseData.request_id = Number(responseData.request_id);
+
       response = await responseServices.createResponse(responseData);
-      await notificationServices.receiveResponse(requestId);
+      notificationServices.receiveResponse(requestId);
       break;
     }
     case 'edit-response': {
@@ -66,6 +67,8 @@ export async function action({ params, request }: ActionFunctionArgs) {
     }
   }
 
+  console.log('out here', { response });
+  
   return response;
 }
 
