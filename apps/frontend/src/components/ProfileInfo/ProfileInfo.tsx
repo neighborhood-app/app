@@ -1,6 +1,6 @@
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Col, Row } from 'react-bootstrap';
-import extractDate from '../../utils/utilityFunctions';
+import { extractDate } from '../../utils/utilityFunctions';
 import styles from './ProfileInfo.module.css';
 
 type Props = {

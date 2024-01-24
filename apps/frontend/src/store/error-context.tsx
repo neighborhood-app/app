@@ -1,7 +1,12 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
 type ErrorSetter = (errorMsg: string) => void;
 
 const ErrorContext = createContext<ErrorSetter | undefined>(undefined);
 
-export default ErrorContext;
+const useErrorContext = () => {
+  const context = useContext(ErrorContext);
+  return context;
+};
+
+export { ErrorContext, useErrorContext };

@@ -1,16 +1,16 @@
 import { Modal, Form, Container, Row, Col } from 'react-bootstrap';
-import { AxiosError } from 'axios';
-import { useSubmit, useActionData } from 'react-router-dom';
+import { useSubmit } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
 import { Option } from 'react-bootstrap-typeahead/types/types';
 import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { debounce } from 'ts-debounce';
-import AlertBox from '../AlertBox/AlertBox';
+import { useErrorContext } from '../../store/error-context';
 import styles from './NeighborhoodModalForm.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
-import { FormIntent, ErrorObj } from '../../types';
+import { FormIntent } from '../../types';
+import { getStatusCodeError } from '../../utils/utilityFunctions';
 
 interface Props {
   show: boolean;
@@ -39,10 +39,9 @@ export default function NeighborhoodModalForm({
   const [textAreaInput, setTextAreaInput] = useState(description);
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState<SearchResult[]>([]);
+  const [statusError, setStatusError] = useState(getStatusCodeError());
 
-  const error = useActionData() as AxiosError;
-
-  const errorResponse = error ? (error.response?.data as ErrorObj) : null;
+  const displayError = useErrorContext();
 
   const locationDefaultValue = locationInput || null;
 
@@ -84,8 +83,15 @@ export default function NeighborhoodModalForm({
         encType: 'application/x-www-form-urlencoded',
         action,
       });
-      handleClose();
-      setFormSubmitted(false);
+      if (statusError) {
+        // @ts-ignore
+        displayError(statusError.error);
+        setStatusError(null);
+        setFormSubmitted(false);
+      } else {
+        closeModal();
+        setFormSubmitted(true);
+      }
     }
   };
 
@@ -100,7 +106,6 @@ export default function NeighborhoodModalForm({
 
   return (
     <Modal show={show} onHide={closeModal} animation={true} backdrop="static" centered>
-      {errorResponse && <AlertBox text={errorResponse.error} variant="danger"></AlertBox>}
       <Modal.Header closeButton>
         <Modal.Title>
           {intent === 'edit-neighborhood' ? 'Edit Neighborhood' : 'Create Neighborhood'}

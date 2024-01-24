@@ -3,7 +3,7 @@ import { Col, Row, Form } from 'react-bootstrap';
 import { useState, FormEvent } from 'react';
 import { useSubmit } from 'react-router-dom';
 import CustomBtn from '../CustomBtn/CustomBtn';
-import extractDate from '../../utils/utilityFunctions';
+import { extractDate } from '../../utils/utilityFunctions';
 import styles from './EditProfile.module.css';
 
 type Props = {

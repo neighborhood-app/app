@@ -23,6 +23,7 @@
   margin-right: auto;
   text-align: center;
   width: fit-content;
+  z-index: 1800;
 }
 
 @media (max-width: 576px) {
