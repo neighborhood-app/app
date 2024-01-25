@@ -14,18 +14,6 @@
   z-index: 1600;
 }
 
-.alert {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 4vh;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  width: fit-content;
-  z-index: 1800;
-}
-
 @media (max-width: 576px) {
   .column {
     min-height: 0;

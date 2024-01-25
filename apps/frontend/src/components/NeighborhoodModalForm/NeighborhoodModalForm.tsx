@@ -6,11 +6,9 @@ import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import { debounce } from 'ts-debounce';
-import { useErrorContext } from '../../store/error-context';
 import styles from './NeighborhoodModalForm.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import { FormIntent } from '../../types';
-import { getStatusCodeError } from '../../utils/utilityFunctions';
 
 interface Props {
   show: boolean;
@@ -39,9 +37,6 @@ export default function NeighborhoodModalForm({
   const [textAreaInput, setTextAreaInput] = useState(description);
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState<SearchResult[]>([]);
-  const [statusError, setStatusError] = useState(getStatusCodeError());
-
-  const displayError = useErrorContext();
 
   const locationDefaultValue = locationInput || null;
 
@@ -83,15 +78,8 @@ export default function NeighborhoodModalForm({
         encType: 'application/x-www-form-urlencoded',
         action,
       });
-      if (statusError) {
-        // @ts-ignore
-        displayError(statusError.error);
-        setStatusError(null);
-        setFormSubmitted(false);
-      } else {
-        closeModal();
-        setFormSubmitted(true);
-      }
+      handleClose();
+      setFormSubmitted(false);
     }
   };
 
