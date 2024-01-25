@@ -31,7 +31,6 @@ export default function NeighborhoodModalForm({
 }: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
 
-  const [formSubmitted, setFormSubmitted] = useState(false);
   const [nameInput, setNameInput] = useState(name);
   const [locationInput, setLocationInput] = useState<Option | null>(location);
   const [textAreaInput, setTextAreaInput] = useState(description);
@@ -44,8 +43,8 @@ export default function NeighborhoodModalForm({
 
   const closeModal = () => {
     handleClose();
-    setNameInput('');
-    setTextAreaInput('');
+    setNameInput(name);
+    setTextAreaInput(description);
   };
 
   const provider = new OpenStreetMapProvider();
@@ -68,7 +67,6 @@ export default function NeighborhoodModalForm({
       description: textAreaInput,
       intent,
     };
-    setFormSubmitted(true);
 
     if (!form.checkValidity() || !validateInput() || !isValidAddress(locationInput)) {
       event.stopPropagation();
@@ -79,7 +77,6 @@ export default function NeighborhoodModalForm({
         action,
       });
       handleClose();
-      setFormSubmitted(false);
     }
   };
 
@@ -111,11 +108,10 @@ export default function NeighborhoodModalForm({
               value={nameInput}
               minLength={4}
               maxLength={30}
-              isInvalid={!validInputPattern.test(nameInput) && formSubmitted}
+              isInvalid={!validInputPattern.test(nameInput)}
               isValid={validInputPattern.test(nameInput)}
               onChange={(event) => {
                 setNameInput(event?.target.value);
-                setFormSubmitted(false);
               }}
               required
             />
@@ -138,12 +134,13 @@ export default function NeighborhoodModalForm({
                 if (text === '') {
                   setLocationInput(null);
                 } else {
+                  setLocationInput(text);
                   debouncedSearch(text);
                 }
               }}
               // @ts-ignore
               defaultInputValue={locationDefaultValue ? locationDefaultValue.label : ''}
-              isInvalid={!isValidAddress(locationInput) && formSubmitted}
+              isInvalid={!isValidAddress(locationInput)}
               isValid={isValidAddress(locationInput)}
             />
             <Form.Control.Feedback type="invalid">
@@ -159,7 +156,6 @@ export default function NeighborhoodModalForm({
               value={textAreaInput}
               onChange={(event) => {
                 setTextAreaInput(event?.target.value);
-                setFormSubmitted(false);
               }}
             />
             <Form.Control.Feedback type="invalid">
