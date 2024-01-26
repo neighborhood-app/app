@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLoaderData, useActionData, ActionFunctionArgs } from 'react-router';
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -44,15 +44,24 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function HomePage() {
   const userData = useLoaderData() as unknown as UserWithRelatedData;
-  const error = useActionData() as AxiosError;
-
-  const errorResponse = error ? (error.response?.data as ErrorObj) : null;
+  const errorObj = useActionData() as AxiosError;
 
   const { neighborhoods } = userData;
-  const [show, setShow] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [error, setError] = useState<ErrorObj | null>(null);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  useEffect(() => {
+    if (errorObj) {
+      setError(errorObj.response?.data as ErrorObj);
+      setTimeout(() => {
+        setError(null);
+      }, 5000);
+    }
+  }, [errorObj]);
+
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
 
   const activeRequests = userData.requests.filter((request) => request.status === 'OPEN');
   const neighborhoodCards =
@@ -73,7 +82,7 @@ export default function HomePage() {
 
   return (
     <div className={styles.wrapper}>
-      {errorResponse && <AlertBox text={errorResponse.error} variant="danger"></AlertBox>}
+      {error && <AlertBox text={error.error} variant="danger"></AlertBox>}
       <section>
         <h2>My neighborhoods</h2>
         <Container className="p-0 mb-4 mt-4" fluid>
@@ -116,7 +125,7 @@ export default function HomePage() {
         </Container>
       </section>
       <NeighborhoodModalForm
-        show={show}
+        show={showModal}
         handleClose={handleClose}
         intent="create-neighborhood"
         action="/"
