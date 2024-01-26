@@ -76,7 +76,7 @@ export default function NeighborhoodModalForm({
         encType: 'application/x-www-form-urlencoded',
         action,
       });
-      handleClose();
+      closeModal();
     }
   };
 

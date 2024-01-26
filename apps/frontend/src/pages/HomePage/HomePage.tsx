@@ -48,7 +48,6 @@ export default function HomePage() {
 
   const { neighborhoods } = userData;
   const [showModal, setShowModal] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<ErrorObj | null>(null);
 
   useEffect(() => {
