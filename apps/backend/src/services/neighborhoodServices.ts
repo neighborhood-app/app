@@ -482,22 +482,23 @@ const createNeighborhood = async (neighborhoodData: CreateNeighborhoodData): Pro
 
 // @ts-ignore
 const editNeighborhood = async (id: number, neighborhoodData): Promise<Neighborhood> => {
-  if (await isNeighborhoodDuplicate(neighborhoodData.name, id)) {
-    const error = new Error('There is already a neighborhood with that name. Try something else!');
-    error.name = 'InvalidInputError';
-    throw error;
-  } else if (neighborhoodData.name.length < 4) {
-    const error = new Error('Neighborhood name must have at least 4 characters');
-    error.name = 'InvalidInputError';
-    throw error;
-  } else {
+  if (neighborhoodData.name) {
+    if (await isNeighborhoodDuplicate(neighborhoodData.name, id)) {
+      const error = new Error('There is already a neighborhood with that name. Try something else!');
+      error.name = 'InvalidInputError';
+      throw error;
+    } else if (neighborhoodData.name.length < 4) {
+      const error = new Error('Neighborhood name must have at least 4 characters');
+      error.name = 'InvalidInputError';
+      throw error;
+  }
+}
     const updatedNeighborhood: Neighborhood = await prismaClient.neighborhood.update({
       where: { id },
       data: neighborhoodData,
     });
 
     return updatedNeighborhood;
-  }
 };
 
 export default {
