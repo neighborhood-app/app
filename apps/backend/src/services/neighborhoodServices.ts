@@ -17,19 +17,27 @@ import {
  * @returns Promise resolving to true if data is valid
  */
 
-
-const isNeighborhoodDuplicate = async (neighborhoodName: string): Promise<boolean> => {
+/**
+ * Checks if the neighborhood is a duplicate based on name and an optional argument 'id'
+ * If 'id' is given, it will also check if the duplicate neigbhorhood has the same id as the one provided - 
+ * in which case it doesn't count as a duplicate neighborhood.
+ * @param neighborhoodName 
+ * @param id 
+ * @returns boolean
+ */
+const isNeighborhoodDuplicate = async (neighborhoodName: string, id: number | null = null): Promise<boolean> => {
   const existingNeighborhood: Neighborhood | null = await prismaClient.neighborhood.findUnique({
     where: {
       name: neighborhoodName,
     },
   });
-
-  if (existingNeighborhood) {
-    return true;
+  
+  if (id && existingNeighborhood) {
+    return !(existingNeighborhood.id === id)
   } 
-    return false;
-};
+
+  return !!existingNeighborhood;
+}
 
 // neighborhood services
 
@@ -474,7 +482,7 @@ const createNeighborhood = async (neighborhoodData: CreateNeighborhoodData): Pro
 
 // @ts-ignore
 const editNeighborhood = async (id: number, neighborhoodData): Promise<Neighborhood> => {
-  if (await isNeighborhoodDuplicate(neighborhoodData.name)) {
+  if (await isNeighborhoodDuplicate(neighborhoodData.name, id)) {
     const error = new Error('There is already a neighborhood with that name. Try something else!');
     error.name = 'InvalidInputError';
     throw error;
