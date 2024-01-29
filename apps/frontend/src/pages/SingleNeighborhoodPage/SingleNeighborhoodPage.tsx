@@ -1,4 +1,10 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData, useParams, useActionData } from 'react-router';
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  useLoaderData,
+  useParams,
+  useActionData,
+} from 'react-router';
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
@@ -16,7 +22,7 @@ import {
   SingleNeighborhoodFormIntent,
   UserRole,
   FormIntent,
-  ErrorObj
+  ErrorObj,
 } from '../../types';
 import styles from './SingleNeighborhoodPage.module.css';
 import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
@@ -57,7 +63,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
     const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
     try {
       response = await neighborhoodsService.editNeighborhood(neighborhoodId, neighborhoodData);
-    } catch(error) {
+    } catch (error) {
       return error;
     }
   } else if (intent === 'delete-neighborhood') {
@@ -92,7 +98,6 @@ export default function SingleNeighborhood() {
   });
 
   const errorObj = useActionData() as AxiosError;
-  console.log(errorObj);
 
   const [error, setError] = useState<ErrorObj | null>(null);
 
@@ -150,7 +155,7 @@ export default function SingleNeighborhood() {
 
   return (
     <Container className={styles.wrapper} fluid>
-    {error && <AlertBox text={error.error} variant="danger"></AlertBox>}
+      {error && <AlertBox text={error.error} variant="danger"></AlertBox>}
       <Prompt
         text={promptDetails.text}
         intent={promptDetails.intent}

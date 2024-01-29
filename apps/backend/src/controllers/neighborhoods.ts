@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
 import catchError from '../utils/catchError';
-import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import {
   Neighborhood,
@@ -123,15 +122,7 @@ neighborhoodsRouter.put(
     } else {
       data.location = Prisma.JsonNull;
     }
-    let updatedNeighborhood: Neighborhood;
-    try{
-      updatedNeighborhood = await prismaClient.neighborhood.update({
-        where: { id: +req.params.id },
-        data,
-      });
-    } catch(e) {
-      return res.status(400).send(e);
-    } 
+      const updatedNeighborhood = await neighborhoodServices.editNeighborhood(neighborhoodID, data);
     return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
   }),
 );
