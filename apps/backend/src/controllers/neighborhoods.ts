@@ -108,8 +108,6 @@ neighborhoodsRouter.put(
     // LoginValidator ensures that loggedUserId is present
     const loggedUserID = req.loggedUserId as number;
 
-    console.log('triggered');
-
     const isUserAdminOfNeighborhood = await neighborhoodServices.isUserAdminOfNeighborhood(
       loggedUserID,
       neighborhoodID,
@@ -125,10 +123,15 @@ neighborhoodsRouter.put(
     } else {
       data.location = Prisma.JsonNull;
     }
-    const updatedNeighborhood: Neighborhood = await prismaClient.neighborhood.update({
-      where: { id: +req.params.id },
-      data,
-    });
+    let updatedNeighborhood: Neighborhood;
+    try{
+      updatedNeighborhood = await prismaClient.neighborhood.update({
+        where: { id: +req.params.id },
+        data,
+      });
+    } catch(e) {
+      return res.status(400).send(e);
+    } 
     return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
   }),
 );

@@ -1,12 +1,14 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData, useParams } from 'react-router';
-import { useState } from 'react';
+import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData, useParams, useActionData } from 'react-router';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
+import { AxiosError } from 'axios';
 import neighborhoodsService from '../../services/neighborhoods';
 import requestServices from '../../services/requests';
+
 import {
   EditNeighborhoodData,
   NeighborhoodDetailsForMembers,
@@ -14,6 +16,7 @@ import {
   SingleNeighborhoodFormIntent,
   UserRole,
   FormIntent,
+  ErrorObj
 } from '../../types';
 import styles from './SingleNeighborhoodPage.module.css';
 import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
@@ -21,6 +24,7 @@ import RequestBox from '../../components/RequestBox/RequestBox';
 import Prompt from '../../components/Prompt/Prompt';
 import MapBox from '../../components/MapBox/MapBox';
 import UserCircleStack from '../../components/UserCircleStack/UserCircleStack';
+import AlertBox from '../../components/AlertBox/AlertBox';
 
 import { getStoredUser } from '../../utils/auth';
 
@@ -51,7 +55,11 @@ export async function action({ params, request }: ActionFunctionArgs) {
     response = await neighborhoodsService.leaveNeighborhood(neighborhoodId);
   } else if (intent === 'edit-neighborhood') {
     const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
-    response = await neighborhoodsService.editNeighborhood(neighborhoodId, neighborhoodData);
+    try {
+      response = await neighborhoodsService.editNeighborhood(neighborhoodId, neighborhoodData);
+    } catch(error) {
+      return error;
+    }
   } else if (intent === 'delete-neighborhood') {
     response = await neighborhoodsService.deleteNeighborhood(neighborhoodId);
   }
@@ -69,7 +77,6 @@ export default function SingleNeighborhood() {
   }
 
   const mql = window.matchMedia('(max-width: 768px)');
-
   const [smallDisplay, setSmallDisplay] = useState(mql.matches);
 
   mql.addEventListener('change', () => {
@@ -78,19 +85,25 @@ export default function SingleNeighborhood() {
 
   const { id: neighborhoodId } = useParams();
 
-  // const mql = window.matchMedia('(max-width: 800px)');
-
-  // const [smallDisplay, setSmallDisplay] = useState(mql.matches);
-
   const [promptDetails, setPromptDetails] = useState<PromptDetails>({
     show: false,
     text: '',
     intent: 'leave-neighborhood',
   });
 
-  // mql.addEventListener('change', () => {
-  //   setSmallDisplay(mql.matches);
-  // });
+  const errorObj = useActionData() as AxiosError;
+  console.log(errorObj);
+
+  const [error, setError] = useState<ErrorObj | null>(null);
+
+  useEffect(() => {
+    if (errorObj) {
+      setError(errorObj.response?.data as ErrorObj);
+      setTimeout(() => {
+        setError(null);
+      }, 5000);
+    }
+  }, [errorObj]);
 
   function handleClosePrompt() {
     setPromptDetails((previousState) => ({ ...previousState, show: false }));
@@ -137,6 +150,7 @@ export default function SingleNeighborhood() {
 
   return (
     <Container className={styles.wrapper} fluid>
+    {error && <AlertBox text={error.error} variant="danger"></AlertBox>}
       <Prompt
         text={promptDetails.text}
         intent={promptDetails.intent}
