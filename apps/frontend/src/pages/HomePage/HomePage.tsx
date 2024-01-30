@@ -1,18 +1,20 @@
-import { useState } from 'react';
-import { useLoaderData, ActionFunctionArgs } from 'react-router';
+import { useState, useEffect } from 'react';
+import { useLoaderData, useActionData, ActionFunctionArgs } from 'react-router';
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Container, Row, Col } from 'react-bootstrap';
+import { AxiosError } from 'axios';
 import neighborhoodServices from '../../services/neighborhoods';
 
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import NeighborhoodCard from '../../components/NeighborhoodCard/NeighborhoodCard';
-import CreateNeighborhoodModal from '../../components/CreateNeighborhoodModal/CreateNeighborhoodModal';
+import NeighborhoodModalForm from '../../components/NeighborhoodModalForm/NeighborhoodModalForm';
+import AlertBox from '../../components/AlertBox/AlertBox';
 import styles from './HomePage.module.css';
 import { getStoredUser } from '../../utils/auth';
 
 import userServices from '../../services/users';
 import Request from '../../components/Request/Request';
-import { CreateNeighborhoodData } from '../../types';
+import { CreateNeighborhoodData, ErrorObj } from '../../types';
 
 export async function loader() {
   const user = getStoredUser();
@@ -30,7 +32,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (intent === 'create-neighborhood') {
     const neighborhoodData = Object.fromEntries(formData) as unknown as CreateNeighborhoodData;
-    response = await neighborhoodServices.createNeighborhood(neighborhoodData);
+    try {
+      response = await neighborhoodServices.createNeighborhood(neighborhoodData);
+    } catch (error) {
+      return error;
+    }
   }
 
   return response;
@@ -38,11 +44,23 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function HomePage() {
   const userData = useLoaderData() as unknown as UserWithRelatedData;
-  const { neighborhoods } = userData;
-  const [show, setShow] = useState(false);
+  const errorObj = useActionData() as AxiosError;
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const { neighborhoods } = userData;
+  const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState<ErrorObj | null>(null);
+
+  useEffect(() => {
+    if (errorObj) {
+      setError(errorObj.response?.data as ErrorObj);
+      setTimeout(() => {
+        setError(null);
+      }, 5000);
+    }
+  }, [errorObj]);
+
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
 
   const activeRequests = userData.requests.filter((request) => request.status === 'OPEN');
   const neighborhoodCards =
@@ -63,6 +81,7 @@ export default function HomePage() {
 
   return (
     <div className={styles.wrapper}>
+      {error && <AlertBox text={error.error} variant="danger"></AlertBox>}
       <section>
         <h2>My neighborhoods</h2>
         <Container className="p-0 mb-4 mt-4" fluid>
@@ -78,7 +97,6 @@ export default function HomePage() {
           </Row>
         </Container>
       </section>
-
       <section>
         <h2>My active requests</h2>
         <Container className="p-0 mb-4" fluid>
@@ -105,7 +123,12 @@ export default function HomePage() {
           </Row>
         </Container>
       </section>
-      <CreateNeighborhoodModal show={show} handleClose={handleClose} />
+      <NeighborhoodModalForm
+        show={showModal}
+        handleClose={handleClose}
+        intent="create-neighborhood"
+        action="/"
+      />
     </div>
   );
 }

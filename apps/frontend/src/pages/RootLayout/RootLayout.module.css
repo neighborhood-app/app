@@ -11,6 +11,7 @@
 .sticky {
   position: sticky;
   top: 0;
+  z-index: 1600;
 }
 
 @media (max-width: 576px) {

@@ -1,0 +1,24 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 0;
+}
+
+.switchContainer {
+  margin-top: 30px;
+  margin-right: 38px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+}
+
+.switchContainer > p {
+  margin: 0;
+}
+
+.switch {
+  color: black;
+}

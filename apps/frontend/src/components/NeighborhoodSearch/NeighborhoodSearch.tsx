@@ -8,7 +8,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './NeighborhoodSearch.module.css';
 import NeighborhoodCard from '../NeighborhoodCard/NeighborhoodCard';
 import CustomBtn from '../CustomBtn/CustomBtn';
-import CreateNeighborhoodModal from '../CreateNeighborhoodModal/CreateNeighborhoodModal';
+import NeighborhoodModalForm from '../../components/NeighborhoodModalForm/NeighborhoodModalForm';
 import neighborhoodsService from '../../services/neighborhoods';
 import SpinWheel from '../SpinWheel/SpinWheel';
 import AlertBox from '../AlertBox/AlertBox';
@@ -22,7 +22,7 @@ export default function NeighborhoodSearch({
   neighborhoods: Neighborhood[];
   cursor?: number;
   isNextPage: boolean;
-  }) {
+}) {
   const cursorRef = useRef(cursor);
   const nextPageRef = useRef(isNextPage);
   const [neighborhoodList, setNeighborhoodList] = useState(neighborhoods);
@@ -67,7 +67,7 @@ export default function NeighborhoodSearch({
     const timeout = setTimeout(async () => {
       if (searchTerm.length > 0) {
         setIsLoading(true);
-        setErrorMsg('')
+        setErrorMsg('');
         // Prevent infinite scroll component from fetching more hoods when scrolling
         // through the search results
         nextPageRef.current = false;
@@ -90,7 +90,7 @@ export default function NeighborhoodSearch({
         }
       } else {
         const lastNhoodId: number | undefined = neighborhoods.slice(-1)[0]?.id;
-        
+
         nextPageRef.current = isNextPage;
         cursorRef.current = lastNhoodId;
         setNeighborhoodList(neighborhoods || []);
@@ -156,7 +156,12 @@ export default function NeighborhoodSearch({
           </Col>
         )}
       </Container>
-      <CreateNeighborhoodModal show={show} handleClose={handleClose}></CreateNeighborhoodModal>
+      <NeighborhoodModalForm
+        show={show}
+        handleClose={handleClose}
+        intent="create-neighborhood"
+        action="/"
+      />
     </>
   );
 }

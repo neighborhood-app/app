@@ -1,4 +1,5 @@
-import { Neighborhood, Request, Response } from '@prisma/client';
+/* eslint-disable no-underscore-dangle */
+import { Neighborhood, Request, Response, Prisma } from '@prisma/client';
 import prismaClient from '../../prismaClient';
 import {
   NeighborhoodWithRelatedFields,
@@ -15,24 +16,28 @@ import {
  * @param data
  * @returns Promise resolving to true if data is valid
  */
-const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Promise<boolean> => {
-  const MINIMUM_NAME_LENGTH = 4;
-  const neighborhoodName = data.name;
 
-  // we do not want to throw an error if neighborhood does not exist
-  // hence not using findUniqueOrThrow
+/**
+ * Checks if the neighborhood is a duplicate based on name and an optional argument 'id'
+ * If 'id' is given, it will also check if the duplicate neigbhorhood has the same id as the one provided - 
+ * in which case it doesn't count as a duplicate neighborhood.
+ * @param neighborhoodName 
+ * @param id 
+ * @returns boolean
+ */
+const isNeighborhoodDuplicate = async (neighborhoodName: string, id: number | null = null): Promise<boolean> => {
   const existingNeighborhood: Neighborhood | null = await prismaClient.neighborhood.findUnique({
     where: {
       name: neighborhoodName,
     },
   });
+  
+  if (id && existingNeighborhood) {
+    return !(existingNeighborhood.id === id)
+  } 
 
-  if (neighborhoodName.length < MINIMUM_NAME_LENGTH || existingNeighborhood) {
-    return false;
-  }
-
-  return true;
-};
+  return !!existingNeighborhood;
+}
 
 // neighborhood services
 
@@ -55,14 +60,14 @@ const isCreateNeighborhoodDataValid = async (data: CreateNeighborhoodData): Prom
  */
 const getNeighborhoods = async (currCursor?: number): Promise<NeighborhoodsPerPage> => {
   const NHOODS_PER_PAGE = 16; // might make sense to increase this number in production
-  let firstNhood: Neighborhood | null = null;
+  // let firstNhood: Neighborhood | null = null;
 
-  if (typeof currCursor !== 'number') {
-    firstNhood = await prismaClient.neighborhood.findFirst({});
-  }
+  // if (typeof currCursor !== 'number') {
+  //   firstNhood = await prismaClient.neighborhood.findFirst({});
+  // }
 
   const neighborhoods: Neighborhood[] = await prismaClient.neighborhood.findMany({
-    skip: 1,
+    skip: currCursor ? 1 : 0,
     take: NHOODS_PER_PAGE,
     cursor: currCursor
       ? {
@@ -71,7 +76,7 @@ const getNeighborhoods = async (currCursor?: number): Promise<NeighborhoodsPerPa
       : undefined,
   });
 
-  if (firstNhood) neighborhoods.unshift(firstNhood);
+  // if (firstNhood) neighborhoods.unshift(firstNhood);
 
   let newCursor: number | undefined = neighborhoods.slice(-1)[0]?.id;
   if (neighborhoods.length === 0) return { neighborhoods, newCursor, hasNextPage: false };
@@ -206,6 +211,44 @@ const filterNeighborhoods = async (searchTerm: string): Promise<Neighborhood[]> 
   return neighborhoods;
 };
 
+const filterNeighborhoodsByLocation = async (boundary: string): Promise<Neighborhood[]> => {
+  const objBoundary = JSON.parse(boundary);
+  const boundaryCoordinates = {
+    swLat: objBoundary._southWest.lat,
+    swLng: objBoundary._southWest.lng,
+    neLat: objBoundary._northEast.lat,
+    neLng: objBoundary._northEast.lng,
+  }
+
+  const neighborhoods = await prismaClient.neighborhood.findMany({
+    where: {
+        AND: [
+          {
+            location: { 
+              not: Prisma.JsonNull,
+            }
+          },
+          {
+            location: {
+              path: ['x'],
+              gt: boundaryCoordinates.swLng,
+              lt: boundaryCoordinates.neLng
+            }
+          }, 
+          {
+            location: {
+              path: ['y'],
+              gt: boundaryCoordinates.swLat,
+              lt: boundaryCoordinates.neLat
+            }
+          }
+        ]
+      },
+  });
+
+  return neighborhoods;
+};
+
 const getNeighborhoodRequests = async (nhoodId: number): Promise<Request[]> => {
   const neighborhood: NeighborhoodWithRelatedFields | null =
     await prismaClient.neighborhood.findUnique({
@@ -291,12 +334,15 @@ const parseCreateNeighborhoodData = async (object: unknown): Promise<CreateNeigh
     'name' in object &&
     typeof object.name === 'string' &&
     'description' in object &&
-    typeof object.description === 'string'
+    typeof object.description === 'string' &&
+    'location' in object &&
+    (typeof object.location === 'string' ||  object.location === null)
   ) {
     const neighborhoodData: CreateNeighborhoodData = {
       admin_id: object.admin_id,
       name: object.name,
       description: object.description,
+      location: object.location ? JSON.parse(object.location) : null
     };
 
     return neighborhoodData;
@@ -416,18 +462,43 @@ const removeUserFromNeighborhood = async (
  * @param data must include name, and adminId
  * @returns newly created neighborhod
  */
-const createNeighborhood = async (data: CreateNeighborhoodData): Promise<Neighborhood> => {
-  const createNeighborhoodDataValid = await isCreateNeighborhoodDataValid(data);
-
-  if (!createNeighborhoodDataValid) {
-    const error = new Error('Invalid data for creating neighborhood');
+const createNeighborhood = async (neighborhoodData: CreateNeighborhoodData): Promise<Neighborhood> => {
+  if (await isNeighborhoodDuplicate(neighborhoodData.name)) {
+    const error = new Error('There is already a neighborhood with that name. Try something else!');
+    error.name = 'InvalidInputError';
+    throw error;
+  } else if (neighborhoodData.name.length < 4) {
+    const error = new Error('Neighborhood name must have at least 4 characters');
     error.name = 'InvalidInputError';
     throw error;
   } else {
-    const newNeighborhood: Neighborhood = await prismaClient.neighborhood.create({ data });
+    const newNeighborhood: Neighborhood = await prismaClient.neighborhood.create({ data: {
+      ...neighborhoodData, location: neighborhoodData.location ? neighborhoodData.location as Prisma.JsonObject : Prisma.JsonNull
+    } });
 
     return newNeighborhood;
   }
+};
+
+// @ts-ignore
+const editNeighborhood = async (id: number, neighborhoodData): Promise<Neighborhood> => {
+  if (neighborhoodData.name) {
+    if (await isNeighborhoodDuplicate(neighborhoodData.name, id)) {
+      const error = new Error('There is already a neighborhood with that name. Try something else!');
+      error.name = 'InvalidInputError';
+      throw error;
+    } else if (neighborhoodData.name.length < 4) {
+      const error = new Error('Neighborhood name must have at least 4 characters');
+      error.name = 'InvalidInputError';
+      throw error;
+  }
+}
+    const updatedNeighborhood: Neighborhood = await prismaClient.neighborhood.update({
+      where: { id },
+      data: neighborhoodData,
+    });
+
+    return updatedNeighborhood;
 };
 
 export default {
@@ -443,4 +514,6 @@ export default {
   connectUserToNeighborhood,
   removeUserFromNeighborhood,
   getNeighborhoodRequests,
+  filterNeighborhoodsByLocation,
+  editNeighborhood
 };

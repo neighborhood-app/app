@@ -57,11 +57,6 @@ export default function RequestBox({
 
   return (
     <Container className="pe-0" fluid>
-      <Row className="me-0 mt-3 mb-1">
-        <Col>
-          <h2 className={styles.title}>Neighborhood Requests</h2>
-        </Col>
-      </Row>
       <Row className="me-0">
         <Col>
           <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>
@@ -97,8 +92,7 @@ export default function RequestBox({
         </Row>
       </Form>
       <CreateRequestModal show={show} handleClose={handleClose} />
-      <Row
-        className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
+      <Row className="mt-1 me-0 gy-sm-4 gx-xl-5 gx-sm-4 justify-content-start">
         {requestBoxes.length !== 0 ? (
           requestBoxes
         ) : (
