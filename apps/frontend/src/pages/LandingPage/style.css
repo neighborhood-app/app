@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   text-decoration: none;
   list-style: none;
 }
@@ -19,9 +19,10 @@ img {
 
 :root {
   --primary-color: #fff;
-  --secondary-color: #5171dc;
+  --secondary-color: #ff0054;
   --text-color: #3e4756;
-  --accent-color: #97d2a6;
+  --accent-color: #ff4e2a;
+  --border-color: #f3b7aa;
   --btn-text-color: rgb(37, 37, 37);
 
   --fw-300: 300;
@@ -34,8 +35,8 @@ img {
 body {
   color: var(--text-color);
   background: #fff;
-  background-image: radial-gradient(at 3.6% 13.8%, #ebfaf1 0px, transparent 50%),
-    radial-gradient(at 96.3% 93.8%, #d9e7ff 0px, transparent 50%);
+  background-image: radial-gradient(at 3.6% 13.8%, #f8d5e0 0px, transparent 50%),
+    radial-gradient(at 96.3% 93.8%, #fad3ca 0px, transparent 50%);
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
@@ -113,6 +114,7 @@ header.active {
   align-items: center;
   justify-content: center;
   padding: 12px 18px;
+  outline: 0;
   border: 0;
   border-radius: 10px;
   overflow: hidden;
@@ -126,8 +128,7 @@ header.active {
 }
 
 .btn:hover {
-  background: rgb(193, 228, 248);
-  color: rgb(33, 0, 85);
+  background: #f7cad9;
 }
 
 .btn:active {
@@ -136,10 +137,7 @@ header.active {
 
 .btn-hover-effect {
   position: absolute;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -147,19 +145,14 @@ header.active {
 }
 
 .btn-hover-effect div {
-  background: rgb(25, 18, 154);
-  background: linear-gradient(
-    90deg,
-    rgb(187, 229, 18) 0%,
-    rgb(97, 221, 243) 50%,
-    rgb(25, 18, 154) 100%
-  );
+  background: #ff0054;
+  background: linear-gradient(90deg, #ff4e2a 0%, #ff0054 50%, #9704ff 100%);
   border-radius: 50%;
   width: 250px;
   aspect-ratio: 1/1;
   filter: blur(20px);
-  opacity: 0.5;
-  animation: effect 8s infinite;
+  opacity: 0.4;
+  animation: effect 7s infinite;
 }
 
 @keyframes effect {
@@ -252,14 +245,14 @@ header.active {
 }
 
 #gettingstarted h1::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 66%;
   left: 0;
   width: 100%;
   height: 12px;
   border-radius: 5px;
-  background: linear-gradient(90deg, #d7f9d6 0%, #d1f8f8 50%, #d0d1ff 100%);
+  background: linear-gradient(90deg, #f3b7aa 0%, #f7cad9 50%, #e4caf7 100%);
   z-index: -1;
 }
 
@@ -277,17 +270,16 @@ header.active {
   max-width: 300px;
   padding: 30px 20px;
   background: var(--primary-color);
-  border: 2px solid var(--accent-color);
+  border: 3px solid var(--border-color);
   border-radius: 10px;
   box-shadow: 0 0 4px 2px #00000020;
-  transition:
-    background 0.3s linear,
-    border 0.3s ease-in-out;
+  transition: background 0.3s linear, border 0.4s ease-in-out;
+  cursor: default;
 }
 
 .card:hover {
-  background: linear-gradient(160deg, #ebfff05b 30%, #c7d4fe4f 80%);
-  border: 2px solid var(--accent-color);
+  background: linear-gradient(160deg, #fbe7e3e5 30%, #ffdfe9c4 80%);
+  border: 3px solid var(--accent-color);
 }
 
 .card h2 {
@@ -320,14 +312,14 @@ header.active {
 }
 
 #explore h1::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 66%;
   left: 0;
   width: 100%;
   height: 12px;
   border-radius: 5px;
-  background: linear-gradient(90deg, #d7f9d6 0%, #d1f8f8 50%, #d0d1ff 100%);
+  background: linear-gradient(90deg, #f3b7aa 0%, #f7cad9 50%, #e4caf7 100%);
   z-index: -1;
 }
 
@@ -345,8 +337,7 @@ header.active {
   height: 430px;
   margin: 20px 0 40px;
   border-radius: 10px;
-  box-shadow:
-    rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
     rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
   user-select: none;
   cursor: grab;
@@ -359,13 +350,13 @@ header.active {
   gap: 10px;
   height: 100%;
   background: var(--primary-color);
-  border: 3px solid var(--accent-color);
+  border: 3px solid var(--border-color);
   border-radius: inherit;
   transition: border 0.2s ease-in;
 }
 
 .swiper-slide:hover .slide-content {
-  border: 3px solid #a5b7f2;
+  border: 3px solid var(--accent-color);
 }
 
 .slide-content img {
@@ -379,7 +370,7 @@ header.active {
   text-align: center;
   font-size: clamp(1rem, 3vw, 1.1rem);
   font-weight: var(--fw-600);
-  color: var(--secondary-color);
+  color: var(--accent-color);
   padding: 18px 20px 0;
 }
 
@@ -494,6 +485,15 @@ form {
   line-height: 1.3;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: var(--text-color);
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .btn-wrap {
   display: flex;
   justify-content: center;
@@ -529,7 +529,7 @@ footer {
       transparent 37%,
       transparent 100%
     ),
-    linear-gradient(90deg, #defee5, #c1d5f6);
+    linear-gradient(90deg, #f7cad9, #f3b7aa);
 }
 
 .follow-us h2 {
@@ -666,8 +666,8 @@ footer {
     grid-template-columns: 1fr;
     grid-template-rows: 50% 50%;
     grid-template-areas:
-      'image-container'
-      'content';
+      "image-container"
+      "content";
   }
 
   .image-container {
@@ -688,8 +688,8 @@ footer {
     grid-template-columns: 1fr;
     grid-template-rows: 35% 60%;
     grid-template-areas:
-      'contact-content'
-      'form-container';
+      "contact-content"
+      "form-container";
     gap: 24px;
     width: 90%;
     padding: 40px 30px 60px;
@@ -722,7 +722,7 @@ footer {
     right: -100%;
     width: 160px;
     height: 22vh;
-    background: var(--accent-color);
+    background: var(--secondary-color);
     border-radius: 10px;
     padding: 20px 20px 10px;
     transition: all 0.7s ease;
@@ -747,7 +747,7 @@ footer {
   }
 
   .btn {
-    padding: 8px 12px;
+    padding: 10px 12px;
     font-size: 0.9rem;
     margin-right: 16px;
   }
@@ -784,5 +784,21 @@ footer {
 
   .signup-app-part p {
     text-align: right;
+  }
+}
+
+@media (max-width: 420px) {
+  .logo {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #explore h1::before {
+    top: 92%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 40%;
+    height: 12px;
   }
 }
