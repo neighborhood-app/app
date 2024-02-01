@@ -30,6 +30,8 @@ import HomePage, {
   action as homePageAction,
 } from './pages/HomePage/HomePage';
 
+import LandingPage from './pages/LandingPage/LandingPage';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -88,6 +90,10 @@ const router = createBrowserRouter([
     loader: redirectLoggedInUser,
     action: signUpAction,
   },
+  {
+    path: '/landing',
+    element: <LandingPage />
+  }
 ]);
 
 const App = () => <RouterProvider router={router} />;
