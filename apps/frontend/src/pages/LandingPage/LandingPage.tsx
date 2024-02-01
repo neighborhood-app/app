@@ -1,4 +1,5 @@
 import {CSSProperties} from 'react'
+import styles from './LandingPage.module.css';
 
 interface CustomCSS extends CSSProperties {
   '--i': number
@@ -6,7 +7,7 @@ interface CustomCSS extends CSSProperties {
 
 export default function LandingPage() {
   return (
-    <>
+    <div className={styles.wrapper}>
     <header>
       <a href="#" className="logo">
         <i className="fa-solid fa-people-roof"></i>
@@ -176,6 +177,6 @@ export default function LandingPage() {
       </div>
     </footer>
     <script src="app.js"></script>
-    </>
+    </ div>
   )
 }

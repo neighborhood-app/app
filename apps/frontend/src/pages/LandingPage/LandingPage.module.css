@@ -17,23 +17,8 @@ img {
   width: 100%;
 }
 
-:root {
-  --primary-color: #fff;
-  --secondary-color: #ff0054;
-  --text-color: #3e4756;
-  --accent-color: #ff4e2a;
-  --border-color: #f3b7aa;
-  --btn-text-color: rgb(37, 37, 37);
-
-  --fw-300: 300;
-  --fw-400: 400;
-  --fw-500: 500;
-  --fw-600: 600;
-  --fw-700: 700;
-}
-
 .wrapper {
-  color: var(--text-color);
+  color: #3e4756;
   background: #fff;
   background-image: radial-gradient(at 3.6% 13.8%, #f8d5e0 0px, transparent 50%),
   radial-gradient(at 96.3% 93.8%, #fad3ca 0px, transparent 50%);
@@ -62,7 +47,7 @@ header.active {
 }
 
 .logo {
-  color: var(--text-color);
+  color: #3e4756;
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -83,14 +68,14 @@ header.active {
 }
 
 .nav-item {
-  color: var(--text-color);
+  color: #3e4756;
   font-size: 1rem;
   transition: all 0.5s ease;
 }
 
 .nav-item:hover,
 .nav-item.active {
-  color: var(--accent-color);
+  color: #ff4e2a;
 }
 
 .right-nav {
@@ -101,7 +86,7 @@ header.active {
 #menu-icon {
   display: none;
   font-size: 2rem;
-  color: var(--text-color);
+  color: #3e4756;
   cursor: pointer;
   z-index: 20;
 }
@@ -120,7 +105,7 @@ header.active {
   overflow: hidden;
   font-size: 1rem;
   font-weight: var(--fw-700);
-  color: var(--btn-text-color);
+  color: rgb(37, 37, 37);
   box-shadow: 0 0 4px 2px #00000020;
   transition: all 0.3s ease;
   z-index: 0;
@@ -179,7 +164,7 @@ header.active {
 }
 
 #home .content {
-  color: var(--text-color);
+  color: #3e4756;
 }
 
 #home .content h1 {
@@ -269,8 +254,8 @@ header.active {
   text-align: center;
   max-width: 300px;
   padding: 30px 20px;
-  background: var(--primary-color);
-  border: 3px solid var(--border-color);
+  background: #fff;
+  border: 3px solid #f3b7aa;
   border-radius: 10px;
   box-shadow: 0 0 4px 2px #00000020;
   transition: background 0.3s linear, border 0.4s ease-in-out;
@@ -279,7 +264,7 @@ header.active {
 
 .card:hover {
   background: linear-gradient(160deg, #fbe7e3e5 30%, #ffdfe9c4 80%);
-  border: 3px solid var(--accent-color);
+  border: 3px solid #ff4e2a;
 }
 
 .card h2 {
@@ -349,14 +334,14 @@ header.active {
   grid-template-rows: 2fr 1fr 3fr;
   gap: 10px;
   height: 100%;
-  background: var(--primary-color);
-  border: 3px solid var(--border-color);
+  background: #fff;
+  border: 3px solid #f3b7aa;
   border-radius: inherit;
   transition: border 0.2s ease-in;
 }
 
 .swiper-slide:hover .slide-content {
-  border: 3px solid var(--accent-color);
+  border: 3px solid #ff4e2a;
 }
 
 .slide-content img {
@@ -370,14 +355,14 @@ header.active {
   text-align: center;
   font-size: clamp(1rem, 3vw, 1.1rem);
   font-weight: var(--fw-600);
-  color: var(--accent-color);
+  color: #ff4e2a;
   padding: 18px 20px 0;
 }
 
 .slide-content p {
   font-size: clamp(0.8rem, 3vw, 1rem);
   font-weight: var(--fw-400);
-  color: var(--text-color);
+  color: #3e4756;
   padding: 6px 20px 20px;
 }
 
@@ -473,14 +458,14 @@ form {
 .form-input:focus,
 .form-textarea:valid,
 .form-textarea:focus {
-  border: 2px solid var(--accent-color);
+  border: 2px solid #ff4e2a;
 }
 
 .form-input:valid ~ .form-label,
 .form-input:focus ~ .form-label,
 .form-textarea:valid ~ .form-textarea-label,
 .form-textarea:focus ~ .form-textarea-label {
-  color: var(--text-color);
+  color: #3e4756;
   font-size: 1rem;
   line-height: 1.3;
 }
@@ -490,7 +475,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-background-clip: text;
-  -webkit-text-fill-color: var(--text-color);
+  -webkit-text-fill-color: #3e4756;
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -547,7 +532,7 @@ footer {
 
 .follow-us-list i {
   font-size: 2rem;
-  color: var(--text-color);
+  color: #3e4756;
   cursor: pointer;
   transform: scale(1);
   transition: transform 0.2s linear;
@@ -576,13 +561,13 @@ footer {
   align-items: center;
   justify-content: center;
   padding: 12px 18px;
-  border: 1px solid var(--text-color);
+  border: 1px solid #3e4756;
   border-radius: 10px;
   font-size: 1rem;
   font-weight: var(--fw-700);
-  color: var(--btn-text-color);
+  color: rgb(37, 37, 37);
   box-shadow: 0 0 4px 2px #00000020;
-  background: var(--primary-color);
+  background: #fff;
   transform: scale(1);
   transition: all 0.4s ease;
   cursor: pointer;
@@ -722,7 +707,7 @@ footer {
     right: -100%;
     width: 160px;
     height: 22vh;
-    background: var(--secondary-color);
+    background: #ff0054;
     border-radius: 10px;
     padding: 20px 20px 10px;
     transition: all 0.7s ease;
@@ -734,12 +719,12 @@ footer {
   }
 
   .nav-item {
-    color: var(--primary-color);
+    color: #fff;
   }
 
   .nav-item:hover,
   .nav-item.active {
-    color: var(--text-color);
+    color: #3e4756;
   }
 
   .navbar.active {

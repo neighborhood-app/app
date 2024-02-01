@@ -15,6 +15,7 @@ body,
   height: auto;
   position: relative;
   min-height: 100vh;
+  scroll-behavior: smooth;
 }
 
 body {
