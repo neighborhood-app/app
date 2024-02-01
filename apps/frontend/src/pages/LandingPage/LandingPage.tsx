@@ -8,32 +8,32 @@ interface CustomCSS extends CSSProperties {
 export default function LandingPage() {
   return (
     <div className={styles.wrapper}>
-    <header>
-      <a href="#" className="logo">
+    <header className={styles.header}>
+      <a href="#" className={styles.logo}>
         <i className="fa-solid fa-people-roof"></i>
         <span>Neighborhood App</span>
       </a>
 
-      <ul className="navbar">
-        <li><a href="#home" className="nav-item active">Home</a></li>
-        <li><a href="#gettingstarted" className="nav-item">Getting Started</a></li>
-        <li><a href="#explore" className="nav-item">Explore</a></li>
-        <li><a href="#contact" className="nav-item">Contact</a></li>
+      <ul className={styles.navBar}>
+        <li><a href="#home" className={`${styles.navItem} ${styles.active}`}>Home</a></li>
+        <li><a href="#gettingstarted" className={styles.navItem}>Getting Started</a></li>
+        <li><a href="#explore" className={styles.navItem}>Explore</a></li>
+        <li><a href="#contact" className={styles.navItem}>Contact</a></li>
       </ul>
 
-      <div className="right-nav">
-        <button className="btn">
+      <div className={styles.rightNav}>
+        <button className={styles.btn}>
           Sign Up
-          <div className="btn-hover-effect">
+          <div className={styles.btnHoverEffect}>
             <div></div>
           </div>
         </button>
-        <div className="bx bx-menu" id="menu-icon"></div>
+        <div className={`bx bx-menu ${styles.menuIcon}`}></div>
       </div>
     </header>
 
-    <section id="home">
-      <div className="content">
+    <section className={styles.home}>
+      <div className={styles.content}>
         <h1>Building Stronger Communities Together!</h1>
         <p>
           Are you ready to transform your community into a vibrant, connected hub of collaboration
@@ -41,7 +41,7 @@ export default function LandingPage() {
           meaningful connections, and build a stronger, more closely associated community.
         </p>
         <div className="scroll-btn-animation">
-          <a href="#gettingstarted" className="btn">
+          <a href="#gettingstarted" className={styles.btn}>
             More about
             <div className="btn-hover-effect">
               <div></div>
@@ -171,8 +171,11 @@ export default function LandingPage() {
           Join Neighborhood App today and be a part of the movement to create stronger, more united
           neighborhoods.
         </p>
+        {/* 
+        Check it out later!!!
+        */}
         <div className="scroll-btn-animation">
-          <button className="signup-btn">Sign Up</button>
+          <button className={styles.signupBtn}>Sign Up</button>
         </div>
       </div>
     </footer>
