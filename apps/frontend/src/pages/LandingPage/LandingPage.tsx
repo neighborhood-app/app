@@ -1,4 +1,5 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, useEffect } from 'react';
+import ScrollReveal from 'scrollreveal';
 import styles from './LandingPage.module.css';
 
 interface CustomCSS extends CSSProperties {
@@ -16,13 +17,96 @@ const img12 = require('./images/img-12.jpg');
 const img13 = require('./images/img-13.jpg');
 const img14 = require('./images/img-14.jpg');
 
+ScrollReveal().reveal('.scroll-btn-animation', {
+  delay: 1400,
+  easing: 'ease-in',
+  origin: 'top',
+  distance: '30px',
+  duration: 800,
+});
+
 export default function LandingPage() {
+  useEffect(() => {
+    ScrollReveal({ distance: '70px' });
+
+    ScrollReveal().reveal('[class*="content"] h1', {
+      delay: 200,
+      easing: 'ease-in',
+      origin: 'top',
+      duration: 800,
+    });
+
+    ScrollReveal().reveal('[class*="content"] p', {
+      delay: 800,
+      easing: 'ease-in',
+      origin: 'top',
+      distance: '30px',
+      duration: 800,
+    });
+
+    ScrollReveal().reveal('[class*="card"]', {
+      delay: 1400,
+      interval: 400,
+      easing: 'ease-in',
+      origin: 'top',
+      distance: '40px',
+      duration: 500,
+    });
+
+    ScrollReveal().reveal('[class*="gettingStarted"] h1', {
+      delay: 500,
+      easing: 'ease-in',
+      origin: 'top',
+      duration: 800,
+    });
+
+    ScrollReveal().reveal('[class*="explore"] h1', {
+      delay: 500,
+      easing: 'ease-in',
+      origin: 'top',
+      duration: 800,
+    });
+
+    ScrollReveal().reveal('[class*="container"]', {
+      delay: 1400,
+      easing: 'ease-in',
+      origin: 'top',
+      distance: '30px',
+      duration: 800,
+    });
+
+    ScrollReveal().reveal('[class*="followUs"] h2', {
+      delay: 1000,
+      easing: 'ease-in',
+      origin: 'top',
+      distance: '30px',
+      duration: 600,
+    });
+
+    ScrollReveal().reveal('[class*="followUsList"] i', {
+      delay: 800,
+      interval: 400,
+      easing: 'ease-in',
+      origin: 'top',
+      distance: '30px',
+      duration: 400,
+    });
+
+    ScrollReveal().reveal('[class*="signupAppPart"] p', {
+      delay: 800,
+      easing: 'ease-in',
+      origin: 'top',
+      distance: '30px',
+      duration: 600,
+    });
+  }, []);
+
   return (
     <div className={styles.wrapper}>
       <header className={styles.header}>
         <a href="#" className={styles.logo}>
           <i className="fa-solid fa-people-roof"></i>
-          <span>Neighborhood App</span>
+          <span>Neighborhood</span>
         </a>
 
         <ul className={styles.navBar}>
@@ -64,7 +148,7 @@ export default function LandingPage() {
           <h1>Building Stronger Communities Together!</h1>
           <p>
             Are you ready to transform your community into a vibrant, connected hub of collaboration
-            and support? Introducing Neighborhood App, the social-media app designed to foster
+            and support? Introducing Neighborhood, the social-media app designed to foster
             meaningful connections, and build a stronger, more closely associated community.
           </p>
           <div className="scroll-btn-animation">
@@ -101,7 +185,7 @@ export default function LandingPage() {
           <div className={styles.card}>
             <h2>Connect and Contribute</h2>
             <p>
-              Attend local events, and gatherings, or help your neighbors. Neighborhood App makes it
+              Attend local events, and gatherings, or help your neighbors. Neighborhood makes it
               easy to bring your community closer.
             </p>
           </div>
@@ -116,40 +200,40 @@ export default function LandingPage() {
       </section>
 
       <section className={styles.explore}>
-        <h1>Why Neighborhood App?</h1>
+        <h1>Why Neighborhood?</h1>
         <div className={styles.container}>
           <div className={styles.swiper}>
             <div className="swiper-wrapper">
               <div className={styles.swiperSlide}>
                 <div className={styles.slideContent}>
-                  <img src={img10} alt="" />
+                  <img className={styles.img} src={img10} alt="" />
                   <h2>Collaborate on Local Projects</h2>
                   <p>
-                    Neighborhood App allows you to turn ideas into action from organizing a
-                    neighborhood clean-up to starting a community garden. Engage with your neighbors
-                    and make a positive impact together.
+                    Neighborhood allows you to turn ideas into action from organizing a neighborhood
+                    clean-up to starting a community garden. Engage with your neighbors and make a
+                    positive impact together.
                   </p>
                 </div>
               </div>
 
               <div className={styles.swiperSlide}>
                 <div className={styles.slideContent}>
-                  <img src={img12} alt="" />
+                  <img className={styles.img} src={img12} alt="" />
                   <h2>Connect with Your Neighbors</h2>
                   <p>
                     Discover the incredible people who live right next door. From friendly faces to
-                    local experts, the Neighborhood App connects you with your community.
+                    local experts, the Neighborhood connects you with your community.
                   </p>
                 </div>
               </div>
 
               <div className={styles.swiperSlide}>
                 <div className={styles.slideContent}>
-                  <img src={img11} alt="" />
+                  <img className={styles.img} src={img11} alt="" />
                   <h2>Support Your Neighbors</h2>
                   <p>
                     Extend a helping hand to your neighbor who needs help. From lending a cup of
-                    sugar to assisting with a household task, Neighborhood App allows you to build a
+                    sugar to assisting with a household task, Neighborhood allows you to build a
                     network of support within arm's reach.
                   </p>
                 </div>
@@ -157,7 +241,7 @@ export default function LandingPage() {
 
               <div className={styles.swiperSlide}>
                 <div className={styles.slideContent}>
-                  <img src={img14} alt="" />
+                  <img className={styles.img} src={img14} alt="" />
                   <h2>Stay Informed</h2>
                   <p>
                     Receive real-time updates on local events, news, and important announcements.
@@ -169,10 +253,10 @@ export default function LandingPage() {
 
               <div className={`${styles.swiperSlide} swiper-no-swiping`}>
                 <div className={styles.slideContent}>
-                  <img src={img13} alt="" />
+                  <img className={styles.img} src={img13} alt="" />
                   <h2>Build a Supportive Network</h2>
                   <p>
-                    Need a helping hand or have a skill to share? Neighborhood App is your go-to
+                    Need a helping hand or have a skill to share? Neighborhood is your go-to
                     platform for exchanging favors, skills, and support. Strengthen the bonds that
                     make a community resilient.
                   </p>
@@ -208,8 +292,8 @@ export default function LandingPage() {
         </div>
         <div className={styles.signupAppPart}>
           <p>
-            Join Neighborhood App today and be a part of the movement to create stronger, more
-            united neighborhoods.
+            Join Neighborhood today and be a part of the movement to create stronger, more united
+            neighborhoods.
           </p>
           {/* 
         Check it out later!!!
