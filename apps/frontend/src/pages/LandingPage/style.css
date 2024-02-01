@@ -504,7 +504,7 @@ input:-webkit-autofill:active {
 /* ------- */
 /* FOOTER */
 
-footer {
+.footer {
   display: grid;
   grid-template-columns: 70% 25%;
   align-items: center;

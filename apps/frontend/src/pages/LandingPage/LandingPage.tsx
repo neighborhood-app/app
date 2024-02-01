@@ -5,6 +5,19 @@ interface CustomCSS extends CSSProperties {
   '--i': number
 }
 
+const homeImg1 = require("./images/splitted-home-img/1-1.jpg");
+const homeImg2 = require("./images/splitted-home-img/1-2.jpg");
+const homeImg3 = require("./images/splitted-home-img/2-1.jpg");
+const homeImg4 = require("./images/splitted-home-img/2-2.jpg");
+
+const img10 = require('./images/img-10.jpg')
+const img11 = require('./images/img-11.jpg')
+const img12 = require('./images/img-12.jpg')
+const img13 = require('./images/img-13.jpg')
+const img14 = require('./images/img-14.jpg')
+
+
+
 export default function LandingPage() {
   return (
     <div className={styles.wrapper}>
@@ -43,42 +56,42 @@ export default function LandingPage() {
         <div className="scroll-btn-animation">
           <a href="#gettingstarted" className={styles.btn}>
             More about
-            <div className="btn-hover-effect">
+            <div className={styles.btnHoverEffect}>
               <div></div>
             </div>
           </a>
         </div>
       </div>
 
-      <div className="image-container">
-        <img className="item" src="images/splitted-home-img/1-1.jpg" style={{"--i": 2} as CustomCSS }  alt="" />
+      <div className={styles.imageContainer}>
+        <img className={styles.item} src={homeImg1} style={{"--i": 2} as CustomCSS }  alt="" />
 
-        <img className="item" src="images/splitted-home-img//1-2.jpg" style={{"--i": 3} as CustomCSS } alt="" />
+        <img className={styles.item} src={homeImg2} style={{"--i": 3} as CustomCSS } alt="" />
 
-        <img className="item" src="images/splitted-home-img//2-1.jpg" style={{"--i": 4} as CustomCSS } alt="" />
+        <img className={styles.item} src={homeImg3} style={{"--i": 4} as CustomCSS } alt="" />
 
-        <img className="item" src="images/splitted-home-img//2-2.jpg" style={{"--i": 1} as CustomCSS } alt="" />
+        <img className={styles.item} src={homeImg4} style={{"--i": 1} as CustomCSS } alt="" />
       </div>
     </section>
 
-    <section id="gettingstarted">
+    <section className={styles.gettingStarted}>
       <h1>How It Works?</h1>
-      <div className="card-container">
-        <div className="card">
+      <div className={styles.cardContainer}>
+        <div className={styles.card}>
           <h2>Join Your Neighborhood</h2>
           <p>
             Sign up with a few easy steps and start connecting with your neighbors. Your community
             is just a click away.
           </p>
         </div>
-        <div className="card">
+        <div className={styles.card}>
           <h2>Connect and Contribute</h2>
           <p>
             Attend local events, and gatherings, or help your neighbors. Neighborhood App makes it
             easy to bring your community closer.
           </p>
         </div>
-        <div className="card">
+        <div className={styles.card}>
           <h2>Share Ideas and Updates</h2>
           <p>
             Keep everyone in the loop by sharing thoughts, updates, and exciting news with your
@@ -88,14 +101,14 @@ export default function LandingPage() {
       </div>
     </section>
 
-    <section id="explore">
+    <section className={styles.explore}>
       <h1>Why Neighborhood App?</h1>
-      <div className="container">
-        <div className="swiper">
-          <div className="swiper-wrapper">
-            <div className="swiper-slide">
-              <div className="slide-content">
-                <img src="images/img-10.jpg" alt="" />
+      <div className={styles.container}>
+        <div className={styles.swiper}>
+          <div className='swiper-wrapper'>
+            <div className={styles.swiperSlide}>
+              <div className={styles.slideContent}>
+                <img src={img10} alt="" />
                 <h2>Collaborate on Local Projects</h2>
                 <p>
                   Neighborhood App allows you to turn ideas into action from organizing a
@@ -105,9 +118,9 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="swiper-slide">
-              <div className="slide-content">
-                <img src="images/img-12.jpg" alt="" />
+            <div className={styles.swiperSlide}>
+              <div className={styles.slideContent}>
+                <img src={img12} alt="" />
                 <h2>Connect with Your Neighbors</h2>
                 <p>
                   Discover the incredible people who live right next door. From friendly faces to
@@ -116,9 +129,9 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="swiper-slide">
-              <div className="slide-content">
-                <img src="images/img-11.jpg" alt="" />
+            <div className={styles.swiperSlide}>
+              <div className={styles.slideContent}>
+                <img src={img11} alt="" />
                 <h2>Support Your Neighbors</h2>
                 <p>
                   Extend a helping hand to your neighbor who needs help. From lending a cup of sugar
@@ -128,9 +141,9 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="swiper-slide">
-              <div className="slide-content">
-                <img src="images/img-14.jpg" alt="" />
+            <div className={styles.swiperSlide}>
+              <div className={styles.slideContent}>
+                <img src={img14} alt="" />
                 <h2>Stay Informed</h2>
                 <p>
                   Receive real-time updates on local events, news, and important announcements.
@@ -140,9 +153,9 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="swiper-slide swiper-no-swiping">
-              <div className="slide-content">
-                <img src="images/img-13.jpg" alt="" />
+            <div className={`${styles.swiperSlide} swiper-no-swiping`}>
+              <div className={styles.slideContent}>
+                <img src={img13} alt="" />
                 <h2>Build a Supportive Network</h2>
                 <p>
                   Need a helping hand or have a skill to share? Neighborhood App is your go-to
@@ -156,17 +169,22 @@ export default function LandingPage() {
       </div>
     </section>
 
-    <footer>
-      <div className="follow-us">
+    <footer className={styles.footer}>
+      <div className={styles.followUs}>
         <h2>Follow us</h2>
-        <div className="follow-us-list">
+        <div className={styles.followUsList}>
+          {
+            /*
+              Icons are too small
+            */
+          }
           <a href="#"><i className="bx bxl-facebook-square"></i></a>
           <a href="#"> <i className="bx bxl-instagram"></i></a>
           <a href="#"><i className="bx bxl-twitter"></i></a>
           <a href="#"> <i className="bx bxl-github"></i></a>
         </div>
       </div>
-      <div className="signup-app-part">
+      <div className={styles.signupAppPart}>
         <p>
           Join Neighborhood App today and be a part of the movement to create stronger, more united
           neighborhoods.
