@@ -1,10 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Quicksand", sans-serif;
+  font-family: 'Quicksand', sans-serif;
   text-decoration: none;
   list-style: none;
 }
@@ -36,7 +36,7 @@ img {
   color: var(--text-color);
   background: #fff;
   background-image: radial-gradient(at 3.6% 13.8%, #f8d5e0 0px, transparent 50%),
-  radial-gradient(at 96.3% 93.8%, #fad3ca 0px, transparent 50%);
+    radial-gradient(at 96.3% 93.8%, #fad3ca 0px, transparent 50%);
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
@@ -245,7 +245,7 @@ header.active {
 }
 
 #gettingstarted h1::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 66%;
   left: 0;
@@ -273,7 +273,9 @@ header.active {
   border: 3px solid var(--border-color);
   border-radius: 10px;
   box-shadow: 0 0 4px 2px #00000020;
-  transition: background 0.3s linear, border 0.4s ease-in-out;
+  transition:
+    background 0.3s linear,
+    border 0.4s ease-in-out;
   cursor: default;
 }
 
@@ -312,7 +314,7 @@ header.active {
 }
 
 #explore h1::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 66%;
   left: 0;
@@ -337,7 +339,8 @@ header.active {
   height: 430px;
   margin: 20px 0 40px;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
     rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
   user-select: none;
   cursor: grab;
@@ -666,8 +669,8 @@ input:-webkit-autofill:active {
     grid-template-columns: 1fr;
     grid-template-rows: 50% 50%;
     grid-template-areas:
-      "image-container"
-      "content";
+      'image-container'
+      'content';
   }
 
   .image-container {
@@ -688,8 +691,8 @@ input:-webkit-autofill:active {
     grid-template-columns: 1fr;
     grid-template-rows: 35% 60%;
     grid-template-areas:
-      "contact-content"
-      "form-container";
+      'contact-content'
+      'form-container';
     gap: 24px;
     width: 90%;
     padding: 40px 30px 60px;

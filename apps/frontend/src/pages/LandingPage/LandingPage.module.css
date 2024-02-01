@@ -6,7 +6,7 @@ img {
   color: #3e4756;
   background: #fff;
   background-image: radial-gradient(at 3.6% 13.8%, #f8d5e0 0px, transparent 50%),
-  radial-gradient(at 96.3% 93.8%, #fad3ca 0px, transparent 50%);
+    radial-gradient(at 96.3% 93.8%, #fad3ca 0px, transparent 50%);
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
@@ -23,12 +23,12 @@ img {
   padding: 16px 8%;
   z-index: 10;
   transition: all 0.5s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .header.active {
   background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 }
 
 .logo {
@@ -44,7 +44,8 @@ img {
 
 .navBar {
   display: flex;
-  margin-left: auto;
+  margin: 0 0 0 auto;
+  list-style: none;
 }
 
 .navBar li {
@@ -215,7 +216,7 @@ img {
 }
 
 .gettingStarted h1::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 66%;
   left: 0;
@@ -243,7 +244,9 @@ img {
   border: 3px solid #f3b7aa;
   border-radius: 10px;
   box-shadow: 0 0 4px 2px #00000020;
-  transition: background 0.3s linear, border 0.4s ease-in-out;
+  transition:
+    background 0.3s linear,
+    border 0.4s ease-in-out;
   cursor: default;
 }
 
@@ -282,7 +285,7 @@ img {
 }
 
 .explore h1::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 66%;
   left: 0;
@@ -307,7 +310,8 @@ img {
   height: 430px;
   margin: 20px 0 40px;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
     rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
   user-select: none;
   cursor: grab;
@@ -636,8 +640,8 @@ signupBtn:hover {
     grid-template-columns: 1fr;
     grid-template-rows: 50% 50%;
     grid-template-areas:
-      "imageContainer"
-      "content";
+      'imageContainer'
+      'content';
   }
 
   .imageContainer {
@@ -658,8 +662,8 @@ signupBtn:hover {
     grid-template-columns: 1fr;
     grid-template-rows: 35% 60%;
     grid-template-areas:
-      "contact-content"
-      "form-container";
+      'contact-content'
+      'form-container';
     gap: 24px;
     width: 90%;
     padding: 40px 30px 60px;
