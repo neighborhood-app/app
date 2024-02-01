@@ -1,3 +1,9 @@
+import {CSSProperties} from 'react'
+
+interface CustomCSS extends CSSProperties {
+  '--i': number
+}
+
 export default function LandingPage() {
   return (
     <>
@@ -44,13 +50,13 @@ export default function LandingPage() {
       </div>
 
       <div className="image-container">
-        <img className="item" src="images/splitted-home-img/1-1.jpg" style="--i: 2" alt="" />
+        <img className="item" src="images/splitted-home-img/1-1.jpg" style={{"--i": 2} as CustomCSS }  alt="" />
 
-        <img className="item" src="images/splitted-home-img//1-2.jpg" style="--i: 3" alt="" />
+        <img className="item" src="images/splitted-home-img//1-2.jpg" style={{"--i": 3} as CustomCSS } alt="" />
 
-        <img className="item" src="images/splitted-home-img//2-1.jpg" style="--i: 4" alt="" />
+        <img className="item" src="images/splitted-home-img//2-1.jpg" style={{"--i": 4} as CustomCSS } alt="" />
 
-        <img className="item" src="images/splitted-home-img//2-2.jpg" style="--i: 1" alt="" />
+        <img className="item" src="images/splitted-home-img//2-2.jpg" style={{"--i": 1} as CustomCSS } alt="" />
       </div>
     </section>
 
@@ -146,48 +152,6 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section id="contact">
-      <div className="contact-container">
-        <div className="contact-content">
-          <h1>Contact</h1>
-          <p>
-            Whether you're seeking information, encountering a challenge, or just want to share your
-            thoughts, your communication matters to us. You can fill out the contact form, and we
-            will get back to you as soon as possible.
-          </p>
-        </div>
-        <form className="form-container">
-          <div className="form-card">
-            <label className="form-label" for="full_name">Full Name</label>
-            <input className="form-input" type="text" name="full_name" required="required" />
-          </div>
-
-          <div className="form-card">
-            <label className="form-label" for="email">Email</label>
-            <input className="form-input" type="email" name="email" required="required" />
-          </div>
-
-          <div className="form-card">
-            <label className="form-textarea-label" for="message">Message</label>
-            <textarea
-              className="form-textarea"
-              maxlength="420"
-              rows="3"
-              name="message"
-              required="required"></textarea>
-          </div>
-          <div className="btn-wrap">
-            <button className="btn">
-              Submit
-              <div className="btn-hover-effect">
-                <div></div>
-              </div>
-            </button>
-          </div>
-        </form>
       </div>
     </section>
 
