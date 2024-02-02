@@ -1,5 +1,6 @@
 import { CSSProperties, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import ScrollReveal from 'scrollreveal';
 import styles from './LandingPage.module.css';
 
@@ -211,97 +212,100 @@ export default function LandingPage() {
       <section className={styles.explore}>
         <h1>Why Neighborhood?</h1>
         <div className={styles.container}>
-            <Swiper
-              spaceBetween={10}
-              slidesPerView={1}
-              preventClicks={true}
-              noSwiping={true}
-              freeMode={false}
-              navigation={{
-                nextEl: '.next',
-                prevEl: '.prev'
-              }
-              }
-              loop={true}
-              autoplay={{
-                delay: 2500,
-                pauseOnMouseEnter: true,
-              }}
-              speed={400}
-              breakpoints={{
-                550: {
-                  slidesPerView: 2,
-                  spaceBetween: 20,
-                },
-                950: {
-                  slidesPerView: 3,
-                  spaceBetween: 30,
-                },
-                1200: {
-                  slidesPerView: 4,
-                  spaceBetween: 20,
-                },
-              }}
-            >
-              <SwiperSlide className={styles.swiperSlide}>
-                <div className={styles.slideContent}>
-                  <img className={styles.img} src={img10} alt="" />
-                  <h2>Collaborate on Local Projects</h2>
-                  <p>
-                    Neighborhood allows you to turn ideas into action from organizing a neighborhood
-                    clean-up to starting a community garden. Engage with your neighbors and make a
-                    positive impact together.
-                  </p>
-                </div>
-              </SwiperSlide>
+          <Swiper
+            modules={[Autoplay, Navigation, Pagination]}
+            spaceBetween={10}
+            slidesPerView={2}
+            preventClicks={true}
+            noSwiping={true}
+            freeMode={false}
+            navigation={{
+              nextEl: '.next',
+              prevEl: '.prev',
+            }}
+            loop={true}
+            autoplay={{
+              delay: 2500,
+              pauseOnMouseEnter: true,
+            }}
+            speed={400}
+            breakpoints={{
+              300: {
+                slidesPerView: 1,
+                spaceBetween: 1,
+              },
+              550: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              950: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+              },
+              1200: {
+                slidesPerView: 4,
+                spaceBetween: 20,
+              },
+            }}>
+            <SwiperSlide className={styles.swiperSlide}>
+              <div className={styles.slideContent}>
+                <img className={styles.img} src={img10} alt="" />
+                <h2>Collaborate on Local Projects</h2>
+                <p>
+                  Neighborhood allows you to turn ideas into action from organizing a neighborhood
+                  clean-up to starting a community garden. Engage with your neighbors and make a
+                  positive impact together.
+                </p>
+              </div>
+            </SwiperSlide>
 
-              <SwiperSlide className={styles.swiperSlide}>
-                <div className={styles.slideContent}>
-                  <img className={styles.img} src={img12} alt="" />
-                  <h2>Connect with Your Neighbors</h2>
-                  <p>
-                    Discover the incredible people who live right next door. From friendly faces to
-                    local experts, the Neighborhood connects you with your community.
-                  </p>
-                </div>
-              </SwiperSlide>
+            <SwiperSlide className={styles.swiperSlide}>
+              <div className={styles.slideContent}>
+                <img className={styles.img} src={img12} alt="" />
+                <h2>Connect with Your Neighbors</h2>
+                <p>
+                  Discover the incredible people who live right next door. From friendly faces to
+                  local experts, the Neighborhood connects you with your community.
+                </p>
+              </div>
+            </SwiperSlide>
 
-              <SwiperSlide className={styles.swiperSlide}>
-                <div className={styles.slideContent}>
-                  <img className={styles.img} src={img11} alt="" />
-                  <h2>Support Your Neighbors</h2>
-                  <p>
-                    Extend a helping hand to your neighbor who needs help. From lending a cup of
-                    sugar to assisting with a household task, Neighborhood allows you to build a
-                    network of support within arm's reach.
-                  </p>
-                </div>
-              </SwiperSlide>
+            <SwiperSlide className={styles.swiperSlide}>
+              <div className={styles.slideContent}>
+                <img className={styles.img} src={img11} alt="" />
+                <h2>Support Your Neighbors</h2>
+                <p>
+                  Extend a helping hand to your neighbor who needs help. From lending a cup of sugar
+                  to assisting with a household task, Neighborhood allows you to build a network of
+                  support within arm's reach.
+                </p>
+              </div>
+            </SwiperSlide>
 
-              <SwiperSlide className={styles.swiperSlide}>
-                <div className={styles.slideContent}>
-                  <img className={styles.img} src={img14} alt="" />
-                  <h2>Stay Informed</h2>
-                  <p>
-                    Receive real-time updates on local events, news, and important announcements.
-                    Whether it's a neighborhood gathering or a safety alert, stay connected to what
-                    matters most in your community.
-                  </p>
-                </div>
-              </SwiperSlide>
+            <SwiperSlide className={styles.swiperSlide}>
+              <div className={styles.slideContent}>
+                <img className={styles.img} src={img14} alt="" />
+                <h2>Stay Informed</h2>
+                <p>
+                  Receive real-time updates on local events, news, and important announcements.
+                  Whether it's a neighborhood gathering or a safety alert, stay connected to what
+                  matters most in your community.
+                </p>
+              </div>
+            </SwiperSlide>
 
-              <SwiperSlide className={`${styles.swiperSlide} swiper-no-swiping`}>
-                <div className={styles.slideContent}>
-                  <img className={styles.img} src={img13} alt="" />
-                  <h2>Build a Supportive Network</h2>
-                  <p>
-                    Need a helping hand or have a skill to share? Neighborhood is your go-to
-                    platform for exchanging favors, skills, and support. Strengthen the bonds that
-                    make a community resilient.
-                  </p>
-                </div>
-              </SwiperSlide>
-            </Swiper>
+            <SwiperSlide className={`${styles.swiperSlide}`}>
+              <div className={styles.slideContent}>
+                <img className={styles.img} src={img13} alt="" />
+                <h2>Build a Supportive Network</h2>
+                <p>
+                  Need a helping hand or have a skill to share? Neighborhood is your go-to platform
+                  for exchanging favors, skills, and support. Strengthen the bonds that make a
+                  community resilient.
+                </p>
+              </div>
+            </SwiperSlide>
+          </Swiper>
         </div>
       </section>
 
@@ -341,7 +345,7 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
-      <script src="app.js"></script>
+      {/* <script src="app.js"></script> */}
     </div>
   );
 }

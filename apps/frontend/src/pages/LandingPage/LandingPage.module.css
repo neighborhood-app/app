@@ -297,14 +297,13 @@ img {
 }
 
 .container {
-  width: 70%;
-  display: flex;
+  width: 100%;
+  /* display: flex; */
 }
 
 .swiperSlide {
   max-width: 350px;
-  min-height: fit-content;
-  height: 430px;
+  height: 450px;
   margin: 20px 0 40px;
   border-radius: 10px;
   box-shadow:
@@ -316,8 +315,8 @@ img {
 
 .slideContent {
   display: grid;
-  grid-auto-flow: dense;
-  grid-template-rows: auto auto auto;
+  /* grid-auto-flow: dense; */
+  grid-auto-rows: auto auto 1fr;
   gap: 10px;
   height: 100%;
   background: #fff;
@@ -342,7 +341,7 @@ img {
   font-size: clamp(1rem, 3vw, 1rem);
   font-weight: 600;
   color: #ff4e2a;
-  padding: 12px 15px 0;
+  padding: 12px 15px 0 0;
 }
 
 .slideContent p {
