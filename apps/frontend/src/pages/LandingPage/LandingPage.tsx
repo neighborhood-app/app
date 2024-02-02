@@ -99,6 +99,14 @@ export default function LandingPage() {
       distance: '30px',
       duration: 600,
     });
+
+    ScrollReveal().reveal('[class*="signupBtn"] p', {
+      delay: 800,
+      easing: 'ease-in',
+      origin: 'top',
+      distance: '30px',
+      duration: 600,
+    });
   }, []);
 
   return (
