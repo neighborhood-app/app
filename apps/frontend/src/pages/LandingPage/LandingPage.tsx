@@ -121,18 +121,18 @@ export default function LandingPage() {
 
         <ul className={styles.navBar}>
           <li>
-            <a href="#home" className={`${styles.navItem} ${styles.active}`}>
+            <a href="#home" className={`${styles.navItem}`}>
               Home
             </a>
           </li>
           <li>
             <a href="#gettingstarted" className={styles.navItem}>
-              Getting Started
+              How it works?
             </a>
           </li>
           <li>
             <a href="#explore" className={styles.navItem}>
-              Explore
+              Why Neighborhood?
             </a>
           </li>
         </ul>
@@ -156,14 +156,6 @@ export default function LandingPage() {
             and support? Introducing Neighborhood, the social-media app designed to foster
             meaningful connections, and build a stronger, more closely associated community.
           </p>
-          <div className="scroll-btn-animation">
-            <a href="#gettingstarted" className={styles.btn}>
-              More about
-              <div className={styles.btnHoverEffect}>
-                <div></div>
-              </div>
-            </a>
-          </div>
         </div>
 
         <div className={styles.imageContainer}>
