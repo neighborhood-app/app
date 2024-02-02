@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { CSSProperties, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
@@ -126,29 +127,32 @@ export default function LandingPage() {
             </a>
           </li>
           <li>
-            <a href="#gettingstarted" className={styles.navItem}>
+            <a href="#howItWorks" className={styles.navItem}>
               How it works?
             </a>
           </li>
           <li>
-            <a href="#explore" className={styles.navItem}>
+            <a href="#whyNeighborhood" className={styles.navItem}>
               Why Neighborhood?
             </a>
           </li>
         </ul>
 
         <div className={styles.rightNav}>
-          <button className={styles.btn}>
-            Sign Up
-            <div className={styles.btnHoverEffect}>
-              <div></div>
-            </div>
-          </button>
+          <Link to="/signup">
+            <button className={styles.btn}>
+              Sign Up
+              <div className={styles.btnHoverEffect}>
+                <div></div>
+              </div>
+            </button>
+          </Link>
+
           <div className={`bx bx-menu ${styles.menuIcon}`}></div>
         </div>
       </header>
 
-      <section className={styles.home}>
+      <section id="home" className={styles.home}>
         <div className={styles.content}>
           <h1>Building Stronger Communities Together!</h1>
           <p>
@@ -169,7 +173,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className={styles.gettingStarted}>
+      <section id="howItWorks" className={styles.gettingStarted}>
         <h1>How It Works?</h1>
         <div className={styles.cardContainer}>
           <div className={styles.card}>
@@ -196,7 +200,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className={styles.explore}>
+      <section id="whyNeighborhood" className={styles.explore}>
         <h1>Why Neighborhood?</h1>
         <div className={styles.container}>
           <Swiper
@@ -327,9 +331,11 @@ export default function LandingPage() {
           {/* 
         Check it out later!!!
         */}
-          <div className="scroll-btn-animation">
-            <button className={styles.signupBtn}>Sign Up</button>
-          </div>
+          <Link to="/signup">
+            <div className="scroll-btn-animation">
+              <button className={styles.signupBtn}>Sign Up</button>
+            </div>
+          </Link>
         </div>
       </footer>
       {/* <script src="app.js"></script> */}
