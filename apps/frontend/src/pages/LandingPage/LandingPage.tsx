@@ -1,4 +1,5 @@
 import { CSSProperties, useEffect } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import ScrollReveal from 'scrollreveal';
 import styles from './LandingPage.module.css';
 
@@ -210,9 +211,39 @@ export default function LandingPage() {
       <section className={styles.explore}>
         <h1>Why Neighborhood?</h1>
         <div className={styles.container}>
-          <div className={styles.swiper}>
-            <div className="swiper-wrapper">
-              <div className={styles.swiperSlide}>
+            <Swiper
+              spaceBetween={10}
+              slidesPerView={1}
+              preventClicks={true}
+              noSwiping={true}
+              freeMode={false}
+              navigation={{
+                nextEl: '.next',
+                prevEl: '.prev'
+              }
+              }
+              loop={true}
+              autoplay={{
+                delay: 2500,
+                pauseOnMouseEnter: true,
+              }}
+              speed={400}
+              breakpoints={{
+                550: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                950: {
+                  slidesPerView: 3,
+                  spaceBetween: 30,
+                },
+                1200: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+              }}
+            >
+              <SwiperSlide className={styles.swiperSlide}>
                 <div className={styles.slideContent}>
                   <img className={styles.img} src={img10} alt="" />
                   <h2>Collaborate on Local Projects</h2>
@@ -222,9 +253,9 @@ export default function LandingPage() {
                     positive impact together.
                   </p>
                 </div>
-              </div>
+              </SwiperSlide>
 
-              <div className={styles.swiperSlide}>
+              <SwiperSlide className={styles.swiperSlide}>
                 <div className={styles.slideContent}>
                   <img className={styles.img} src={img12} alt="" />
                   <h2>Connect with Your Neighbors</h2>
@@ -233,9 +264,9 @@ export default function LandingPage() {
                     local experts, the Neighborhood connects you with your community.
                   </p>
                 </div>
-              </div>
+              </SwiperSlide>
 
-              <div className={styles.swiperSlide}>
+              <SwiperSlide className={styles.swiperSlide}>
                 <div className={styles.slideContent}>
                   <img className={styles.img} src={img11} alt="" />
                   <h2>Support Your Neighbors</h2>
@@ -245,9 +276,9 @@ export default function LandingPage() {
                     network of support within arm's reach.
                   </p>
                 </div>
-              </div>
+              </SwiperSlide>
 
-              <div className={styles.swiperSlide}>
+              <SwiperSlide className={styles.swiperSlide}>
                 <div className={styles.slideContent}>
                   <img className={styles.img} src={img14} alt="" />
                   <h2>Stay Informed</h2>
@@ -257,9 +288,9 @@ export default function LandingPage() {
                     matters most in your community.
                   </p>
                 </div>
-              </div>
+              </SwiperSlide>
 
-              <div className={`${styles.swiperSlide} swiper-no-swiping`}>
+              <SwiperSlide className={`${styles.swiperSlide} swiper-no-swiping`}>
                 <div className={styles.slideContent}>
                   <img className={styles.img} src={img13} alt="" />
                   <h2>Build a Supportive Network</h2>
@@ -269,9 +300,8 @@ export default function LandingPage() {
                     make a community resilient.
                   </p>
                 </div>
-              </div>
-            </div>
-          </div>
+              </SwiperSlide>
+            </Swiper>
         </div>
       </section>
 

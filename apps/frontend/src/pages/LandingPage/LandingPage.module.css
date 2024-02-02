@@ -297,14 +297,14 @@ img {
 }
 
 .container {
-  width: 100%;
+  width: 70%;
   display: flex;
 }
 
 .swiperSlide {
   max-width: 350px;
-  /* height: 430px; */
-  max-width: 20%;
+  min-height: fit-content;
+  height: 430px;
   margin: 20px 0 40px;
   border-radius: 10px;
   box-shadow:
@@ -317,7 +317,7 @@ img {
 .slideContent {
   display: grid;
   grid-auto-flow: dense;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto auto;
   gap: 10px;
   height: 100%;
   background: #fff;
