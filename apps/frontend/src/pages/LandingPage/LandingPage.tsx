@@ -135,11 +135,6 @@ export default function LandingPage() {
               Explore
             </a>
           </li>
-          <li>
-            <a href="#contact" className={styles.navItem}>
-              Contact
-            </a>
-          </li>
         </ul>
 
         <div className={styles.rightNav}>

@@ -356,7 +356,7 @@ img {
 
 .footer {
   display: grid;
-  grid-template-columns: 70% 25%;
+  grid-template-columns: 65% 35%;
   align-items: center;
   width: 100%;
   height: auto;
@@ -411,7 +411,7 @@ img {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
 }
 
@@ -419,6 +419,7 @@ img {
   font-size: clamp(0.8rem, 3vw, 1rem);
   font-weight: 500;
   line-height: 1.5;
+  text-align: justify;
 }
 
 .signupBtn {
