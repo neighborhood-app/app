@@ -252,5 +252,8 @@ export interface Subscriber {
   deleted: boolean;
   createdAt: string;
   updatedAt: string;
+  data: {
+    username: string;
+  }
   __v: number;
 }

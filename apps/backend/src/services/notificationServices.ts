@@ -8,6 +8,34 @@ const NOVU_API_KEY = '9cc0a07918a5743da4558428c33d6558';
 const novu = new Novu(NOVU_API_KEY);
 
 /**
+ * Creates a new topic that groups together a set of subscribers (need to be added with `addSubscribersToTopic`)
+ * to receive bulk notifications.
+ * @param key unique identifier for the topic
+ * @param name descriptive name to explain topic's purpose
+ */
+export async function createTopic(key: string, name: string) {
+  const result = await novu.topics.create({
+    key,
+    name,
+  });
+
+  console.log(result.data);
+}
+
+/**
+ * Adds a list of subscribers to a topic.
+ * @param key topic identifier
+ * @param subscriberIds an array of the subscriber ids as numbers
+ */
+export async function addSubscribersToTopic(key: string, subscriberIds: number[]) {
+  const response = await novu.topics.addSubscribers(key, {
+    subscribers: subscriberIds.map(String),
+  });
+
+  console.log(response.data);
+}
+
+/**
  * Creates a new subscriber to receive notifications
  * @param id
  * @param firstName

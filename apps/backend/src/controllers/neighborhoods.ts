@@ -12,6 +12,7 @@ import {
   NeighborhoodsPerPage,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
+import { addSubscribersToTopic } from '../services/notificationServices';
 
 const neighborhoodsRouter = express.Router();
 
@@ -158,7 +159,12 @@ neighborhoodsRouter.post(
     if (!isAdminOfNeighborhood)
       return res.status(401).send({ error: 'You are not authorized to do this.' });
 
-    await neighborhoodServices.connectUserToNeighborhood(userId, neighborhoodId);
+    const responses = [
+      neighborhoodServices.connectUserToNeighborhood(userId, neighborhoodId),
+      addSubscribersToTopic(`neighborhood:${neighborhoodId}`, [userId]),
+    ];
+
+    await Promise.all(responses);
 
     return res.status(201).send({ success: 'Yay! Your neighborhood is growing.' });
   }),

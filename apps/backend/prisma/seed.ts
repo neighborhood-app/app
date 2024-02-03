@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import prismaClient from '../prismaClient';
-import {createSubscriber, deleteSubscriber, getAllSubscribers} from '../src/services/notificationServices';
+import { addSubscribersToTopic, createSubscriber, createTopic, deleteSubscriber, getAllSubscribers } from '../src/services/notificationServices';
 
 const SAMPLE_PASSWORD = 'secret';
 
@@ -134,8 +134,13 @@ async function main() {
     },
   });
 
+  
   await connectUsertoNeighborhood(bob.id, bobNeighborhood.id);
   await connectUsertoNeighborhood(mike.id, bobNeighborhood.id);
+  
+  const bobNeighborhoodKey = `neighborhoodId:${bobNeighborhood.id}`;
+  await createTopic(bobNeighborhoodKey, bobNeighborhood.name);
+  await addSubscribersToTopic(bobNeighborhoodKey, [bob.id, mike.id]);
 
   // The variable will be used in the future when we add responses.
   // eslint-disable-next-line
@@ -191,6 +196,10 @@ async function main() {
   await connectUsertoNeighborhood(maria.id, antoninaNeighborhood.id);
   await connectUsertoNeighborhood(leia.id, antoninaNeighborhood.id);
 
+  const antoninaNeighborhoodKey = `neighborhoodId:${antoninaNeighborhood.id}`;
+  await createTopic(antoninaNeighborhoodKey, antoninaNeighborhood.name);
+  await addSubscribersToTopic(antoninaNeighborhoodKey, [antonina.id, radu.id, maria.id, leia.id]);
+
   const raduRequest = await prismaClient.request.create({
     data: {
       neighborhood_id: antoninaNeighborhood.id,
@@ -240,6 +249,10 @@ async function main() {
   });
 
   await connectUsertoNeighborhood(shwetank.id, shwetankNeighborhood.id);
+
+  const shwetankNeighborhoodKey = `neighborhoodId:${shwetankNeighborhood.id}`;
+  await createTopic(shwetankNeighborhoodKey, shwetankNeighborhood.name);
+  await addSubscribersToTopic(shwetankNeighborhoodKey, [shwetank.id]);
 
   //---------------------------------------------------------
 
