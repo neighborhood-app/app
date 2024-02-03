@@ -8,6 +8,14 @@
   padding: 1vw;
 }
 
+.logo {
+  font-size: 1.2rem;
+}
+
+.logo i {
+  font-size: 1.6rem;
+}
+
 .link {
   margin-top: 20px;
   display: flex;

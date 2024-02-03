@@ -19,6 +19,12 @@ const MainNav = () => {
     setSmallDisplay(mql.matches);
   });
 
+  const logo = (
+    <div className={styles.logo}>
+      <i className="fa-solid fa-people-roof"></i>
+    </div>
+  );
+
   const profileIconLink = user ? (
     <Link to={`/users/${user.id}`}>
       <div className={styles.link}>
@@ -104,6 +110,7 @@ const MainNav = () => {
         </>
       ) : (
         <>
+          {logo}
           {profileIconLink}
           {homeIconLink}
           {exploreIconLink}
