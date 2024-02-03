@@ -103,7 +103,7 @@ export default function LandingPage() {
       duration: 600,
     });
 
-    ScrollReveal().reveal('[class*="signupBtn"] p', {
+    ScrollReveal().reveal('[class*="signupBtn"]', {
       delay: 800,
       easing: 'ease-in',
       origin: 'top',
