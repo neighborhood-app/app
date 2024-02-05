@@ -23,7 +23,7 @@ export async function action({ request }: { request: Request }) {
 export default function LoginPage() {
   return (
     <Container className={styles.wrapperContainer} fluid>
-      <Row>
+      <Row className={styles.headerRow}>
         <div className={styles.logo}>
           <i className="fa-solid fa-people-roof"></i>
           <span>Neighborhood</span>
