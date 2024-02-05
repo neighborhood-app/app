@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import prismaClient from '../prismaClient';
-import { addSubscribersToTopic, createSubscriber, createTopic, deleteSubscriber, getAllSubscribers } from '../src/services/notificationServices';
+import { addSubscribersToTopic, createSubscriber, createTopic, deleteSubscriber, deleteTopic, getAllSubscribers } from '../src/services/notificationServices';
 
 const SAMPLE_PASSWORD = 'secret';
 
@@ -110,11 +110,25 @@ async function main() {
   const subscribers = await getAllSubscribers();
   const deletePromises: Promise<void>[] = [];
 
-  subscribers.forEach(async subscriber => {
+  subscribers.forEach(subscriber => {
     deletePromises.push(deleteSubscriber(subscriber.subscriberId));
   });
 
   await Promise.all(deletePromises);
+
+  //---------------------------------------------------------
+
+  // Delete existing topics
+  // { 
+  //   const promises: Promise<void>[] = [];
+
+  //   for (let id = 1; id < 10; id += 1) {
+  //     promises.push(deleteTopic(`neighborhood:${id}`));
+  //   }
+  
+  //   await Promise.all(promises);
+  // }
+
 
   // Add users as notification subscribers
   const addSubscriberPromises: Promise<void>[] = [];
@@ -267,8 +281,12 @@ async function main() {
           description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
         },
       }).then(neighborhood => {
+        console.log(neighborhood);
+        
         connectUsertoNeighborhood(users[userIdx].id, neighborhood.id);
-      });
+        createTopic(`neighborhood:${neighborhood.id}`, neighborhood.name);
+        addSubscribersToTopic(`neighborhood:${neighborhood.id}`, [users[userIdx].id])
+      }).catch(err => console.error(err));
 
       neighborhoods.push(neighborhood);
       count += 1;

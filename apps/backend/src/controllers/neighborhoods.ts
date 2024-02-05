@@ -7,12 +7,11 @@ import {
   Request as RequestData,
   CreateNeighborhoodData,
   NeighborhoodType,
-  NeighborhoodWithRelatedFields,
   RequestWithAuthentication,
   NeighborhoodsPerPage,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
-import { addSubscribersToTopic } from '../services/notificationServices';
+import { addSubscribersToTopic, createTopic } from '../services/notificationServices';
 
 const neighborhoodsRouter = express.Router();
 
@@ -131,12 +130,17 @@ neighborhoodsRouter.post(
     const newNeighborhood: Neighborhood =
       await neighborhoodServices.createNeighborhood(createNeighborhoodData);
 
-    await neighborhoodServices.connectUserToNeighborhood(loggedUserID, newNeighborhood.id);
+    const TOPIC_KEY = `neighborhood:${newNeighborhood.id}`;
+    const responses = [
+      neighborhoodServices.connectUserToNeighborhood(loggedUserID, newNeighborhood.id),
+      createTopic(TOPIC_KEY, newNeighborhood.name),
+      addSubscribersToTopic(TOPIC_KEY, [loggedUserID]),
+      neighborhoodServices.getNeighborhoodDetailsForMembers(newNeighborhood.id),
+    ];
 
-    const newNeighborhoodWithRelatedFields: NeighborhoodWithRelatedFields =
-      await neighborhoodServices.getNeighborhoodDetailsForMembers(newNeighborhood.id);
+    await Promise.all(responses);
 
-    res.status(201).json(newNeighborhoodWithRelatedFields);
+    return res.status(201).json(responses[2]);
   }),
 );
 

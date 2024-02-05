@@ -14,12 +14,16 @@ const novu = new Novu(NOVU_API_KEY);
  * @param name descriptive name to explain topic's purpose
  */
 export async function createTopic(key: string, name: string) {
-  const result = await novu.topics.create({
-    key,
-    name,
-  });
+  try {
+    const result = await novu.topics.create({
+      key,
+      name,
+    });
 
-  console.log(result.data);
+    console.log(result.data);
+  } catch (error: unknown) {
+    console.error(error);
+  }
 }
 
 /**
@@ -28,11 +32,28 @@ export async function createTopic(key: string, name: string) {
  * @param subscriberIds an array of the subscriber ids as numbers
  */
 export async function addSubscribersToTopic(key: string, subscriberIds: number[]) {
-  const response = await novu.topics.addSubscribers(key, {
-    subscribers: subscriberIds.map(String),
-  });
+  try {
+    const response = await novu.topics.addSubscribers(key, {
+      subscribers: subscriberIds.map(String),
+    });
 
-  console.log(response.data);
+    console.log(response.data);
+  } catch (error) {
+    console.log((error as Error).message);
+  }
+}
+
+/**
+ * Deletes a topic by topic key
+ * @param key unique identifier of the topic
+ */
+export async function deleteTopic(key: string) {
+  try {
+    const result = await novu.topics.delete(key);
+    console.log(result.data);
+  } catch (error: unknown) {
+    console.log((error as Error).message);
+  }
 }
 
 /**
@@ -56,7 +77,7 @@ export async function createSubscriber(
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error((error as Error).message);
   }
 }
 
