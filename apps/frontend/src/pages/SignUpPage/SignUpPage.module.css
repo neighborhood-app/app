@@ -1,12 +1,26 @@
-.neighborhoodHeading {
-  position: absolute;
-  top: 1rem;
-  right: 2rem;
+.headerRow {
+  padding-top: 1.3rem;
+  padding-left: 5.35rem;
+}
+
+.logo {
+  /* position: absolute; */
+  /* top: 1.3rem;
+  left: 5.8rem; */
+  color: #3e4756;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.logo i {
+  font-size: 2rem;
+  margin-right: 4px;
 }
 
 .wrapperContainer {
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  background-image: radial-gradient(at 3.6% 13.8%, #f8d5e0 0px, transparent 50%),
+    radial-gradient(at 96.3% 93.8%, #fad3ca 0px, transparent 50%);
 }
 
 .customCol {
@@ -15,36 +29,37 @@
 }
 
 .customRow {
-  height: 100vh;
+  height: 90%;
 }
 
 .formWrapper {
+  min-height: 28.2rem;
   padding: 1.9rem 1rem;
 }
 
 .imgCol {
-  background: linear-gradient(to right, #ff7343 9%, white);
-  background-color: #ff7343;
+  /* background: linear-gradient(to right, #ff7343 9%, white);
+  background-color: #ff7343; */
+  justify-content: center;
   text-align: center;
-  padding-top: 62px;
-  padding-bottom: 3px;
+  /* padding-top: 62px;
+  padding-bottom: 3px; */
 }
 
 @media screen and (max-width: 992px) {
-  .neighborhoodHeading {
-    position: absolute;
-    top: 1.5rem;
-    padding-right: 10px;
-    background: #ffffffc9;
-    right: auto;
-  } 
+  .wrapperContainer {
+    height: 100vh;
+  }
+
+  .customRow {
+    height: fit-content;
+  }
+
+  .customCol {
+    justify-content: center;
+  }
 
   .imgCol {
-    background: #ff7343;
-    background-image: url('../../assets/neighborhood3.jpeg');
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 320px;
+    display: none;
   }
 }
