@@ -140,12 +140,7 @@ export default function LandingPage() {
 
         <div className={styles.rightNav}>
           <Link to="/signup">
-            <button className={styles.btn}>
-              Sign Up
-              <div className={styles.btnHoverEffect}>
-                <div></div>
-              </div>
-            </button>
+            <button className={styles.btn}>Sign Up</button>
           </Link>
 
           <div className={`bx bx-menu ${styles.menuIcon}`}></div>
@@ -331,14 +326,8 @@ export default function LandingPage() {
           {/* 
         Check it out later!!!
         */}
-          <Link to="/signup">
-            <div className="scroll-btn-animation">
-              <button className={styles.signupBtn}>Sign Up</button>
-            </div>
-          </Link>
         </div>
       </footer>
-      {/* <script src="app.js"></script> */}
     </div>
   );
 }
