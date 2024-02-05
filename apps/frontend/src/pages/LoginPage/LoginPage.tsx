@@ -23,7 +23,12 @@ export async function action({ request }: { request: Request }) {
 export default function LoginPage() {
   return (
     <Container className={styles.wrapperContainer} fluid>
-      <h1 className={styles.neighborhoodHeading}>Neighborhood</h1>
+      <Row>
+        <div className={styles.logo}>
+          <i className="fa-solid fa-people-roof"></i>
+          <span>Neighborhood</span>
+        </div>
+      </Row>
       <Row className={styles.customRow}>
         <WelcomeImgBox className={`${styles.customCol} ${styles.imgCol}`}></WelcomeImgBox>
         <LoginForm className={`${styles.customCol} ${styles.formWrapper}`}></LoginForm>
