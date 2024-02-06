@@ -26,9 +26,7 @@ body {
     sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* background: white; */
-  background-image: radial-gradient(at 3.6% 13.8%, #f8d5e0 0px, transparent 50%),
-    radial-gradient(at 96.3% 93.8%, #fad3ca 0px, transparent 50%);
+  background: white;
 }
 
 code {
