@@ -1,9 +1,12 @@
 import { Form, Col } from 'react-bootstrap';
-import { Form as FormRouter } from 'react-router-dom';
+import { Form as FormRouter, useNavigate } from 'react-router-dom';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './SignUpForm.module.css';
 
 export default function SignUpForm({ className }: { className: string }) {
+  const navigate = useNavigate();
+  const redirectToLogin = () => navigate('/login');
+
   return (
     <Col lg={6} className={className}>
       <FormRouter method="post" role="form" className={styles.signUpForm}>
@@ -42,6 +45,9 @@ export default function SignUpForm({ className }: { className: string }) {
         <div className="d-grid gap-2">
           <CustomBtn variant="primary" type="submit">
             Submit
+          </CustomBtn>
+          <CustomBtn variant="outline-dark" onClick={redirectToLogin}>
+            Already have an account? Log in!
           </CustomBtn>
         </div>
       </FormRouter>
