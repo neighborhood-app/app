@@ -29,6 +29,20 @@ async function receiveResponse(requestId: number) {
   }
 }
 
+async function createRequest(requestId: any, neighborhoodId: number) {
+  try {
+    const user = getStoredUser();
+    const headers = { authorization: '' };
+
+    if (user) headers.authorization = `Bearer ${user.token}`;
+    await axios.post(`${BASE_URL}/create-request/${requestId}`, { neighborhoodId }, {
+      headers,
+    });
+  } catch (error: unknown) {
+    console.error(error);
+  }
+}
+
 // async function updateAction(notificationId: string, btnType: string, status: string) {
 //   const user = getStoredUser();
 //   const headers = { authorization: '' };
@@ -46,4 +60,5 @@ async function receiveResponse(requestId: number) {
 export default {
   joinNeighborhood,
   receiveResponse,
+  createRequest,
 };

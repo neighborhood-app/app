@@ -11,7 +11,7 @@ import {
   NeighborhoodsPerPage,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
-import { addSubscribersToTopic, createTopic } from '../services/notificationServices';
+import { addSubscribersToTopic, createTopic, getTopics } from '../services/notificationServices';
 
 const neighborhoodsRouter = express.Router();
 
@@ -62,6 +62,10 @@ neighborhoodsRouter.get(
       ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
       : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
+    
+    // TEST
+    const topics = await getTopics(30);
+    console.log(topics)
     return res.status(200).send(neighborhood);
   }),
 );
@@ -89,7 +93,6 @@ neighborhoodsRouter.delete(
   }),
 );
 
-// Since update routes are not critical, not spending too much time on it
 neighborhoodsRouter.put(
   '/:id',
   middleware.userIdExtractorAndLoginValidator,
@@ -117,6 +120,7 @@ neighborhoodsRouter.put(
   }),
 );
 
+// Create a neighborhood
 neighborhoodsRouter.post(
   '/',
   middleware.userIdExtractorAndLoginValidator,
@@ -131,14 +135,15 @@ neighborhoodsRouter.post(
       await neighborhoodServices.createNeighborhood(createNeighborhoodData);
 
     const TOPIC_KEY = `neighborhood:${newNeighborhood.id}`;
+    await createTopic(TOPIC_KEY, newNeighborhood.name);
+
     const responses = [
       neighborhoodServices.connectUserToNeighborhood(loggedUserID, newNeighborhood.id),
-      createTopic(TOPIC_KEY, newNeighborhood.name),
       addSubscribersToTopic(TOPIC_KEY, [loggedUserID]),
       neighborhoodServices.getNeighborhoodDetailsForMembers(newNeighborhood.id),
     ];
 
-    await Promise.all(responses);
+    await Promise.all(responses);    
 
     return res.status(201).json(responses[2]);
   }),

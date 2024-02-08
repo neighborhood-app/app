@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import prismaClient from '../prismaClient';
-import { addSubscribersToTopic, createSubscriber, createTopic, deleteSubscriber, deleteTopic, getAllSubscribers } from '../src/services/notificationServices';
+import { addSubscribersToTopic, createSubscriber, createTopic, deleteSubscriber, deleteTopic, getAllSubscribers, getTopics } from '../src/services/notificationServices';
+// import { Neighborhood } from '../src/types';
 
 const SAMPLE_PASSWORD = 'secret';
 
@@ -20,7 +21,7 @@ const getPasswordHash = async (password: string): Promise<string> => {
  * @param userId
  * @param neighborhoodId
  */
-const connectUsertoNeighborhood = async (
+const connectUserToNeighborhood = async (
   userId: number,
   neighborhoodId: number,
 ): Promise<void> => {
@@ -104,6 +105,17 @@ async function main() {
   });
 
   const users = [bob, radu, shwetank, antonina, maria, mike, leia];
+
+  //---------------------------------------------------------
+
+  // Delete existing topics (passed-in number is arbitrary)
+  const topics = await getTopics(50);
+  console.log(topics);
+  
+  const promises: Promise<void>[] = [];
+  topics.forEach(topic => promises.push(deleteTopic(topic)))
+  await Promise.all(promises);
+
   //---------------------------------------------------------
 
   // Delete all existing subscribers
@@ -116,21 +128,7 @@ async function main() {
 
   await Promise.all(deletePromises);
 
-  //---------------------------------------------------------
-
-  // Delete existing topics
-  // { 
-  //   const promises: Promise<void>[] = [];
-
-  //   for (let id = 1; id < 10; id += 1) {
-  //     promises.push(deleteTopic(`neighborhood:${id}`));
-  //   }
-  
-  //   await Promise.all(promises);
-  // }
-
-
-  // Add users as notification subscribers
+  // Create subscribers from users
   const addSubscriberPromises: Promise<void>[] = [];
   users.forEach(async user => {
     addSubscriberPromises.push(createSubscriber(String(user.id), user.username, user.first_name || '', user.last_name || ''));
@@ -149,10 +147,10 @@ async function main() {
   });
 
   
-  await connectUsertoNeighborhood(bob.id, bobNeighborhood.id);
-  await connectUsertoNeighborhood(mike.id, bobNeighborhood.id);
+  await connectUserToNeighborhood(bob.id, bobNeighborhood.id);
+  await connectUserToNeighborhood(mike.id, bobNeighborhood.id);
   
-  const bobNeighborhoodKey = `neighborhoodId:${bobNeighborhood.id}`;
+  const bobNeighborhoodKey = `neighborhood:${bobNeighborhood.id}`;
   await createTopic(bobNeighborhoodKey, bobNeighborhood.name);
   await addSubscribersToTopic(bobNeighborhoodKey, [bob.id, mike.id]);
 
@@ -205,12 +203,12 @@ async function main() {
     },
   });
 
-  await connectUsertoNeighborhood(antonina.id, antoninaNeighborhood.id);
-  await connectUsertoNeighborhood(radu.id, antoninaNeighborhood.id);
-  await connectUsertoNeighborhood(maria.id, antoninaNeighborhood.id);
-  await connectUsertoNeighborhood(leia.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(antonina.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(radu.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(maria.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(leia.id, antoninaNeighborhood.id);
 
-  const antoninaNeighborhoodKey = `neighborhoodId:${antoninaNeighborhood.id}`;
+  const antoninaNeighborhoodKey = `neighborhood:${antoninaNeighborhood.id}`;
   await createTopic(antoninaNeighborhoodKey, antoninaNeighborhood.name);
   await addSubscribersToTopic(antoninaNeighborhoodKey, [antonina.id, radu.id, maria.id, leia.id]);
 
@@ -262,38 +260,71 @@ async function main() {
     },
   });
 
-  await connectUsertoNeighborhood(shwetank.id, shwetankNeighborhood.id);
+  await connectUserToNeighborhood(shwetank.id, shwetankNeighborhood.id);
 
-  const shwetankNeighborhoodKey = `neighborhoodId:${shwetankNeighborhood.id}`;
+  const shwetankNeighborhoodKey = `neighborhood:${shwetankNeighborhood.id}`;
   await createTopic(shwetankNeighborhoodKey, shwetankNeighborhood.name);
   await addSubscribersToTopic(shwetankNeighborhoodKey, [shwetank.id]);
 
   //---------------------------------------------------------
 
-  // More seed neighborhoods
-  const neighborhoods = [];
-  for (let count = 1; count < 28;) {
-    for (let userIdx = 0; userIdx < users.length; userIdx += 1) {
-      const neighborhood = prismaClient.neighborhood.create({
-        data: {
-          admin_id: users[userIdx].id,
-          name: `Neighborhood ${count}`,
-          description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        },
-      }).then(neighborhood => {
-        console.log(neighborhood);
-        
-        connectUsertoNeighborhood(users[userIdx].id, neighborhood.id);
-        createTopic(`neighborhood:${neighborhood.id}`, neighborhood.name);
-        addSubscribersToTopic(`neighborhood:${neighborhood.id}`, [users[userIdx].id])
-      }).catch(err => console.error(err));
+  // Create more neighborhoods
+  // const neighborhoods: Promise<Neighborhood | void>[] = [];
+  // for (let count = 1; count < 28;) {
+  //   for (let userIdx = 0; userIdx < users.length; userIdx += 1) {
+  //     const neighborhood = prismaClient.neighborhood.create({
+  //       data: {
+  //         admin_id: users[userIdx].id,
+  //         name: `Neighborhood ${count}`,
+  //         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+  //       },
+  //     }).then(neighborhood => {
+  //       connectUserToNeighborhood(users[userIdx].id, neighborhood.id);
+  //       return neighborhood;
+  //     }).catch(err => console.error(err));
 
-      neighborhoods.push(neighborhood);
-      count += 1;
-    }
-  }
+  //     neighborhoods.push(neighborhood);
+  //     count += 1;
+  //   }
+  // }
 
-  await Promise.all(neighborhoods);
+  // await Promise.all(neighborhoods);
+  
+  //   const neighborhoods: Promise<Neighborhood | void>[] = [];
+  // for (let count = 1; count < 28;) {
+  //   for (let userIdx = 0; userIdx < users.length; userIdx += 1) {
+  //     const neighborhood = prismaClient.neighborhood.create({
+  //       data: {
+  //         admin_id: users[userIdx].id,
+  //         name: `Neighborhood ${count}`,
+  //         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+  //       },
+  //     }).then(neighborhood => {        
+  //       connectUserToNeighborhood(users[userIdx].id, neighborhood.id);
+  //       return neighborhood;
+  //     }).then(async neighborhood => {
+  //       const topicKey = `neighborhood:${neighborhood.id}`;
+  //       await createTopic(topicKey, neighborhood.name);
+  //       addSubscribersToTopic(topicKey, [users[userIdx].id]);
+  //     }).catch(err => console.error(err.data));
+
+  //     neighborhoods.push(neighborhood);
+  //     count += 1;
+  //   }
+  // }
+
+  // await Promise.all(neighborhoods);
+  //---------------------------------------------------------
+
+  // // Create topics and add subscribers to the new neighborhoods
+  // {
+  //   const promises = [];
+  //   neighborhoods.forEach(neighborhood => {
+  //     promises.push(createTopic(`neighborhood:${neighborhood.id}`, neighborhood.name));
+  //   })
+  //       addSubscribersToTopic(`neighborhood:${neighborhood.id}`, [users[userIdx].id])
+  // }
+  
 }
 
 main()

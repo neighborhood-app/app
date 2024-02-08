@@ -1,6 +1,6 @@
-import { Novu } from '@novu/node';
+import { Novu, TriggerRecipientsTypeEnum } from '@novu/node';
 import { createHmac } from 'crypto';
-import { JoinNeighborhoodArgs, Request, Subscriber } from '../types';
+import { JoinNeighborhoodArgs, Request, Subscriber, Topic } from '../types';
 import requestServices from './requestServices';
 
 // MOVE KEY TO .env file
@@ -15,14 +15,9 @@ const novu = new Novu(NOVU_API_KEY);
  */
 export async function createTopic(key: string, name: string) {
   try {
-    const result = await novu.topics.create({
-      key,
-      name,
-    });
-
-    console.log(result.data);
+    await novu.topics.create({ key, name });
   } catch (error: unknown) {
-    console.error(error);
+    if (typeof error === 'object' && error && 'data' in error) console.error(error.data);
   }
 }
 
@@ -33,27 +28,51 @@ export async function createTopic(key: string, name: string) {
  */
 export async function addSubscribersToTopic(key: string, subscriberIds: number[]) {
   try {
-    const response = await novu.topics.addSubscribers(key, {
+    await novu.topics.addSubscribers(key, {
       subscribers: subscriberIds.map(String),
     });
-
-    console.log(response.data);
   } catch (error) {
     console.log((error as Error).message);
   }
 }
 
 /**
- * Deletes a topic by topic key
- * @param key unique identifier of the topic
+ * Removes all subscribers from a topic and then deletes it
+ * @param topic the Topic object to remove
  */
-export async function deleteTopic(key: string) {
+export async function deleteTopic(topic: Topic) {
   try {
-    const result = await novu.topics.delete(key);
-    console.log(result.data);
+    await novu.topics.removeSubscribers(topic.key, {
+      subscribers: topic.subscribers,
+    });
+
+    await novu.topics.delete(topic.key);
   } catch (error: unknown) {
-    console.log((error as Error).message);
+    console.error(error);
   }
+}
+
+/**
+ * Get topics
+ * @param numOfTopics - the number of topics per page
+ * @returns an array of Topic objects
+ */
+export async function getTopics(numOfTopics: number): Promise<Topic[]> {
+  const options = {
+    method: 'GET',
+    headers: { Authorization: `ApiKey ${NOVU_API_KEY}` },
+    pageSize: numOfTopics,
+  };
+
+  const topics = await fetch('https://api.novu.co/v1/topics', options)
+    .then((response) => response.json())
+    .then((response) => response.data)
+    .catch((err) => {
+      console.error(err);
+      return { error: `Could not retrieve topics.` };
+    });
+
+  return topics;
 }
 
 /**
@@ -223,6 +242,26 @@ export const triggers = {
       });
     } catch (error: unknown) {
       console.error('Failed to trigger receive-response notification', error);
+    }
+  },
+  /**
+   * Sends a notification to the requester when a user responds to them.
+   * @param requestId (string) - id of the new request
+   * @param actorId (string) - the subscriber id of the user who made the request
+   * @param neighborhoodId (string) - the id of the neighborhood the request was created in
+   */
+  async createRequest(requestId: string, actorId: string, neighborhoodId: string) {
+    try {
+      const topicKey = `neighborhood:${neighborhoodId}`;
+      await novu.trigger('create-request', {
+        to: [{ type: TriggerRecipientsTypeEnum.TOPIC, topicKey }],
+        actor: { subscriberId: actorId },
+        payload: {
+          requestId,
+        },
+      });
+    } catch (error: unknown) {
+      console.error('Failed to trigger create-request notification', error);
     }
   },
 };

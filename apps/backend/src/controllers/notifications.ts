@@ -51,17 +51,19 @@ notificationsRouter.post(
   }),
 );
 
-// notificationsRouter.post(
-//   '/mark-action-done',
-//   middleware.userIdExtractorAndLoginValidator,
-//   catchError(async (req: RequestWithAuthentication, res: Response) => {
-//     const loggedUserId: number = req.loggedUserId as number;
-//     const { notificationId, btnType, status } = req.body;
-    
-//     const resData = await markActionDone(loggedUserId, notificationId, status, btnType);
+// User created a new request in a neighborhood
+notificationsRouter.post(
+  '/create-request/:requestId',
+  middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const { requestId } = req.params;
+    const { loggedUserId } = req;
+    const { neighborhoodId } = req.body;
 
-//     return res.status(201).send(resData);
-//   }),
-// );
+    await triggers.createRequest(requestId, String(loggedUserId), String(neighborhoodId));
+    return res.status(201);
+  }),
+);
 
 export default notificationsRouter;

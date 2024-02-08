@@ -22,7 +22,10 @@ export interface RequestWithUser extends Omit<Request, 'time_created'> {
   user: User;
 }
 
-export type UserWithRelatedData = UserWithoutPasswordHash & {neighborhoods: Neighborhood[], requests: RequestWithUser[]}
+export type UserWithRelatedData = UserWithoutPasswordHash & {
+  neighborhoods: Neighborhood[];
+  requests: RequestWithUser[];
+};
 
 /**
  * format of user data, without id, to create entry in users table
@@ -75,7 +78,7 @@ export type UpdateUserInput = {
   bio: string;
   dob?: string;
   email: string;
-}
+};
 
 export type UpdateUserData = {
   first_name: string;
@@ -83,7 +86,7 @@ export type UpdateUserData = {
   bio: string;
   dob?: Date;
   email: string;
-}
+};
 
 /**
  * Format of data sent to POST /api/neighborhood to create new neighborhood
@@ -97,6 +100,13 @@ export interface RequestWithAuthentication extends APIRequest {
   token?: string;
   loggedUserId?: number;
   username?: string;
+}
+
+/**
+ * Request with token for authentication and neighborhoodId
+ */
+export interface RequestWithAuthenticationAndId extends RequestWithAuthentication {
+  neighborhoodId?: number;
 }
 
 const neighborhoodWithRelatedFields = schema.Prisma.validator<schema.Prisma.NeighborhoodArgs>()({
@@ -143,7 +153,7 @@ const neighborhoodWithUsers = schema.Prisma.validator<schema.Prisma.Neighborhood
 
 export type NeighborhoodWithUsers = schema.Prisma.NeighborhoodGetPayload<
   typeof neighborhoodWithUsers
-  >;
+>;
 
 /**
  * Request type with full data: user, responses, and neighborhood with users
@@ -155,8 +165,8 @@ const requestFullData = schema.Prisma.validator<schema.Prisma.RequestArgs>()({
     neighborhood: {
       include: {
         users: true,
-      }
-    }
+      },
+    },
   },
 });
 
@@ -239,7 +249,7 @@ export interface JoinNeighborhoodArgs {
 }
 
 /**
- * Shape of a Novu subcriber 
+ * Shape of a Novu Subcriber
  */
 export interface Subscriber {
   _id: string;
@@ -254,6 +264,18 @@ export interface Subscriber {
   updatedAt: string;
   data: {
     username: string;
-  }
+  };
   __v: number;
+}
+
+/**
+ * Shape of a Novu Topic
+ */
+export interface Topic {
+  _id: string;
+  _environmentId: string;
+  _organizationId: string;
+  key: string;
+  name: string;
+  subscribers: string[];
 }
