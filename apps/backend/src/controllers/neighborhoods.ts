@@ -142,14 +142,13 @@ neighborhoodsRouter.post(
     const TOPIC_KEY = `neighborhood:${newNeighborhood.id}`;
     await createTopic(TOPIC_KEY, newNeighborhood.name);
 
-    const responses = [
+    const promises = [
       neighborhoodServices.connectUserToNeighborhood(loggedUserID, newNeighborhood.id),
       addSubscribersToTopic(TOPIC_KEY, [loggedUserID]),
       neighborhoodServices.getNeighborhoodDetailsForMembers(newNeighborhood.id),
     ];
 
-    await Promise.all(responses);    
-
+    const responses = await Promise.all(promises);
     return res.status(201).json(responses[2]);
   }),
 );
