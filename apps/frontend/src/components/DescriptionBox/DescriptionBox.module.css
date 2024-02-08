@@ -1,3 +1,7 @@
+.container {
+  margin-top: 15px;
+}
+
 .neighborhoodImg {
   max-height: 5em;
   min-width: 5em;
@@ -5,6 +9,7 @@
 
 .neighborhoodDescription {
   margin: 10px 0px;
+  padding: 0;
 }
 
 .btn {
@@ -30,6 +35,17 @@
 
 .leaveIcon:active {
   color: #e92700;
+}
+
+.deleteBtn {
+  display: inline-block;
+  padding: 3px 9px;
+}
+
+.editBtn {
+  display: inline-block;
+  padding: 3px 9px;
+  margin-right: 8px;
 }
 
 @keyframes beat {

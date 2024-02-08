@@ -317,7 +317,7 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
     const createNeighborhoodResponse: Response = await api
       .post('/api/neighborhoods')
       .set('Authorization', `Bearer ${token}`)
-      .send({ name: NEW_NEIGHBORHOOD_NAME, description: '' })
+      .send({ name: NEW_NEIGHBORHOOD_NAME, description: '', location: '' })
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
@@ -475,11 +475,13 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
       },
     });
 
+    const location = JSON.stringify({label: "Athens", x: 40, y: 20});
+
     const newData = {
       name: 'Test',
       description: 'Test',
       admin_id: newAdmin!.id,
-      location: 'Athens',
+      location,
     };
 
     const response: Response = await api
@@ -495,7 +497,7 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
       }),
     ).toEqual({
       id: neighborhoodToUpdate!.id,
-      ...newData,
+      ...newData, location: JSON.parse(newData.location)
     });
   });
 

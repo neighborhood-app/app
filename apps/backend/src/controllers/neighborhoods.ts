@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
+import { Prisma } from '@prisma/client';
 import catchError from '../utils/catchError';
-import prismaClient from '../../prismaClient';
 import middleware from '../utils/middleware';
 import {
   Neighborhood,
@@ -13,6 +13,7 @@ import {
 import neighborhoodServices from '../services/neighborhoodServices';
 import { addSubscribersToTopic, createTopic } from '../services/notificationServices';
 
+
 const neighborhoodsRouter = express.Router();
 
 neighborhoodsRouter.get(
@@ -20,7 +21,7 @@ neighborhoodsRouter.get(
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: Request, res: Response, next) => {
     // Execute the next route if this was a search request
-    if ('searchTerm' in req.query) return next();
+    if ('searchTerm' in req.query || 'boundary' in req.query) return next();
 
     let { cursor }: { cursor?: string | number } = req.query;
     cursor = cursor ? Number(cursor) : undefined;
@@ -35,12 +36,20 @@ neighborhoodsRouter.get(
   '/',
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: Request, res: Response) => {
-    const { searchTerm } = req.query;
+    const { searchTerm, boundary } = req.query;
 
-    const neighborhoods: Neighborhood[] = await neighborhoodServices.filterNeighborhoods(
-      searchTerm as string,
-    );
+    let neighborhoods: Neighborhood[];
 
+    if (boundary) {
+      neighborhoods = await neighborhoodServices.filterNeighborhoodsByLocation(boundary as string)
+    }
+
+    else {
+      neighborhoods = await neighborhoodServices.filterNeighborhoods(
+        searchTerm as string,
+      );
+    }
+    
     res.status(200).send(neighborhoods);
   }),
 );
@@ -94,7 +103,6 @@ neighborhoodsRouter.put(
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const neighborhoodID = Number(req.params.id);
-
     // LoginValidator ensures that loggedUserId is present
     const loggedUserID = req.loggedUserId as number;
 
@@ -108,10 +116,12 @@ neighborhoodsRouter.put(
     }
 
     const data = req.body;
-    const updatedNeighborhood: Neighborhood = await prismaClient.neighborhood.update({
-      where: { id: +req.params.id },
-      data,
-    });
+    if (data.location) {
+      data.location = JSON.parse(data.location);
+    } else {
+      data.location = Prisma.JsonNull;
+    }
+      const updatedNeighborhood = await neighborhoodServices.editNeighborhood(neighborhoodID, data);
     return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
   }),
 );
@@ -123,7 +133,6 @@ neighborhoodsRouter.post(
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const loggedUserID = req.loggedUserId as number; // loggedUserId extracted by middleware
     req.body.admin_id = loggedUserID; // adding user_id as admin_id to request.body
-
     const createNeighborhoodData: CreateNeighborhoodData =
       await neighborhoodServices.parseCreateNeighborhoodData(req.body);
 

@@ -2,8 +2,56 @@
   padding: 50px;
 }
 
+.neighborhoodImg {
+  max-height: 5em;
+  min-width: 5em;
+}
+
+.nameColumn {
+  max-width: 400px;
+}
+
+.neighborhoodName {
+  text-wrap: wrap;
+  overflow-wrap: break-word;
+}
+
+.membersContainer {
+  margin-top: 10px;
+  display: flex;
+  align-self: flex-start;
+}
+
+.centeredColumn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  /* padding: 0; */
+  /* margin-top: 30px; */
+}
+
+.leaveIcon {
+  margin-left: 8px;
+  color: #ff4e2a;
+}
+
+.leaveIcon:hover {
+  cursor: pointer;
+}
+
 @media (max-width: 576px) {
   .wrapper {
     padding: 30px;
+  }
+
+  .centeredColumn {
+    width: 89vw;
+  }
+
+  .membersContainer {
+    margin-top: 10px;
   }
 }

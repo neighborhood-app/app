@@ -37,10 +37,18 @@ const MainNav = () => {
           icon={faHouse}
           size="xl"></FontAwesomeIcon>
       </div>
+    <Link to={'/'} title="Home">
+      <div className={styles.link}>
+        <FontAwesomeIcon
+          className={`${styles.navIcon} ${styles.homeIcon}`}
+          icon={faHouse}
+          size="xl"></FontAwesomeIcon>
+      </div>
     </Link>
   );
 
   const exploreIconLink = (
+    <Link to={'/explore'} title="Explore neighborhoods">
     <Link to={'/explore'} title="Explore neighborhoods">
       <div className={styles.link}>
         <FontAwesomeIcon
@@ -53,6 +61,7 @@ const MainNav = () => {
   const notificationsIconLink = <Notifications className={styles.link}></Notifications>;
 
   const logoutIconLink = (
+    <div className={styles.link} title="Log out">
     <div className={styles.link} title="Log out">
       <FontAwesomeIcon
         icon={faRightFromBracket}

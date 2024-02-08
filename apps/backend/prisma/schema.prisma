@@ -21,7 +21,7 @@ model Neighborhood {
   admin_id    Int
   name        String    @unique @db.VarChar(30)
   description String?   @db.VarChar(400)
-  location    String?   @db.VarChar(50)
+  location    Json?
   admin       User      @relation("admin", fields: [admin_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   users       User[]
   requests    Request[]
