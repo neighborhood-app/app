@@ -43,7 +43,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
       responseData.request_id = Number(responseData.request_id);
 
       response = await responseServices.createResponse(responseData);
-      notificationServices.receiveResponse(requestId);
+      notificationServices.receiveResponse(requestId).catch(console.error);
       break;
     }
     case 'edit-response': {

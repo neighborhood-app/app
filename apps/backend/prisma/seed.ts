@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import prismaClient from '../prismaClient';
 import { addSubscribersToTopic, createSubscriber, createTopic, deleteSubscriber, deleteTopic, getAllSubscribers, getTopics } from '../src/services/notificationServices';
-// import { Neighborhood } from '../src/types';
+import { Neighborhood } from '../src/types';
 
 const SAMPLE_PASSWORD = 'secret';
 
@@ -268,52 +268,39 @@ async function main() {
 
   //---------------------------------------------------------
 
-  // Create more neighborhoods
-  // const neighborhoods: Promise<Neighborhood | void>[] = [];
-  // for (let count = 1; count < 28;) {
-  //   for (let userIdx = 0; userIdx < users.length; userIdx += 1) {
-  //     const neighborhood = prismaClient.neighborhood.create({
-  //       data: {
-  //         admin_id: users[userIdx].id,
-  //         name: `Neighborhood ${count}`,
-  //         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-  //       },
-  //     }).then(neighborhood => {
-  //       connectUserToNeighborhood(users[userIdx].id, neighborhood.id);
-  //       return neighborhood;
-  //     }).catch(err => console.error(err));
+  // Create more neighborhoods and corresponding topics
+  const neighborhoods: Promise<Neighborhood | void>[] = [];
+  for (let count = 1; count < 28;) {
+    for (let userIdx = 0; userIdx < users.length; userIdx += 1) {
+      const user = users[userIdx];
+      const neighborhood = prismaClient.neighborhood.create({
+        data: {
+          admin_id: user.id,
+          name: `Neighborhood ${count}`,
+          description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+        },
+      }).then(neighborhood => {        
+        connectUserToNeighborhood(user.id, neighborhood.id).catch(console.error);
+        return neighborhood;
+      }).then(async neighborhood => {
+        const topicKey = `neighborhood:${neighborhood.id}`;
+        createTopic(topicKey, neighborhood.name)
+          .then(_ => {
+            addSubscribersToTopic(topicKey, [user.id])
+          })
+          .catch(console.error);
+      }).catch(err => console.error(err.data));
 
-  //     neighborhoods.push(neighborhood);
-  //     count += 1;
-  //   }
-  // }
+      neighborhoods.push(neighborhood);
+      count += 1;
+    }
+  }
 
-  // await Promise.all(neighborhoods);
-  
-  //   const neighborhoods: Promise<Neighborhood | void>[] = [];
-  // for (let count = 1; count < 28;) {
-  //   for (let userIdx = 0; userIdx < users.length; userIdx += 1) {
-  //     const neighborhood = prismaClient.neighborhood.create({
-  //       data: {
-  //         admin_id: users[userIdx].id,
-  //         name: `Neighborhood ${count}`,
-  //         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-  //       },
-  //     }).then(neighborhood => {        
-  //       connectUserToNeighborhood(users[userIdx].id, neighborhood.id);
-  //       return neighborhood;
-  //     }).then(async neighborhood => {
-  //       const topicKey = `neighborhood:${neighborhood.id}`;
-  //       await createTopic(topicKey, neighborhood.name);
-  //       addSubscribersToTopic(topicKey, [users[userIdx].id]);
-  //     }).catch(err => console.error(err.data));
-
-  //     neighborhoods.push(neighborhood);
-  //     count += 1;
-  //   }
-  // }
-
-  // await Promise.all(neighborhoods);
+  try {
+    await Promise.all(neighborhoods);
+  } catch (error) {
+    console.error(error);
+  }
   //---------------------------------------------------------
 
   // // Create topics and add subscribers to the new neighborhoods

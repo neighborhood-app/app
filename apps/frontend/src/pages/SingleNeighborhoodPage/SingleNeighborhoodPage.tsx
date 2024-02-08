@@ -37,7 +37,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
     const requestData = Object.fromEntries(formData) as unknown as CreateRequestData;
     requestData.neighborhood_id = neighborhoodId;
     response = await requestService.createRequest(requestData);
-    notificationService.createRequest(response.id, neighborhoodId);
+    notificationService.createRequest(response.id, neighborhoodId).catch(console.error);
   } else if (intent === 'join-neighborhood') {
     response = await notificationService.joinNeighborhood(neighborhoodId);
   } else if (intent === 'leave-neighborhood') {

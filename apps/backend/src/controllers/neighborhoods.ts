@@ -11,7 +11,7 @@ import {
   NeighborhoodsPerPage,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
-import { addSubscribersToTopic, createTopic, getTopics } from '../services/notificationServices';
+import { addSubscribersToTopic, createTopic } from '../services/notificationServices';
 
 const neighborhoodsRouter = express.Router();
 
@@ -62,10 +62,6 @@ neighborhoodsRouter.get(
       ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
       : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
-    
-    // TEST
-    const topics = await getTopics(30);
-    console.log(topics)
     return res.status(200).send(neighborhood);
   }),
 );
