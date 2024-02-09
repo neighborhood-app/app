@@ -215,7 +215,7 @@ export default function LandingPage() {
               delay: 2500,
               pauseOnMouseEnter: true,
             }}
-            speed={400}
+            speed={1000}
             breakpoints={{
               300: {
                 slidesPerView: 1,
