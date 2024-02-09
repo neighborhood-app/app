@@ -99,9 +99,9 @@ img {
   cursor: pointer;
 }
 
-.btn:hover {
+/* .btn:hover {
   background: #f7cad9;
-}
+} */
 
 .btn:active {
   transform: scale(0.97);

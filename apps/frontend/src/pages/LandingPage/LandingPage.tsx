@@ -3,6 +3,7 @@ import { CSSProperties, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import ScrollReveal from 'scrollreveal';
+import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import styles from './LandingPage.module.css';
 
 interface CustomCSS extends CSSProperties {
@@ -140,7 +141,7 @@ export default function LandingPage() {
 
         <div className={styles.rightNav}>
           <Link to="/signup">
-            <button className={styles.btn}>Sign Up</button>
+            <CustomBtn variant="primary">Sign Up</CustomBtn>
           </Link>
 
           <div className={`bx bx-menu ${styles.menuIcon}`}></div>
