@@ -324,9 +324,6 @@ export default function LandingPage() {
             Join Neighborhood today and be a part of the movement to create stronger, more united
             neighborhoods.
           </p>
-          {/* 
-        Check it out later!!!
-        */}
         </div>
       </footer>
     </div>

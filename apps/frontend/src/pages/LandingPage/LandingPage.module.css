@@ -458,7 +458,8 @@ img {
   }
 
   .home {
-    gap: 40px;
+    margin-top: 20px;
+    min-height: fit-content;
   }
 
   .home .content h1 {
@@ -466,7 +467,7 @@ img {
   }
 
   .imageContainer .item {
-    max-width: 200px;
+    max-width: 170px;
   }
 
   .contact-container {
@@ -504,7 +505,7 @@ img {
 
   .imageContainer {
     grid-area: imageContainer;
-    margin-top: 100px;
+    margin-top: 50px;
   }
 
   .home .content {
