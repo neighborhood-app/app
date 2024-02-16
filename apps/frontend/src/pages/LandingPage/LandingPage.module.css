@@ -587,14 +587,14 @@ img {
     margin-right: 16px;
   }
 
-  .gettingStarted {
-    padding-top: 120px;
-  }
-
   .gettingStarted .cardContainer {
     grid-template-columns: repeat(1, 1fr);
     column-gap: 0;
     row-gap: 30px;
+  }
+
+  .explore {
+    padding: 10px 8% 0;
   }
 
   .footer {
