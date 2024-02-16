@@ -513,6 +513,10 @@ img {
     text-align: center;
   }
 
+  .gettingStarted {
+    padding-top: 40px;
+  }
+
   .gettingStarted .cardContainer {
     column-gap: 20px;
   }
@@ -594,7 +598,7 @@ img {
   }
 
   .explore {
-    padding: 10px 8% 0;
+    min-height: fit-content;
   }
 
   .footer {
