@@ -8,6 +8,12 @@
   padding: 1vw;
 }
 
+/* .nav {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+background-color: #ff4e2a1c;
+} */
+
 .link {
   margin-top: 20px;
   display: flex;

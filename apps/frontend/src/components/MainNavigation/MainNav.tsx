@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Nav, Navbar } from 'react-bootstrap';
 import { faCompass, faHouse, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { IPopoverNotificationCenterProps } from '@novu/notification-center';
 import styles from './MainNav.module.css';
 import { getStoredUser, deleteStoredUser } from '../../utils/auth';
 import UserCircle from '../UserCircle/UserCircle';
@@ -50,7 +51,9 @@ const MainNav = () => {
     </Link>
   );
 
-  const notificationsIconLink = <Notifications className={styles.link}></Notifications>;
+  const NotificationBell = (
+    position?: IPopoverNotificationCenterProps['position'],
+  ) => <Notifications className={styles.link} position={position}></Notifications>;
 
   const logoutIconLink = (
     <div className={styles.link} title="Log out">
@@ -70,6 +73,7 @@ const MainNav = () => {
       <Navbar className={styles.nav} expand="sm">
         {smallDisplay ? (
           <>
+            {NotificationBell('bottom-start')}
             <Navbar.Toggle />
             <Navbar.Collapse>
               <Nav className="me-auto">
@@ -83,9 +87,6 @@ const MainNav = () => {
                 </Nav.Link>
                 <Nav.Link href="/explore" className={styles.navbarCollapseLink}>
                   EXPLORE
-                </Nav.Link>
-                <Nav.Link href="#pricing" className={styles.navbarCollapseLink}>
-                  NOTIFICATIONS
                 </Nav.Link>
                 <Nav.Link
                   className={styles.navbarCollapseLink}
@@ -103,7 +104,7 @@ const MainNav = () => {
             {profileIconLink}
             {homeIconLink}
             {exploreIconLink}
-            {notificationsIconLink}
+            {NotificationBell('right-start')}
             {logoutIconLink}
           </>
         )}

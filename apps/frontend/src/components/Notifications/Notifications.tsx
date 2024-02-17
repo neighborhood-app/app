@@ -6,12 +6,21 @@ import {
   MessageActionStatusEnum,
   useUpdateAction,
   ButtonTypeEnum,
+  IPopoverNotificationCenterProps,
 } from '@novu/notification-center';
 import { AxiosError } from 'axios';
+import { Container } from 'react-bootstrap';
 import neighborhoodServices from '../../services/neighborhoods';
 import { getStoredUser } from '../../utils/auth';
+import styles from './Notifications.module.css'
 
-export default function Notifications({ className }: { className: string }) {
+export default function Notifications({
+  className,
+  position,
+}: {
+  className: string;
+  position?: IPopoverNotificationCenterProps["position"]
+}) {
   const user = getStoredUser();
 
   const CustomNotificationCenter = () => {
@@ -52,16 +61,19 @@ export default function Notifications({ className }: { className: string }) {
     };
 
     return (
-      <PopoverNotificationCenter
-        colorScheme={'light'}
-        onNotificationClick={handleOnNotificationClick}
-        onActionClick={handleOnActionClick}>
-        {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
-      </PopoverNotificationCenter>
+      <Container className={styles.test}>
+        <PopoverNotificationCenter
+          colorScheme={'light'}
+          onNotificationClick={handleOnNotificationClick}
+          onActionClick={handleOnActionClick}
+          position={position}>
+          {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
+        </PopoverNotificationCenter>
+      </Container>
     );
   };
 
-  const styles = {
+  const bellStyles = {
     bellButton: {
       root: {
         svg: {
@@ -82,6 +94,13 @@ export default function Notifications({ className }: { className: string }) {
         },
       },
     },
+    layout: {
+      root: {
+        width: '390px',
+        maxWidth: '100vw',
+        zIndex: '1700',
+      }
+    }
   };
 
   return (
@@ -91,7 +110,7 @@ export default function Notifications({ className }: { className: string }) {
         subscriberId={String(user?.id)}
         // TODO: move to .env file
         applicationIdentifier={'bPm7zbb5KQz7'}
-        styles={styles}>
+        styles={bellStyles}>
         <CustomNotificationCenter></CustomNotificationCenter>
       </NovuProvider>
     </div>

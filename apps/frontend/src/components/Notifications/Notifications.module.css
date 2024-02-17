@@ -26,3 +26,8 @@
     transform: rotate(-10deg);
   }
 }
+
+.test {
+  /* width: 200px; */
+  max-width: 100vw;
+}
