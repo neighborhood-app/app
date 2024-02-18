@@ -142,7 +142,7 @@ img {
 }
 
 .home .content p {
-  font-size: clamp(0.8rem, 3vw, 1.1rem);
+  /* font-size: clamp(0.8rem, 3vw, 1.1rem); */
   font-weight: 500;
   line-height: 1.5;
   margin-bottom: 32px;
@@ -326,7 +326,7 @@ img {
 }
 
 .slideContent p {
-  font-size: clamp(0.8rem, 3vw, 0.9rem);
+  /* font-size: clamp(0.8rem, 3vw, 0.9rem); */
   font-weight: 400;
   color: #3e4756;
   padding: 6px 20px 20px;
