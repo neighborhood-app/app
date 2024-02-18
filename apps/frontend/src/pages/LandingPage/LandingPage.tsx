@@ -143,8 +143,6 @@ export default function LandingPage() {
           <Link to="/signup">
             <CustomBtn variant="primary">Sign Up</CustomBtn>
           </Link>
-
-          <div className={`bx bx-menu ${styles.menuIcon}`}></div>
         </div>
       </header>
 
