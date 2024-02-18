@@ -470,6 +470,16 @@ img {
     max-width: 170px;
   }
 
+  .gettingStarted {
+    min-height: fit-content;
+    padding-top: 20px;
+  }
+
+  .explore {
+    min-height: fit-content;
+    padding-top: 60px;
+  }
+
   .contact-container {
     grid-template-columns: 45% 45%;
     gap: 50px;
@@ -595,10 +605,6 @@ img {
     grid-template-columns: repeat(1, 1fr);
     column-gap: 0;
     row-gap: 30px;
-  }
-
-  .explore {
-    min-height: fit-content;
   }
 
   .footer {
