@@ -20,9 +20,11 @@ const MainNav = () => {
   });
 
   const logo = (
-    <div className={styles.logo}>
-      <i className="fa-solid fa-people-roof"></i>
-    </div>
+    <Link to="/landing">
+      <div className={styles.logo}>
+        <i className="fa-solid fa-people-roof"></i>
+      </div>
+    </Link>
   );
 
   const profileIconLink = user ? (

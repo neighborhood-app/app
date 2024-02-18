@@ -19,12 +19,12 @@ export default function SignUpPage() {
   return (
     <Container className={styles.wrapperContainer} fluid>
       <Row className={styles.headerRow}>
-        <div className={styles.logo}>
-          <Link to="/landing">
+        <Link to="/landing">
+          <div className={styles.logo}>
             <i className="fa-solid fa-people-roof"></i>
             <span>Neighborhood</span>
-          </Link>
-        </div>
+          </div>
+        </Link>
       </Row>
       <Row className={styles.customRow}>
         <WelcomeImgBox className={`${styles.customCol} ${styles.imgCol}`}></WelcomeImgBox>
