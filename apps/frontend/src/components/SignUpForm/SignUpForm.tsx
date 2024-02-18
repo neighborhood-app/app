@@ -47,7 +47,8 @@ export default function SignUpForm({ className }: { className: string }) {
             Submit
           </CustomBtn>
           <CustomBtn variant="outline-dark" onClick={redirectToLogin}>
-            Already have an account? Log in!
+            Already have an account?
+            <br /> Log in!
           </CustomBtn>
         </div>
       </FormRouter>
