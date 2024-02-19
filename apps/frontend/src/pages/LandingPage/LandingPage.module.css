@@ -326,7 +326,7 @@ img {
 }
 
 .slideContent p {
-  /* font-size: clamp(0.8rem, 3vw, 0.9rem); */
+  font-size: clamp(0.8rem, 3vw, 0.9rem);
   font-weight: 400;
   color: #3e4756;
   padding: 6px 20px 20px;
@@ -629,6 +629,19 @@ img {
 
   .signupAppPart p {
     text-align: right;
+  }
+}
+
+@media (max-width: 550px) {
+  .swiperSlide {
+    max-width: fit-content;
+  }
+
+  .slideContent img {
+    aspect-ratio: 4/2;
+    border-radius: 8px 8px 0 0;
+    object-fit: cover;
+    user-select: none;
   }
 }
 
