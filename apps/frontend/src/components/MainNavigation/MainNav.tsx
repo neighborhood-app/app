@@ -70,7 +70,7 @@ const MainNav = () => {
 
   return (
     <>
-      <Navbar className={styles.nav} expand="sm">
+      <Navbar className={styles.nav} variant='' expand="sm">
         {smallDisplay ? (
           <>
             {NotificationBell('bottom-start')}
@@ -79,14 +79,14 @@ const MainNav = () => {
               <Nav className="me-auto">
                 {user ? (
                   <Nav.Link href={`/users/${user.id}`} className={styles.navbarCollapseLink}>
-                    MY PROFILE
+                    My Profile
                   </Nav.Link>
                 ) : null}
                 <Nav.Link href="/" className={styles.navbarCollapseLink}>
-                  HOME
+                  Home
                 </Nav.Link>
                 <Nav.Link href="/explore" className={styles.navbarCollapseLink}>
-                  EXPLORE
+                  Explore
                 </Nav.Link>
                 <Nav.Link
                   className={styles.navbarCollapseLink}
@@ -94,7 +94,7 @@ const MainNav = () => {
                     deleteStoredUser();
                     window.location.reload();
                   }}>
-                  SIGN OUT
+                  Sign Out
                 </Nav.Link>
               </Nav>
             </Navbar.Collapse>

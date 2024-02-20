@@ -1,18 +1,15 @@
 .nav {
-  background-color: #f0f0f0;
   display: flex;
   flex-direction: column;
   justify-content: top;
   align-items: center;
   height: 100%;
   padding: 1vw;
+  background-color: #ff4e2a1c;
+  background: linear-gradient(#ff8e6a61, white 77%);
+  /* -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px); */
 }
-
-/* .nav {
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-background-color: #ff4e2a1c;
-} */
 
 .link {
   margin-top: 20px;
@@ -61,12 +58,14 @@ background-color: #ff4e2a1c;
 }
 
 .navbarCollapseLink {
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .navIcon {
-  color: #ff4e2a;
+  color: white; /* #ff4e2a; */
   font-size: 1.7rem;
+  stroke: #340900;
+  stroke-width: 40px;
 }
 
 .navIcon:hover {
@@ -97,20 +96,37 @@ background-color: #ff4e2a1c;
   animation: leave 0.4s;
 }
 
+/* doesn't work in Safari */
 @keyframes flip {
   0% {
+    -ms-transform: rotateY(0);
+    -webkit-transform: rotateY(0);
+    -moz-transform: rotateY(0);
+    -o-transform: rotateY(0);
     transform: rotateY(0);
   }
   100% {
+    -ms-transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
     transform: rotateY(180deg);
   }
 }
 
 @keyframes rotate {
   0% {
+    -ms-transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
     transform: rotate(0);
   }
   100% {
+    -ms-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
@@ -141,7 +157,8 @@ background-color: #ff4e2a1c;
 
 @media (max-width: 576px) {
   .nav {
-    background-color: #fff;
+    background: none;
+    background-color: #ff8e6a61;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;

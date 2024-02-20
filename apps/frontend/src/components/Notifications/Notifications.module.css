@@ -1,5 +1,7 @@
 .navIcon {
-  color: #ff4e2a;
+  color: white;
+  stroke: #340900;
+  stroke-width: 30px;
   font-size: 1.7rem;
 }
 

@@ -34,12 +34,29 @@
 }
 
 .leaveIcon {
+  font-size: 1.7em;
   margin-left: 8px;
+  margin-top: 4px;
   color: #ff4e2a;
 }
 
 .leaveIcon:hover {
+  animation: beat 0.2s linear;
+  color: #ff2b00;
   cursor: pointer;
+}
+
+.leaveIcon:active {
+  color: #e92700;
+}
+
+@keyframes beat {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
 }
 
 @media (max-width: 576px) {

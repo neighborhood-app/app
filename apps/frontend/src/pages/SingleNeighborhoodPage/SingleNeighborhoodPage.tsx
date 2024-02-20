@@ -184,7 +184,7 @@ export default function SingleNeighborhood() {
           {userRole === 'MEMBER' ? (
             <FontAwesomeIcon
               icon={faDoorOpen}
-              size="2xl"
+              size="xl"
               className={styles.leaveIcon}
               onClick={handleLeavePrompt}
             />

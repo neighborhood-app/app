@@ -26,6 +26,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: white;
   background: linear-gradient(#fe496f45, #ff4e2a78);
+  background: linear-gradient(#ff8e6a61, white 77%);
 }
 
 code {
@@ -105,4 +106,10 @@ a {
   border: 0.25em #ff2a70 solid;
   border-right-color: transparent;
   display: block;
+}
+
+.navbar {
+  --bs-navbar-toggler-padding-x: 0.7rem;
+  --bs-navbar-toggler-font-size: 1.1rem;
+  --bs-navbar-toggler-focus-width: 0.1rem;
 }

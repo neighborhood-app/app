@@ -9,10 +9,9 @@ import {
   IPopoverNotificationCenterProps,
 } from '@novu/notification-center';
 import { AxiosError } from 'axios';
-import { Container } from 'react-bootstrap';
 import neighborhoodServices from '../../services/neighborhoods';
 import { getStoredUser } from '../../utils/auth';
-import styles from './Notifications.module.css'
+// import styles from './Notifications.module.css'
 
 export default function Notifications({
   className,
@@ -61,7 +60,6 @@ export default function Notifications({
     };
 
     return (
-      <Container className={styles.test}>
         <PopoverNotificationCenter
           colorScheme={'light'}
           onNotificationClick={handleOnNotificationClick}
@@ -69,23 +67,24 @@ export default function Notifications({
           position={position}>
           {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
         </PopoverNotificationCenter>
-      </Container>
     );
   };
 
-  const bellStyles = {
+  const styles = {
     bellButton: {
       root: {
         svg: {
-          color: '#ff4e2a',
-          fill: '#ff4e2a',
+          color: '#340900',
+          fill: 'white',
           minWidth: '32px',
           minHeight: '32px',
+          '&:hover': { fill: '#ff2b00' },
+          '&:active': { fill: '#e92700' },
         },
       },
       dot: {
         rect: {
-          fill: '#45f400', // or #f80000 or black
+          fill: '#ff2a70', // '#45f400', #00e909
           strokeWidth: '0',
           width: '4px',
           height: '4px',
@@ -99,8 +98,8 @@ export default function Notifications({
         width: '390px',
         maxWidth: '100vw',
         zIndex: '1700',
-      }
-    }
+      },
+    },
   };
 
   return (
@@ -110,7 +109,7 @@ export default function Notifications({
         subscriberId={String(user?.id)}
         // TODO: move to .env file
         applicationIdentifier={'bPm7zbb5KQz7'}
-        styles={bellStyles}>
+        styles={styles}>
         <CustomNotificationCenter></CustomNotificationCenter>
       </NovuProvider>
     </div>

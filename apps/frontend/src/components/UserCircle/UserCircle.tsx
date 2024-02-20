@@ -16,7 +16,7 @@ export default function UserCircle({
       className={`${styles.circle} ${isLast ? styles.lastCircle : ''} ${
         inStack ? styles.inStack : ''
       }`}>
-      <strong>{firstTwoLetters}</strong>
+      {firstTwoLetters}
     </div>
   );
 }
