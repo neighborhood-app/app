@@ -143,6 +143,11 @@ export default function LandingPage() {
           <Link to="/signup">
             <CustomBtn variant="primary">Sign Up</CustomBtn>
           </Link>
+          <Link to="/login">
+            <CustomBtn variant="primary" className={styles.loginBtn}>
+              Log in
+            </CustomBtn>
+          </Link>
         </div>
       </header>
 

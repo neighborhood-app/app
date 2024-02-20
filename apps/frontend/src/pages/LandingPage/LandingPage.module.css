@@ -99,9 +99,10 @@ img {
   cursor: pointer;
 }
 
-/* .btn:hover {
-  background: #f7cad9;
-} */
+.loginBtn {
+  padding: 0.375rem 1rem;
+  margin-left: 10px;
+}
 
 .btn:active {
   transform: scale(0.97);

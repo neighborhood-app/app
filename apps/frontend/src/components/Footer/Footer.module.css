@@ -1,16 +1,124 @@
 .footer {
-  width: 100vw;
-  height: 6vh;
-  background-color: white;
-  /* position: absolute;
-  bottom: 0; */
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 65% 35%;
   align-items: center;
-  margin-top: auto;
-  border-top: 1px solid black;
+  width: 100%;
+  height: auto;
+  padding: 30px 8%;
+  background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 8%,
+      rgba(90, 90, 90, 0.05) 8%,
+      rgba(90, 90, 90, 0.05) 21%,
+      transparent 21%,
+      transparent 100%
+    ),
+    linear-gradient(
+      45deg,
+      transparent 0%,
+      transparent 23%,
+      rgba(90, 90, 90, 0.05) 23%,
+      rgba(90, 90, 90, 0.05) 37%,
+      transparent 37%,
+      transparent 100%
+    ),
+    linear-gradient(90deg, #f7cad9, #f3b7aa);
 }
 
-.paragraph {
-  margin: 0;
+.followUs h2 {
+  font-size: clamp(1.2rem, 3vw, 1.4rem);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.followUsList {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.followUsList i {
+  font-size: 2rem;
+  color: #3e4756;
+  cursor: pointer;
+  transform: scale(1);
+  transition: transform 0.2s linear;
+}
+
+.followUsList i:is(:hover, :focus) {
+  transform: scale(1.1);
+}
+
+.signupAppPart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.signupAppPart p {
+  font-size: clamp(0.8rem, 3vw, 1rem);
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: justify;
+}
+
+.signupBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border: 1px solid #3e4756;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: rgb(37, 37, 37);
+  box-shadow: 0 0 4px 2px #00000020;
+  background: #fff;
+  transform: scale(1);
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.signupBtn:hover {
+  transform: scale(0.97);
+}
+
+@media (max-width: 1000px) {
+  .footer {
+    grid-template-columns: 60% 35%;
+  }
+
+  .signupBtn {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 750px) {
+  .footer {
+    grid-template-columns: 50% 45%;
+    padding: 30px 6%;
+  }
+
+  .followUsList i {
+    font-size: 1.5rem;
+  }
+
+  .signupBtn {
+    margin: unset;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  .signupAppPart {
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .signupAppPart p {
+    text-align: right;
+  }
 }
