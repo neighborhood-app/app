@@ -1,4 +1,5 @@
 import { redirect } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 import { StoredUserData } from '../types';
 
 const STORAGE_KEY = 'user';
@@ -44,6 +45,14 @@ export function checkAuthLoader() {
 
   if (!user && location === '/') return redirect('landing');
   if (!user) return redirect('/login');
+
+  const decodedToken = jwtDecode(user.token);
+
+  const isTokenExpired = decodedToken.exp ? Date.now() >= decodedToken.exp * 1000 : true;
+  console.log(isTokenExpired);
+  
+  if (isTokenExpired) return redirect('/login');
+
   return null;
 }
 
