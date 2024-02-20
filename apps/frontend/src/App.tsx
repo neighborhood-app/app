@@ -92,8 +92,8 @@ const router = createBrowserRouter([
   },
   {
     path: '/landing',
-    element: <LandingPage />
-  }
+    element: <LandingPage />,
+  },
 ]);
 
 const App = () => <RouterProvider router={router} />;

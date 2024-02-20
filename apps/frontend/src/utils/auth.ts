@@ -40,7 +40,9 @@ export function deleteStoredUser(): null {
  */
 export function checkAuthLoader() {
   const user = getStoredUser();
+  const location = window.location.pathname;
 
+  if (!user && location === '/') return redirect('landing');
   if (!user) return redirect('/login');
   return null;
 }
