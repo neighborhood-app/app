@@ -48,10 +48,10 @@ export function checkAuthLoader() {
 
   const decodedToken = jwtDecode(user.token);
 
-  const isTokenExpired = decodedToken.exp ? Date.now() >= decodedToken.exp * 1000 : true;
+  const isTokenExpired = decodedToken.exp ? Date.now() >= decodedToken.exp * 1000 : null;
   console.log(isTokenExpired);
   
-  if (isTokenExpired) return redirect('/login');
+  // if (isTokenExpired) return redirect('/login');
 
   return null;
 }
