@@ -59,6 +59,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
     case 'accept-offer': {
       const responseId = formData.get('responseId') as string;
       response = await responseServices.acceptResponse(responseId);
+      notificationServices.responseAccepted(requestId, +responseId).catch(console.error);
       break;
     }
     default: {
@@ -66,8 +67,6 @@ export async function action({ params, request }: ActionFunctionArgs) {
       throw new Error(`Invalid form intent: ${JSON.stringify(exhaustiveCheck)}`);
     }
   }
-
-  console.log('out here', { response });
   
   return response;
 }

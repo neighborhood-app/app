@@ -37,6 +37,21 @@ notificationsRouter.post(
   }),
 );
 
+// User created a new request in a neighborhood
+notificationsRouter.post(
+  '/create-request/:requestId',
+  middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const { requestId } = req.params;
+    const { loggedUserId } = req;
+    const { neighborhoodId } = req.body;
+
+    await triggers.createRequest(requestId, String(loggedUserId), String(neighborhoodId));
+    return res.status(201);
+  }),
+);
+
 // User received a response to their request
 notificationsRouter.post(
   '/receive-response/:requestId',
@@ -51,17 +66,18 @@ notificationsRouter.post(
   }),
 );
 
-// User created a new request in a neighborhood
+// User's response was accepted by the requester
 notificationsRouter.post(
-  '/create-request/:requestId',
+  '/response-accepted/:responseId',
   middleware.userIdExtractorAndLoginValidator,
   middleware.validateURLParams,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const { requestId } = req.params;
+    const { responseId } = req.params;
     const { loggedUserId } = req;
-    const { neighborhoodId } = req.body;
+    const { requestId } = req.body;
+    console.log(typeof responseId, typeof requestId);
 
-    await triggers.createRequest(requestId, String(loggedUserId), String(neighborhoodId));
+    await triggers.responseAccepted(responseId, requestId, String(loggedUserId));
     return res.status(201);
   }),
 );

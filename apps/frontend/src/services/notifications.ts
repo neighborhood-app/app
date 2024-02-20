@@ -15,6 +15,24 @@ async function joinNeighborhood(neighborhoodId: number) {
   return response.data;
 }
 
+async function createRequest(requestId: any, neighborhoodId: number) {
+  try {
+    const user = getStoredUser();
+    const headers = { authorization: '' };
+
+    if (user) headers.authorization = `Bearer ${user.token}`;
+    await axios.post(
+      `${BASE_URL}/create-request/${requestId}`,
+      { neighborhoodId },
+      {
+        headers,
+      },
+    );
+  } catch (error: unknown) {
+    console.error(error);
+  }
+}
+
 async function receiveResponse(requestId: number) {
   try {
     const user = getStoredUser();
@@ -29,36 +47,27 @@ async function receiveResponse(requestId: number) {
   }
 }
 
-async function createRequest(requestId: any, neighborhoodId: number) {
+async function responseAccepted(requestId: number, responseId: number) {
   try {
     const user = getStoredUser();
     const headers = { authorization: '' };
 
     if (user) headers.authorization = `Bearer ${user.token}`;
-    await axios.post(`${BASE_URL}/create-request/${requestId}`, { neighborhoodId }, {
-      headers,
-    });
+    await axios.post(
+      `${BASE_URL}/response-accepted/${responseId}`,
+      { requestId },
+      {
+        headers,
+      },
+    );
   } catch (error: unknown) {
     console.error(error);
   }
 }
 
-// async function updateAction(notificationId: string, btnType: string, status: string) {
-//   const user = getStoredUser();
-//   const headers = { authorization: '' };
-//   const data = { notificationId, btnType, status };
-
-//   if (user) headers.authorization = `Bearer ${user.token}`;
-
-//   const response = await axios.post(`${BASE_URL}/mark-action-done`, data, {
-//     headers,
-//   });
-
-//   return response.data;
-// }
-
 export default {
   joinNeighborhood,
-  receiveResponse,
   createRequest,
+  receiveResponse,
+  responseAccepted,
 };

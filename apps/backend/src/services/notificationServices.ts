@@ -2,6 +2,7 @@ import { Novu, TriggerRecipientsTypeEnum } from '@novu/node';
 import { createHmac } from 'crypto';
 import { JoinNeighborhoodArgs, Request, Subscriber, Topic } from '../types';
 import requestServices from './requestServices';
+import responseServices from './responseServices';
 
 // MOVE KEY TO .env file
 const NOVU_API_KEY = '9cc0a07918a5743da4558428c33d6558';
@@ -223,6 +224,26 @@ export const triggers = {
   },
   /**
    * Sends a notification to the requester when a user responds to them.
+   * @param requestId (string) - id of the new request
+   * @param actorId (string) - the subscriber id of the user who made the request
+   * @param neighborhoodId (string) - the id of the neighborhood the request was created in
+   */
+  async createRequest(requestId: string, actorId: string, neighborhoodId: string) {
+    try {
+      const topicKey = `neighborhood:${neighborhoodId}`;
+      await novu.trigger('create-request', {
+        to: [{ type: TriggerRecipientsTypeEnum.TOPIC, topicKey }],
+        actor: { subscriberId: actorId },
+        payload: {
+          requestId,
+        },
+      });
+    } catch (error: unknown) {
+      console.error('Failed to trigger create-request notification', error);
+    }
+  },
+  /**
+   * Sends a notification to the requester when a user responds to them.
    * @param requestId (string) - id of the request the user received a repsonse for
    * @param subscriberId (string) - the subscriber id of the user who responded
    */
@@ -245,23 +266,29 @@ export const triggers = {
     }
   },
   /**
-   * Sends a notification to the requester when a user responds to them.
-   * @param requestId (string) - id of the new request
-   * @param actorId (string) - the subscriber id of the user who made the request
-   * @param neighborhoodId (string) - the id of the neighborhood the request was created in
+   * Sends a notification to the respondee when their response got accepted.
+   * @param responseId (string) - id of the accepted response
+   * @param requestId (number) - id of the request the user responded to
+   * @param actorId (string) - the subscriber id of the user who created the request
    */
-  async createRequest(requestId: string, actorId: string, neighborhoodId: string) {
+  async responseAccepted(responseId: string, requestId: number, actorId: string) {
     try {
-      const topicKey = `neighborhood:${neighborhoodId}`;
-      await novu.trigger('create-request', {
-        to: [{ type: TriggerRecipientsTypeEnum.TOPIC, topicKey }],
-        actor: { subscriberId: actorId },
+      const response = await responseServices.getResponseById(+responseId);
+      const subscriberId = String(response.user_id);
+
+      await novu.trigger('response-accepted', {
+        to: {
+          subscriberId,
+        },
         payload: {
           requestId,
         },
+        actor: {
+          subscriberId: actorId,
+        },
       });
     } catch (error: unknown) {
-      console.error('Failed to trigger create-request notification', error);
+      console.error('Failed to trigger response-accepted notification', error);
     }
   },
 };

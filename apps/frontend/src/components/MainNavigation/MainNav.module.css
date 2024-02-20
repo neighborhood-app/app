@@ -96,7 +96,6 @@
   animation: leave 0.4s;
 }
 
-/* doesn't work in Safari */
 @keyframes flip {
   0% {
     -ms-transform: rotateY(0);
