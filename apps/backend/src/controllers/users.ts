@@ -8,7 +8,7 @@ const usersRouter = express.Router();
 
 usersRouter.get('/', middleware.userIdExtractorAndLoginValidator, catchError(async (_req: Request, res: Response) => {
   const users: Array<UserWithoutPasswordHash> = await userServices.getAllUsers();
-
+  
   res.status(200).json(users);
 }));
 
@@ -20,7 +20,7 @@ usersRouter.get('/:id', middleware.userIdExtractorAndLoginValidator, catchError(
   res.status(200).json(user);
 }));
 
-usersRouter.post('/', middleware.userIdExtractorAndLoginValidator, catchError(async (req: Request, res: Response) => {
+usersRouter.post('/', catchError(async (req: Request, res: Response) => {
   const createUserData = await userServices.parseCreateUserData(req.body);
   const newUser: UserWithoutPasswordHash = await userServices.createUser(createUserData);
 
