@@ -223,7 +223,7 @@ img {
   max-width: 300px;
   padding: 30px 20px;
   background: #fff;
-  border: 3px solid #f3b7aa;
+  /* border: 3px solid #f3b7aa; */
   border-radius: 10px;
   box-shadow: 0 0 4px 2px #00000020;
   transition:
@@ -234,7 +234,7 @@ img {
 
 .card:hover {
   background: linear-gradient(160deg, #fbe7e3e5 30%, #ffdfe9c4 80%);
-  border: 3px solid #ff4e2a;
+  /* border: 3px solid #ff4e2a; */
 }
 
 .card h2 {
@@ -302,7 +302,7 @@ img {
   gap: 10px;
   height: 100%;
   background: #fff;
-  border: 3px solid #f3b7aa;
+  /* border: 3px solid #f3b7aa; */
   border-radius: inherit;
   transition: border 0.2s ease-in;
 }
@@ -314,6 +314,7 @@ img {
 .slideContent img {
   aspect-ratio: 3/2;
   border-radius: 8px 8px 0 0;
+  box-shadow: 0 0 4px 2px #00000020;
   object-fit: cover;
   user-select: none;
 }
