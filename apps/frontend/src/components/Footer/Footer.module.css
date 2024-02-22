@@ -1,6 +1,7 @@
 .footer {
   display: grid;
   grid-template-columns: 65% 35%;
+  z-index: 10;
   align-items: center;
   width: 100%;
   height: auto;

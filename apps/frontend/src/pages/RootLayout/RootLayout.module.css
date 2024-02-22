@@ -8,8 +8,15 @@
   min-width: 0;
 }
 
+.mainColumn {
+  margin-left: 4%;
+}
+
 .sticky {
-  position: sticky;
+  position: fixed;
+  height: 100%;
+  /* max-width: 5%; */
+  left: 0;
   top: 0;
 }
 
@@ -21,6 +28,7 @@
   }
 
   .sticky {
+    position: sticky;
     z-index: 1600;
   }
 }

@@ -11,7 +11,7 @@ const RootLayout = () => (
       <Col className={`${styles.column} ${styles.sticky}`} sm="auto">
         <MainNav />
       </Col>
-      <Col className={styles.column}>
+      <Col className={`${styles.column} ${styles.mainColumn}`}>
         <main>
           <Outlet />
         </main>
