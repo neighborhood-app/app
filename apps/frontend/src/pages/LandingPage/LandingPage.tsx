@@ -121,8 +121,8 @@ export default function LandingPage() {
           <span> Neighborhood</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav" className={styles.navBar}>
-          <Nav className="me-auto">
+        <Navbar.Collapse id="responsive-navbar-nav" className="">
+          <Nav className="me-auto w-100 justify-content-end">
             <Nav.Link className={styles.navItem}>Home</Nav.Link>
             <Nav.Link className={styles.navItem}>How it works?</Nav.Link>
             <Nav.Link className={styles.navItem}>Why Neighborhood?</Nav.Link>

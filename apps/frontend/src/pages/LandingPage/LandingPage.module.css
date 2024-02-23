@@ -587,15 +587,15 @@ img {
     margin-bottom: 12px;
   }
 
-  .navItem {
+  /* .navItem {
     list-style: none;
     color: #fff;
-  }
+  } */
 
-  .navItem:hover,
+  /* .navItem:hover,
   .navItem.active {
     color: #3e4756;
-  }
+  } */
 
   .navBar.active {
     right: 6%;
