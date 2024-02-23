@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
 import { CSSProperties, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Nav, Navbar } from 'react-bootstrap';
 import ScrollReveal from 'scrollreveal';
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import styles from './LandingPage.module.css';
@@ -19,7 +19,7 @@ const img10 = require('./images/img-10.jpg');
 const img11 = require('./images/img-11.jpg');
 const img12 = require('./images/img-12.jpg');
 const img13 = require('./images/img-13.jpg');
-const img14 = require('./images/img-14.jpg');
+// const img14 = require('./images/img-14.jpg');
 
 ScrollReveal().reveal('.scroll-btn-animation', {
   delay: 1400,
@@ -115,41 +115,26 @@ export default function LandingPage() {
 
   return (
     <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <a href="#" className={styles.logo}>
+      <Navbar className={styles.header} expand="md" sticky="top">
+        <Navbar.Brand href="#">
           <i className="fa-solid fa-people-roof"></i>
-          <span>Neighborhood</span>
-        </a>
-
-        <ul className={styles.navBar}>
-          <li>
-            <a href="#home" className={`${styles.navItem}`}>
-              Home
-            </a>
-          </li>
-          <li>
-            <a href="#howItWorks" className={styles.navItem}>
-              How it works?
-            </a>
-          </li>
-          <li>
-            <a href="#whyNeighborhood" className={styles.navItem}>
-              Why Neighborhood?
-            </a>
-          </li>
-        </ul>
-
-        <div className={styles.rightNav}>
-          <Link to="/signup">
-            <CustomBtn variant="primary">Sign Up</CustomBtn>
-          </Link>
-          <Link to="/login">
-            <CustomBtn variant="primary" className={styles.loginBtn}>
-              Log in
-            </CustomBtn>
-          </Link>
-        </div>
-      </header>
+          <span> Neighborhood</span>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav" className={styles.navBar}>
+          <Nav className="me-auto">
+            <Nav.Link className={styles.navItem}>Home</Nav.Link>
+            <Nav.Link className={styles.navItem}>How it works?</Nav.Link>
+            <Nav.Link className={styles.navItem}>Why Neighborhood?</Nav.Link>
+            <Nav.Link href="/signup" className={styles.navItem}>
+              <CustomBtn variant="primary">Sign Up</CustomBtn>
+            </Nav.Link>
+            <Nav.Link href="/signup" className={styles.navItem}>
+              <CustomBtn variant="primary">Log in</CustomBtn>
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
 
       <section id="home" className={styles.home}>
         <div className={styles.content}>
@@ -272,7 +257,7 @@ export default function LandingPage() {
               </div>
             </SwiperSlide>
 
-            <SwiperSlide className={styles.swiperSlide}>
+            {/* <SwiperSlide className={styles.swiperSlide}>
               <div className={styles.slideContent}>
                 <img className={styles.img} src={img14} alt="" />
                 <h2>Stay Informed</h2>
@@ -282,7 +267,7 @@ export default function LandingPage() {
                   matters most in your community.
                 </p>
               </div>
-            </SwiperSlide>
+            </SwiperSlide> */}
 
             <SwiperSlide className={`${styles.swiperSlide}`}>
               <div className={styles.slideContent}>
@@ -303,9 +288,6 @@ export default function LandingPage() {
         <div className={styles.followUs}>
           <h2>Follow us</h2>
           <div className={styles.followUsList}>
-            {/*
-              Icons are too small
-            */}
             <a href="#">
               <i className="bx bxl-facebook-square"></i>
             </a>

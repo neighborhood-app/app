@@ -13,13 +13,13 @@ img {
 }
 
 .header {
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  top: 0;
-  right: 0;
+  /* position: fixed; */
+  /* display: flex; */
+  /* align-items: center; */
+  /* justify-content: space-between; */
+  /* width: 100%; */
+  /* top: 0; */
+  /* right: 0; */
   padding: 16px 8%;
   z-index: 10;
   transition: all 0.5s ease;
@@ -44,6 +44,8 @@ img {
 
 .navBar {
   display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
   margin: 0 0 0 auto;
   list-style: none;
 }
@@ -57,6 +59,8 @@ img {
   color: #3e4756;
   font-size: 1rem;
   transition: all 0.5s ease;
+  align-self: center;
+  justify-self: flex-end;
 }
 
 .navItem:hover,
@@ -634,7 +638,7 @@ img {
   }
 }
 
-@media (max-width: 550px) {
+@media (max-width: 576px) {
   .swiperSlide {
     max-width: fit-content;
   }
