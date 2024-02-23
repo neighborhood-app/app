@@ -115,22 +115,34 @@ export default function LandingPage() {
 
   return (
     <div className={styles.wrapper}>
-      <Navbar className={styles.header} expand="md" sticky="top">
-        <Navbar.Brand href="#">
+      <Navbar className={styles.header} expand="lg" sticky="top">
+        <Navbar.Brand href="#home">
           <i className="fa-solid fa-people-roof"></i>
           <span> Neighborhood</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav" className="">
           <Nav className="me-auto w-100 justify-content-end">
-            <Nav.Link className={styles.navItem}>Home</Nav.Link>
-            <Nav.Link className={styles.navItem}>How it works?</Nav.Link>
-            <Nav.Link className={styles.navItem}>Why Neighborhood?</Nav.Link>
-            <Nav.Link href="/signup" className={styles.navItem}>
-              <CustomBtn variant="primary">Sign Up</CustomBtn>
+            <Nav.Link href="#home" className={styles.navItem}>
+              Home
             </Nav.Link>
+            <Nav.Link href="#howItWorks" className={styles.navItem}>
+              How it works?
+            </Nav.Link>
+            <Nav.Link href="#whyNeighborhood" className={styles.navItem}>
+              Why Neighborhood?
+            </Nav.Link>
+          </Nav>
+          <Nav className="me-auto flex-row justify-content-center">
             <Nav.Link href="/signup" className={styles.navItem}>
-              <CustomBtn variant="primary">Log in</CustomBtn>
+              <CustomBtn className={styles.btn} variant="primary">
+                Sign Up
+              </CustomBtn>
+            </Nav.Link>
+            <Nav.Link href="/login" className={styles.navItem}>
+              <CustomBtn className={styles.btn} variant="primary">
+                Log in
+              </CustomBtn>
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
@@ -256,18 +268,6 @@ export default function LandingPage() {
                 </p>
               </div>
             </SwiperSlide>
-
-            {/* <SwiperSlide className={styles.swiperSlide}>
-              <div className={styles.slideContent}>
-                <img className={styles.img} src={img14} alt="" />
-                <h2>Stay Informed</h2>
-                <p>
-                  Receive real-time updates on local events, news, and important announcements.
-                  Whether it's a neighborhood gathering or a safety alert, stay connected to what
-                  matters most in your community.
-                </p>
-              </div>
-            </SwiperSlide> */}
 
             <SwiperSlide className={`${styles.swiperSlide}`}>
               <div className={styles.slideContent}>

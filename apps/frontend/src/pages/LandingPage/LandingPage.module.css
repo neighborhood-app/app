@@ -57,20 +57,15 @@ img {
 
 .navItem {
   color: #3e4756;
-  font-size: 1rem;
+  font-size: 1.2rem;
   transition: all 0.5s ease;
   align-self: center;
-  justify-self: flex-end;
+  margin-right: 1rem;
 }
 
 .navItem:hover,
 .navItem.active {
   color: #ff4e2a;
-}
-
-.rightNav {
-  display: flex;
-  align-items: center;
 }
 
 .menuIcon {
@@ -85,12 +80,13 @@ img {
 
 .btn {
   background-color: #ff0054;
+  width: 6.5rem;
   color: white;
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 18px;
+  padding: 10px 16px;
   outline: 0;
   border: 0;
   border-radius: 10px;
@@ -130,9 +126,9 @@ img {
   grid-template-columns: 40% 60%;
   gap: 80px;
   place-items: center;
-  min-height: 90vh;
+  min-height: 80vh;
   width: 100%;
-  padding: 80px 8% 0;
+  padding: 60px 8% 0;
 }
 
 .home .content {
@@ -437,6 +433,10 @@ img {
   .home .item {
     max-width: 220px;
   }
+
+  .home {
+    padding: 20px 8% 0;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -463,8 +463,11 @@ img {
     padding: 16px 5%;
   }
 
+  .navItem {
+    margin-right: 1rem;
+  }
+
   .home {
-    margin-top: 20px;
     min-height: fit-content;
   }
 
@@ -530,7 +533,7 @@ img {
   }
 
   .gettingStarted {
-    padding-top: 40px;
+    padding-top: 20px;
   }
 
   .gettingStarted .cardContainer {
@@ -586,17 +589,6 @@ img {
     margin-right: unset;
     margin-bottom: 12px;
   }
-
-  /* .navItem {
-    list-style: none;
-    color: #fff;
-  } */
-
-  /* .navItem:hover,
-  .navItem.active {
-    color: #3e4756;
-  } */
-
   .navBar.active {
     right: 6%;
   }
@@ -640,7 +632,7 @@ img {
 
 @media (max-width: 576px) {
   .swiperSlide {
-    max-width: fit-content;
+    max-width: 100%;
   }
 
   .slideContent img {
