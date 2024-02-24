@@ -285,7 +285,7 @@ img {
 
 .swiperSlide {
   max-width: 350px;
-  height: 450px;
+  height: 410px;
   margin: 20px 0 40px;
   border-radius: 10px;
   box-shadow:
@@ -298,6 +298,7 @@ img {
 .slideContent {
   display: grid;
   grid-auto-flow: dense;
+  /* grid-template-rows: 3fr 1fr 3fr; */
   grid-auto-rows: 1fr;
   gap: 10px;
   height: 100%;
@@ -329,6 +330,7 @@ img {
 
 .slideContent p {
   font-size: clamp(0.8rem, 3vw, 0.9rem);
+  align-self: start;
   font-weight: 400;
   color: #3e4756;
   padding: 6px 20px 20px;
@@ -633,6 +635,10 @@ img {
 @media (max-width: 576px) {
   .swiperSlide {
     max-width: 100%;
+  }
+
+  .slideContent {
+    grid-template-rows: 3fr 1fr 3fr;
   }
 
   .slideContent img {
