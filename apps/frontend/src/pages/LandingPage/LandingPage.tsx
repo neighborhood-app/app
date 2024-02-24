@@ -104,7 +104,7 @@ export default function LandingPage() {
       duration: 600,
     });
 
-    ScrollReveal().reveal('[class*="signupBtn"]', {
+    ScrollReveal().reveal('[class*="home"]', {
       delay: 800,
       easing: 'ease-in',
       origin: 'top',
@@ -116,7 +116,7 @@ export default function LandingPage() {
   return (
     <div className={styles.wrapper}>
       <Navbar className={styles.header} expand="lg" sticky="top">
-        <Navbar.Brand href="#home">
+        <Navbar.Brand href="#home" className={styles.logo}>
           <i className="fa-solid fa-people-roof"></i>
           <span> Neighborhood</span>
         </Navbar.Brand>
@@ -156,6 +156,9 @@ export default function LandingPage() {
             and support? Introducing Neighborhood, the social-media app designed to foster
             meaningful connections, and build a stronger, more closely associated community.
           </p>
+          <CustomBtn className={styles.btn} variant="primary">
+            Sign Up
+          </CustomBtn>
         </div>
 
         <div className={styles.imageContainer}>
