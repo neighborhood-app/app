@@ -145,7 +145,11 @@ export default function SingleNeighborhood() {
     : null;
   const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
 
-  console.log(userRole);
+  const MapColumn = (breakpoint: 'auto' | '6', location: SearchResult) => (
+    <Col xs={breakpoint} className={styles.centeredColumn}>
+      <MapBox coordinates={{ lat: location?.y, lng: location?.x }} />
+    </Col>
+  );
 
   let neighborhoodRequests;
   let usernames;
@@ -202,20 +206,12 @@ export default function SingleNeighborhood() {
             location={neighborhoodLocation}
             setPromptDetails={setPromptDetails}
           />
-          {neighborhoodLocation && smallDisplay ? (
-            <Col xs="auto" className={styles.centeredColumn}>
-              <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
-            </Col>
-          ) : null}
+          {neighborhoodLocation && smallDisplay ? MapColumn('auto', neighborhoodLocation) : null}
           {userRole !== 'NON-MEMBER' ? (
             <h2 className={`${styles.title} mt-3`}>Neighborhood Requests</h2>
           ) : null}
         </Col>
-        {neighborhoodLocation && !smallDisplay ? (
-          <Col xs={6} className={styles.centeredColumn}>
-            <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
-          </Col>
-        ) : null}
+        {neighborhoodLocation && !smallDisplay ? MapColumn('6', neighborhoodLocation) : null}
       </Row>
       {userRole !== 'NON-MEMBER' ? (
         <Row>{<RequestBox requests={neighborhoodRequests} />}</Row>
