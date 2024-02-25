@@ -25,7 +25,7 @@ export default function LoginPage() {
   return (
     <Container className={styles.wrapper} fluid>
       <Row className={styles.headerRow}>
-        <Link to="/landing">
+        <Link className={styles.logoLink} to="/landing">
           <div className={styles.logo}>
             <i className="fa-solid fa-people-roof"></i>
             <span>Neighborhood</span>
