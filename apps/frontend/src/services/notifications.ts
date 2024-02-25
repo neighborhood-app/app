@@ -15,6 +15,24 @@ async function joinNeighborhood(neighborhoodId: number) {
   return response.data;
 }
 
+// do we need authorization here?
+async function joinReqAccepted(userId: number, neighborhoodId: number) {
+  const user = getStoredUser();
+  const headers = { authorization: '' };
+
+  if (user) headers.authorization = `Bearer ${user.token}`;
+
+  const response = await axios.post(
+    `${BASE_URL}/join-accepted/${neighborhoodId}`,
+    { userId },
+    {
+      headers,
+    },
+  );
+
+  return response.data;
+}
+
 async function createRequest(requestId: any, neighborhoodId: number) {
   try {
     const user = getStoredUser();
@@ -67,6 +85,7 @@ async function responseAccepted(requestId: number, responseId: number) {
 
 export default {
   joinNeighborhood,
+  joinReqAccepted,
   createRequest,
   receiveResponse,
   responseAccepted,

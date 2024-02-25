@@ -37,6 +37,25 @@ notificationsRouter.post(
   }),
 );
 
+// User was accepted as neighborhood member
+notificationsRouter.post(
+  '/join-accepted/:neighborhoodId',
+  middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
+  catchError(async (req: RequestWithAuthentication, res: Response) => {
+    const { neighborhoodId } = req.params;
+    const { userId } = req.body;
+
+    console.log({ userId, neighborhoodId });
+
+    const neighborhood = await neighborhoodServices.getNeighborhoodDetailsForMembers(+neighborhoodId);
+    const neighborhoodName = neighborhood.name;
+
+    await triggers.joinReqAccepted(String(userId), neighborhoodId, neighborhoodName);
+    return res.status(201);
+  }),
+);
+
 // User created a new request in a neighborhood
 notificationsRouter.post(
   '/create-request/:requestId',

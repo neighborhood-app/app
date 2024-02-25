@@ -223,6 +223,27 @@ export const triggers = {
     }
   },
   /**
+   * Sends a notification to a user when the admin accepts their request to join a neighborhood.
+   * @param subscriberId (string) - subscriberId of the user who joined
+   * @param neighborhoodId (string) - the id of the joined neighborhood
+   * @param neighborhoodName (string) - the name of the joined neighborhood
+   */
+  async joinReqAccepted(subscriberId: string, neighborhoodId: string, neighborhoodName: string) {
+    try {
+      novu.trigger('join-accepted', {
+        to: {
+          subscriberId,
+        },
+        payload: {
+          neighborhoodName,
+          neighborhoodId,
+        },
+      }).then(res => console.log(res.data))
+    } catch (error: unknown) {
+      console.error('Failed to trigger join-accepted notification', error);
+    }
+  },
+  /**
    * Sends a notification to the requester when a user responds to them.
    * @param requestId (string) - id of the new request
    * @param actorId (string) - the subscriber id of the user who made the request

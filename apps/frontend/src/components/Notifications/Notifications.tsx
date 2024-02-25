@@ -10,6 +10,7 @@ import {
 } from '@novu/notification-center';
 import { AxiosError } from 'axios';
 import neighborhoodServices from '../../services/neighborhoods';
+import notificationServices from '../../services/notifications';
 import { getStoredUser } from '../../utils/auth';
 // import styles from './Notifications.module.css'
 
@@ -18,7 +19,7 @@ export default function Notifications({
   position,
 }: {
   className: string;
-  position?: IPopoverNotificationCenterProps["position"]
+  position?: IPopoverNotificationCenterProps['position'];
 }) {
   const user = getStoredUser();
 
@@ -39,10 +40,12 @@ export default function Notifications({
       if (notificationType === 'join-neighborhood' && btnType === 'primary') {
         const { userId, neighborhoodId } = notification.payload;
         try {
-          await neighborhoodServices.connectUserToNeighborhood(
-            Number(userId),
-            Number(neighborhoodId),
-          );
+          await neighborhoodServices
+            .connectUserToNeighborhood(Number(userId), Number(neighborhoodId))
+            .then(_ => {
+              console.log(userId);
+              notificationServices.joinReqAccepted(Number(userId), Number(neighborhoodId)).catch(console.error);
+            });
         } catch (error) {
           if (error instanceof AxiosError) {
             // TODO: display error in some manner
@@ -60,13 +63,13 @@ export default function Notifications({
     };
 
     return (
-        <PopoverNotificationCenter
-          colorScheme={'light'}
-          onNotificationClick={handleOnNotificationClick}
-          onActionClick={handleOnActionClick}
-          position={position}>
-          {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
-        </PopoverNotificationCenter>
+      <PopoverNotificationCenter
+        colorScheme={'light'}
+        onNotificationClick={handleOnNotificationClick}
+        onActionClick={handleOnActionClick}
+        position={position}>
+        {({ unseenCount }) => <NotificationBell unseenCount={unseenCount} />}
+      </PopoverNotificationCenter>
     );
   };
 
