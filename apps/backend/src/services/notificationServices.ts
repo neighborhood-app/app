@@ -1,6 +1,13 @@
 import { Novu, TriggerRecipientsTypeEnum } from '@novu/node';
 import { createHmac } from 'crypto';
-import { JoinNeighborhoodArgs, Request, Subscriber, Topic } from '../types';
+import {
+  JoinNeighborhoodArgs,
+  Notification,
+  NotificationFilterData,
+  Request,
+  Subscriber,
+  Topic,
+} from '../types';
 import requestServices from './requestServices';
 import responseServices from './responseServices';
 
@@ -146,6 +153,28 @@ export async function deleteSubscriber(subscriberId: string) {
 }
 
 /**
+ * Retrieves the last 100 subscriber notifications.
+ * @param subscriberId (string) - the id of the subscriber
+ * @returns an array of Notification objects
+ */
+function getSubscriberNotifications(subscriberId: string) {
+  return novu.subscribers
+    .getNotificationsFeed(subscriberId, {
+      page: 0,
+      limit: 100,
+    })
+    .then((res) =>
+      res.data.data.map((notification: Notification) => ({
+        status: notification.cta.action.status,
+        userId: notification.payload.userId,
+        neighborhoodId: notification.payload.neighborhoodId,
+        templateIdentifier: notification.templateIdentifier,
+      })),
+    )
+    .catch(console.error);
+}
+
+/**
  * Generates an HMAC encrypted subscriberId
  * @param id - the subscriber id
  * @returns the encrypter subscriber id
@@ -155,39 +184,6 @@ export function hashSubscriberId(id: string) {
 
   return hmacHash;
 }
-
-/**
- *
- * @param subscriberId (number)
- * @param notificationId (string) - the id of the associated notification
- * @param status (string) - the status to set the action to
- * @param btnType - the type of the button (primary/secondary)
- * @returns
- */
-// export async function markActionDone(
-//   subscriberId: number,
-//   notificationId: string,
-//   status: string,
-//   btnType: string,
-// ) {
-//   const options = {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json', Authorization: `ApiKey ${NOVU_API_KEY}` },
-//     body: JSON.stringify({ payload: {}, status }),
-//   };
-
-//   const res = await fetch(
-//     `https://api.novu.co/v1/subscribers/${subscriberId}/messages/${notificationId}/actions/${btnType}`,
-//     options,
-//   )
-//     .then((response) => response.json())
-//     .then((data) => data)
-//     .catch((error) => console.error('Error:', error));
-
-//   console.log('res from marking as done', res.data.cta);
-
-//   return res;
-// }
 
 export const triggers = {
   /**
@@ -207,6 +203,18 @@ export const triggers = {
     username,
   }: JoinNeighborhoodArgs) {
     try {
+      const notifications = await getSubscriberNotifications(adminId);
+
+      const identicalNotification = notifications.some(
+        (notification: NotificationFilterData) =>
+          notification.status === 'pending' &&
+          notification.userId === userId &&
+          notification.neighborhoodId === neighborhoodId &&
+          notification.templateIdentifier === 'join-neighborhood',
+      );
+
+      if (identicalNotification) return;
+
       await novu.trigger('join-neighborhood', {
         to: {
           subscriberId: adminId,
@@ -228,9 +236,9 @@ export const triggers = {
    * @param neighborhoodId (string) - the id of the joined neighborhood
    * @param neighborhoodName (string) - the name of the joined neighborhood
    */
-  async joinReqAccepted(subscriberId: string, neighborhoodId: string, neighborhoodName: string) {
-    try {
-      novu.trigger('join-accepted', {
+  joinReqAccepted(subscriberId: string, neighborhoodId: string, neighborhoodName: string) {
+    novu
+      .trigger('join-accepted', {
         to: {
           subscriberId,
         },
@@ -238,10 +246,10 @@ export const triggers = {
           neighborhoodName,
           neighborhoodId,
         },
-      }).then(res => console.log(res.data))
-    } catch (error: unknown) {
-      console.error('Failed to trigger join-accepted notification', error);
-    }
+      })
+      .catch((error) => {
+        console.error('Failed to trigger join-accepted notification', error);
+      });
   },
   /**
    * Sends a notification to the requester when a user responds to them.

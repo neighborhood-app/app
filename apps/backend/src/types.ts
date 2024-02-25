@@ -91,7 +91,9 @@ export type UpdateUserData = {
 /**
  * Format of data sent to POST /api/neighborhood to create new neighborhood
  */
-export type CreateNeighborhoodData = Pick<Neighborhood, 'admin_id' | 'name' | 'description'> & {location: null | schema.Prisma.JsonValue};
+export type CreateNeighborhoodData = Pick<Neighborhood, 'admin_id' | 'name' | 'description'> & {
+  location: null | schema.Prisma.JsonValue;
+};
 
 /**
  * Request with token for authentication
@@ -268,7 +270,7 @@ export interface Subscriber {
   __v: number;
 }
 
-/**
+/*
  * Shape of a Novu Topic
  */
 export interface Topic {
@@ -278,4 +280,31 @@ export interface Topic {
   key: string;
   name: string;
   subscribers: string[];
+}
+
+/*
+ * Shape of Notification data returned from `getNotificationsFeed`
+ */
+export interface Notification {
+  cta: {
+    action: { status: 'pending' | 'done' };
+  };
+  templateIdentifier: string;
+  status: string;
+  payload: {
+    neighborhoodId: string;
+    neighborhoodName: string;
+    username: string;
+    userId: string;
+  };
+}
+
+/*
+ * Shape of Notification data needed to find identical notification
+ */
+export interface NotificationFilterData {
+  status: 'pending' | 'done';
+  templateIdentifier: string;
+  neighborhoodId: string;
+  userId: string;
 }

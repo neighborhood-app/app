@@ -46,11 +46,10 @@ notificationsRouter.post(
     const { neighborhoodId } = req.params;
     const { userId } = req.body;
 
-    console.log({ userId, neighborhoodId });
-
     const neighborhood = await neighborhoodServices.getNeighborhoodDetailsForMembers(+neighborhoodId);
     const neighborhoodName = neighborhood.name;
 
+    // await could perhaps be omitted here with a `catch` callback
     await triggers.joinReqAccepted(String(userId), neighborhoodId, neighborhoodName);
     return res.status(201);
   }),
