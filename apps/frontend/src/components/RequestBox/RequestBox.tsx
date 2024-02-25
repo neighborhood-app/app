@@ -57,7 +57,7 @@ export default function RequestBox({
 
   return (
     <Container className="pe-0" fluid>
-      <Row className="me-0">
+      <Row className="me-0 mt-2">
         <Col>
           <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>
             Create request
