@@ -82,8 +82,8 @@ img {
   background-color: #ff0054;
   width: 6.5rem;
   color: white;
-  position: relative;
-  display: inline-flex;
+  /* position: relative; */
+  /* display: inline-flex; */
   align-items: center;
   justify-content: center;
   padding: 10px 16px;
@@ -190,7 +190,6 @@ img {
 }
 
 .gettingStarted h1 {
-  position: relative;
   font-size: clamp(1.8rem, 3vw, 2.1rem);
   font-weight: 600;
   line-height: 1.3;
@@ -199,7 +198,6 @@ img {
 
 .gettingStarted h1::before {
   content: '';
-  position: absolute;
   top: 66%;
   left: 0;
   width: 100%;
@@ -518,7 +516,7 @@ img {
 
   .home {
     grid-template-columns: 1fr;
-    grid-template-rows: 50% 50%;
+    /* grid-template-rows: 50% 50%; */
     grid-template-areas:
       'imageContainer'
       'content';
@@ -535,7 +533,7 @@ img {
   }
 
   .gettingStarted {
-    padding-top: 20px;
+    padding-top: 50px;
   }
 
   .gettingStarted .cardContainer {
