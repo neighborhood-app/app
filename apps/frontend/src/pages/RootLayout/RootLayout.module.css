@@ -8,9 +8,9 @@
   min-width: 0;
 }
 
-.mainColumn {
+/* .mainColumn {
   margin-left: 4%;
-}
+} */
 
 .sticky {
   position: fixed;
