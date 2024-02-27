@@ -8,9 +8,9 @@
   min-width: 0;
 }
 
-/* .mainColumn {
+.mainColumn {
   margin-left: 4%;
-} */
+}
 
 .sticky {
   position: fixed;
@@ -21,6 +21,10 @@
 }
 
 @media (max-width: 576px) {
+  .mainColumn {
+    margin-left: 0;
+  }
+
   .column {
     min-height: 0;
     min-width: unset;
