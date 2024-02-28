@@ -22,7 +22,7 @@ const Footer = ({ variant = 'layout' }: Props) => (
         <a href="#">
           <i className="bx bxl-twitter"></i>
         </a>
-        <a href="#">
+        <a href="https://github.com/neighborhood-app/app">
           {' '}
           <i className="bx bxl-github"></i>
         </a>
