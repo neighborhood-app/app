@@ -81,10 +81,14 @@ export default function NeighborhoodModalForm({
   };
 
   const handleLocationSearch = async (query: string) => {
-    setIsLoading(true);
-    const results = await provider.search({ query });
-    setOptions(results);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const results = await provider.search({ query });
+      setOptions(results);
+      setIsLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const debouncedSearch = debounce(handleLocationSearch, 1000);

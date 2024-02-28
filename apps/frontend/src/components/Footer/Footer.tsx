@@ -1,6 +1,10 @@
 import styles from './Footer.module.css';
 
-const Footer = () => (
+interface Props {
+  variant?: 'landing' | 'layout';
+}
+
+const Footer = ({ variant = 'layout' }: Props) => (
   <footer className={styles.footer}>
     <div className={styles.followUs}>
       <h2>Follow us</h2>
@@ -24,12 +28,14 @@ const Footer = () => (
         </a>
       </div>
     </div>
-    <div className={styles.signupAppPart}>
-      <p>
-        Join Neighborhood today and be a part of the movement to create stronger, more united
-        neighborhoods.
-      </p>
-    </div>
+    {variant === 'landing' ? (
+      <div className={styles.signupAppPart}>
+        <p>
+          Join Neighborhood today and be a part of the movement to create stronger, more united
+          neighborhoods.
+        </p>
+      </div>
+    ) : null}
   </footer>
 );
 
