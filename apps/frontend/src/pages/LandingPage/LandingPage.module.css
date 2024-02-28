@@ -648,11 +648,6 @@ img {
 }
 
 @media (max-width: 420px) {
-  .logo {
-    display: flex;
-    flex-direction: column;
-  }
-
   .explore h1::before {
     top: 92%;
     left: 50%;
