@@ -68,9 +68,12 @@
   .imgCol {
     display: none;
   }
-}
 
-@media screen and (max-width: 992px) {
+  .logo {
+    display: flex;
+    justify-content: center;
+  }
+
   .customRow {
     padding: 0;
   }
