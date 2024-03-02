@@ -116,7 +116,7 @@ export default function NeighborhoodSearch({
       <Container className={`${styles.searchBox} mt-4 mb-5`} fluid>
         <Row className="mt-1 gy-3 justify-content-center justify-content-sm-end">
           <Col className={`mx-sm-auto ${styles.searchCol}`} lg="4" sm="6" xs="auto">
-            <Form>
+            <Form onSubmit={(event) => event.preventDefault()}>
               <Form.Group>
                 <Form.Control
                   className={styles.searchInput}
