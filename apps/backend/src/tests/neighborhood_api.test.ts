@@ -488,8 +488,8 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
       .put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`)
       .set('Authorization', `Bearer ${token}`)
       .send(newData);
-
-    expect(response.text).toEqual("Neighborhood 'Test' has been updated.");
+    
+    expect(response.body).toEqual({ success: "Neighborhood 'Test' has been updated." });
     expect(response.status).toEqual(200);
     expect(
       await prismaClient.neighborhood.findFirst({
@@ -514,7 +514,7 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
       .set('Authorization', `Bearer ${token}`)
       .send(newData);
 
-    expect(response.text).toEqual("Neighborhood 'Test' has been updated.");
+    expect(response.body).toEqual({ success: "Neighborhood 'Test' has been updated." });
     expect(response.status).toEqual(200);
     expect(
       await prismaClient.neighborhood.findFirst({
@@ -538,7 +538,7 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
       .set('Authorization', `Bearer ${token}`)
       .send({});
 
-    expect(response.text).toEqual("Neighborhood 'Bob's Neighborhood' has been updated.");
+    expect(response.body).toEqual({ success: "Neighborhood 'Bob's Neighborhood' has been updated." });
     expect(response.status).toEqual(200);
     expect(
       await prismaClient.neighborhood.findFirst({
@@ -913,7 +913,7 @@ describe('Tests for getting requests associated with a n-hood GET /neighborhoods
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(400);
-    expect(response.body.error).toEqual('user is not a member of the neighborhood');
+    expect(response.body.error).toEqual('User is not a member of the neighborhood');
   });
 
   test('able to fetch data with valid data', async () => {
