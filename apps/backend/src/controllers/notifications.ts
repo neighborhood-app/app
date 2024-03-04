@@ -33,7 +33,7 @@ notificationsRouter.post(
     }
 
     await triggers.joinNeighborhood(args);
-    return res.status(201);
+    return res.status(201).send({ success: `Your request to join ${neighborhoodName} has been sent.` });
   }),
 );
 
@@ -93,7 +93,6 @@ notificationsRouter.post(
     const { responseId } = req.params;
     const { loggedUserId } = req;
     const { requestId } = req.body;
-    console.log(typeof responseId, typeof requestId);
 
     await triggers.responseAccepted(responseId, requestId, String(loggedUserId));
     return res.status(201);

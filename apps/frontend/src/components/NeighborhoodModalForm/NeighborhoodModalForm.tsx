@@ -1,6 +1,6 @@
 import { Modal, Form, Container, Row, Col } from 'react-bootstrap';
 import { useSubmit } from 'react-router-dom';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Option } from 'react-bootstrap-typeahead/types/types';
 import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
@@ -31,7 +31,7 @@ export default function NeighborhoodModalForm({
 }: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
 
-  const [nameInput, setNameInput] = useState(name);
+  const [nameInput, setNameInput] = useState(name);  
   const [locationInput, setLocationInput] = useState<Option | null>(location);
   const [textAreaInput, setTextAreaInput] = useState(description);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +87,11 @@ export default function NeighborhoodModalForm({
     setIsLoading(false);
   };
 
-  const debouncedSearch = debounce(handleLocationSearch, 1000);
+  const debouncedSearch = debounce(handleLocationSearch, 1000);  
+
+  useEffect(() => {
+    setNameInput(name);    
+  }, [name]);
 
   return (
     <Modal show={show} onHide={closeModal} animation={true} backdrop="static" centered>

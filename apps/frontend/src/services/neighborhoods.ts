@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { redirect } from 'react-router';
 import { LatLngBounds } from 'leaflet';
 import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/types';
@@ -54,7 +54,7 @@ async function getSingleNeighborhood(id: number): Promise<NeighborhoodType | nul
 
 async function deleteNeighborhood(
   id: number,
-): Promise<Response | { success: string } | { error: string }> {
+): Promise<Response | { success: string } | ErrorObj> {
   const user = getStoredUser();
   if (!user) return redirect('/login');
 
@@ -66,7 +66,7 @@ async function deleteNeighborhood(
 
 async function createNeighborhood(
   neighborhoodData: CreateNeighborhoodData,
-): Promise<Response | { success: string } | { error: string }> {
+): Promise<Response | { success: string } | ErrorObj> {
   const user = getStoredUser();
   if (!user) return redirect('/login');
 
@@ -93,7 +93,7 @@ async function connectUserToNeighborhood(
 
 async function leaveNeighborhood(
   neighborhoodId: number,
-): Promise<Response | { success: string } | { error: string }> {
+): Promise<Response | { success: string } | ErrorObj> {
   const user = getStoredUser();
   if (!user) return redirect('/login');
 
@@ -106,16 +106,22 @@ async function leaveNeighborhood(
 async function editNeighborhood(
   neighborhoodId: number,
   neighborhoodData: EditNeighborhoodData,
-): Promise<Response | { success: string } | { error: string }> {
+): Promise<Response | { success: string } | ErrorObj> {
   const user = getStoredUser();
   if (!user) return redirect('/login');
   
   neighborhoodData.location = neighborhoodData.location ? neighborhoodData.location : null
 
   const headers = { authorization: `Bearer ${user.token}` };
-  const response = await axios.put(`${BASE_URL}/${neighborhoodId}`, neighborhoodData, { headers });
+  let response;
+  try {
+    response = await axios.put(`${BASE_URL}/${neighborhoodId}`, neighborhoodData, { headers });
+    return response.data;
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) return error.response?.data;
 
-  return response.data;
+    throw error;
+  }
 }
 
 export default {

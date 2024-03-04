@@ -3,7 +3,7 @@ import catchError from '../utils/catchError';
 import { User, LoginData, LoginResponseData, RequestWithAuthentication } from '../types';
 import loginServices from '../services/loginServices';
 import middleware from '../utils/middleware';
-import { hashSubscriberId } from '../utils/notifications';
+import { hashSubscriberId } from '../services/notificationServices';
 
 const loginRouter = express.Router();
 

@@ -109,10 +109,9 @@ async function main() {
   //---------------------------------------------------------
 
   // Delete existing topics (passed-in number is arbitrary)
-  const topics = await getTopics(50);
-  console.log(topics);
-  
+  const topics = await getTopics(50);  
   const promises: Promise<void>[] = [];
+
   topics.forEach(topic => promises.push(deleteTopic(topic)))
   await Promise.all(promises);
 

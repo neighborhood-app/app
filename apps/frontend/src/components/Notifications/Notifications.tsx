@@ -43,14 +43,13 @@ export default function Notifications({
           await neighborhoodServices
             .connectUserToNeighborhood(Number(userId), Number(neighborhoodId))
             .then(_ => {
-              console.log(userId);
               notificationServices.joinReqAccepted(Number(userId), Number(neighborhoodId)).catch(console.error);
             });
         } catch (error) {
           if (error instanceof AxiosError) {
             // TODO: display error in some manner
+            console.error(error);
           }
-          console.log(error);
         }
       }
 

@@ -11,7 +11,6 @@ import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
-import { AxiosError } from 'axios';
 import notificationService from '../../services/notifications';
 import neighborhoodService from '../../services/neighborhoods';
 import requestService from '../../services/requests';
@@ -22,8 +21,8 @@ import {
   NeighborhoodType,
   SingleNeighborhoodFormIntent,
   UserRole,
-  FormIntent,
   ErrorObj,
+  PromptDetails,
 } from '../../types';
 import styles from './SingleNeighborhoodPage.module.css';
 import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
@@ -63,11 +62,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
     response = await neighborhoodService.leaveNeighborhood(neighborhoodId);
   } else if (intent === 'edit-neighborhood') {
     const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
-    try {
-      response = await neighborhoodService.editNeighborhood(neighborhoodId, neighborhoodData);
-    } catch (error) {
-      return error;
-    }
+    response = await neighborhoodService.editNeighborhood(neighborhoodId, neighborhoodData);
   } else if (intent === 'delete-neighborhood') {
     response = await neighborhoodService.deleteNeighborhood(neighborhoodId);
   }
@@ -78,39 +73,18 @@ export async function action({ params, request }: ActionFunctionArgs) {
 const neighborhoodImg = require('./palm.jpeg');
 
 export default function SingleNeighborhood() {
-  interface PromptDetails {
-    show: boolean;
-    text: string;
-    intent: FormIntent;
-  }
-
+  const { id: neighborhoodId } = useParams();
+  const actionData: unknown = useActionData();
   const mql = window.matchMedia('(max-width: 768px)');
   const [smallDisplay, setSmallDisplay] = useState(mql.matches);
-
-  mql.addEventListener('change', () => {
-    setSmallDisplay(mql.matches);
-  });
-
-  const { id: neighborhoodId } = useParams();
+  const [success, setSuccess] = useState<{ success: string } | null>(null);
+  const [error, setError] = useState<ErrorObj | null>(null);
 
   const [promptDetails, setPromptDetails] = useState<PromptDetails>({
     show: false,
     text: '',
     intent: 'leave-neighborhood',
   });
-
-  const errorObj = useActionData() as AxiosError;
-
-  const [error, setError] = useState<ErrorObj | null>(null);
-
-  useEffect(() => {
-    if (errorObj) {
-      setError(errorObj.response?.data as ErrorObj);
-      setTimeout(() => {
-        setError(null);
-      }, 5000);
-    }
-  }, [errorObj]);
 
   function handleClosePrompt() {
     setPromptDetails((previousState) => ({ ...previousState, show: false }));
@@ -138,6 +112,20 @@ export default function SingleNeighborhood() {
     });
   }
 
+  mql.addEventListener('change', () => {
+    setSmallDisplay(mql.matches);
+  });
+
+  useEffect(() => {
+    if (typeof actionData === 'object' && actionData && 'error' in actionData) {
+      setError(actionData as ErrorObj);
+      setTimeout(() => setError(null), 6000);
+    } else if (typeof actionData === 'object' && actionData && 'success' in actionData) {
+      setSuccess(actionData as { success: string });
+      setTimeout(() => setSuccess(null), 6000);
+    }
+  }, [actionData]);
+
   const user = getStoredUser();
   const neighborhoodData = useLoaderData() as NeighborhoodType;
   const neighborhoodLocation = neighborhoodData.location
@@ -163,6 +151,7 @@ export default function SingleNeighborhood() {
 
   return (
     <Container className={styles.wrapper} fluid>
+      {success && <AlertBox text={success.success} variant="success"></AlertBox>}
       {error && <AlertBox text={error.error} variant="danger"></AlertBox>}
       <Prompt
         text={promptDetails.text}

@@ -94,7 +94,7 @@ neighborhoodsRouter.delete(
     }
 
     const deletedNeighborhood = await neighborhoodServices.deleteNeighborhood(neighborhoodID);
-    return res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`);
+    return res.status(200).send({ success: `Neighborhood '${deletedNeighborhood.name}' has been deleted.` });
   }),
 );
 
@@ -121,8 +121,9 @@ neighborhoodsRouter.put(
     } else {
       data.location = Prisma.JsonNull;
     }
-      const updatedNeighborhood = await neighborhoodServices.editNeighborhood(neighborhoodID, data);
-    return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
+
+    const updatedNeighborhood = await neighborhoodServices.editNeighborhood(neighborhoodID, data);
+    return res.status(200).send({ success: `Neighborhood '${updatedNeighborhood.name}' has been updated.` });
   }),
 );
 
@@ -213,7 +214,7 @@ neighborhoodsRouter.get(
       await neighborhoodServices.isUserMemberOfNeighborhood(loggedUserID, neighborhoodID);
 
     if (!isUserMemberOfNeighborhood) {
-      return res.status(400).send({ error: 'user is not a member of the neighborhood' });
+      return res.status(400).send({ error: 'User is not a member of the neighborhood' });
     }
 
     const requests: RequestData[] =

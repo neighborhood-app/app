@@ -12,6 +12,7 @@ async function joinNeighborhood(neighborhoodId: number) {
   const response = await axios.post(`${BASE_URL}/join-neighborhood/${neighborhoodId}`, null, {
     headers,
   });
+  
   return response.data;
 }
 

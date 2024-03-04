@@ -12,6 +12,7 @@
 }
 
 .neighborhoodName {
+  line-height: 1.1;
   text-wrap: wrap;
   overflow-wrap: break-word;
 }
