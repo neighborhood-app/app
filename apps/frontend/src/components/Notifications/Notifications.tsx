@@ -12,7 +12,6 @@ import { AxiosError } from 'axios';
 import neighborhoodServices from '../../services/neighborhoods';
 import notificationServices from '../../services/notifications';
 import { getStoredUser } from '../../utils/auth';
-// import styles from './Notifications.module.css'
 
 export default function Notifications({
   className,
@@ -109,8 +108,7 @@ export default function Notifications({
       <NovuProvider
         subscriberHash={user?.hashedSubscriberId}
         subscriberId={String(user?.id)}
-        // TODO: move to .env file
-        applicationIdentifier={'bPm7zbb5KQz7'}
+        applicationIdentifier={process.env.REACT_APP_NOVU_APP_ID || ''}
         styles={styles}>
         <CustomNotificationCenter></CustomNotificationCenter>
       </NovuProvider>

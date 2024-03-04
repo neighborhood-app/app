@@ -1,14 +1,9 @@
 import express, { Response } from 'express';
-// import { Novu } from '@novu/node';
 import catchError from '../utils/catchError';
 import middleware from '../utils/middleware';
 import { JoinNeighborhoodArgs, RequestWithAuthentication } from '../types';
 import { triggers } from '../services/notificationServices';
 import neighborhoodServices from '../services/neighborhoodServices';
-
-// MOVE KEY TO .env file
-// const NOVU_API_KEY = '9cc0a07918a5743da4558428c33d6558';
-// const novu = new Novu(NOVU_API_KEY);
 
 const notificationsRouter = express.Router();
 

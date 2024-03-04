@@ -11,8 +11,7 @@ import {
 import requestServices from './requestServices';
 import responseServices from './responseServices';
 
-// MOVE KEY TO .env file
-const NOVU_API_KEY = '9cc0a07918a5743da4558428c33d6558';
+const NOVU_API_KEY = process.env.NOVU_API_KEY || '';
 const novu = new Novu(NOVU_API_KEY);
 
 /**
