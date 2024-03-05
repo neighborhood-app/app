@@ -311,7 +311,7 @@ img {
 }
 
 .slideContent img {
-  aspect-ratio: 3/2;
+  aspect-ratio: 4/2;
   border-radius: 8px 8px 0 0;
   box-shadow: 0 0 4px 2px #00000020;
   object-fit: cover;
