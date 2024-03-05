@@ -135,11 +135,11 @@ export default function NeighborhoodModalForm({
               onChange={(option) => {
                 setLocationInput(option[0]);
               }}
-              // onInputChange={(text, _event) => {
-              //   if (text === '') {
-              //     setLocationInput(null);
-              //   }
-              // }}
+              onInputChange={(text, _event) => {
+                if (text.trim() === '') {
+                  setLocationInput(null);
+                }
+              }}
               // @ts-ignore
               defaultInputValue={locationDefaultValue ? locationDefaultValue.label : ''}
               isInvalid={!isValidAddress(locationInput)}
