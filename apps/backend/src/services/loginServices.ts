@@ -81,7 +81,7 @@ const generateToken = async (username: string, userId: number): Promise<string> 
     userDataForGeneratingToken,
     secret,
     // { expiresIn: 5 }, // token expires in 1 hour
-    { expiresIn: '1000h' }, // token expires in 1000 hours while dev
+    { expiresIn: '24h' }, // token expires in 1000 hours while dev
   );
 
   return token;
