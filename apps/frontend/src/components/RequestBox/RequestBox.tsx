@@ -56,7 +56,7 @@ export default function RequestBox({
     )) || [];
 
   return (
-    <Container className="pe-0" fluid>
+    <Container fluid>
       <Row className="me-0">
         <Col>
           <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>

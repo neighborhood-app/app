@@ -1,5 +1,6 @@
 import { Container, Row } from 'react-bootstrap';
 import { redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 import { LoginData } from '@neighborhood/backend/src/types';
 import { UserInfo } from '../../types';
 import LoginForm from '../../components/LoginForm/LoginForm';
@@ -22,8 +23,15 @@ export async function action({ request }: { request: Request }) {
 
 export default function LoginPage() {
   return (
-    <Container className={styles.wrapperContainer} fluid>
-      <h1 className={styles.neighborhoodHeading}>Neighborhood</h1>
+    <Container className={styles.wrapper} fluid>
+      <Row className={styles.headerRow}>
+        <Link className={styles.logoLink} to="/landing">
+          <div className={styles.logo}>
+            <i className="fa-solid fa-people-roof"></i>
+            <span>Neighborhood</span>
+          </div>
+        </Link>
+      </Row>
       <Row className={styles.customRow}>
         <WelcomeImgBox className={`${styles.customCol} ${styles.imgCol}`}></WelcomeImgBox>
         <LoginForm className={`${styles.customCol} ${styles.formWrapper}`}></LoginForm>

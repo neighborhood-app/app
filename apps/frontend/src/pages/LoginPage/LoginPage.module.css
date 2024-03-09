@@ -1,21 +1,39 @@
-.neighborhoodHeading {
-  position: absolute;
-  top: 1rem;
-  right: 2rem;
+.wrapper {
+  color: #3e4756;
+  background: #fff;
+  background-image: radial-gradient(at 3.6% 13.8%, #f8d5e0 0px, transparent 50%),
+    radial-gradient(at 96.3% 93.8%, #fad3ca 0px, transparent 50%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100dvh;
 }
 
-.wrapperContainer {
-  height: 100%;
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
+  padding: 16px 7.23%;
+}
+
+.logo {
+  color: #3e4756;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.logo i {
+  font-size: 2rem;
+  margin-right: 4px;
+}
+
+.customRow {
+  padding: 4.5rem;
 }
 
 .customCol {
   align-content: center;
   display: grid;
-}
-
-.customRow {
-  height: 100vh;
 }
 
 .formWrapper {
@@ -24,28 +42,38 @@
 }
 
 .imgCol {
-  background: linear-gradient(to right, #ff7343 9%, white);
-  background-color: #ff7343;
+  /* background: linear-gradient(to right, #ff7343 9%, white);
+  background-color: #ff7343; */
+  justify-content: center;
   text-align: center;
-  padding-top: 62px;
-  padding-bottom: 3px;
+  /* padding-top: 62px;
+  padding-bottom: 3px; */
 }
 
 @media screen and (max-width: 992px) {
-  .neighborhoodHeading {
-    position: absolute;
-    top: 1.5rem;
-    padding-right: 10px;
-    background: #ffffffc9;
-    right: auto;
-  } 
+  .headerRow {
+    justify-content: center;
+    padding-top: 2rem;
+  }
+
+  .logoLink {
+    width: fit-content;
+  }
+
+  .customCol {
+    justify-content: center;
+  }
 
   .imgCol {
-    background: #ff7343;
-    background-image: url('../../assets/neighborhood3.jpeg');
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 320px;
+    display: none;
+  }
+
+  .logo {
+    display: flex;
+    justify-content: center;
+  }
+
+  .customRow {
+    padding: 0;
   }
 }

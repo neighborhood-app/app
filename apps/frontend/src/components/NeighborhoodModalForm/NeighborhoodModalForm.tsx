@@ -5,7 +5,7 @@ import { Option } from 'react-bootstrap-typeahead/types/types';
 import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
-import { debounce } from 'ts-debounce';
+// import { debounce } from 'ts-debounce';
 import styles from './NeighborhoodModalForm.module.css';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import { FormIntent } from '../../types';
@@ -43,6 +43,7 @@ export default function NeighborhoodModalForm({
 
   const closeModal = () => {
     handleClose();
+    setIsLoading(false);
     setNameInput(name);
     setTextAreaInput(description);
   };
@@ -81,13 +82,17 @@ export default function NeighborhoodModalForm({
   };
 
   const handleLocationSearch = async (query: string) => {
-    setIsLoading(true);
-    const results = await provider.search({ query });
-    setOptions(results);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const results = await provider.search({ query });
+      setOptions(results);
+      setIsLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const debouncedSearch = debounce(handleLocationSearch, 1000);
+  // const debouncedSearch = debounce(handleLocationSearch, 1000);
 
   return (
     <Modal show={show} onHide={closeModal} animation={true} backdrop="static" centered>
@@ -131,11 +136,8 @@ export default function NeighborhoodModalForm({
                 setLocationInput(option[0]);
               }}
               onInputChange={(text, _event) => {
-                if (text === '') {
+                if (text.trim() === '') {
                   setLocationInput(null);
-                } else {
-                  setLocationInput(text);
-                  debouncedSearch(text);
                 }
               }}
               // @ts-ignore

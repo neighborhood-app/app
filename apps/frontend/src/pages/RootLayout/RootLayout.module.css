@@ -8,16 +8,31 @@
   min-width: 0;
 }
 
+.mainColumn {
+  margin-left: 4%;
+}
+
 .sticky {
-  position: sticky;
+  position: fixed;
+  height: 100%;
+  /* max-width: 5%; */
+  left: 0;
   top: 0;
-  z-index: 1600;
 }
 
 @media (max-width: 576px) {
+  .mainColumn {
+    margin-left: 0;
+  }
+
   .column {
     min-height: 0;
     min-width: unset;
     height: auto;
+  }
+
+  .sticky {
+    position: sticky;
+    z-index: 1600;
   }
 }
