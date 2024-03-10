@@ -8,12 +8,12 @@ a:hover {
 }
 
 .checkboxCol {
-  font-size: .875rem;
+  font-size: 0.875rem;
   padding-left: 0;
 }
 
 .forgotPwdCol {
-  font-size: .875rem;
+  font-size: 0.875rem;
   padding: 0;
   text-align: right;
 }
@@ -26,6 +26,6 @@ a:hover {
 
 @media screen and (max-width: 500px) {
   .loginForm {
-    max-width: 86%;
+    max-width: 100%;
   }
 }
