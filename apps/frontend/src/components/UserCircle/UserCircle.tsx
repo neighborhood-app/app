@@ -8,8 +8,8 @@ export default function UserCircle({
   username: string;
   isLast?: boolean;
   inStack?: boolean;
-}) {
-  const firstTwoLetters = username.slice(0, 2).toUpperCase();
+  }) {  
+  const firstTwoLetters = username?.slice(0, 2).toUpperCase();
 
   return (
     <div

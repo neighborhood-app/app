@@ -23,7 +23,7 @@ loginRouter.post(
     );
 
     if (!isPasswordCorrect) {
-      return response.status(401).json({ error: 'invalid username or password' });
+      return response.status(401).json({ error: 'Invalid username or password.' });
     }
 
     const token: string = await loginServices.generateToken(userInDb.username, userInDb.id);

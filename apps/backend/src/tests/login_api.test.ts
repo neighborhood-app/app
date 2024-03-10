@@ -57,7 +57,7 @@ describe('Tests for logging in the app: POST /login', () => {
       .expect(401)
       .expect('Content-Type', /application\/json/);
 
-    expect(response._body.error).toBe('invalid username or password');
+    expect(response._body.error).toBe('Invalid username or password.');
 
     const loginData2: LoginData = {
       username: 'WrongUsername',
@@ -70,7 +70,7 @@ describe('Tests for logging in the app: POST /login', () => {
       .expect(401)
       .expect('Content-Type', /application\/json/);
 
-    expect(response2._body.error).toBe('invalid username or password');
+    expect(response2._body.error).toBe('Invalid username or password.');
   });
 
   test('Unable to login if user is already logged in', async () => {

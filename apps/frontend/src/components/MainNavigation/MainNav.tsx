@@ -23,8 +23,8 @@ const MainNav = () => {
 
   const logo = (
     <Link to="/landing">
-      <div className={`mt-2`}>
-        <FontAwesomeIcon className={`${styles.logo}`} icon={faPeopleRoof} />
+      <div className='mt-2'>
+        <FontAwesomeIcon className={styles.logo} icon={faPeopleRoof} />
       </div>
     </Link>
   );

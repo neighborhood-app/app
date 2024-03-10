@@ -84,7 +84,9 @@ describe('When there is initially no user in db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    expect(response1._body.error).toBe('Invalid Username');
+    expect(response1._body.error).toBe(
+      'The username needs to be 4-20 characters long and can contain alphanumerics, _, or .',
+    );
 
     const dataWithShortPassword: CreateUserData = {
       username: 'johnsmith',
@@ -98,7 +100,7 @@ describe('When there is initially no user in db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    expect(response2._body.error).toBe('Invalid Password');
+    expect(response2._body.error).toBe('The password needs to be at least 4 characters long.');
   });
 });
 
