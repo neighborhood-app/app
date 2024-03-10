@@ -5,18 +5,11 @@
   align-items: center;
   height: 100%;
   padding: 1vw;
-  background-color: #ff4e2a1c;
-  background: linear-gradient(#ff8e6a61, white 77%);
-  /* -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px); */
 }
 
 .logo {
-  font-size: 1.2rem;
-}
-
-.logo i {
   font-size: 1.6rem;
+  transition: font-size 0.2s;
 }
 
 .link {
@@ -70,18 +63,22 @@
 }
 
 .navIcon {
-  color: white; /* #ff4e2a; */
+  color: white;
   font-size: 1.7rem;
   stroke: #340900;
   stroke-width: 40px;
 }
 
-.navIcon:hover {
+.navIcon:hover, .logo:hover {
   color: #ff2b00;
 }
 
-.navIcon:active {
+.navIcon:active, .logo:active {
   color: #e92700;
+}
+
+.logo:hover {
+  font-size: 1.7rem;
 }
 
 .homeIcon:hover {
@@ -165,7 +162,8 @@
 @media (max-width: 576px) {
   .nav {
     background: none;
-    background-color: #ff8e6a61;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;

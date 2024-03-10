@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Nav, Navbar } from 'react-bootstrap';
-import { faCompass, faHouse, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faCompass, faHouse, faPeopleRoof, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { IPopoverNotificationCenterProps } from '@novu/notification-center';
 import styles from './MainNav.module.css';
 import { getStoredUser, deleteStoredUser } from '../../utils/auth';
@@ -23,8 +23,8 @@ const MainNav = () => {
 
   const logo = (
     <Link to="/landing">
-      <div className={styles.logo}>
-        <i className="fa-solid fa-people-roof"></i>
+      <div className={`mt-2`}>
+        <FontAwesomeIcon className={`${styles.logo}`} icon={faPeopleRoof} />
       </div>
     </Link>
   );

@@ -29,35 +29,22 @@
   align-items: center;
 }
 
-.title {
-  /* padding: 0; */
-  /* margin-top: 30px; */
-}
-
 .leaveIcon {
+  color: #ff4e2a;
   font-size: 1.7em;
   margin-left: 8px;
   margin-top: 4px;
-  color: #ff4e2a;
+  transition: font-size 0.2s;
 }
 
 .leaveIcon:hover {
-  animation: beat 0.2s linear;
+  font-size: 1.8em;
   color: #ff2b00;
   cursor: pointer;
 }
 
 .leaveIcon:active {
   color: #e92700;
-}
-
-@keyframes beat {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.1);
-  }
 }
 
 @media (max-width: 576px) {
