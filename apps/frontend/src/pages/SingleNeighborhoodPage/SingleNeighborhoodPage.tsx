@@ -144,11 +144,11 @@ export default function SingleNeighborhood() {
   const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
 
   let neighborhoodRequests;
-  let usernames;
+  let users;
 
   if (checkForNeighborhoodDetails(neighborhoodData)) {
     neighborhoodRequests = neighborhoodData.requests;
-    usernames = neighborhoodData.users?.map((user) => user.username);
+    users = neighborhoodData.users;
   } else {
     neighborhoodRequests = null;
   }
@@ -178,7 +178,7 @@ export default function SingleNeighborhood() {
           xs="12"
           md="2"
           className={`${styles.membersContainer} justify-content-md-end ms-md-auto ms-3 pe-0`}>
-          {userRole !== 'NON-MEMBER' ? <UserCircleStack usernames={usernames} /> : null}
+          {userRole !== 'NON-MEMBER' ? <UserCircleStack users={users} /> : null}
           {userRole === 'MEMBER' ? (
             <FontAwesomeIcon
               icon={faDoorOpen}

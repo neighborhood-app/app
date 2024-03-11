@@ -1,18 +1,24 @@
+import { User } from '@prisma/client';
+import { Link } from 'react-router-dom';
 import UserCircle from '../UserCircle/UserCircle';
 import styles from './UserCircleStack.module.css';
 
-export default function UserCircleStack({ usernames }: { usernames?: string[] }) {
-  if (Array.isArray(usernames)) {
-    const displayUsers = usernames.slice(0, 3);
-    const usersLeft = usernames.length - 3;
+export default function UserCircleStack({ users }: { users?: User[] | null }) {
+  if (Array.isArray(users)) {
+    const displayUsers = users.slice(0, 3);
+    const usersLeft = users.length - 3;
 
     return (
       <div className={styles.circleContainer}>
-        {displayUsers.map((username, index) =>
+        {displayUsers.map((user, index) =>
           index === displayUsers.length - 1 ? (
-            <UserCircle key={username} username={username} isLast={true} />
+            <Link to={`/users/${user.id}`} className={styles.circleLink}>
+              <UserCircle key={user.id} username={user.username} isLast={true} />
+            </Link>
           ) : (
-            <UserCircle key={username} username={username} />
+            <Link to={`/users/${user.id}`} className={styles.circleLink}>
+              <UserCircle key={user.id} username={user.username} />
+            </Link>
           ),
         )}
         {/* If there are more than 3 users a circle is shown with how many users there are left. */}
