@@ -101,7 +101,31 @@ export default function Notifications({
         zIndex: '1700',
       },
     },
+    notifications: {
+      listItem: {
+        buttons: {
+          primary: {
+            borderRadius: '0.375rem',
+            background: '#fe496f',
+            '&:hover': {
+              background: '#ff0054',
+            },
+          },
+          secondary: {
+            background: 'transparent',
+            border: '1px solid #212529',
+            color: '#212529',
+            '&:hover': {
+              background: '#ff2b00',
+              color: 'white',
+              border: 0,
+            },
+          },
+        },
+      },
+    },
   };
+
 
   return (
     <div className={className} title="Notifications">
