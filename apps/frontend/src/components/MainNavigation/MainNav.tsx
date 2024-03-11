@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Nav, Navbar } from 'react-bootstrap';
-import { faBell, faCompass, faHouse, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faCompass, faHouse, faPeopleRoof, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { IPopoverNotificationCenterProps } from '@novu/notification-center';
 import styles from './MainNav.module.css';
 import { getStoredUser, deleteStoredUser } from '../../utils/auth';
 import UserCircle from '../UserCircle/UserCircle';
+import Notifications from '../Notifications/Notifications';
 
 // const profilePic = require('./profile_placeholder.png');
 
@@ -21,8 +23,8 @@ const MainNav = () => {
 
   const logo = (
     <Link to="/landing">
-      <div className={styles.logo}>
-        <i className="fa-solid fa-people-roof"></i>
+      <div className='mt-2'>
+        <FontAwesomeIcon className={styles.logo} icon={faPeopleRoof} />
       </div>
     </Link>
   );
@@ -57,13 +59,9 @@ const MainNav = () => {
     </Link>
   );
 
-  const notificationsIconLink = (
-    <div className={styles.link} title="Notifications">
-      <FontAwesomeIcon
-        icon={faBell}
-        className={`${styles.navIcon} ${styles.bellIcon}`}></FontAwesomeIcon>
-    </div>
-  );
+  const NotificationBell = (
+    position?: IPopoverNotificationCenterProps['position'],
+  ) => <Notifications className={styles.link} position={position}></Notifications>;
 
   const logoutIconLink = (
     <div className={styles.link} title="Log out">
@@ -79,48 +77,48 @@ const MainNav = () => {
   );
 
   return (
-    <Navbar className={styles.nav} expand="sm">
-      {smallDisplay ? (
-        <>
-          <Navbar.Toggle />
-          <Navbar.Collapse>
-            <Nav className="me-auto">
-              {user ? (
-                <Nav.Link href={`/users/${user.id}`} className={styles.navbarCollapseLink}>
-                  MY PROFILE
+    <>
+      <Navbar className={styles.nav} variant='' expand="sm">
+        {smallDisplay ? (
+          <>
+            {NotificationBell('bottom-start')}
+            <Navbar.Toggle />
+            <Navbar.Collapse>
+              <Nav className="me-auto">
+                {user ? (
+                  <Nav.Link href={`/users/${user.id}`} className={styles.navbarCollapseLink}>
+                    My Profile
+                  </Nav.Link>
+                ) : null}
+                <Nav.Link href="/" className={styles.navbarCollapseLink}>
+                  Home
                 </Nav.Link>
-              ) : null}
-              <Nav.Link href="/" className={styles.navbarCollapseLink}>
-                HOME
-              </Nav.Link>
-              <Nav.Link href="/explore" className={styles.navbarCollapseLink}>
-                EXPLORE
-              </Nav.Link>
-              <Nav.Link href="#pricing" className={styles.navbarCollapseLink}>
-                NOTIFICATIONS
-              </Nav.Link>
-              <Nav.Link
-                className={styles.navbarCollapseLink}
-                onClick={() => {
-                  deleteStoredUser();
-                  window.location.reload();
-                }}>
-                SIGN OUT
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </>
-      ) : (
-        <>
-          {logo}
-          {profileIconLink}
-          {homeIconLink}
-          {exploreIconLink}
-          {notificationsIconLink}
-          {logoutIconLink}
-        </>
-      )}
-    </Navbar>
+                <Nav.Link href="/explore" className={styles.navbarCollapseLink}>
+                  Explore
+                </Nav.Link>
+                <Nav.Link
+                  className={styles.navbarCollapseLink}
+                  onClick={() => {
+                    deleteStoredUser();
+                    window.location.reload();
+                  }}>
+                  Sign Out
+                </Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </>
+        ) : (
+          <>
+            {logo}
+            {profileIconLink}
+            {homeIconLink}
+            {exploreIconLink}
+            {NotificationBell('right-start')}
+            {logoutIconLink}
+          </>
+        )}
+      </Navbar>
+    </>
   );
 };
 

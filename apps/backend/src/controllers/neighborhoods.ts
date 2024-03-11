@@ -7,11 +7,11 @@ import {
   Request as RequestData,
   CreateNeighborhoodData,
   NeighborhoodType,
-  NeighborhoodWithRelatedFields,
   RequestWithAuthentication,
   NeighborhoodsPerPage,
 } from '../types';
 import neighborhoodServices from '../services/neighborhoodServices';
+import { addSubscribersToTopic, createTopic } from '../services/notificationServices';
 
 
 const neighborhoodsRouter = express.Router();
@@ -19,7 +19,7 @@ const neighborhoodsRouter = express.Router();
 neighborhoodsRouter.get(
   '/',
   middleware.userIdExtractorAndLoginValidator,
-  catchError(async (req: Request, res: Response, next) => {    
+  catchError(async (req: Request, res: Response, next) => {
     // Execute the next route if this was a search request
     if ('searchTerm' in req.query || 'boundary' in req.query) return next();
 
@@ -71,7 +71,7 @@ neighborhoodsRouter.get(
       ? await neighborhoodServices.getNeighborhoodDetailsForMembers(neighborhoodID)
       : await neighborhoodServices.getNeighborhoodDetailsForNonMembers(neighborhoodID);
 
-    res.status(200).send(neighborhood);
+    return res.status(200).send(neighborhood);
   }),
 );
 
@@ -94,11 +94,10 @@ neighborhoodsRouter.delete(
     }
 
     const deletedNeighborhood = await neighborhoodServices.deleteNeighborhood(neighborhoodID);
-    return res.status(200).send(`Neighborhood '${deletedNeighborhood.name}' has been deleted.`);
+    return res.status(200).send({ success: `Neighborhood '${deletedNeighborhood.name}' has been deleted.` });
   }),
 );
 
-// Since update routes are not critical, not spending too much time on it
 neighborhoodsRouter.put(
   '/:id',
   middleware.userIdExtractorAndLoginValidator,
@@ -122,11 +121,13 @@ neighborhoodsRouter.put(
     } else {
       data.location = Prisma.JsonNull;
     }
-      const updatedNeighborhood = await neighborhoodServices.editNeighborhood(neighborhoodID, data);
-    return res.status(200).send(`Neighborhood '${updatedNeighborhood.name}' has been updated.`);
+
+    const updatedNeighborhood = await neighborhoodServices.editNeighborhood(neighborhoodID, data);
+    return res.status(200).send({ success: `Neighborhood '${updatedNeighborhood.name}' has been updated.` });
   }),
 );
 
+// Create a neighborhood
 neighborhoodsRouter.post(
   '/',
   middleware.userIdExtractorAndLoginValidator,
@@ -139,32 +140,47 @@ neighborhoodsRouter.post(
     const newNeighborhood: Neighborhood =
       await neighborhoodServices.createNeighborhood(createNeighborhoodData);
 
-    await neighborhoodServices.connectUserToNeighborhood(loggedUserID, newNeighborhood.id);
+    const TOPIC_KEY = `neighborhood:${newNeighborhood.id}`;
+    await createTopic(TOPIC_KEY, newNeighborhood.name);
 
-    const newNeighborhoodWithRelatedFields: NeighborhoodWithRelatedFields =
-      await neighborhoodServices.getNeighborhoodDetailsForMembers(newNeighborhood.id);
+    const promises = [
+      neighborhoodServices.connectUserToNeighborhood(loggedUserID, newNeighborhood.id),
+      addSubscribersToTopic(TOPIC_KEY, [loggedUserID]),
+      neighborhoodServices.getNeighborhoodDetailsForMembers(newNeighborhood.id),
+    ];
 
-    res.status(201).json(newNeighborhoodWithRelatedFields);
+    const responses = await Promise.all(promises);
+    return res.status(201).json(responses[2]);
   }),
 );
 
-// Should probably be `put` instead
 // Join a neighborhood
 neighborhoodsRouter.post(
-  '/:id/join',
+  '/:id/join/:userId',
   middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
-    const loggedUserId = req.loggedUserId as number; // user should be extracted by the middleware
+    // The logged user should be the admin of the neighborhood NOT the user to join
+    const loggedUserId = req.loggedUserId as number;
     const neighborhoodId = Number(req.params.id);
+    const userId = Number(req.params.userId);
 
-    // Just checking for presence and type of param id,
-    // rest validation will be done by neighborhoodServices
-    if (!neighborhoodId || Number.isNaN(neighborhoodId)) {
-      return res.status(400).send({ error: 'Unable to parse URL' });
-    }
+    const isAdminOfNeighborhood = await neighborhoodServices.isUserAdminOfNeighborhood(
+      loggedUserId,
+      neighborhoodId,
+    );
 
-    await neighborhoodServices.connectUserToNeighborhood(loggedUserId, neighborhoodId);
-    return res.status(201).send({ success: 'You have joined the neighborhood' });
+    if (!isAdminOfNeighborhood)
+      return res.status(401).send({ error: 'You are not authorized to do this.' });
+
+    const responses = [
+      neighborhoodServices.connectUserToNeighborhood(userId, neighborhoodId),
+      addSubscribersToTopic(`neighborhood:${neighborhoodId}`, [userId]),
+    ];
+
+    await Promise.all(responses);
+
+    return res.status(201).send({ success: 'Yay! Your neighborhood is growing.' });
   }),
 );
 
@@ -198,7 +214,7 @@ neighborhoodsRouter.get(
       await neighborhoodServices.isUserMemberOfNeighborhood(loggedUserID, neighborhoodID);
 
     if (!isUserMemberOfNeighborhood) {
-      return res.status(400).send({ error: 'user is not a member of the neighborhood' });
+      return res.status(400).send({ error: 'User is not a member of the neighborhood' });
     }
 
     const requests: RequestData[] =

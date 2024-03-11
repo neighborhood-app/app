@@ -26,6 +26,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: white;
+  /* background: linear-gradient(#ff8e6a61, white 77%); */
+  background-image: radial-gradient(at 3.6% 13.8%, #fad3ca 0px, transparent 50%),
+    radial-gradient(at 96.3% 93.8%, #f8d5e0 0px, transparent 50%);
 }
 
 code {
@@ -76,6 +79,8 @@ a {
   --bs-btn-hover-border-color: #ff0054;
   --bs-btn-active-bg: #fe496f;
   --bs-btn-active-border-color: #fe496f;
+  --bs-btn-disabled-bg: #fe496f;
+  --bs-btn-disabled-border-color: #fe496f;
 }
 
 .btn-danger {
@@ -103,4 +108,10 @@ a {
   border: 0.25em #ff2a70 solid;
   border-right-color: transparent;
   display: block;
+}
+
+.navbar {
+  --bs-navbar-toggler-padding-x: 0.7rem;
+  --bs-navbar-toggler-font-size: 1.1rem;
+  --bs-navbar-toggler-focus-width: 0.1rem;
 }

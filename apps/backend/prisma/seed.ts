@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 import prismaClient from '../prismaClient';
+import { addSubscribersToTopic, createSubscriber, createTopic, deleteSubscriber, deleteTopic, getAllSubscribers, getTopics } from '../src/services/notificationServices';
+import { Neighborhood } from '../src/types';
 
 const SAMPLE_PASSWORD = 'secret';
 
@@ -19,7 +21,7 @@ const getPasswordHash = async (password: string): Promise<string> => {
  * @param userId
  * @param neighborhoodId
  */
-const connectUsertoNeighborhood = async (
+const connectUserToNeighborhood = async (
   userId: number,
   neighborhoodId: number,
 ): Promise<void> => {
@@ -101,8 +103,39 @@ async function main() {
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
+
+  const users = [bob, radu, shwetank, antonina, maria, mike, leia];
+
   //---------------------------------------------------------
 
+  // Delete existing topics (passed-in number is arbitrary)
+  const topics = await getTopics(50);  
+  const promises: Promise<void>[] = [];
+
+  topics.forEach(topic => promises.push(deleteTopic(topic)))
+  await Promise.all(promises);
+
+  //---------------------------------------------------------
+
+  // Delete all existing subscribers
+  const subscribers = await getAllSubscribers();
+  const deletePromises: Promise<void>[] = [];
+
+  subscribers.forEach(subscriber => {
+    deletePromises.push(deleteSubscriber(subscriber.subscriberId));
+  });
+
+  await Promise.all(deletePromises);
+
+  // Create subscribers from users
+  const addSubscriberPromises: Promise<void>[] = [];
+  users.forEach(async user => {
+    addSubscriberPromises.push(createSubscriber(String(user.id), user.username, user.first_name || '', user.last_name || ''));
+  });
+
+  await Promise.all(addSubscriberPromises)
+
+  //---------------------------------------------------------
   // Bob's Neighborhood
   const bobNeighborhood = await prismaClient.neighborhood.create({
     data: {
@@ -112,8 +145,13 @@ async function main() {
     },
   });
 
-  await connectUsertoNeighborhood(bob.id, bobNeighborhood.id);
-  await connectUsertoNeighborhood(mike.id, bobNeighborhood.id);
+  
+  await connectUserToNeighborhood(bob.id, bobNeighborhood.id);
+  await connectUserToNeighborhood(mike.id, bobNeighborhood.id);
+  
+  const bobNeighborhoodKey = `neighborhood:${bobNeighborhood.id}`;
+  await createTopic(bobNeighborhoodKey, bobNeighborhood.name);
+  await addSubscribersToTopic(bobNeighborhoodKey, [bob.id, mike.id]);
 
   // The variable will be used in the future when we add responses.
   // eslint-disable-next-line
@@ -153,6 +191,7 @@ async function main() {
       content: 'I need someone to cook breakfast and dinner for me everyday. I don\'t want to pay anything btw.',
     },
   });
+
   //---------------------------------------------------------
 
   // Antonina's Neighborhood
@@ -163,10 +202,14 @@ async function main() {
     },
   });
 
-  await connectUsertoNeighborhood(antonina.id, antoninaNeighborhood.id);
-  await connectUsertoNeighborhood(radu.id, antoninaNeighborhood.id);
-  await connectUsertoNeighborhood(maria.id, antoninaNeighborhood.id);
-  await connectUsertoNeighborhood(leia.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(antonina.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(radu.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(maria.id, antoninaNeighborhood.id);
+  await connectUserToNeighborhood(leia.id, antoninaNeighborhood.id);
+
+  const antoninaNeighborhoodKey = `neighborhood:${antoninaNeighborhood.id}`;
+  await createTopic(antoninaNeighborhoodKey, antoninaNeighborhood.name);
+  await addSubscribersToTopic(antoninaNeighborhoodKey, [antonina.id, radu.id, maria.id, leia.id]);
 
   const raduRequest = await prismaClient.request.create({
     data: {
@@ -216,31 +259,58 @@ async function main() {
     },
   });
 
-  await connectUsertoNeighborhood(shwetank.id, shwetankNeighborhood.id);
+  await connectUserToNeighborhood(shwetank.id, shwetankNeighborhood.id);
+
+  const shwetankNeighborhoodKey = `neighborhood:${shwetankNeighborhood.id}`;
+  await createTopic(shwetankNeighborhoodKey, shwetankNeighborhood.name);
+  await addSubscribersToTopic(shwetankNeighborhoodKey, [shwetank.id]);
 
   //---------------------------------------------------------
 
-  // More seed neighborhoods
-  const users = [bob, radu, shwetank, antonina, maria, mike, leia];
-  const neighborhoods = [];
+  // Create more neighborhoods and corresponding topics
+  const neighborhoods: Promise<Neighborhood | void>[] = [];
   for (let count = 1; count < 28;) {
     for (let userIdx = 0; userIdx < users.length; userIdx += 1) {
+      const user = users[userIdx];
       const neighborhood = prismaClient.neighborhood.create({
         data: {
-          admin_id: users[userIdx].id,
+          admin_id: user.id,
           name: `Neighborhood ${count}`,
           description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
         },
-      }).then(neighborhood => {
-        connectUsertoNeighborhood(users[userIdx].id, neighborhood.id);
-      });
+      }).then(neighborhood => {        
+        connectUserToNeighborhood(user.id, neighborhood.id).catch(console.error);
+        return neighborhood;
+      }).then(async neighborhood => {
+        const topicKey = `neighborhood:${neighborhood.id}`;
+        createTopic(topicKey, neighborhood.name)
+          .then(_ => {
+            addSubscribersToTopic(topicKey, [user.id])
+          })
+          .catch(console.error);
+      }).catch(err => console.error(err.data));
 
       neighborhoods.push(neighborhood);
       count += 1;
     }
   }
 
-  await Promise.all(neighborhoods);
+  try {
+    await Promise.all(neighborhoods);
+  } catch (error) {
+    console.error(error);
+  }
+  //---------------------------------------------------------
+
+  // // Create topics and add subscribers to the new neighborhoods
+  // {
+  //   const promises = [];
+  //   neighborhoods.forEach(neighborhood => {
+  //     promises.push(createTopic(`neighborhood:${neighborhood.id}`, neighborhood.name));
+  //   })
+  //       addSubscribersToTopic(`neighborhood:${neighborhood.id}`, [users[userIdx].id])
+  // }
+  
 }
 
 main()

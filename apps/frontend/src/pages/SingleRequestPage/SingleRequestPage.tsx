@@ -4,6 +4,7 @@ import { redirect } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import responseServices from '../../services/responses';
 import requestServices from '../../services/requests';
+import notificationServices from '../../services/notifications';
 import RequestDescBox from '../../components/RequestDescBox/RequestDescBox';
 import { EditRequestData, FullRequestData, SingleRequestFormIntent } from '../../types';
 import ResponsesGrid from '../../components/ResponsesGrid/ResponsesGrid';
@@ -40,7 +41,9 @@ export async function action({ params, request }: ActionFunctionArgs) {
     case 'create-response': {
       const responseData = Object.fromEntries(formData) as unknown as ResponseData;
       responseData.request_id = Number(responseData.request_id);
+
       response = await responseServices.createResponse(responseData);
+      notificationServices.receiveResponse(requestId).catch(console.error);
       break;
     }
     case 'edit-response': {
@@ -56,6 +59,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
     case 'accept-offer': {
       const responseId = formData.get('responseId') as string;
       response = await responseServices.acceptResponse(responseId);
+      notificationServices.responseAccepted(requestId, +responseId).catch(console.error);
       break;
     }
     default: {
@@ -63,7 +67,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
       throw new Error(`Invalid form intent: ${JSON.stringify(exhaustiveCheck)}`);
     }
   }
-
+  
   return response;
 }
 

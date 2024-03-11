@@ -16,6 +16,11 @@
   padding: 16px 7.23%;
 }
 
+.alertBox {
+  max-width: 75%;
+  margin: 1em auto 1em;
+}
+
 .logo {
   color: #3e4756;
   font-size: 1.5rem;

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { EditResponseData, Response, ResponseData } from '@neighborhood/backend/src/types';
 import { getStoredUser } from '../utils/auth';
 
@@ -6,15 +6,22 @@ const baseURL = '/api/responses';
 const user = getStoredUser();
 
 async function createResponse(responseInput: ResponseData): Promise<Response | { error: string }> {
-  const headers: { authorization?: string } = {};
+  
+  try {
+    const headers: { authorization?: string } = {};
+  
+    if (user) {
+      headers.authorization = `Bearer ${user.token}`;
+    }
 
-  if (user) {
-    headers.authorization = `Bearer ${user.token}`;
+    const response = await axios.post(baseURL, responseInput, { headers });
+    return response.data;
+  } catch (error: unknown) {
+    console.error(error);
+
+    if (error instanceof AxiosError) return { error: error.message };
+    return { error: 'An unknown error occurred.' };
   }
-
-  const response = await axios.post(baseURL, responseInput, { headers });
-
-  return response.data;
 }
 
 async function acceptResponse(responseId: string): Promise<Response | { error: string }> {

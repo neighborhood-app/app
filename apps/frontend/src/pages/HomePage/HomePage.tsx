@@ -20,6 +20,7 @@ export async function loader() {
   const user = getStoredUser();
   if (!user) return null;
   const userData = await userServices.getUserData(user.id);
+
   return userData;
 }
 

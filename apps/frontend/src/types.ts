@@ -16,9 +16,12 @@ export interface NeighborhoodDetailsForMembers extends Neighborhood {
   requests: Array<RequestWithUserAndResponses> | null;
 }
 
-export type CreateNeighborhoodData = Pick<NeighborhoodDetailsForNonMembers, "name" | "description" | "location">
+export type CreateNeighborhoodData = Pick<
+  NeighborhoodDetailsForNonMembers,
+  'name' | 'description' | 'location'
+>;
 
-export type EditNeighborhoodData = CreateNeighborhoodData & {location: string | null}
+export type EditNeighborhoodData = CreateNeighborhoodData & { location: string | null };
 
 export type NeighborhoodType = NeighborhoodDetailsForMembers | NeighborhoodDetailsForNonMembers;
 
@@ -29,7 +32,7 @@ export interface RequestWithUserAndResponses extends Omit<Request, 'time_created
 }
 
 export interface FullRequestData extends RequestWithUserAndResponses {
-  neighborhood: NeighborhoodWithUsers
+  neighborhood: NeighborhoodWithUsers;
 }
 
 export type EditRequestData = Pick<Partial<Request>, 'title' | 'content'>;
@@ -50,8 +53,7 @@ export type SingleNeighborhoodFormIntent =
   | 'leave-neighborhood'
   | 'create-neighborhood'
   | 'edit-neighborhood'
-  | 'delete-neighborhood'
-  ;
+  | 'delete-neighborhood';
 
 export type SingleRequestFormIntent =
   | 'edit-request'
@@ -60,8 +62,7 @@ export type SingleRequestFormIntent =
   | 'accept-offer'
   | 'create-response'
   | 'edit-response'
-  | 'delete-response'
-  ;
+  | 'delete-response';
 
 export type FormIntent = SingleNeighborhoodFormIntent | SingleRequestFormIntent;
 
@@ -71,7 +72,13 @@ export interface ErrorObj {
 
 // this is a [bug](https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope)
 // eslint-disable-next-line no-shadow
-export type UserRole = 'NON-MEMBER' | 'MEMBER' | 'ADMIN'
+export type UserRole = 'NON-MEMBER' | 'MEMBER' | 'ADMIN';
+
+export interface PromptDetails {
+  show: boolean;
+  text: string;
+  intent: FormIntent;
+}
 
 // RequestWithUserAndResponses or just Request?
 // export interface ResponseWithUserAndRequest extends Response {

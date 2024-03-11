@@ -11,9 +11,9 @@ import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDoorOpen } from '@fortawesome/free-solid-svg-icons';
 import { SearchResult } from 'leaflet-geosearch/dist/providers/provider';
-import { AxiosError } from 'axios';
-import neighborhoodsService from '../../services/neighborhoods';
-import requestServices from '../../services/requests';
+import notificationService from '../../services/notifications';
+import neighborhoodService from '../../services/neighborhoods';
+import requestService from '../../services/requests';
 
 import {
   EditNeighborhoodData,
@@ -21,8 +21,8 @@ import {
   NeighborhoodType,
   SingleNeighborhoodFormIntent,
   UserRole,
-  FormIntent,
   ErrorObj,
+  PromptDetails,
 } from '../../types';
 import styles from './SingleNeighborhoodPage.module.css';
 import DescriptionBox from '../../components/DescriptionBox/DescriptionBox';
@@ -36,7 +36,7 @@ import { getStoredUser } from '../../utils/auth';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
-  const neighborhood = await neighborhoodsService.getSingleNeighborhood(Number(id));
+  const neighborhood = await neighborhoodService.getSingleNeighborhood(Number(id));
 
   return neighborhood;
 }
@@ -49,25 +49,22 @@ export async function action({ params, request }: ActionFunctionArgs) {
   formData.delete('intent');
   // We should consider only returning success/error objects from all routes
   // where we don't need the new data
-  let response: Request | Response | { success: string } | { error: string } | null = null;
+  let response: Request | Response | { success: string } | ErrorObj | null = null;
 
   if (intent === 'create-request') {
     const requestData = Object.fromEntries(formData) as unknown as CreateRequestData;
     requestData.neighborhood_id = neighborhoodId;
-    response = await requestServices.createRequest(requestData);
+    response = await requestService.createRequest(requestData);
+    notificationService.createRequest(response.id, neighborhoodId).catch(console.error);
   } else if (intent === 'join-neighborhood') {
-    response = await neighborhoodsService.connectUserToNeighborhood(neighborhoodId);
+    response = await notificationService.joinNeighborhood(neighborhoodId);
   } else if (intent === 'leave-neighborhood') {
-    response = await neighborhoodsService.leaveNeighborhood(neighborhoodId);
+    response = await neighborhoodService.leaveNeighborhood(neighborhoodId);
   } else if (intent === 'edit-neighborhood') {
     const neighborhoodData = Object.fromEntries(formData) as unknown as EditNeighborhoodData;
-    try {
-      response = await neighborhoodsService.editNeighborhood(neighborhoodId, neighborhoodData);
-    } catch (error) {
-      return error;
-    }
+    response = await neighborhoodService.editNeighborhood(neighborhoodId, neighborhoodData);
   } else if (intent === 'delete-neighborhood') {
-    response = await neighborhoodsService.deleteNeighborhood(neighborhoodId);
+    response = await neighborhoodService.deleteNeighborhood(neighborhoodId);
   }
 
   return response;
@@ -76,39 +73,18 @@ export async function action({ params, request }: ActionFunctionArgs) {
 const neighborhoodImg = require('./palm.jpeg');
 
 export default function SingleNeighborhood() {
-  interface PromptDetails {
-    show: boolean;
-    text: string;
-    intent: FormIntent;
-  }
-
+  const { id: neighborhoodId } = useParams();
+  const actionData: unknown = useActionData();
   const mql = window.matchMedia('(max-width: 768px)');
   const [smallDisplay, setSmallDisplay] = useState(mql.matches);
-
-  mql.addEventListener('change', () => {
-    setSmallDisplay(mql.matches);
-  });
-
-  const { id: neighborhoodId } = useParams();
+  const [success, setSuccess] = useState<{ success: string } | null>(null);
+  const [error, setError] = useState<ErrorObj | null>(null);
 
   const [promptDetails, setPromptDetails] = useState<PromptDetails>({
     show: false,
     text: '',
     intent: 'leave-neighborhood',
   });
-
-  const errorObj = useActionData() as AxiosError;
-
-  const [error, setError] = useState<ErrorObj | null>(null);
-
-  useEffect(() => {
-    if (errorObj) {
-      setError(errorObj.response?.data as ErrorObj);
-      setTimeout(() => {
-        setError(null);
-      }, 5000);
-    }
-  }, [errorObj]);
 
   function handleClosePrompt() {
     setPromptDetails((previousState) => ({ ...previousState, show: false }));
@@ -136,12 +112,32 @@ export default function SingleNeighborhood() {
     });
   }
 
+  mql.addEventListener('change', () => {
+    setSmallDisplay(mql.matches);
+  });
+
+  useEffect(() => {
+    if (typeof actionData === 'object' && actionData && 'error' in actionData) {
+      setError(actionData as ErrorObj);
+      setTimeout(() => setError(null), 6000);
+    } else if (typeof actionData === 'object' && actionData && 'success' in actionData) {
+      setSuccess(actionData as { success: string });
+      setTimeout(() => setSuccess(null), 6000);
+    }
+  }, [actionData]);
+
   const user = getStoredUser();
   const neighborhoodData = useLoaderData() as NeighborhoodType;
   const neighborhoodLocation = neighborhoodData.location
     ? (neighborhoodData.location as unknown as SearchResult)
     : null;
   const userRole = checkLoggedUserRole(user?.username, neighborhoodData);
+
+  const MapColumn = (breakpoint: 'auto' | '6', location: SearchResult) => (
+    <Col xs={breakpoint} className={styles.centeredColumn}>
+      <MapBox coordinates={{ lat: location?.y, lng: location?.x }} />
+    </Col>
+  );
 
   let neighborhoodRequests;
   let usernames;
@@ -155,6 +151,7 @@ export default function SingleNeighborhood() {
 
   return (
     <Container className={styles.wrapper} fluid>
+      {success && <AlertBox text={success.success} variant="success"></AlertBox>}
       {error && <AlertBox text={error.error} variant="danger"></AlertBox>}
       <Prompt
         text={promptDetails.text}
@@ -182,7 +179,7 @@ export default function SingleNeighborhood() {
           {userRole === 'MEMBER' ? (
             <FontAwesomeIcon
               icon={faDoorOpen}
-              size="2xl"
+              size="xl"
               className={styles.leaveIcon}
               onClick={handleLeavePrompt}
             />
@@ -198,20 +195,16 @@ export default function SingleNeighborhood() {
             location={neighborhoodLocation}
             setPromptDetails={setPromptDetails}
           />
-          {neighborhoodLocation && smallDisplay ? (
-            <Col xs={'auto'} className={styles.centeredColumn}>
-              <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
-            </Col>
+          {neighborhoodLocation && smallDisplay ? MapColumn('auto', neighborhoodLocation) : null}
+          {userRole !== 'NON-MEMBER' ? (
+            <h2 className={`${styles.title} mt-3`}>Neighborhood Requests</h2>
           ) : null}
-          <h2 className={styles.title}>Neighborhood Requests</h2>
         </Col>
-        {neighborhoodLocation && !smallDisplay ? (
-          <Col xs={6} className={styles.centeredColumn}>
-            <MapBox coordinates={{ lat: neighborhoodLocation.y, lng: neighborhoodLocation.x }} />
-          </Col>
-        ) : null}
+        {neighborhoodLocation && !smallDisplay ? MapColumn('6', neighborhoodLocation) : null}
       </Row>
-      <Row>{<RequestBox requests={neighborhoodRequests} />}</Row>
+      {userRole !== 'NON-MEMBER' ? (
+        <Row>{<RequestBox requests={neighborhoodRequests} />}</Row>
+      ) : null}
     </Container>
   );
 }
