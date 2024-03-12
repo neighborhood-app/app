@@ -32,5 +32,6 @@
 
 .inStack:hover {
   margin-top: -8px;
+  margin-left: 0;
   transform: scale(1.1);
 }

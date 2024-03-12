@@ -2,12 +2,13 @@
   display: flex;
 }
 
+.circleLink {
+  height: fit-content;
+}
+
 .dropdownContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items:flex-start;
-  padding-bottom: 1rem;
+  width: fit-content;
+  padding-bottom: 2rem;
 }
 
 .dropdown {
@@ -16,3 +17,9 @@
   top: 0.5rem;
 }
 
+.hiddenOverlay {
+  position: relative;
+  z-index: -1;
+  height: 5rem;
+  width: 5rem;
+}

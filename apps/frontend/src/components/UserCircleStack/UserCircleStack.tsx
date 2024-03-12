@@ -15,36 +15,35 @@ export default function UserCircleStack({ users }: { users?: User[] | null }) {
     console.log(usersLeft);
 
     return (
-
-        <div className={styles.circleContainer}>
-          {displayUsers.map((user, index) =>
-            index === displayUsers.length - 1 ? (
-              <Link to={`/users/${user.id}`} className={styles.circleLink}>
-                <UserCircle key={user.id} username={user.username} isLast={true} />
-              </Link>
-            ) : (
-              <Link to={`/users/${user.id}`} className={styles.circleLink}>
-                <UserCircle key={user.id} username={user.username} />
-              </Link>
-            ),
-          )}
-          {/* If there are more than 3 users a circle is shown with how many users there are left. */}
-          {usersLeft > 0 ? (
-            <div className={styles.dropdownContainer} onMouseEnter={() => setShowUserList(true)} onMouseLeave={() => setShowUserList(false)}>
-              <UserCircle
-                username={`+${usersLeft}`}
-                isLast={true}
-              />
-              <Dropdown show={showUserList} className={styles.dropdown}>
-                <Dropdown.Menu>
-                  {restOfUsers.map((user) => (
-                    <Dropdown.Item>{user.username}</Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          ) : null}
-        </div>
+      <div className={styles.circleContainer}>
+        {displayUsers.map((user, index) =>
+          index === displayUsers.length - 1 ? (
+            <Link to={`/users/${user.id}`} className={styles.circleLink}>
+              <UserCircle key={user.id} username={user.username} isLast={true} />
+            </Link>
+          ) : (
+            <Link to={`/users/${user.id}`} className={styles.circleLink}>
+              <UserCircle key={user.id} username={user.username} />
+            </Link>
+          ),
+        )}
+        {/* If there are more than 3 users a circle is shown with how many users there are left. */}
+        {usersLeft > 0 ? (
+          <div
+            className={styles.dropdownContainer}
+            onMouseEnter={() => setShowUserList(true)}
+            onMouseLeave={() => setShowUserList(false)}>
+            <UserCircle username={`+${usersLeft}`} isLast={true} />
+            <Dropdown show={showUserList} className={styles.dropdown}>
+              <Dropdown.Menu>
+                {restOfUsers.map((user) => (
+                  <Dropdown.Item>{user.username}</Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+        ) : null}
+      </div>
     );
   }
 
