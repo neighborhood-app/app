@@ -2,6 +2,7 @@ import { CSSProperties, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Nav, Navbar } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import ScrollReveal from 'scrollreveal';
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import styles from './LandingPage.module.css';
@@ -157,7 +158,7 @@ export default function LandingPage() {
             meaningful connections, and build a stronger, more closely associated community.
           </p>
           <CustomBtn className={styles.btn} variant="primary">
-            Sign Up
+            <Link to={'/signup'} className={styles.signUpLink}>Sign Up</Link>
           </CustomBtn>
         </div>
 
@@ -291,19 +292,14 @@ export default function LandingPage() {
         <div className={styles.followUs}>
           <h2>Follow us</h2>
           <div className={styles.followUsList}>
-            <a href="#">
-              <i className="bx bxl-facebook-square"></i>
-            </a>
-            <a href="#">
-              {' '}
-              <i className="bx bxl-instagram"></i>
-            </a>
-            <a href="#">
-              <i className="bx bxl-twitter"></i>
-            </a>
             <a href="https://github.com/neighborhood-app/app">
               {' '}
               <i className="bx bxl-github"></i>
+            </a>
+            {/* TODO: Add link to LinkedIn page for project */}
+            <a href="#">
+              {' '}
+              <i className="bx bxl-linkedin"></i>
             </a>
           </div>
         </div>

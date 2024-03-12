@@ -3,6 +3,7 @@ import catchError from '../utils/catchError';
 import { User, LoginData, LoginResponseData, RequestWithAuthentication } from '../types';
 import loginServices from '../services/loginServices';
 import middleware from '../utils/middleware';
+import { hashSubscriberId } from '../services/notificationServices';
 
 const loginRouter = express.Router();
 
@@ -22,14 +23,16 @@ loginRouter.post(
     );
 
     if (!isPasswordCorrect) {
-      return response.status(401).json({ error: 'invalid username or password' });
+      return response.status(401).json({ error: 'Invalid username or password.' });
     }
 
     const token: string = await loginServices.generateToken(userInDb.username, userInDb.id);
+    const hashedSubscriberId = hashSubscriberId(String(userInDb.id));
     const responseData: LoginResponseData = {
       id: userInDb.id,
       username: userInDb.username,
       token,
+      hashedSubscriberId,
     };
 
     return response.status(200).json(responseData);

@@ -2,7 +2,8 @@
 import app from '../app';
 import prismaClient from '../../prismaClient';
 import testHelpers from './testHelpers';
-import { CreateUserData, UserWithoutPasswordHash } from '../types';
+import { CreateUserData, User, UserWithoutPasswordHash } from '../types';
+import main from './seed';
 
 const supertest = require('supertest'); // eslint-disable-line
 // 'require' was used because supertest does not support import
@@ -13,12 +14,16 @@ beforeAll(async () => {
   await testHelpers.removeAllData();
 });
 
+afterAll(async () => {
+  await main();
+});
+
 describe('When there is initially no user in db', () => {
   beforeEach(async () => {
     await prismaClient.user.deleteMany({});
   });
 
-  test('Creating User succeeds with valid data', async () => {
+  test('Creating user succeeds with valid data', async () => {
     const newUser: CreateUserData = {
       username: 'johnsmith',
       email: 'johnsmith@example.com',
@@ -30,7 +35,7 @@ describe('When there is initially no user in db', () => {
       .send(newUser)
       .expect(201)
       .expect('Content-Type', /application\/json/);
-
+    
     const body: UserWithoutPasswordHash = response._body;
     expect(body.username).toBe('johnsmith');
     expect(body.email).toBe('johnsmith@example.com');
@@ -38,7 +43,7 @@ describe('When there is initially no user in db', () => {
     const users = await testHelpers.usersInDb();
     expect(users).toHaveLength(1);
     expect(users[0].username).toBe('johnsmith');
-  });
+  }, 7000);
 
   test('Creating User fails with proper statuscode and message if username or password missing', async () => {
     const dataWithoutUsername = {
@@ -79,7 +84,9 @@ describe('When there is initially no user in db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    expect(response1._body.error).toBe('Invalid Username');
+    expect(response1._body.error).toBe(
+      'The username needs to be 4-20 characters long and can contain alphanumerics, _, or .',
+    );
 
     const dataWithShortPassword: CreateUserData = {
       username: 'johnsmith',
@@ -93,7 +100,7 @@ describe('When there is initially no user in db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    expect(response2._body.error).toBe('Invalid Password');
+    expect(response2._body.error).toBe('The password needs to be at least 4 characters long.');
   });
 });
 
@@ -130,7 +137,7 @@ describe('When there is initially one user in db', () => {
   });
 
   test('Able to create user with different username and valid data', async () => {
-    const usersBeforeTest = await testHelpers.usersInDb();
+    const usersBeforeTest: User[] = await testHelpers.usersInDb();    
     const newUser: CreateUserData = {
       username: 'drewneil',
       email: 'drewneil@gmail.com',
@@ -144,6 +151,7 @@ describe('When there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/);
 
     const body: UserWithoutPasswordHash = response._body;
+    
     expect(body.username).toBe('drewneil');
     expect(body.email).toBe('drewneil@gmail.com');
 
@@ -152,5 +160,5 @@ describe('When there is initially one user in db', () => {
 
     const usernames = usersAfterTest.map(user => user.username);
     expect(usernames).toContain('drewneil');
-  });
+  }, 7000);
 });

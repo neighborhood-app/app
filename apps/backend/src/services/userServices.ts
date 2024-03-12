@@ -44,9 +44,16 @@ const getAllUsers = async (): Promise<Array<UserWithoutPasswordHash>> => {
  * @returns Promise resolving to username
  */
 const parseAndValidateUsername = async (username: unknown): Promise<string> => {
-  const MINIMUM_USERNAME_LENGTH = 4;
-  if (typeof username !== 'string' || username.length < MINIMUM_USERNAME_LENGTH) {
-    const error = new Error('Invalid Username');
+//   Only contains alphanumeric characters, underscore and dot.
+// Underscore and dot can't be at the end or start of a username (e.g _username / username_ / .username / username.).
+// Underscore and dot can't be next to each other (e.g user_.name).
+// Underscore or dot can't be used multiple times in a row (e.g user__name / user..name).
+  // Number of characters must be between 4 and 15.
+  const usernameRegex = /^(?=.{4,20}$)(?![.])(?!.*[.]{2})(?!.*[_]{3})[a-z0-9._]+(?<![.])$/gi;
+
+  // const MINIMUM_USERNAME_LENGTH = 4;
+  if (typeof username !== 'string' || !usernameRegex.test(username)) {
+    const error = new Error('The username needs to be 4-20 characters long and can contain alphanumerics, _, or .');
     error.name = 'UserDataError';
     throw error;
   }
@@ -80,7 +87,7 @@ const validateEmail = async (email: string): Promise<string> => {
 
   if (!existingUser) return email;
 
-  const error = new Error('Sorry, that email is taken.');
+  const error = new Error('This email is already linked to another account.');
   error.name = 'UserDataError';
   throw error;
 };
@@ -94,7 +101,7 @@ const validateEmail = async (email: string): Promise<string> => {
 const getPasswordHash = async (password: unknown): Promise<string> => {
   const MINIMUM_PASSWORD_LENGTH = 4;
   if (typeof password !== 'string' || password.length < MINIMUM_PASSWORD_LENGTH) {
-    const error = new Error('Invalid Password');
+    const error = new Error('The password needs to be at least 4 characters long.');
     error.name = 'UserDataError';
     throw error;
   }

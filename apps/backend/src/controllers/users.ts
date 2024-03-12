@@ -2,30 +2,48 @@ import express, { Request, Response } from 'express';
 import catchError from '../utils/catchError';
 import userServices from '../services/userServices';
 import middleware from '../utils/middleware';
+import { createSubscriber } from '../services/notificationServices';
 import { UserWithoutPasswordHash, RequestWithAuthentication } from '../types';
 
 const usersRouter = express.Router();
 
-usersRouter.get('/', middleware.userIdExtractorAndLoginValidator, catchError(async (_req: Request, res: Response) => {
-  const users: Array<UserWithoutPasswordHash> = await userServices.getAllUsers();
-  
-  res.status(200).json(users);
-}));
+usersRouter.get(
+  '/',
+  catchError(async (_req: Request, res: Response) => {
+    const users: Array<UserWithoutPasswordHash> = await userServices.getAllUsers();
 
-usersRouter.get('/:id', middleware.userIdExtractorAndLoginValidator, catchError(async (req: Request, res: Response) => {
-  const userId: number = Number(req.params.id);
+    res.status(200).json(users);
+  }),
+);
 
-  const user: UserWithoutPasswordHash = await userServices.getUserById(userId);
+usersRouter.get(
+  '/:id',
+  catchError(async (req: Request, res: Response) => {
+    const userId: number = Number(req.params.id);
 
-  res.status(200).json(user);
-}));
+    const user: UserWithoutPasswordHash = await userServices.getUserById(userId);
 
-usersRouter.post('/', catchError(async (req: Request, res: Response) => {
-  const createUserData = await userServices.parseCreateUserData(req.body);
-  const newUser: UserWithoutPasswordHash = await userServices.createUser(createUserData);
+    res.status(200).json(user);
+  }),
+);
 
-  res.status(201).json(newUser);
-}));
+usersRouter.post(
+  '/',
+  catchError(async (req: Request, res: Response) => {
+    const createUserData = await userServices.parseCreateUserData(req.body);
+    const newUser: UserWithoutPasswordHash = await userServices.createUser(createUserData);
+
+    // Create a new subscriber for notifications
+    await createSubscriber(
+      String(newUser.id),
+      newUser.username,
+      newUser.first_name || '',
+      newUser.last_name || '',
+    );
+
+    return res.status(201).json(newUser);
+  }),
+);
 
 usersRouter.put(
   '/:id',
@@ -34,7 +52,7 @@ usersRouter.put(
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const userId = Number(req.params.id);
     if (!(userId === Number(req.loggedUserId))) {
-      return res.status(401).json('Logged user is not the owner of this profile')
+      return res.status(401).json('Logged user is not the owner of this profile');
     }
     const updatedUser = await userServices.updateUser(req.body, userId);
     return res.status(200).json(updatedUser);

@@ -10,8 +10,8 @@ export default function UserCircle({
   onHover?: () => void;
   isLast?: boolean;
   inStack?: boolean;
-}) {
-  const firstTwoLetters = username.slice(0, 2).toUpperCase();
+  }) {  
+  const firstTwoLetters = username?.slice(0, 2).toUpperCase();
 
   return (
     <div
@@ -19,7 +19,7 @@ export default function UserCircle({
         inStack ? styles.inStack : ''
       }`}
       onMouseOver={onHover}>
-      <strong>{firstTwoLetters}</strong>
+      {firstTwoLetters}
     </div>
   );
 }

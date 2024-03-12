@@ -80,7 +80,7 @@ const neighborhoodsInDb = async (): Promise<Neighborhood[]> => {
 /**
  * - creates user in db users table with given username and password
  * - rest of the fields are null
- * @param username used to populate user_name field
+ * @param username used to populate username field
  * @param password user to populate password_hash field
  */
 const seedUser = async (createUserData: CreateUserData) => {

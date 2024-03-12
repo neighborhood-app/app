@@ -12,6 +12,7 @@
 }
 
 .neighborhoodName {
+  line-height: 1.1;
   text-wrap: wrap;
   overflow-wrap: break-word;
 }
@@ -28,18 +29,22 @@
   align-items: center;
 }
 
-.title {
-  /* padding: 0; */
-  /* margin-top: 30px; */
-}
-
 .leaveIcon {
-  margin-left: 8px;
   color: #ff4e2a;
+  font-size: 1.7em;
+  margin-left: 8px;
+  margin-top: 4px;
+  transition: font-size 0.2s;
 }
 
 .leaveIcon:hover {
+  font-size: 1.8em;
+  color: #ff2b00;
   cursor: pointer;
+}
+
+.leaveIcon:active {
+  color: #e92700;
 }
 
 @media (max-width: 576px) {

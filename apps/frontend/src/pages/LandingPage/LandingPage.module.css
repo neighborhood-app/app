@@ -79,7 +79,6 @@ img {
 /* All Buttons Styles */
 
 .btn {
-  background-color: #ff0054;
   width: 6.5rem;
   color: white;
   /* position: relative; */
@@ -116,6 +115,10 @@ img {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.signUpLink:hover {
+  color: white;
 }
 
 /* --------------- */

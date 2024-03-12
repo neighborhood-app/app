@@ -48,7 +48,7 @@ const findUserByUsername = async (username: string): Promise<User> => {
 
   if (user) return user;
 
-  const error = new Error('invalid username or password');
+  const error = new Error('Invalid username or password.');
   error.name = 'InvalidUserameOrPasswordError';
   throw error;
 };

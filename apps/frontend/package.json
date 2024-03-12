@@ -14,6 +14,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/material": "^5.15.2",
     "@neighborhood/backend": "^1.0.0",
+    "@novu/notification-center": "^0.22.0",
     "@types/axios": "^0.14.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.25",
