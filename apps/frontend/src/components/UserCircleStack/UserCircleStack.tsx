@@ -12,6 +12,7 @@ export default function UserCircleStack({ users }: { users?: User[] | null }) {
     const displayUsers = users.slice(0, 3);
     const restOfUsers = users.slice(3);
     const usersLeft = users.length - 3;
+    console.log(usersLeft);
 
     return (
 
@@ -31,7 +32,7 @@ export default function UserCircleStack({ users }: { users?: User[] | null }) {
           {usersLeft > 0 ? (
             <div className={styles.dropdownContainer} onMouseEnter={() => setShowUserList(true)} onMouseLeave={() => setShowUserList(false)}>
               <UserCircle
-                username={`+1${usersLeft}`}
+                username={`+${usersLeft}`}
                 isLast={true}
               />
               <Dropdown show={showUserList} className={styles.dropdown}>
