@@ -10,19 +10,18 @@ export default function UserCircleStack({ users }: { users?: User[] | null }) {
 
   if (Array.isArray(users)) {
     const displayUsers = users.slice(0, 3);
-    const restOfUsers = users.slice(3);
+    // const restOfUsers = users.slice(3);
     const usersLeft = users.length - 3;
-    console.log(usersLeft);
 
     return (
       <div className={styles.circleContainer}>
         {displayUsers.map((user, index) =>
           index === displayUsers.length - 1 ? (
-            <Link to={`/users/${user.id}`} className={styles.circleLink}>
-              <UserCircle key={user.id} username={user.username} isLast={true} />
+            <Link key={user.id} to={`/users/${user.id}`} className={styles.circleLink}>
+              <UserCircle username={user.username} isLast={true} />
             </Link>
           ) : (
-            <Link to={`/users/${user.id}`} className={styles.circleLink}>
+            <Link key={user.id} to={`/users/${user.id}`} className={styles.circleLink}>
               <UserCircle key={user.id} username={user.username} />
             </Link>
           ),
@@ -33,11 +32,16 @@ export default function UserCircleStack({ users }: { users?: User[] | null }) {
             className={styles.dropdownContainer}
             onMouseEnter={() => setShowUserList(true)}
             onMouseLeave={() => setShowUserList(false)}>
-            <UserCircle username={`+${usersLeft}`} isLast={true} />
+            <UserCircle username={`...`} isLast={true} />
             <Dropdown show={showUserList} className={styles.dropdown}>
               <Dropdown.Menu>
-                {restOfUsers.map((user) => (
-                  <Dropdown.Item>{user.username}</Dropdown.Item>
+                {users.map((user) => (
+                  <Dropdown.Item
+                    key={user.id}
+                    href={`/users/${user.id}`}
+                    className={styles.dropdownItem}>
+                    {user.username}
+                  </Dropdown.Item>
                 ))}
               </Dropdown.Menu>
             </Dropdown>

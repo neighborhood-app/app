@@ -21,6 +21,7 @@
 .lastCircle {
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
 
 .inStack {

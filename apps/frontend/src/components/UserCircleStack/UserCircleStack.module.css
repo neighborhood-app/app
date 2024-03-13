@@ -17,6 +17,10 @@
   top: 0.5rem;
 }
 
+.dropdownItem:active {
+  background-color: pink;
+}
+
 .hiddenOverlay {
   position: relative;
   z-index: -1;
