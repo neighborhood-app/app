@@ -34,7 +34,7 @@ export default function UserCircleStack({ users }: { users?: User[] | null }) {
             onMouseLeave={() => setShowUserList(false)}>
             <UserCircle username={`...`} isLast={true} />
             <Dropdown show={showUserList} className={styles.dropdown}>
-              <Dropdown.Menu>
+              <Dropdown.Menu className={styles.dropdownMenu}>
                 {users.map((user) => (
                   <Dropdown.Item
                     key={user.id}

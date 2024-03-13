@@ -17,6 +17,11 @@
   top: 0.5rem;
 }
 
+.dropdownMenu {
+  max-height: 50vh;
+  overflow: scroll;
+}
+
 .dropdownItem:active {
   background-color: pink;
 }
