@@ -25,14 +25,13 @@
 }
 
 .inStack {
-  margin-left: -19px;
+  margin-left: -16px;
   letter-spacing: 0.1rem;
   font-size: 0.62rem;
   transition: all 0.5s ease-in-out;
 }
 
 .inStack:hover {
-  margin-top: -8px;
-  margin-left: 0;
+  margin-top: -3px;
   transform: scale(1.1);
 }
