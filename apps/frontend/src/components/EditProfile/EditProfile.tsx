@@ -12,6 +12,7 @@ type Props = {
 };
 
 export default function EditProfile({ profile, closeForm }: Props) {
+  const [profPic, setProfPic] = useState<File | undefined>(undefined);
   const [formInput, setFormInput] = useState({
     first_name: profile.first_name || '',
     last_name: profile.last_name || '',
@@ -22,14 +23,30 @@ export default function EditProfile({ profile, closeForm }: Props) {
 
   const submit = useSubmit();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form: UpdateUserInput = { ...formInput };
-    if (!form.dob) {
-      delete form.dob;
+    const formDeets: UpdateUserInput = { ...formInput };
+    if (!formDeets.dob) {
+      delete formDeets.dob;
     }
 
-    submit(form, {
+    if (profPic) {
+      const URL = 'https://api.cloudinary.com/v1_1/dwlk6urra/image/upload';
+      const cloudFormData = new FormData();
+      cloudFormData.append('file', profPic);
+      cloudFormData.append('upload_preset', 'prof_pic')
+      cloudFormData.append('api_key', process.env.REACT_APP_CLOUDINARY_API_KEY || '');
+  
+      const response = await fetch(URL, {
+        method: 'post',
+        body: cloudFormData,
+      }).then(res => res.json())
+        .catch(console.error);
+  
+      console.log(response);
+    }
+ 
+    submit(formDeets, {
       method: 'put',
       action: `/users/${profile.id}`,
     });
@@ -41,7 +58,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
       files: FileList;
     };
 
-    console.log('target', target.files);
+    setProfPic(target.files[0]);
   };
 
   return (
