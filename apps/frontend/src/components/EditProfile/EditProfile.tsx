@@ -36,6 +36,14 @@ export default function EditProfile({ profile, closeForm }: Props) {
     closeForm();
   };
 
+  const handleImageChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const target = event.target as HTMLInputElement & {
+      files: FileList;
+    };
+
+    console.log('target', target.files);
+  };
+
   return (
     <>
       <Form className={styles.form} onSubmit={handleSubmit}>
@@ -101,13 +109,24 @@ export default function EditProfile({ profile, closeForm }: Props) {
               maxLength={40}></Form.Control>
           </Col>
         </Row>
-        <Row>
-          <Col sm={6} xs={6} className={'d-flex justify-content-end'}>
+        <Row className={styles.row}>
+          <Col>
+            <h3>Image</h3>
+            <Form.Control
+              className={styles.inputField}
+              onChange={handleImageChange}
+              type="file"
+              accept="image/*"
+              name="image"></Form.Control>
+          </Col>
+        </Row>
+        <Row className="mt-4 mt-md-5 justify-content-center">
+          <Col md={4} xs={6} className={'d-flex'}>
             <CustomBtn variant="primary" type="submit" className={styles.btn}>
               Submit
             </CustomBtn>
           </Col>
-          <Col sm={6} xs={6}>
+          <Col md={4} xs={6}>
             <CustomBtn variant="outline-dark" onClick={closeForm} className={styles.btn}>
               Cancel
             </CustomBtn>
