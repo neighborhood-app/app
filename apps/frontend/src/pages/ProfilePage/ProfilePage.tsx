@@ -8,6 +8,7 @@ import { getStoredUser } from '../../utils/auth';
 import usersServices from '../../services/users';
 import EditProfile from '../../components/EditProfile/EditProfile';
 import ProfileInfo from '../../components/ProfileInfo/ProfileInfo';
+import CloudImg from '../../components/CloudImg/CouldImg';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const userId = params.id;
@@ -25,7 +26,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   return response;
 }
 
-const profileImage = require('./profile-picture.png');
+// const profileImage = require('./profile-picture.png');
 
 export default function ProfilePage() {
   const loggedUser = getStoredUser();
@@ -55,7 +56,8 @@ export default function ProfilePage() {
     <Container className={styles.container} fluid>
       <Row className={styles.header}>
         <Col className={styles.column}>
-          <img src={profileImage} alt="Profile" className={styles.profilePicture} />
+          {/* <img src={profileImage} alt="Profile" className={styles.profilePicture} /> */}
+          <CloudImg className={styles.profilePicture}></CloudImg>
         </Col>
         <Col className={`${styles.column} ${styles.headerColumn}`}>
           <h3 className={styles.userName}>@{profileData.username}</h3>
