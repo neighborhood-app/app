@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
 import { useState } from 'react';
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Image } from 'react-bootstrap';
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
 import styles from './ProfilePage.module.css';
 import { getStoredUser } from '../../utils/auth';
@@ -20,10 +20,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export async function action({ params, request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const profileId = Number(params.id);
-  // eslint-disable-next-line no-restricted-syntax
-  for (const prop of formData) {
-    console.log(prop);
-  }
 
   const profileData = Object.fromEntries(formData) as unknown as UpdateUserInput;
 
@@ -31,7 +27,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
   return response;
 }
 
-// const profileImage = require('./profile-picture.png');
+const profileImgPlaceholder = require('../../assets/icons/user_icon.png');
 
 export default function ProfilePage() {
   const loggedUser = getStoredUser();
@@ -56,14 +52,18 @@ export default function ProfilePage() {
       : null;
 
   const showUpdateButton = isUserAdmin && !edit;
+  const userImg = profileData.image_url ? (
+    <CloudImg src={profileData.image_url} className={styles.profilePicture}></CloudImg>
+  ) : (
+    <Image src={profileImgPlaceholder} className={styles.profilePicture}></Image>
+  );
 
+  console.log(profileData);
+  
   return (
     <Container className={styles.container} fluid>
       <Row className={styles.header}>
-        <Col className={styles.column}>
-          {/* <img src={profileImage} alt="Profile" className={styles.profilePicture} /> */}
-          <CloudImg className={styles.profilePicture}></CloudImg>
-        </Col>
+        <Col className={styles.column}>{userImg}</Col>
         <Col className={`${styles.column} ${styles.headerColumn}`}>
           <h3 className={styles.userName}>@{profileData.username}</h3>
           {nameOfUser && <p>{nameOfUser}</p>}
