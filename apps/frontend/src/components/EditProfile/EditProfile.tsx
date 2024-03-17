@@ -1,10 +1,12 @@
-import { UserWithRelatedData, UpdateUserInput } from '@neighborhood/backend/src/types';
+import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Col, Row, Form } from 'react-bootstrap';
 import { useState, FormEvent } from 'react';
-import { useSubmit } from 'react-router-dom';
+// import { useSubmit } from 'react-router-dom';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import extractDate from '../../utils/utilityFunctions';
 import styles from './EditProfile.module.css';
+import { UpdateUserInput } from '../../types';
+import userServices from '../../services/users';
 
 type Props = {
   profile: UserWithRelatedData;
@@ -21,7 +23,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
     email: profile.email || '',
   });
 
-  const submit = useSubmit();
+  // const submit = useSubmit();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,26 +32,36 @@ export default function EditProfile({ profile, closeForm }: Props) {
       delete formDeets.dob;
     }
 
-    if (profPic) {
-      const URL = 'https://api.cloudinary.com/v1_1/dwlk6urra/image/upload';
-      const cloudFormData = new FormData();
-      cloudFormData.append('file', profPic);
-      cloudFormData.append('upload_preset', 'prof_pic')
-      cloudFormData.append('api_key', process.env.REACT_APP_CLOUDINARY_API_KEY || '');
-  
-      const response = await fetch(URL, {
-        method: 'post',
-        body: cloudFormData,
-      }).then(res => res.json())
-        .catch(console.error);
-  
-      console.log(response);
-    }
- 
-    submit(formDeets, {
-      method: 'put',
-      action: `/users/${profile.id}`,
-    });
+    const formData = new FormData();
+    Object.entries(formInput).forEach(([key, value]) => formData.append(key, value));
+    if (profPic) formData.append('image_url', profPic);
+
+    // if (profPic) {
+    //   const URL = 'https://api.cloudinary.com/v1_1/dwlk6urra/image/upload';
+    //   const cloudFormData = new FormData();
+    //   cloudFormData.append('file', profPic);
+    //   cloudFormData.append('upload_preset', 'prof_pic');
+    //   cloudFormData.append('overwrite', 'true');
+    //   cloudFormData.append('public_id', `${profile.username}:${profile.id}`);
+    //   cloudFormData.append('api_key', process.env.REACT_APP_CLOUDINARY_API_KEY || '');
+
+    //   const response = await fetch(URL, {
+    //     method: 'post',
+    //     body: cloudFormData,
+    //   }).then(res => res.json())
+    //     .catch(console.error);
+
+    //   console.log(response);
+    //   // secure_url
+    // }
+
+    const res = await userServices.updateProfile(formData, profile.id);
+    console.log(res);
+
+    // submit(formData, {
+    //   method: 'put',
+    //   action: `/users/${profile.id}`,
+    // });
     closeForm();
   };
 

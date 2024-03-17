@@ -65,6 +65,7 @@ model User {
   first_name    String?        @db.VarChar(25)
   last_name     String?        @db.VarChar(25)
   dob           DateTime?      @db.Date
+  image_url     String?        @db.VarChar(400)
   gender_id     Int?
   bio           String?        @db.VarChar(500)
   adminOf       Neighborhood[] @relation("admin")

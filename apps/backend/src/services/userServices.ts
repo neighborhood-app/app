@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
-import { User } from '@prisma/client';
-import { CreateUserData, UpdateUserData, UpdateUserInput, UserWithoutId, UserWithoutPasswordHash } from '../types';
+import { Prisma, User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
+import { CreateUserData, UpdateUserData, UpdateUserInput, UserWithoutId, UserWithoutPasswordHash } from '../types';
 import { isObject,stringIsValidDate } from '../utils/helpers';
+import { uploadImage } from './imageServices';
 
 const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   id: true,
@@ -13,6 +14,7 @@ const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   dob: true,
   gender_id: true,
   bio: true,
+  image_url: true,
   neighborhoods: true,
   requests: {
     include: {
@@ -177,6 +179,7 @@ const generateUserDataWithoutId = async (createUserData: CreateUserData)
     dob: null,
     gender_id: null,
     bio: null,
+    image_url: createUserData.image_url || null
   };
 
   return userData;
@@ -215,7 +218,7 @@ const createUser = async (userData: CreateUserData): Promise<UserWithoutPassword
 };
 
 const isUpdateProfileData = (obj: object): obj is UpdateUserInput => {
-  const VALID_PROPS = ['first_name', 'last_name', 'email', 'dob', 'bio'];
+  const VALID_PROPS = ['first_name', 'last_name', 'email', 'dob', 'bio', 'image_url'];
   const props = Object.keys(obj);
 
   if (props.some((prop) => !VALID_PROPS.includes(prop))) return false;
@@ -224,6 +227,7 @@ const isUpdateProfileData = (obj: object): obj is UpdateUserInput => {
   if ('dob' in obj && typeof obj.dob !== 'string') return false;
   if ('email' in obj && typeof obj.email !== 'string') return false;
   if ('bio' in obj && typeof obj.bio !== 'string') return false;
+  // if ('image_url' in obj && (typeof obj.image_url !== 'string' || obj.image_url instanceof File))
 
   return true;
 };
@@ -244,33 +248,52 @@ const updateUser = async (body: unknown, userId: number): Promise<UserWithoutPas
     error.name = 'InvalidDateError';
     throw error;
   }
-  let updateData: UpdateUserData | UpdateUserInput;
+  
+  if (body.image_url) {
+    const imageURL = await uploadImage((body.image_url as string), `profile-pics/${userId}`);
+    body.image_url = imageURL;
+  }
+  
+  let updateData: UpdateUserData; 
 
   if (body.dob && typeof body.dob === 'string') {
     updateData = {
-      ...body, dob: new Date(body.dob)
-    }
+      ...body,
+      dob: new Date(body.dob),
+    } as UpdateUserData;
   } else {
-    updateData = body;
+    updateData = { ...body, dob: undefined };
   }
-
-  const updatedProfile: UserWithoutPasswordHash = await prismaClient.user.update({
-    where: { id: userId },
-    data: updateData,
-    // Ensures password hash isn't being sent
-    select: {
-      id: true,
-      username: true,
-      email: true,
-      first_name: true,
-      last_name: true,
-      dob: true,
-      gender_id: true,
-      bio: true,
+  
+  try { 
+    const updatedProfile: UserWithoutPasswordHash = await prismaClient.user.update({
+      where: { id: userId },
+      data: updateData,
+      // Ensures password hash isn't being sent
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        first_name: true,
+        last_name: true,
+        dob: true,
+        gender_id: true,
+        bio: true,
+        image_url: true,
+      }
+    });
+  
+    return updatedProfile;
+  } catch (error: unknown) {
+    if (error instanceof Prisma.PrismaClientValidationError) {
+      const newError = new Error('Invalid inputs. Please try again.');
+      newError.name = 'InvalidInputError';
+      throw newError;
     }
-  });
-
-  return updatedProfile;
+    
+    console.error(error);
+    throw error;
+  }
 };
 
 export default {
