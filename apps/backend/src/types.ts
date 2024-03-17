@@ -130,7 +130,12 @@ export type NeighborhoodDetailsForNonMembers = Omit<Neighborhood, 'admin_id'>;
 const neighborhoodDetailsForMembers = schema.Prisma.validator<schema.Prisma.NeighborhoodArgs>()({
   include: {
     admin: true,
-    users: true,
+    users: {
+      select: {
+        id: true,
+        username: true,
+      }
+    },
     requests: true,
   },
 });

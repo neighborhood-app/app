@@ -167,10 +167,20 @@ const getNeighborhoodDetailsForMembers = async (
 ): Promise<NeighborhoodDetailsForMembers> => {
   const FIELDS_TO_INCLUDE_FOR_MEMBERS = {
     admin: true,
-    users: true,
+    users: {
+      select: {
+        id: true,
+        username: true,
+      }
+    },
     requests: {
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+          }
+        },
         responses: {
           include: {
             user: true,
