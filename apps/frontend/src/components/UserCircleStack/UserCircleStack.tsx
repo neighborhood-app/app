@@ -40,6 +40,7 @@ export default function UserCircleStack({ users }: { users?: User[] | null }) {
                     key={user.id}
                     href={`/users/${user.id}`}
                     className={styles.dropdownItem}>
+                    <UserCircle username={user.username} inList={true} />
                     {user.username}
                   </Dropdown.Item>
                 ))}

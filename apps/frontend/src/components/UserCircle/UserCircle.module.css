@@ -35,3 +35,16 @@
   margin-top: -3px;
   transform: scale(1.1);
 }
+
+.inList {
+  margin: 0 10px 0 5px;
+  width: 30px;
+  height: 30px;
+}
+
+.inList:hover {
+  background-color: inherit;
+  color: inherit;
+  margin-top: 0;
+  transform: none;
+}
