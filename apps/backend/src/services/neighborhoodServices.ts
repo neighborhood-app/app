@@ -176,6 +176,7 @@ const getNeighborhoodDetailsForMembers = async (
       select: {
         id: true,
         username: true,
+        email: true,
       }
     },
     requests: {
@@ -184,6 +185,7 @@ const getNeighborhoodDetailsForMembers = async (
           select: {
             id: true,
             username: true,
+            email: true
           }
         },
         responses: {
