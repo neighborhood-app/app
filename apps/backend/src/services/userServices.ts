@@ -1,9 +1,16 @@
 import bcrypt from 'bcrypt';
 import { Prisma, User } from '@prisma/client';
 import prismaClient from '../../prismaClient';
-import { CreateUserData, UpdateUserData, UpdateUserInput, UserWithoutId, UserWithoutPasswordHash } from '../types';
-import { isObject,stringIsValidDate } from '../utils/helpers';
-import { uploadImage } from './imageServices';
+import {
+  CreateUserData,
+  UpdateUserData,
+  UpdateUserInput,
+  UserWithoutId,
+  UserWithoutPasswordHash,
+} from '../types';
+import { isObject, stringIsValidDate } from '../utils/helpers';
+import { uploadImage, URL } from './imageServices';
+import { updateSubcriber } from './notificationServices';
 
 const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   id: true,
@@ -19,8 +26,8 @@ const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   requests: {
     include: {
       user: true,
-    }
-  }
+    },
+  },
 };
 
 // helpers
@@ -46,16 +53,18 @@ const getAllUsers = async (): Promise<Array<UserWithoutPasswordHash>> => {
  * @returns Promise resolving to username
  */
 const parseAndValidateUsername = async (username: unknown): Promise<string> => {
-//   Only contains alphanumeric characters, underscore and dot.
-// Underscore and dot can't be at the end or start of a username (e.g _username / username_ / .username / username.).
-// Underscore and dot can't be next to each other (e.g user_.name).
-// Underscore or dot can't be used multiple times in a row (e.g user__name / user..name).
+  //   Only contains alphanumeric characters, underscore and dot.
+  // Underscore and dot can't be at the end or start of a username (e.g _username / username_ / .username / username.).
+  // Underscore and dot can't be next to each other (e.g user_.name).
+  // Underscore or dot can't be used multiple times in a row (e.g user__name / user..name).
   // Number of characters must be between 4 and 15.
   const usernameRegex = /^(?=.{4,20}$)(?![.])(?!.*[.]{2})(?!.*[_]{3})[a-z0-9._]+(?<![.])$/gi;
 
   // const MINIMUM_USERNAME_LENGTH = 4;
   if (typeof username !== 'string' || !usernameRegex.test(username)) {
-    const error = new Error('The username needs to be 4-20 characters long and can contain alphanumerics, _, or .');
+    const error = new Error(
+      'The username needs to be 4-20 characters long and can contain alphanumerics, _, or .',
+    );
     error.name = 'UserDataError';
     throw error;
   }
@@ -95,11 +104,11 @@ const validateEmail = async (email: string): Promise<string> => {
 };
 
 /**
-   * - narrows type of password to string, generates password hash from the password
-   * - throws error if password is missing or invalid ie less than 4 characters
-   * @param password this should be a valid password
-   * @returns Promise resolving to password hash
-   */
+ * - narrows type of password to string, generates password hash from the password
+ * - throws error if password is missing or invalid ie less than 4 characters
+ * @param password this should be a valid password
+ * @returns Promise resolving to password hash
+ */
 const getPasswordHash = async (password: unknown): Promise<string> => {
   const MINIMUM_PASSWORD_LENGTH = 4;
   if (typeof password !== 'string' || password.length < MINIMUM_PASSWORD_LENGTH) {
@@ -120,13 +129,13 @@ const getPasswordHash = async (password: unknown): Promise<string> => {
  * checks if username, password and email properties are present and of type string
  * @returns - type predicate (boolean) indicating whether obj is of type `CreateUserData`
  */
-const isCreateUserData = (obj: object): obj is CreateUserData => (
-  'username' in obj && 'password' in obj
-      && 'email' in obj
-      && typeof obj.username === 'string'
-      && typeof obj.password === 'string'
-      && typeof obj.email === 'string'
-);
+const isCreateUserData = (obj: object): obj is CreateUserData =>
+  'username' in obj &&
+  'password' in obj &&
+  'email' in obj &&
+  typeof obj.username === 'string' &&
+  typeof obj.password === 'string' &&
+  typeof obj.email === 'string';
 
 /**
  * - performs type narrowing for data from req.body to POST /users
@@ -168,8 +177,9 @@ const parseCreateUserData = async (body: unknown): Promise<CreateUserData> => {
  * currently only username and password required
  * @returns Promise resolving to the user data without id
  */
-const generateUserDataWithoutId = async (createUserData: CreateUserData)
-: Promise<UserWithoutId> => {
+const generateUserDataWithoutId = async (
+  createUserData: CreateUserData,
+): Promise<UserWithoutId> => {
   const userData: UserWithoutId = {
     username: await parseAndValidateUsername(createUserData.username),
     password_hash: await getPasswordHash(createUserData.password),
@@ -179,7 +189,7 @@ const generateUserDataWithoutId = async (createUserData: CreateUserData)
     dob: null,
     gender_id: null,
     bio: null,
-    image_url: createUserData.image_url || null
+    image_url: createUserData.image_url || null,
   };
 
   return userData;
@@ -191,7 +201,7 @@ const generateUserDataWithoutId = async (createUserData: CreateUserData)
  * @param userId
  * @returns Promise resolving to user data without password hash.
  */
-const getUserById = async (userId: number): Promise<UserWithoutPasswordHash > => {
+const getUserById = async (userId: number): Promise<UserWithoutPasswordHash> => {
   const user: UserWithoutPasswordHash = await prismaClient.user.findUniqueOrThrow({
     where: {
       id: userId,
@@ -227,7 +237,12 @@ const isUpdateProfileData = (obj: object): obj is UpdateUserInput => {
   if ('dob' in obj && typeof obj.dob !== 'string') return false;
   if ('email' in obj && typeof obj.email !== 'string') return false;
   if ('bio' in obj && typeof obj.bio !== 'string') return false;
-  // if ('image_url' in obj && (typeof obj.image_url !== 'string' || obj.image_url instanceof File))
+  if (
+    'image_url' in obj &&
+    typeof obj.image_url !== 'string' &&
+    typeof obj.image_url !== 'undefined'
+  )
+    return false;
 
   return true;
 };
@@ -248,13 +263,13 @@ const updateUser = async (body: unknown, userId: number): Promise<UserWithoutPas
     error.name = 'InvalidDateError';
     throw error;
   }
-  
+
   if (body.image_url) {
-    const imageURL = await uploadImage((body.image_url as string), `profile-pics/${userId}`);
-    body.image_url = imageURL;
+    const imagePath = await uploadImage(body.image_url as string, `profile-pics/${userId}`);
+    body.image_url = imagePath;
   }
-  
-  let updateData: UpdateUserData; 
+
+  let updateData: UpdateUserData;
 
   if (body.dob && typeof body.dob === 'string') {
     updateData = {
@@ -264,8 +279,8 @@ const updateUser = async (body: unknown, userId: number): Promise<UserWithoutPas
   } else {
     updateData = { ...body, dob: undefined };
   }
-  
-  try { 
+
+  try {
     const updatedProfile: UserWithoutPasswordHash = await prismaClient.user.update({
       where: { id: userId },
       data: updateData,
@@ -280,9 +295,21 @@ const updateUser = async (body: unknown, userId: number): Promise<UserWithoutPas
         gender_id: true,
         bio: true,
         image_url: true,
-      }
+      },
     });
-  
+
+    console.log({ updatedProfile });
+
+    const subscriberInfo = {
+      subscriberId: String(updatedProfile.id),
+      firstName: updatedProfile.first_name || '',
+      lastName: updatedProfile.last_name || '',
+      email: updatedProfile.email,
+      avatar: URL + updatedProfile.image_url,
+    };
+
+    updateSubcriber(subscriberInfo);
+
     return updatedProfile;
   } catch (error: unknown) {
     if (error instanceof Prisma.PrismaClientValidationError) {
@@ -290,7 +317,7 @@ const updateUser = async (body: unknown, userId: number): Promise<UserWithoutPas
       newError.name = 'InvalidInputError';
       throw newError;
     }
-    
+
     console.error(error);
     throw error;
   }
@@ -301,5 +328,5 @@ export default {
   getAllUsers,
   getUserById,
   createUser,
-  updateUser
+  updateUser,
 };

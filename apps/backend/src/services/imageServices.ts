@@ -1,6 +1,9 @@
 // Require the cloudinary library
 const cloudinary = require('cloudinary').v2;
 
+export const URL =
+  `https://res.cloudinary.com/${process.env.CLOUD_NAME}/image/upload/v1710605561/`;
+
 // Return "https" URLs by setting secure: true
 cloudinary.config({
   secure: true,

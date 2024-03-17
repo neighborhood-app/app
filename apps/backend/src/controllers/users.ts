@@ -49,6 +49,7 @@ usersRouter.post(
       newUser.username,
       newUser.first_name || '',
       newUser.last_name || '',
+      newUser.image_url || '',
     );
 
     return res.status(201).json(newUser);

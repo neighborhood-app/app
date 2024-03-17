@@ -84,20 +84,24 @@ export async function getTopics(numOfTopics: number): Promise<Topic[]> {
 
 /**
  * Creates a new subscriber to receive notifications
- * @param id
+ * @param id to use as subscriberId
+ * @param username
  * @param firstName
  * @param lastName
+ * @param imageURL (optional) to use as the user's avatar
  */
 export async function createSubscriber(
   id: string,
   username: string,
   firstName: string,
   lastName: string,
+  imageURL?: string,
 ) {
   try {
     await novu.subscribers.identify(id, {
       firstName,
       lastName,
+      avatar: imageURL,
       data: {
         username,
       },
@@ -119,6 +123,42 @@ export async function getSubscriber(subscriberId: string) {
   } catch (error: unknown) {
     console.error(`Could not retrieve subscriber with id ${subscriberId}`, error);
     return { error: `Could not retrieve subscriber with id ${subscriberId}` };
+  }
+}
+
+/**
+ * Updates a subscriber's info
+ * @param subscriberId
+ */
+export async function updateSubcriber({
+  subscriberId,
+  firstName,
+  lastName,
+  email,
+  imageUrl,
+}: {
+  subscriberId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  imageUrl?: string;
+}) {
+  try {
+    // If none of the values were updated ('' or undefined), return immediately
+    if ([firstName, lastName, email, imageUrl].every((val) => !val)) return;
+
+    // eslint-disable-next-line prefer-rest-params
+    console.log(arguments);
+
+    const res = await novu.subscribers.update(subscriberId, {
+      firstName,
+      lastName,
+      email,
+      avatar: imageUrl,
+    });
+    console.log('novu res', res.data.data);
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -202,6 +242,11 @@ export const triggers = {
     username,
   }: JoinNeighborhoodArgs) {
     try {
+      /*
+       * Checks if there is an identical notification in the recent history.
+       * Note that this implementation only checks the first page of results
+       * and not ALL the admin's notifications.
+       */
       const notifications = await getSubscriberNotifications(adminId);
 
       const identicalNotification = notifications.some(
@@ -214,9 +259,17 @@ export const triggers = {
 
       if (identicalNotification) return;
 
+      const subscriberInfo = (await getSubscriber(userId)).data;
+      console.log({subscriberInfo});
+
       await novu.trigger('join-neighborhood', {
         to: {
           subscriberId: adminId,
+        },
+        actor: {
+          subscriberId: userId,
+          // Maybe passing the id is enough to grab the avatar. Check
+          avatar: subscriberInfo.avatar
         },
         payload: {
           neighborhoodId,
