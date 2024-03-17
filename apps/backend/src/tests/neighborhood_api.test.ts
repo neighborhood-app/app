@@ -100,10 +100,10 @@ describe('Tests for getting all neighborhoods: GET /neighborhoods', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(res1.status).toEqual(404);
-    expect(res1.body).toEqual({ error: 'No Neighborhood found' });
+    expect(res1.body).toEqual({ error: 'Neighborhood not found.' });
 
     expect(res2.status).toEqual(404);
-    expect(res2.body).toEqual({ error: 'No Neighborhood found' });
+    expect(res2.body).toEqual({ error: 'Neighborhood not found.' });
   });
 
   test('/?searchTerm=:searchTerm returns neighborhoods that match the search term', async () => {
@@ -222,7 +222,7 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
       .get('/api/neighborhoods/0')
       .set('Authorization', `Bearer ${token}`);
     expect(response.status).toEqual(404);
-    expect(response.body.error).toEqual('No Neighborhood found');
+    expect(response.body.error).toEqual('Neighborhood not found.');
   });
 
   test('GET /neighborhoods/:id only returns the id, name, description and location of neighborhood if user is not logged in', async () => {
@@ -323,7 +323,8 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
 
     const neighborhoodUsers = createNeighborhoodResponse.body.users;
 
-    const userNames = neighborhoodUsers.map((u: { username: any }) => u.username);
+    const userNames = neighborhoodUsers.map((u: { username: string }) => u.username);
+    
     expect(userNames).toContain(BOBS_LOGIN_DATA.username);
 
     expect(createNeighborhoodResponse.body.name).toBe(NEW_NEIGHBORHOOD_NAME);
