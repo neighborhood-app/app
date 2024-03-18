@@ -104,6 +104,20 @@ async function main() {
     },
   });
 
+  await prismaClient.user.createMany({
+    data: [
+      {username: 'user1', email: 'user1@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
+      {username: 'user2', email: 'user2@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
+      {username: 'user3', email: 'user3@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
+      {username: 'user4', email: 'user4@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
+      {username: 'user5', email: 'user5@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
+      {username: 'user6', email: 'user6@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
+      {username: 'user7', email: 'user7@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
+      {username: 'user8', email: 'user8@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
+      {username: 'user9', email: 'user9@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
+    ]
+  })
+
   const users = [bob, radu, shwetank, antonina, maria, mike, leia];
 
   //---------------------------------------------------------

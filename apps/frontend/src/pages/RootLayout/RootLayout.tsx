@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, ScrollRestoration } from 'react-router-dom';
 import { Row, Col, Container } from 'react-bootstrap';
 import Footer from '../../components/Footer/Footer';
 import styles from './RootLayout.module.css';
@@ -20,6 +20,7 @@ const RootLayout = () => (
     <Row>
       <Footer />
     </Row>
+    <ScrollRestoration />
   </Container>
 );
 
