@@ -51,7 +51,7 @@ function ErrorPage() {
 
   return (
     <Container fluid>
-      <Row>
+      <Row className='m-0'>
         <Col className={`${styles.column} ${styles.sticky}`} sm="auto">
           <MainNav />
         </Col>
