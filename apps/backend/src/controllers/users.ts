@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import * as formData from 'express-form-data';
 import catchError from '../utils/catchError';
 import userServices from '../services/userServices';
 import middleware from '../utils/middleware';
@@ -9,16 +8,17 @@ import { UserWithoutPasswordHash, RequestWithAuthentication } from '../types';
 const usersRouter = express.Router();
 
 // parse data with connect-multiparty.
-usersRouter.use(formData.parse());
-// delete from the request all empty files (size == 0)
-usersRouter.use(formData.format());
-// change the file objects to fs.ReadStream
-usersRouter.use(formData.stream());
-// union the body and the files
-usersRouter.use(formData.union());
+// usersRouter.use(formData.parse());
+// // delete from the request all empty files (size == 0)
+// usersRouter.use(formData.format());
+// // change the file objects to fs.ReadStream
+// usersRouter.use(formData.stream());
+// // union the body and the files
+// usersRouter.use(formData.union());
 
 usersRouter.get(
   '/',
+  middleware.userIdExtractorAndLoginValidator,
   catchError(async (_req: Request, res: Response) => {
     const users: Array<UserWithoutPasswordHash> = await userServices.getAllUsers();
 
@@ -28,6 +28,8 @@ usersRouter.get(
 
 usersRouter.get(
   '/:id',
+  middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
   catchError(async (req: Request, res: Response) => {
     const userId: number = Number(req.params.id);
 

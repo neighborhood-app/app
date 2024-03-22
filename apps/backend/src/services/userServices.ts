@@ -305,8 +305,10 @@ const updateUser = async (body: unknown, userId: number): Promise<UserWithoutPas
       firstName: updatedProfile.first_name || '',
       lastName: updatedProfile.last_name || '',
       email: updatedProfile.email,
-      avatar: URL + updatedProfile.image_url,
+      avatar: updatedProfile.image_url ? URL + updatedProfile.image_url : '',
     };
+
+    console.log({subscriberInfo});
 
     updateSubcriber(subscriberInfo);
 

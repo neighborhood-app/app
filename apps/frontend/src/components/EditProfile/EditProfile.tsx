@@ -36,25 +36,6 @@ export default function EditProfile({ profile, closeForm }: Props) {
     Object.entries(formInput).forEach(([key, value]) => formData.append(key, value));
     if (profPic) formData.append('image_url', profPic);
 
-    // if (profPic) {
-    //   const URL = 'https://api.cloudinary.com/v1_1/dwlk6urra/image/upload';
-    //   const cloudFormData = new FormData();
-    //   cloudFormData.append('file', profPic);
-    //   cloudFormData.append('upload_preset', 'prof_pic');
-    //   cloudFormData.append('overwrite', 'true');
-    //   cloudFormData.append('public_id', `${profile.username}:${profile.id}`);
-    //   cloudFormData.append('api_key', process.env.REACT_APP_CLOUDINARY_API_KEY || '');
-
-    //   const response = await fetch(URL, {
-    //     method: 'post',
-    //     body: cloudFormData,
-    //   }).then(res => res.json())
-    //     .catch(console.error);
-
-    //   console.log(response);
-    //   // secure_url
-    // }
-
     const res = await userServices.updateProfile(formData, profile.id);
     console.log(res);
 

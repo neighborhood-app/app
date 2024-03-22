@@ -135,28 +135,49 @@ export async function updateSubcriber({
   firstName,
   lastName,
   email,
-  imageUrl,
+  avatar,
 }: {
   subscriberId: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  imageUrl?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  avatar?: string;
 }) {
   try {
     // If none of the values were updated ('' or undefined), return immediately
-    if ([firstName, lastName, email, imageUrl].every((val) => !val)) return;
+    if ([firstName, lastName, email, avatar].every((val) => !val)) return;
 
-    // eslint-disable-next-line prefer-rest-params
-    console.log(arguments);
+    // interface UpdateSubData {
+    //   firstName?: string;
+    //   lastName?: string;
+    //   email?: string;
+    //   imageUrl?: string;
+    // }
 
-    const res = await novu.subscribers.update(subscriberId, {
-      firstName,
-      lastName,
-      email,
-      avatar: imageUrl,
-    });
-    console.log('novu res', res.data.data);
+    const subscriberInfo = { firstName, lastName, email, avatar };
+    console.log({ subscriberInfo });
+
+    const options = {
+      method: 'PUT',
+      headers: { Authorization: `ApiKey ${NOVU_API_KEY}` },
+      body: subscriberInfo as unknown as BodyInit,
+    };
+
+    const res = await fetch(`https://api.novu.co/v1/subscribers/${subscriberId}`, options)
+      .then((response) => response.json())
+      .then((response) => response.data)
+      .catch((err) => {
+        console.error(err);
+        return { error: `Could not update subscriber ${subscriberId}.` };
+      });
+
+    // const res = await novu.subscribers.update(subscriberId, {
+    //   firstName,
+    //   lastName,
+    //   email,
+    //   avatar: imageUrl,
+    // });
+    console.log('novu res', res);
   } catch (error) {
     console.error(error);
   }
@@ -259,17 +280,12 @@ export const triggers = {
 
       if (identicalNotification) return;
 
-      const subscriberInfo = (await getSubscriber(userId)).data;
-      console.log({subscriberInfo});
-
       await novu.trigger('join-neighborhood', {
         to: {
           subscriberId: adminId,
         },
         actor: {
           subscriberId: userId,
-          // Maybe passing the id is enough to grab the avatar. Check
-          avatar: subscriberInfo.avatar
         },
         payload: {
           neighborhoodId,
