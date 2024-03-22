@@ -1,5 +1,5 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, useLoaderData } from 'react-router';
-import { useState } from 'react';
+import { ActionFunctionArgs, LoaderFunctionArgs, useActionData, useLoaderData } from 'react-router';
+import { useEffect, useState } from 'react';
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import CustomBtn from '../../components/CustomBtn/CustomBtn';
@@ -9,7 +9,8 @@ import usersServices from '../../services/users';
 import EditProfile from '../../components/EditProfile/EditProfile';
 import ProfileInfo from '../../components/ProfileInfo/ProfileInfo';
 import CloudImg from '../../components/CloudImg/CouldImg';
-import { UpdateUserInput } from '../../types';
+import { ErrorObj, UpdatableUserFields } from '../../types';
+import AlertBox from '../../components/AlertBox/AlertBox';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const userId = params.id;
@@ -17,23 +18,27 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return userData;
 }
 
-export async function action({ params, request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const profileId = Number(params.id);
+export async function action({ request }: ActionFunctionArgs) {
+  const res = await request.formData();
+  const userData = Object.fromEntries(res) as unknown as UpdatableUserFields;
 
-  const profileData = Object.fromEntries(formData) as unknown as UpdateUserInput;
-
-  const response = await usersServices.updateProfile(profileData, profileId);
-  return response;
+  return userData;
 }
 
 const profileImgPlaceholder = require('../../assets/icons/user_icon.png');
 
 export default function ProfilePage() {
   const loggedUser = getStoredUser();
-  const profileData = useLoaderData() as UserWithRelatedData;
+  let profileData = useLoaderData() as UserWithRelatedData;
+  const updatedData = useActionData() as UpdatableUserFields | ErrorObj | undefined;
 
   const [edit, setEdit] = useState(false);
+  const [error, setError] = useState<null | ErrorObj>(null);
+
+  useEffect(() => {    
+    if (updatedData && 'error' in updatedData) setError(updatedData);
+    else if (updatedData) profileData = { ...profileData, ...updatedData };
+  }, [updatedData])
 
   function closeForm() {
     setEdit(false);
@@ -57,11 +62,12 @@ export default function ProfilePage() {
   ) : (
     <Image src={profileImgPlaceholder} className={styles.profilePicture}></Image>
   );
-
-  console.log(profileData);
   
   return (
     <Container className={styles.container} fluid>
+      <Row className='m-3'>
+        {error && <AlertBox variant='danger' text={error.error}></AlertBox>}
+      </Row>
       <Row className={styles.header}>
         <Col className={styles.column}>{userImg}</Col>
         <Col className={`${styles.column} ${styles.headerColumn}`}>

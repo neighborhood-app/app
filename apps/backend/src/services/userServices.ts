@@ -298,8 +298,6 @@ const updateUser = async (body: unknown, userId: number): Promise<UserWithoutPas
       },
     });
 
-    console.log({ updatedProfile });
-
     const subscriberInfo = {
       subscriberId: String(updatedProfile.id),
       firstName: updatedProfile.first_name || '',

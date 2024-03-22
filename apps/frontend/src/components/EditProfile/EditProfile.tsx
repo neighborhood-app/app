@@ -1,11 +1,11 @@
 import { UserWithRelatedData } from '@neighborhood/backend/src/types';
 import { Col, Row, Form } from 'react-bootstrap';
-import { useState, FormEvent } from 'react';
-// import { useSubmit } from 'react-router-dom';
+import React, { useState, FormEvent } from 'react';
+import { useSubmit } from 'react-router-dom';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import extractDate from '../../utils/utilityFunctions';
 import styles from './EditProfile.module.css';
-import { UpdateUserInput } from '../../types';
+import { ErrorObj, UpdatableUserFields, UpdateUserInput } from '../../types';
 import userServices from '../../services/users';
 
 type Props = {
@@ -23,7 +23,7 @@ export default function EditProfile({ profile, closeForm }: Props) {
     email: profile.email || '',
   });
 
-  // const submit = useSubmit();
+  const submit = useSubmit();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,12 +37,23 @@ export default function EditProfile({ profile, closeForm }: Props) {
     if (profPic) formData.append('image_url', profPic);
 
     const res = await userServices.updateProfile(formData, profile.id);
-    console.log(res);
+    const responseData: ErrorObj | UpdatableUserFields =
+    'error' in res
+    ? res
+    : {
+      first_name: res.first_name || '',
+      last_name: res.last_name || '',
+      email: res.email || '',
+      image_url: res.image_url || '',
+      dob: res.dob || null,
+      bio: res.bio || '',
+    };
 
-    // submit(formData, {
-    //   method: 'put',
-    //   action: `/users/${profile.id}`,
-    // });
+    submit(responseData as unknown as { [name: string]: string }, {
+      method: 'post',
+      action: `/users/${profile.id}`,
+    });
+
     closeForm();
   };
 

@@ -64,7 +64,7 @@ usersRouter.put(
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const userId = Number(req.params.id);
-    if (!(userId === Number(req.loggedUserId))) {
+    if (userId !== Number(req.loggedUserId)) {
       return res.status(401).json('Logged user is not the owner of this profile');
     }
 
