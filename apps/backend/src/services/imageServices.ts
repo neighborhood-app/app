@@ -1,3 +1,5 @@
+import { ErrorObj } from "../types";
+
 // Require the cloudinary library
 const cloudinary = require('cloudinary').v2;
 
@@ -13,7 +15,7 @@ cloudinary.config({
 console.log(cloudinary.config());
 
 // Uploads an image file //
-const uploadImage = async (imagePath: File | string, publicId: string): Promise<string | undefined> => {
+const uploadImage = async (imagePath: File | string, publicId: string): Promise<string | ErrorObj> => {
   // Allow overwriting the asset with new versions
   const options = {
       public_id: publicId,
@@ -26,6 +28,8 @@ const uploadImage = async (imagePath: File | string, publicId: string): Promise<
       return result.public_id;
     } catch (error) {
       console.error(error);
+
+      return { error: 'Sorry, we couldn\'t upload your image.'}
     }
 };
 

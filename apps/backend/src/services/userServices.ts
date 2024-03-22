@@ -266,6 +266,12 @@ const updateUser = async (body: unknown, userId: number): Promise<UserWithoutPas
 
   if (body.image_url) {
     const imagePath = await uploadImage(body.image_url as string, `profile-pics/${userId}`);
+    if (typeof imagePath !== 'string') {
+      const error = new Error(imagePath.error);
+      error.name = 'InvalidInputError';
+      throw error;
+    }
+
     body.image_url = imagePath;
   }
 

@@ -6,6 +6,10 @@ export type Request = schema.Request;
 export type Response = schema.Response;
 export type Neighborhood = schema.Neighborhood;
 
+export interface ErrorObj {
+  error: string;
+}
+
 /**
  * format of the User data, without password hash, which is sent in response
  */
