@@ -327,7 +327,7 @@ describe('Tests for deleting a request: DELETE /requests/:rId', () => {
     });
 
     expect(response.status).toBe(400);
-    expect(response.body.error).toBe('unable to parse data');
+    expect(response.body.error).toBe('Invalid URL.');
     expect(request).not.toBe(null);
   });
 

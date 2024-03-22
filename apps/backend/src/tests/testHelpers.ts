@@ -41,6 +41,7 @@ const generateUserData = async (createUserData: CreateUserData): Promise<UserWit
     dob: null,
     gender_id: null,
     bio: null,
+    image_url: null,
   };
 
   return Promise.resolve(user);
