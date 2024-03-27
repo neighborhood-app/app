@@ -123,7 +123,7 @@ const isUserMemberOfNeighborhood = async (
     return userIdsAssociatedWithNeighborhood.includes(loggedUserID);
   }
 
-  const error = new Error('No Neighborhood found');
+  const error = new Error('Neighborhood not found.');
   error.name = 'ResourceDoesNotExistError';
   throw error;
 };
