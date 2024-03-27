@@ -47,7 +47,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "generate-prisma-client": "cd ../backend && npx prisma generate"
   },
   "eslintConfig": {
     "extends": [
