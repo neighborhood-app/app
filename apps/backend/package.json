@@ -10,7 +10,7 @@
     "seed": "npx prisma migrate reset",
     "lint": "eslint --ext .ts .",
     "fix-lint": "eslint --fix --ext .ts .",
-    "build": "npx prisma generate --generator production && npx prisma migrate deploy && tsc",
+    "build": "npx prisma generate && npx prisma migrate deploy && tsc",
     "start": "NODE_ENV=production && node build/src/index.js",
     "start-db": "./scripts/start-db.sh",
     "reinitialize-db": "./scripts/reinitialize-db.sh",
