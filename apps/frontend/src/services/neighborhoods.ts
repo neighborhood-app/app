@@ -5,7 +5,7 @@ import { Neighborhood, NeighborhoodsPerPage } from '@neighborhood/backend/src/ty
 import { CreateNeighborhoodData, EditNeighborhoodData, ErrorObj, NeighborhoodType } from '../types';
 import { getStoredUser } from '../utils/auth';
 
-const BASE_URL = '/api/neighborhoods';
+const baseURL = `${process.env.REACT_APP_API}/api/neighborhoods`;
 
 async function getNeighborhoods(cursor?: number): Promise<NeighborhoodsPerPage> {
   const user = getStoredUser();
@@ -13,7 +13,7 @@ async function getNeighborhoods(cursor?: number): Promise<NeighborhoodsPerPage> 
 
   if (user) headers.authorization = `Bearer ${user.token}`;
 
-  const response = await axios.get(BASE_URL, { params: { cursor }, headers });
+  const response = await axios.get(baseURL, { params: { cursor }, headers });
   return response.data;
 }
 
@@ -23,7 +23,7 @@ async function filterByName(searchTerm: string): Promise<Neighborhood[]> {
 
   if (user) headers.authorization = `Bearer ${user.token}`;
 
-  const response = await axios.get(BASE_URL, { params: { searchTerm }, headers });
+  const response = await axios.get(baseURL, { params: { searchTerm }, headers });
 
   return response.data;
 }
@@ -34,7 +34,7 @@ async function filterByLocation(mapBounds: LatLngBounds): Promise<Neighborhood[]
 
   if (user) headers.authorization = `Bearer ${user.token}`;
 
-  const response = await axios.get(BASE_URL, { params: { boundary: JSON.stringify(mapBounds) }, headers });
+  const response = await axios.get(baseURL, { params: { boundary: JSON.stringify(mapBounds) }, headers });
 
   return response.data;
 }
@@ -44,7 +44,7 @@ async function getSingleNeighborhood(id: number): Promise<NeighborhoodType | nul
 
   if (userDataInLocalStorage) {
     const headers = { authorization: `Bearer ${userDataInLocalStorage.token}` };
-    const response = await axios.get(`${BASE_URL}/${id}`, { headers });
+    const response = await axios.get(`${baseURL}/${id}`, { headers });
 
     return response.data;
   }
@@ -59,7 +59,7 @@ async function deleteNeighborhood(
   if (!user) return redirect('/login');
 
   const headers = { authorization: `Bearer ${user.token}` };
-  await axios.delete(`${BASE_URL}/${id}`, { headers });
+  await axios.delete(`${baseURL}/${id}`, { headers });
 
   return redirect('/');
 }
@@ -73,7 +73,7 @@ async function createNeighborhood(
   neighborhoodData.location = neighborhoodData.location ? neighborhoodData.location : null
 
   const headers = { authorization: `Bearer ${user.token}` };
-  const response = await axios.post(`${BASE_URL}`, neighborhoodData, { headers });
+  const response = await axios.post(`${baseURL}`, neighborhoodData, { headers });
   
   return response.data;
 }
@@ -86,7 +86,7 @@ async function connectUserToNeighborhood(
   if (!user) return redirect('/login');
   
   const headers = { authorization: `Bearer ${user.token}` };
-  const response = await axios.post(`${BASE_URL}/${neighborhoodId}/join/${userId}`, null, { headers });
+  const response = await axios.post(`${baseURL}/${neighborhoodId}/join/${userId}`, null, { headers });
 
   return response.data;
 }
@@ -98,7 +98,7 @@ async function leaveNeighborhood(
   if (!user) return redirect('/login');
 
   const headers = { authorization: `Bearer ${user.token}` };
-  await axios.put(`${BASE_URL}/${neighborhoodId}/leave`, null, { headers });
+  await axios.put(`${baseURL}/${neighborhoodId}/leave`, null, { headers });
 
   return redirect('/');
 }
@@ -115,7 +115,7 @@ async function editNeighborhood(
   const headers = { authorization: `Bearer ${user.token}` };
   let response;
   try {
-    response = await axios.put(`${BASE_URL}/${neighborhoodId}`, neighborhoodData, { headers });
+    response = await axios.put(`${baseURL}/${neighborhoodId}`, neighborhoodData, { headers });
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) return error.response?.data;

@@ -4,7 +4,7 @@ import { UserWithoutPasswordHash, LoginData } from '@neighborhood/backend/src/ty
 import { ErrorObj, SignUpData, UserInfo } from '../types';
 import login from './login';
 
-const baseURL = '/api/users';
+const baseURL = `${process.env.REACT_APP_API}/api/users`;
 
 async function signUp(signUpData: SignUpData) {
   

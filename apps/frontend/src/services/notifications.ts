@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getStoredUser } from '../utils/auth';
 
-const BASE_URL = '/api/notifications';
+const BASE_URL = `${process.env.REACT_APP_API}/api/notifications`;
 
 async function joinNeighborhood(neighborhoodId: number) {
   const user = getStoredUser();
