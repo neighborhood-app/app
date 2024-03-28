@@ -1,22 +1,53 @@
+import { User } from '@prisma/client';
+import { Link } from 'react-router-dom';
+import { Dropdown } from 'react-bootstrap';
+import { useState } from 'react';
 import UserCircle from '../UserCircle/UserCircle';
 import styles from './UserCircleStack.module.css';
 
-export default function UserCircleStack({ usernames }: { usernames?: string[] }) {
-  if (Array.isArray(usernames)) {
-    const displayUsers = usernames.slice(0, 3);
-    const usersLeft = usernames.length - 3;
+export default function UserCircleStack({ users }: { users?: User[] | null }) {
+  const [showUserList, setShowUserList] = useState(false);
+
+  if (Array.isArray(users)) {
+    const displayUsers = users.slice(0, 3);
+    // const restOfUsers = users.slice(3);
+    const usersLeft = users.length - 3;
 
     return (
       <div className={styles.circleContainer}>
-        {displayUsers.map((username, index) =>
+        {displayUsers.map((user, index) =>
           index === displayUsers.length - 1 ? (
-            <UserCircle key={username} username={username} isLast={true} />
+            <Link key={user.id} to={`/users/${user.id}`} className={styles.circleLink}>
+              <UserCircle username={user.username} isLast={true} />
+            </Link>
           ) : (
-            <UserCircle key={username} username={username} />
+            <Link key={user.id} to={`/users/${user.id}`} className={styles.circleLink}>
+              <UserCircle key={user.id} username={user.username} />
+            </Link>
           ),
         )}
         {/* If there are more than 3 users a circle is shown with how many users there are left. */}
-        {usersLeft > 0 ? <UserCircle username={`+1${usersLeft}`} isLast={true} /> : null}
+        {usersLeft > 0 ? (
+          <div
+            className={styles.dropdownContainer}
+            onMouseEnter={() => setShowUserList(true)}
+            onMouseLeave={() => setShowUserList(false)}>
+            <UserCircle username={`...`} isLast={true} />
+            <Dropdown show={showUserList} className={styles.dropdown}>
+              <Dropdown.Menu className={styles.dropdownMenu}>
+                {users.map((user) => (
+                  <Dropdown.Item
+                    key={user.id}
+                    href={`/users/${user.id}`}
+                    className={styles.dropdownItem}>
+                    <UserCircle username={user.username} inList={true} />
+                    {user.username}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+        ) : null}
       </div>
     );
   }
