@@ -75,7 +75,7 @@ const validateURLParams = (
   const valid = values.map(Number).every(val => !Number.isNaN(val));
   if (valid) return next();
 
-  const error = new Error('unable to parse data');
+  const error = new Error('Invalid URL.');
   error.name = 'InvalidInputError';
   throw error;
 };
