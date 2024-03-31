@@ -3,14 +3,14 @@ import { Request, CreateRequestData } from '@neighborhood/backend/src/types';
 import { StorageWithUser, UserInfo, FullRequestData, EditRequestData } from '../types';
 import { getStoredUser } from '../utils/auth';
 
-const BASE_URL = '/api/requests';
+const baseURL = `${process.env.REACT_APP_API}/api/requests`;
 
 async function getSingleRequest(id: Number): Promise<FullRequestData | null> {
   const user = getStoredUser();
 
   if (user) {
     const headers = { authorization: `Bearer ${user.token}` };
-    const response = await axios.get(`${BASE_URL}/${id}`, { headers });
+    const response = await axios.get(`${baseURL}/${id}`, { headers });
     return response.data;
   }
 
@@ -26,7 +26,7 @@ async function createRequest(requestData: CreateRequestData): Promise<Request> {
     headers.authorization = `Bearer ${userObj.token}`;
   }
 
-  const response = await axios.post(BASE_URL, requestData, { headers });
+  const response = await axios.post(baseURL, requestData, { headers });
 
   return response.data;
 }
@@ -39,7 +39,7 @@ async function editRequest(requestData: EditRequestData, requestId: number): Pro
     headers.authorization = `Bearer ${user.token}`;
   }
 
-  const response = await axios.put(`${BASE_URL}/${requestId}`, requestData, { headers });
+  const response = await axios.put(`${baseURL}/${requestId}`, requestData, { headers });
 
   return response.data;
 }
@@ -52,7 +52,7 @@ async function closeRequest(requestId: number): Promise<Request> {
     headers.authorization = `Bearer ${user.token}`;
   }
 
-  const response = await axios.put(`${BASE_URL}/${requestId}`, { status: 'CLOSED' }, { headers });
+  const response = await axios.put(`${baseURL}/${requestId}`, { status: 'CLOSED' }, { headers });
 
   return response.data;
 }
@@ -65,7 +65,7 @@ async function deleteRequest(requestId: number) {
     headers.authorization = `Bearer ${user.token}`;
   }
 
-  const response = await axios.delete(`${BASE_URL}/${requestId}`, { headers });
+  const response = await axios.delete(`${baseURL}/${requestId}`, { headers });
 
   return response.data;
 }

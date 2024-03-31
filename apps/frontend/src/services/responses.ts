@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { EditResponseData, Response, ResponseData } from '@neighborhood/backend/src/types';
 import { getStoredUser } from '../utils/auth';
 
-const baseURL = '/api/responses';
+const baseURL = `${process.env.REACT_APP_API}/api/responses`;
 const user = getStoredUser();
 
 async function createResponse(responseInput: ResponseData): Promise<Response | { error: string }> {
