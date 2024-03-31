@@ -8,6 +8,7 @@
     "tsc": "tsc",
     "dev": "NODE_ENV=development npx prisma migrate dev && ts-node-dev --quiet --exit-child src/index.ts",
     "seed": "npx prisma migrate reset",
+    "seed-production": "ts-node ./prisma/seed-production.ts",
     "lint": "eslint --ext .ts .",
     "fix-lint": "eslint --fix --ext .ts .",
     "build": "npx prisma generate && npx prisma migrate deploy && tsc",
