@@ -2,7 +2,7 @@ import axios from 'axios';
 import { UserWithRelatedData, UpdateUserInput, UserWithoutPasswordHash } from '@neighborhood/backend/src/types';
 import { getStoredUser } from '../utils/auth';
 
-const baseURL = '/api/users';
+const baseURL = `${process.env.REACT_APP_API}/api/users`;
 
 async function getUserData(id: number): Promise<UserWithRelatedData> {
   const headers: { authorization?: string } = {};

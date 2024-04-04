@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { LoginResponseData, LoginData } from '@neighborhood/backend/src/types';
 import { ErrorObj } from '../types';
 
-const baseURL = '/api/login';
+const baseURL = `${process.env.REACT_APP_API}/api/login`;
 
 async function login(loginData: LoginData): Promise<LoginResponseData | ErrorObj> {
   try { 
