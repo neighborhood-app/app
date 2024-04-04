@@ -2,6 +2,7 @@ import { User } from '@prisma/client';
 import { Link } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 import { useState } from 'react';
+import OutsideClickHandler from 'react-outside-click-handler';
 import UserCircle from '../UserCircle/UserCircle';
 import styles from './UserCircleStack.module.css';
 
@@ -28,10 +29,12 @@ export default function UserCircleStack({ users }: { users?: User[] | null }) {
         )}
         {/* If there are more than 3 users a circle is shown with how many users there are left. */}
         {usersLeft > 0 ? (
+          <OutsideClickHandler onOutsideClick={() => setShowUserList(false)}>
           <div
             className={styles.dropdownContainer}
             onMouseEnter={() => setShowUserList(true)}
-            onMouseLeave={() => setShowUserList(false)}>
+            onMouseLeave={() => setShowUserList(false)}
+            onTouchEnd={() => setShowUserList(true)}>
             <UserCircle username={`...`} isLast={true} />
             <Dropdown show={showUserList} className={styles.dropdown}>
               <Dropdown.Menu className={styles.dropdownMenu}>
@@ -40,13 +43,14 @@ export default function UserCircleStack({ users }: { users?: User[] | null }) {
                     key={user.id}
                     href={`/users/${user.id}`}
                     className={styles.dropdownItem}>
-                    <UserCircle username={user.username} inList={true} />
                     {user.username}
                   </Dropdown.Item>
                 ))}
               </Dropdown.Menu>
             </Dropdown>
+            
           </div>
+          </OutsideClickHandler>
         ) : null}
       </div>
     );
