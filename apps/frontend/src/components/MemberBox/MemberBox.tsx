@@ -15,7 +15,7 @@ export default function MemberBox({ showLeaveBtn, admin, users }: Props) {
           {user.username}
         </li>
       ))
-    : 'There are currently no members of this neighborhood.';
+    : 'There are currently no members of this neighbourhood.';
 
   return (
     <div className={`${styles.column} ${styles.memberColumn}`}>
@@ -33,7 +33,7 @@ export default function MemberBox({ showLeaveBtn, admin, users }: Props) {
       <ul className={styles.list}>{userNames}</ul>
       {showLeaveBtn ? (
         <CustomBtn variant="danger" className={styles.button}>
-          Leave Neighborhood
+          Leave Neighbourhood
         </CustomBtn>
       ) : null}
     </div>

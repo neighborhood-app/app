@@ -35,8 +35,8 @@ const Footer = ({ variant = 'layout' }: Props) => (
     {variant === 'landing' ? (
       <div className={styles.signupAppPart}>
         <p>
-          Join Neighborhood today and be a part of the movement to create stronger, more united
-          neighborhoods.
+          Join Neighbourhood today and be a part of the movement to create stronger, more united
+          neighbourhoods.
         </p>
       </div>
     ) : null}

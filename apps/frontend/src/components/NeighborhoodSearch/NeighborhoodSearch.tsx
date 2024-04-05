@@ -132,7 +132,7 @@ export default function NeighborhoodSearch({
             <CustomBtn
               className={styles.iconBtn}
               variant="primary"
-              title="Create a new neighborhood"
+              title="Create a new neighbourhood"
               onClick={handleShow}>
               <FontAwesomeIcon className={styles.plusIcon} icon={faPlus}></FontAwesomeIcon>
             </CustomBtn>
@@ -152,7 +152,7 @@ export default function NeighborhoodSearch({
           </InfiniteScroll>
         ) : (
           <Col className={styles.noNhoodsText}>
-            <p>Currently, there are no neighborhoods that match your criteria.</p>
+            <p>Currently, there are no neighbourhoods that match your criteria.</p>
           </Col>
         )}
       </Container>

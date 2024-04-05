@@ -119,7 +119,7 @@ export default function LandingPage() {
       <Navbar className={styles.header} expand="lg" sticky="top">
         <Navbar.Brand href="#home" className={styles.logo}>
           <i className="fa-solid fa-people-roof"></i>
-          <span> Neighborhood</span>
+          <span> Neighbourhood</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav" className="">
@@ -130,8 +130,8 @@ export default function LandingPage() {
             <Nav.Link href="#howItWorks" className={styles.navItem}>
               How it works?
             </Nav.Link>
-            <Nav.Link href="#whyNeighborhood" className={styles.navItem}>
-              Why Neighborhood?
+            <Nav.Link href="#whyNeighbourhood" className={styles.navItem}>
+              Why Neighbourhood?
             </Nav.Link>
           </Nav>
           <Nav className="me-auto flex-row justify-content-center">
@@ -154,11 +154,13 @@ export default function LandingPage() {
           <h1>Building Stronger Communities Together!</h1>
           <p>
             Are you ready to transform your community into a vibrant, connected hub of collaboration
-            and support? Introducing Neighborhood, the social-media app designed to foster
+            and support? Introducing Neighbourhood, the social-media app designed to foster
             meaningful connections, and build a stronger, more closely associated community.
           </p>
           <CustomBtn className={styles.btn} variant="primary">
-            <Link to={'/signup'} className={styles.signUpLink}>Sign Up</Link>
+            <Link to={'/signup'} className={styles.signUpLink}>
+              Sign Up
+            </Link>
           </CustomBtn>
         </div>
 
@@ -177,16 +179,16 @@ export default function LandingPage() {
         <h1>How It Works?</h1>
         <div className={styles.cardContainer}>
           <div className={styles.card}>
-            <h2>Join Your Neighborhood</h2>
+            <h2>Join Your Neighbourhood</h2>
             <p>
-              Sign up with a few easy steps and start connecting with your neighbors. Your community
-              is just a click away.
+              Sign up with a few easy steps and start connecting with your neighbours. Your
+              community is just a click away.
             </p>
           </div>
           <div className={styles.card}>
             <h2>Connect and Contribute</h2>
             <p>
-              Attend local events, and gatherings, or help your neighbors. Neighborhood makes it
+              Attend local events, and gatherings, or help your neighbours. Neighbourhood makes it
               easy to bring your community closer.
             </p>
           </div>
@@ -194,14 +196,14 @@ export default function LandingPage() {
             <h2>Share Ideas and Updates</h2>
             <p>
               Keep everyone in the loop by sharing thoughts, updates, and exciting news with your
-              neighbors. Communication is key to a thriving community.
+              neighbours. Communication is key to a thriving community.
             </p>
           </div>
         </div>
       </section>
 
-      <section id="whyNeighborhood" className={styles.explore}>
-        <h1>Why Neighborhood?</h1>
+      <section id="whyNeighbourhood" className={styles.explore}>
+        <h1>Why Neighbourhood?</h1>
         <div className={styles.container}>
           <Swiper
             modules={[Autoplay, Navigation, Pagination]}
@@ -243,8 +245,8 @@ export default function LandingPage() {
                 <img className={styles.img} src={img10} alt="" />
                 <h2>Collaborate on Local Projects</h2>
                 <p>
-                  Neighborhood allows you to turn ideas into action from organizing a neighborhood
-                  clean-up to starting a community garden. Engage with your neighbors and make a
+                  Neighbourhood allows you to turn ideas into action from organizing a neighbourhood
+                  clean-up to starting a community garden. Engage with your neighbours and make a
                   positive impact together.
                 </p>
               </div>
@@ -253,10 +255,10 @@ export default function LandingPage() {
             <SwiperSlide className={styles.swiperSlide}>
               <div className={styles.slideContent}>
                 <img className={styles.img} src={img12} alt="" />
-                <h2>Connect with Your Neighbors</h2>
+                <h2>Connect with Your Neighbours</h2>
                 <p>
                   Discover the incredible people who live right next door. From friendly faces to
-                  local experts, the Neighborhood connects you with your community.
+                  local experts, the Neighbourhood connects you with your community.
                 </p>
               </div>
             </SwiperSlide>
@@ -264,11 +266,11 @@ export default function LandingPage() {
             <SwiperSlide className={styles.swiperSlide}>
               <div className={styles.slideContent}>
                 <img className={styles.img} src={img11} alt="" />
-                <h2>Support Your Neighbors</h2>
+                <h2>Support Your Neighbours</h2>
                 <p>
-                  Extend a helping hand to your neighbor who needs help. From lending a cup of sugar
-                  to assisting with a household task, Neighborhood allows you to build a network of
-                  support within arm's reach.
+                  Extend a helping hand to your neighbour who needs help. From lending a cup of
+                  sugar to assisting with a household task, Neighbourhood allows you to build a
+                  network of support within arm's reach.
                 </p>
               </div>
             </SwiperSlide>
@@ -278,7 +280,7 @@ export default function LandingPage() {
                 <img className={styles.img} src={img13} alt="" />
                 <h2>Build a Supportive Network</h2>
                 <p>
-                  Need a helping hand or have a skill to share? Neighborhood is your go-to platform
+                  Need a helping hand or have a skill to share? Neighbourhood is your go-to platform
                   for exchanging favors, skills, and support. Strengthen the bonds that make a
                   community resilient.
                 </p>
@@ -305,8 +307,8 @@ export default function LandingPage() {
         </div>
         <div className={styles.signupAppPart}>
           <p>
-            Join Neighborhood today and be a part of the movement to create stronger, more united
-            neighborhoods.
+            Join Neighbourhood today and be a part of the movement to create stronger, more united
+            neighbourhoods.
           </p>
         </div>
       </footer>

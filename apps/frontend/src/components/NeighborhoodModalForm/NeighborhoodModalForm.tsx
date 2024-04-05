@@ -31,7 +31,7 @@ export default function NeighborhoodModalForm({
 }: Props) {
   const validInputPattern = /\s*(\S\s*){4,}/;
 
-  const [nameInput, setNameInput] = useState(name);  
+  const [nameInput, setNameInput] = useState(name);
   const [locationInput, setLocationInput] = useState<Option | null>(location);
   const [textAreaInput, setTextAreaInput] = useState(description);
   const [isLoading, setIsLoading] = useState(false);
@@ -93,14 +93,14 @@ export default function NeighborhoodModalForm({
   };
 
   useEffect(() => {
-    setNameInput(name);    
+    setNameInput(name);
   }, [name]);
 
   return (
     <Modal show={show} onHide={closeModal} animation={true} backdrop="static" centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          {intent === 'edit-neighborhood' ? 'Edit Neighborhood' : 'Create Neighborhood'}
+          {intent === 'edit-neighborhood' ? 'Edit Neighbourhood' : 'Create Neighbourhood'}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

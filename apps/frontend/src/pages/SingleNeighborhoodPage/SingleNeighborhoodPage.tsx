@@ -197,7 +197,7 @@ export default function SingleNeighborhood() {
           />
           {neighborhoodLocation && smallDisplay ? MapColumn('auto', neighborhoodLocation) : null}
           {userRole !== 'NON-MEMBER' ? (
-            <h2 className={`${styles.title} mt-3`}>Neighborhood Requests</h2>
+            <h2 className={`${styles.title} mt-3`}>Neighbourhood Requests</h2>
           ) : null}
         </Col>
         {neighborhoodLocation && !smallDisplay ? MapColumn('6', neighborhoodLocation) : null}

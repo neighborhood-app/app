@@ -42,7 +42,7 @@ export default function DescriptionBox({
   function handleDeletePrompt() {
     setPromptDetails({
       show: true,
-      text: 'Are you sure you want to do this? This will delete the neighborhood for you and all members!',
+      text: 'Are you sure you want to do this? This will delete the neighbourhood for you and all members!',
       intent: 'delete-neighborhood',
     });
   }
@@ -67,7 +67,7 @@ export default function DescriptionBox({
               route={`/neighborhoods/${neighborhoodId}`}
               variant="primary"
               intent="join-neighborhood"
-              text="Join Neighborhood"
+              text="Join Neighbourhood"
             />
           ) : null}
           <div className={styles.buttonsContainer}>

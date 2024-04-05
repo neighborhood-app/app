@@ -35,8 +35,8 @@ export default function LoginPage() {
     }
 
     setTimeout(() => {
-      setError(null)
-    }, 6000)
+      setError(null);
+    }, 6000);
   }, [loginResponse]);
 
   return (
@@ -45,12 +45,14 @@ export default function LoginPage() {
         <Link className={styles.logoLink} to="/landing">
           <div className={styles.logo}>
             <i className="fa-solid fa-people-roof"></i>
-            <span>Neighborhood</span>
+            <span>Neighbourhood</span>
           </div>
         </Link>
       </Row>
       <Row className={styles.customRow}>
-        {error && <AlertBox className={styles.alertBox} text={error.error} variant="danger"></AlertBox>}
+        {error && (
+          <AlertBox className={styles.alertBox} text={error.error} variant="danger"></AlertBox>
+        )}
         <WelcomeImgBox className={`${styles.customCol} ${styles.imgCol}`}></WelcomeImgBox>
         <LoginForm className={`${styles.customCol} ${styles.formWrapper}`}></LoginForm>
       </Row>
