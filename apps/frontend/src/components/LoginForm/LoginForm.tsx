@@ -42,7 +42,7 @@ export default function LoginForm({
             </Row>
           </Container>
         </Form.Group>
-        <div className="d-grid gap-2 buttonsDiv">
+        <div className="d-grid gap-2">
           {isLoading && <SpinWheel className={styles.spinner}></SpinWheel>}
           <CustomBtn variant="primary" type="submit" onClick={changeLoadState}>
             Submit
