@@ -27,11 +27,13 @@ export async function action({ request }: { request: Request }) {
 
 export default function LoginPage() {
   const [error, setError] = useState<ErrorObj | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const loginResponse = useActionData() as Response | ErrorObj;
 
   useEffect(() => {
     if (loginResponse && 'error' in loginResponse) {
       setError(loginResponse);
+      setIsLoading(false);
     }
 
     setTimeout(() => {
@@ -54,7 +56,7 @@ export default function LoginPage() {
           <AlertBox className={styles.alertBox} text={error.error} variant="danger"></AlertBox>
         )}
         <WelcomeImgBox className={`${styles.customCol} ${styles.imgCol}`}></WelcomeImgBox>
-        <LoginForm className={`${styles.customCol} ${styles.formWrapper}`}></LoginForm>
+        <LoginForm isLoading={isLoading} setIsLoading={setIsLoading} className={`${styles.customCol} ${styles.formWrapper}`}></LoginForm>
       </Row>
     </Container>
   );

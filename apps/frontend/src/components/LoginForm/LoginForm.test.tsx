@@ -11,7 +11,7 @@ test('LoginForm is rendered', async () => {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <LoginForm className="" />,
+      element: <LoginForm isLoading={false} setIsLoading={() => {}} className="" />,
     },
   ]);
 
