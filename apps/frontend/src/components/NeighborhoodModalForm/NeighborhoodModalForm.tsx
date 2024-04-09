@@ -156,6 +156,7 @@ export default function NeighborhoodModalForm({
             <Form.Control
               as="textarea"
               rows={6}
+              maxLength={400}
               name="description"
               value={textAreaInput}
               onChange={(event) => {
