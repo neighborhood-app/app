@@ -611,7 +611,7 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
     expect(response.status).toBe(400);
   });
 
-    test.only('Update with too long description raises an error', async () => {
+    test('Update with too long description raises an error', async () => {
       const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
         where: {
           name: "Bob's Neighborhood",
