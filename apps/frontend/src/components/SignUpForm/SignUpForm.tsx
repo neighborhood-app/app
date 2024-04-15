@@ -2,10 +2,20 @@ import { Form, Col } from 'react-bootstrap';
 import { Form as FormRouter, useNavigate } from 'react-router-dom';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import styles from './SignUpForm.module.css';
+import SpinWheel from '../SpinWheel/SpinWheel';
 
-export default function SignUpForm({ className }: { className: string }) {
+export default function SignUpForm({
+  className,
+  isLoading,
+  setIsLoading,
+}: {
+  className: string;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const navigate = useNavigate();
   const redirectToLogin = () => navigate('/login');
+  const changeLoadState = () => setIsLoading(true);
 
   return (
     <Col lg={6} className={className}>
@@ -43,7 +53,8 @@ export default function SignUpForm({ className }: { className: string }) {
           </Form.Text>
         </Form.Group>
         <div className="d-grid gap-2">
-          <CustomBtn variant="primary" type="submit">
+          {isLoading && <SpinWheel className={styles.spinner}></SpinWheel>}
+          <CustomBtn variant="primary" type="submit" onClick={changeLoadState}>
             Submit
           </CustomBtn>
           <CustomBtn variant="outline-dark" onClick={redirectToLogin}>

@@ -454,8 +454,9 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
   let token: string;
 
   beforeAll(async () => {
-    const loginResponse: Response = await api.post('/api/login').send(BOBS_LOGIN_DATA);
+    await seed();
 
+    const loginResponse: Response = await api.post('/api/login').send(BOBS_LOGIN_DATA);
     token = loginResponse.body.token;
   });
 
@@ -514,7 +515,7 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
       .put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`)
       .set('Authorization', `Bearer ${token}`)
       .send(newData);
-
+    
     expect(response.body).toEqual({ success: "Neighborhood 'Test' has been updated." });
     expect(response.status).toEqual(200);
     expect(
@@ -610,6 +611,27 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
 
     expect(response.status).toBe(400);
   });
+
+    test('Update with too long description raises an error', async () => {
+      const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
+        where: {
+          name: "Bob's Neighborhood",
+        },
+      });
+
+      const newData = {
+        name: 'Test',
+        description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      };
+
+      const response: Response = await api
+        .put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(newData);
+
+      expect(response.status).toBe(400);
+    });
 
   test('Update with invalid property value types fails', async () => {
     const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
