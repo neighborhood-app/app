@@ -454,8 +454,9 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
   let token: string;
 
   beforeAll(async () => {
-    const loginResponse: Response = await api.post('/api/login').send(BOBS_LOGIN_DATA);
+    await seed();
 
+    const loginResponse: Response = await api.post('/api/login').send(BOBS_LOGIN_DATA);
     token = loginResponse.body.token;
   });
 
@@ -502,7 +503,7 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
     });
   });
 
-  test.only('Partial update works', async () => {
+  test('Partial update works', async () => {
     const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
       where: {
         name: "Bob's Neighborhood",
@@ -514,8 +515,6 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
       .put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`)
       .set('Authorization', `Bearer ${token}`)
       .send(newData);
-
-    console.log(response);
     
     expect(response.body).toEqual({ success: "Neighborhood 'Test' has been updated." });
     expect(response.status).toEqual(200);

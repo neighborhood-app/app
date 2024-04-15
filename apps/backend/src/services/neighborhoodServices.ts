@@ -507,8 +507,7 @@ const createNeighborhood = async (
   }
 };
 
-// @ts-ignore
-const editNeighborhood = async (id: number, neighborhoodData): Promise<Neighborhood> => {
+const editNeighborhood = async (id: number, neighborhoodData: any): Promise<Neighborhood> => {
   const MAX_DESC_CHARS = 400;
   const MIN_NAME_CHARS = 4;
 
@@ -526,7 +525,7 @@ const editNeighborhood = async (id: number, neighborhoodData): Promise<Neighborh
     }
   }
 
-  if (neighborhoodData.description.length > MAX_DESC_CHARS) {
+  if (neighborhoodData.description && neighborhoodData.description.length > MAX_DESC_CHARS) {
     const error = new Error('Neighborhood description cannot exceed 400 characters.');
     error.name = 'InvalidInputError';
     throw error;

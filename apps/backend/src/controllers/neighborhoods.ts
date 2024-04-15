@@ -98,12 +98,12 @@ neighborhoodsRouter.delete(
   }),
 );
 
+// Edit a neighborhood
 neighborhoodsRouter.put(
   '/:id',
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const neighborhoodID = Number(req.params.id);
-    // LoginValidator ensures that loggedUserId is present
     const loggedUserID = req.loggedUserId as number;
 
     const isUserAdminOfNeighborhood = await neighborhoodServices.isUserAdminOfNeighborhood(
@@ -112,7 +112,7 @@ neighborhoodsRouter.put(
     );
 
     if (!isUserAdminOfNeighborhood) {
-      return res.status(403).send({ error: 'User is not the admin of this neighborhood' });
+      return res.status(403).send({ error: 'You are not the admin of this neighborhood.' });
     }
 
     const data = req.body;
