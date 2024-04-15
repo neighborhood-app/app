@@ -502,7 +502,7 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
     });
   });
 
-  test('Partial update works', async () => {
+  test.only('Partial update works', async () => {
     const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
       where: {
         name: "Bob's Neighborhood",
@@ -515,6 +515,8 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
       .set('Authorization', `Bearer ${token}`)
       .send(newData);
 
+    console.log(response);
+    
     expect(response.body).toEqual({ success: "Neighborhood 'Test' has been updated." });
     expect(response.status).toEqual(200);
     expect(
