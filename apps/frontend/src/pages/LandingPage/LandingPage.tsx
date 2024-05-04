@@ -299,7 +299,7 @@ export default function LandingPage() {
               <i className="bx bxl-github"></i>
             </a>
             {/* TODO: Add link to LinkedIn page for project */}
-            <a href="#">
+            <a href="https://www.linkedin.com/company/neighbourhood-community">
               {' '}
               <i className="bx bxl-linkedin"></i>
             </a>
