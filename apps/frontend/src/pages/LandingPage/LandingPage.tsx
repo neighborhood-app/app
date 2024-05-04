@@ -23,11 +23,11 @@ const img13 = require('./images/img-13.jpg');
 // const img14 = require('./images/img-14.jpg');
 
 ScrollReveal().reveal('.scroll-btn-animation', {
-  delay: 1400,
+  delay: 1000,
   easing: 'ease-in',
   origin: 'top',
   distance: '30px',
-  duration: 800,
+  duration: 600,
 });
 
 export default function LandingPage() {
@@ -38,19 +38,19 @@ export default function LandingPage() {
       delay: 200,
       easing: 'ease-in',
       origin: 'top',
-      duration: 800,
+      duration: 600,
     });
 
     ScrollReveal().reveal('[class*="content"] p', {
-      delay: 800,
+      delay: 600,
       easing: 'ease-in',
       origin: 'top',
       distance: '30px',
-      duration: 800,
+      duration: 600,
     });
 
     ScrollReveal().reveal('[class*="card"]', {
-      delay: 1400,
+      delay: 1000,
       interval: 400,
       easing: 'ease-in',
       origin: 'top',
@@ -59,25 +59,25 @@ export default function LandingPage() {
     });
 
     ScrollReveal().reveal('[class*="gettingStarted"] h1', {
-      delay: 500,
+      delay: 400,
       easing: 'ease-in',
       origin: 'top',
-      duration: 800,
+      duration: 600,
     });
 
     ScrollReveal().reveal('[class*="explore"] h1', {
-      delay: 500,
+      delay: 400,
       easing: 'ease-in',
       origin: 'top',
-      duration: 800,
+      duration: 600,
     });
 
     ScrollReveal().reveal('[class*="container"]', {
-      delay: 1400,
+      delay: 1000,
       easing: 'ease-in',
       origin: 'top',
       distance: '30px',
-      duration: 800,
+      duration: 600,
     });
 
     ScrollReveal().reveal('[class*="followUs"] h2', {
@@ -89,7 +89,7 @@ export default function LandingPage() {
     });
 
     ScrollReveal().reveal('[class*="followUsList"] i', {
-      delay: 800,
+      delay: 600,
       interval: 400,
       easing: 'ease-in',
       origin: 'top',
@@ -98,7 +98,7 @@ export default function LandingPage() {
     });
 
     ScrollReveal().reveal('[class*="signupAppPart"] p', {
-      delay: 800,
+      delay: 600,
       easing: 'ease-in',
       origin: 'top',
       distance: '30px',
@@ -106,7 +106,7 @@ export default function LandingPage() {
     });
 
     ScrollReveal().reveal('[class*="home"]', {
-      delay: 800,
+      delay: 600,
       easing: 'ease-in',
       origin: 'top',
       distance: '30px',
