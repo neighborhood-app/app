@@ -133,6 +133,7 @@ async function main() {
 
   // Delete all existing subscribers
   const subscribers = await getAllSubscribers();
+  
   const deletePromises: Promise<void>[] = [];
 
   subscribers.forEach(subscriber => {
@@ -147,7 +148,7 @@ async function main() {
     addSubscriberPromises.push(createSubscriber(String(user.id), user.username, user.first_name || '', user.last_name || ''));
   });
 
-  await Promise.all(addSubscriberPromises)
+  await Promise.all(addSubscriberPromises);
 
   //---------------------------------------------------------
   // Bob's Neighborhood

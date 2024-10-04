@@ -10,7 +10,7 @@ import {
 } from '../types';
 import { isObject, stringIsValidDate } from '../utils/helpers';
 import { uploadImage, URL } from './imageServices';
-import { updateSubcriber } from './notificationServices';
+import { updateSubscriber } from './notificationServices';
 
 const USER_FIELDS_WITHOUT_PASSWORD_HASH = {
   id: true,
@@ -312,9 +312,7 @@ const updateUser = async (body: unknown, userId: number): Promise<UserWithoutPas
       avatar: updatedProfile.image_url ? URL + updatedProfile.image_url : '',
     };
 
-    console.log({subscriberInfo});
-
-    updateSubcriber(subscriberInfo);
+    updateSubscriber(subscriberInfo);
 
     return updatedProfile;
   } catch (error: unknown) {

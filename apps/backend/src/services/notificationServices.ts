@@ -130,7 +130,7 @@ export async function getSubscriber(subscriberId: string) {
  * Updates a subscriber's info
  * @param subscriberId
  */
-export async function updateSubcriber({
+export async function updateSubscriber({
   subscriberId,
   firstName,
   lastName,
@@ -147,23 +147,15 @@ export async function updateSubcriber({
     // If none of the values were updated ('' or undefined), return immediately
     if ([firstName, lastName, email, avatar].every((val) => !val)) return;
 
-    // interface UpdateSubData {
-    //   firstName?: string;
-    //   lastName?: string;
-    //   email?: string;
-    //   imageUrl?: string;
-    // }
-
     const subscriberInfo = { firstName, lastName, email, avatar };
-    console.log({ subscriberInfo });
-
     const options = {
       method: 'PUT',
       headers: { Authorization: `ApiKey ${NOVU_API_KEY}` },
       body: subscriberInfo as unknown as BodyInit,
     };
 
-    const res = await fetch(`https://api.novu.co/v1/subscribers/${subscriberId}`, options)
+    // API currently doesn't work properly
+    await fetch(`https://api.novu.co/v1/subscribers/${subscriberId}`, options)
       .then((response) => response.json())
       .then((response) => response.data)
       .catch((err) => {
@@ -177,7 +169,6 @@ export async function updateSubcriber({
     //   email,
     //   avatar: imageUrl,
     // });
-    console.log('novu res', res);
   } catch (error) {
     console.error(error);
   }

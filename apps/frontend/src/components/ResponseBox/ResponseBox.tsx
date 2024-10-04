@@ -10,8 +10,9 @@ import { getStoredUser } from '../../utils/auth';
 import TriggerActionButton from '../TriggerActionButton/TriggerActionButton';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import EditResponseForm from '../EditResponseForm/EditResponseForm';
+import CloudImg from '../CloudImg/CouldImg';
 
-const profilePic = require('./images/profile.jpg');
+const profileImgPlaceholder = require('../../assets/icons/user_icon.png');
 
 type Props = {
   response: ResponseWithUser;
@@ -140,16 +141,20 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
   }
   const contactInfo = displayContactInfo();
 
+  const userImg = response.user.image_url ? (
+    <CloudImg
+      src={response.user.image_url}
+      className={`${styles.profileImg} ${styles.cloudImg}`}></CloudImg>
+  ) : (
+    <Image roundedCircle src={profileImgPlaceholder} className={styles.profileImg}></Image>
+  );
+
   return (
     <Card>
       <Card.Header className={styles.cardHeader}>
         <Row>
           <Col className="pe-0" xs="auto">
-            <Image
-              roundedCircle
-              className={styles.profileImg}
-              src={profilePic}
-              alt="active user on neighbourhood app"></Image>
+            {userImg}
           </Col>
           <Col className="pe-0 text-muted small" xs="auto">
             {response.user.username}

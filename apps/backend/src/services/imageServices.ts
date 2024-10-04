@@ -12,7 +12,7 @@ cloudinary.config({
 });
 
 // Log the configuration
-console.log(cloudinary.config());
+// console.log(cloudinary.config());
 
 // Uploads an image file //
 const uploadImage = async (imagePath: File | string, publicId: string): Promise<string | ErrorObj> => {
@@ -23,12 +23,10 @@ const uploadImage = async (imagePath: File | string, publicId: string): Promise<
     };
 
     try {
-      const result = await cloudinary.uploader.upload(imagePath, options);
-      console.log(result);
+      const result = await cloudinary.uploader.upload(imagePath, options);      
       return result.public_id;
     } catch (error) {
       console.error(error);
-
       return { error: 'Sorry, we couldn\'t upload your image.'}
     }
 };
