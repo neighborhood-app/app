@@ -149,7 +149,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
               roundedCircle
               className={styles.profileImg}
               src={profilePic}
-              alt="active user on neighborhood app"></Image>
+              alt="active user on neighbourhood app"></Image>
           </Col>
           <Col className="pe-0 text-muted small" xs="auto">
             {response.user.username}

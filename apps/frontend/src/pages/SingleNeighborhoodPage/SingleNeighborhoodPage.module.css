@@ -1,5 +1,6 @@
 .wrapper {
   padding: 50px;
+  /* height: 100vh; */
 }
 
 .neighborhoodImg {
@@ -19,6 +20,7 @@
 
 .membersContainer {
   margin-top: 10px;
+  margin-right: 30px;
   display: flex;
   align-self: flex-start;
 }

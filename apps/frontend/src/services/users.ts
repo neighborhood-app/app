@@ -3,7 +3,7 @@ import { UserWithRelatedData, UserWithoutPasswordHash } from '@neighborhood/back
 import { getStoredUser } from '../utils/auth';
 import { ErrorObj, UpdateUserInput } from '../types';
 
-const baseURL = '/api/users';
+const baseURL = `${process.env.REACT_APP_API}/api/users`;
 
 async function getUserData(id: number): Promise<UserWithRelatedData> {
   const headers: { authorization?: string } = {};

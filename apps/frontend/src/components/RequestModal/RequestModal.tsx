@@ -41,7 +41,6 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     setFormSubmitted(true);
 
     if (!validateTextArea()) {
-
       event.stopPropagation();
     } else {
       submit(form, {
@@ -69,10 +68,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
           className="mb-3"
           minLength={4}
           required
-          isInvalid={
-            (!validTextAreaPattern.test(responseInput)) &&
-            formSubmitted
-          }
+          isInvalid={!validTextAreaPattern.test(responseInput) && formSubmitted}
           isValid={validTextAreaPattern.test(responseInput)}
           onChange={(event) => {
             setResponseInput(event.target.value);
@@ -128,7 +124,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
     handleCloseModal();
     revalidator.revalidate();
   }
-  
+
   const responses = request.responses.map((responseObj: ResponseWithUser) => (
     <ResponseBox response={responseObj} requestOwnerId={request.user_id} key={responseObj.id} />
   ));
@@ -183,7 +179,7 @@ export default function RequestModal({ show, handleCloseModal, request }: Props)
           <section className={styles.currentRequestInfo}>
             <img
               src={requestImg}
-              alt="active request on neighborhood app"
+              alt="active request on neighbourhood app"
               className={styles.requestImage}
             />
             <div className={styles.requestContent}>

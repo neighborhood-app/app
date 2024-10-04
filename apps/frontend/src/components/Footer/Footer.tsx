@@ -12,7 +12,7 @@ const Footer = ({ variant = 'layout' }: Props) => (
         {/*
               Icons are too small
             */}
-        <a href="#">
+        {/* <a href="#">
           <i className="bx bxl-facebook-square"></i>
         </a>
         <a href="#">
@@ -21,18 +21,22 @@ const Footer = ({ variant = 'layout' }: Props) => (
         </a>
         <a href="#">
           <i className="bx bxl-twitter"></i>
-        </a>
+        </a> */}
         <a href="https://github.com/neighborhood-app/app">
           {' '}
           <i className="bx bxl-github"></i>
+        </a>
+        <a href="#">
+          {' '}
+          <i className="bx bxl-linkedin"></i>
         </a>
       </div>
     </div>
     {variant === 'landing' ? (
       <div className={styles.signupAppPart}>
         <p>
-          Join Neighborhood today and be a part of the movement to create stronger, more united
-          neighborhoods.
+          Join Neighbourhood today and be a part of the movement to create stronger, more united
+          neighbourhoods.
         </p>
       </div>
     ) : null}

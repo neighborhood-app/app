@@ -100,10 +100,10 @@ describe('Tests for getting all neighborhoods: GET /neighborhoods', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(res1.status).toEqual(404);
-    expect(res1.body).toEqual({ error: 'No Neighborhood found' });
+    expect(res1.body).toEqual({ error: 'Neighborhood not found.' });
 
     expect(res2.status).toEqual(404);
-    expect(res2.body).toEqual({ error: 'No Neighborhood found' });
+    expect(res2.body).toEqual({ error: 'Neighborhood not found.' });
   });
 
   test('/?searchTerm=:searchTerm returns neighborhoods that match the search term', async () => {
@@ -222,7 +222,7 @@ describe('Tests for getting a single neighborhood: GET /neighborhoods/:id', () =
       .get('/api/neighborhoods/0')
       .set('Authorization', `Bearer ${token}`);
     expect(response.status).toEqual(404);
-    expect(response.body.error).toEqual('No Neighborhood found');
+    expect(response.body.error).toEqual('Neighborhood not found.');
   });
 
   test('GET /neighborhoods/:id only returns the id, name, description and location of neighborhood if user is not logged in', async () => {
@@ -323,7 +323,8 @@ describe('Tests for creating a single neighborhood: POST /neighborhoods/:id ', (
 
     const neighborhoodUsers = createNeighborhoodResponse.body.users;
 
-    const userNames = neighborhoodUsers.map((u: { username: any }) => u.username);
+    const userNames = neighborhoodUsers.map((u: { username: string }) => u.username);
+    
     expect(userNames).toContain(BOBS_LOGIN_DATA.username);
 
     expect(createNeighborhoodResponse.body.name).toBe(NEW_NEIGHBORHOOD_NAME);
@@ -453,8 +454,9 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
   let token: string;
 
   beforeAll(async () => {
-    const loginResponse: Response = await api.post('/api/login').send(BOBS_LOGIN_DATA);
+    await seed();
 
+    const loginResponse: Response = await api.post('/api/login').send(BOBS_LOGIN_DATA);
     token = loginResponse.body.token;
   });
 
@@ -513,7 +515,7 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
       .put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`)
       .set('Authorization', `Bearer ${token}`)
       .send(newData);
-
+    
     expect(response.body).toEqual({ success: "Neighborhood 'Test' has been updated." });
     expect(response.status).toEqual(200);
     expect(
@@ -609,6 +611,27 @@ describe('Tests for updating a single neighborhood: PUT /neighborhoods/:id', () 
 
     expect(response.status).toBe(400);
   });
+
+    test('Update with too long description raises an error', async () => {
+      const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({
+        where: {
+          name: "Bob's Neighborhood",
+        },
+      });
+
+      const newData = {
+        name: 'Test',
+        description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      };
+
+      const response: Response = await api
+        .put(`/api/neighborhoods/${neighborhoodToUpdate!.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(newData);
+
+      expect(response.status).toBe(400);
+    });
 
   test('Update with invalid property value types fails', async () => {
     const neighborhoodToUpdate = await prismaClient.neighborhood.findFirst({

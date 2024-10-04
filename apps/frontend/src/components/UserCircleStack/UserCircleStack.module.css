@@ -1,3 +1,39 @@
 .circleContainer {
   display: flex;
 }
+
+.circleLink {
+  height: fit-content;
+}
+
+.dropdownContainer {
+  width: fit-content;
+  padding-bottom: 2rem;
+}
+
+.dropdown {
+  position: relative;
+  right: 5rem;
+  top: 0.5rem;
+}
+
+.dropdownMenu {
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+}
+
+.dropdownItem:active {
+  background-color: pink;
+}
+
+.hiddenOverlay {
+  position: relative;
+  z-index: -1;
+  height: 5rem;
+  width: 5rem;
+}

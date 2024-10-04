@@ -66,7 +66,7 @@ export default function HomePage() {
   const activeRequests = userData.requests.filter((request) => request.status === 'OPEN');
   const neighborhoodCards =
     neighborhoods.length === 0 ? (
-      <p>You haven't joined any neighborhoods yet!</p>
+      <p>You haven't joined any neighbourhoods yet!</p>
     ) : (
       neighborhoods.map((neighborhood) => (
         <Col className="pe-0" sm="6" md="4" lg="3" key={neighborhood.id}>
@@ -84,12 +84,12 @@ export default function HomePage() {
     <div className={styles.wrapper}>
       {error && <AlertBox text={error.error} variant="danger"></AlertBox>}
       <section>
-        <h2>My neighborhoods</h2>
+        <h2>My neighbourhoods</h2>
         <Container className="p-0 mb-4 mt-4" fluid>
           <Row className="me-0">
             <Col>
               <CustomBtn variant="primary" className={styles.button} onClick={handleShow}>
-                Create neighborhood
+                Create neighbourhood
               </CustomBtn>
             </Col>
           </Row>

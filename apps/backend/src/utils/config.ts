@@ -1,3 +1,8 @@
+// if (process.env.NODE_ENV !== 'production') {
+// 	// eslint-disable-next-line global-require
+// 	require('dotenv').config();
+// }
+
 import { config } from 'dotenv';
 
 config();

@@ -2,7 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Nav, Navbar } from 'react-bootstrap';
-import { faCompass, faHouse, faPeopleRoof, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCompass,
+  faHouse,
+  faPeopleRoof,
+  faRightFromBracket,
+} from '@fortawesome/free-solid-svg-icons';
 import { IPopoverNotificationCenterProps } from '@novu/notification-center';
 import styles from './MainNav.module.css';
 import { getStoredUser, deleteStoredUser } from '../../utils/auth';
@@ -23,7 +28,7 @@ const MainNav = () => {
 
   const logo = (
     <Link to="/landing">
-      <div className='mt-2'>
+      <div className="mt-2">
         <FontAwesomeIcon className={styles.logo} icon={faPeopleRoof} />
       </div>
     </Link>
@@ -50,7 +55,7 @@ const MainNav = () => {
   );
 
   const exploreIconLink = (
-    <Link to={'/explore'} title="Explore neighborhoods">
+    <Link to={'/explore'} title="Explore neighbourhoods">
       <div className={styles.link}>
         <FontAwesomeIcon
           className={`${styles.compassIcon} ${styles.navIcon}`}
@@ -59,9 +64,9 @@ const MainNav = () => {
     </Link>
   );
 
-  const NotificationBell = (
-    position?: IPopoverNotificationCenterProps['position'],
-  ) => <Notifications className={styles.link} position={position}></Notifications>;
+  const NotificationBell = (position?: IPopoverNotificationCenterProps['position']) => (
+    <Notifications className={styles.link} position={position}></Notifications>
+  );
 
   const logoutIconLink = (
     <div className={styles.link} title="Log out">
@@ -78,7 +83,7 @@ const MainNav = () => {
 
   return (
     <>
-      <Navbar className={styles.nav} variant='' expand="sm">
+      <Navbar className={styles.nav} variant="" expand="sm">
         {smallDisplay ? (
           <>
             {NotificationBell('bottom-start')}

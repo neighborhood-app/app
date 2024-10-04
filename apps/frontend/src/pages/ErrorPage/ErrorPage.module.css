@@ -1,5 +1,12 @@
 .error {
-  text-align: center;
+  margin: auto;
+  text-align: justify;
+  padding: 0 2rem;
+  width: fit-content;
+}
+
+.imgContainer {
+  padding: 0 2rem;
 }
 
 .row {
@@ -7,9 +14,9 @@
 }
 
 .column {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   padding: 0;
-  min-width: 0;
+  /* min-width: 0; */
 }
 
 .errorColumn {
@@ -19,6 +26,15 @@
 .sticky {
   position: sticky;
   top: 0;
+}
+ 
+.p {
+  margin: 0;
+}
+
+.errorImg {
+  max-width: 400px;
+  margin: auto;
 }
 
 @media (max-width: 576px) {

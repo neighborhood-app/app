@@ -18,6 +18,11 @@ a:hover {
   text-align: right;
 }
 
+.spinner {
+  margin: auto;
+  margin-bottom: 1rem;
+}
+
 @media screen and (max-width: 575px) {
   .forgotPwdCol {
     text-align: left;

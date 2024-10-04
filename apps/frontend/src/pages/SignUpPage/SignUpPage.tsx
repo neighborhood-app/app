@@ -18,11 +18,14 @@ export async function action({ request }: { request: Request }) {
 
 export default function SignUpPage() {
   const [error, setError] = useState<ErrorObj | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const signUpRes = useActionData() as Response | ErrorObj;
 
   useEffect(() => {
     if (signUpRes && 'error' in signUpRes) {
       setError(signUpRes);
+      setIsLoading(false);
     }
 
     setTimeout(() => {
@@ -36,14 +39,16 @@ export default function SignUpPage() {
         <Link to="/landing">
           <div className={styles.logo}>
             <i className="fa-solid fa-people-roof"></i>
-            <span>Neighborhood</span>
+            <span>Neighbourhood</span>
           </div>
         </Link>
       </Row>
       <Row className={styles.customRow}>
-        {error && <AlertBox className={styles.alertBox} text={error.error} variant='danger'></AlertBox>}
+        {error && (
+          <AlertBox className={styles.alertBox} text={error.error} variant="danger"></AlertBox>
+        )}
         <WelcomeImgBox className={`${styles.customCol} ${styles.imgCol}`}></WelcomeImgBox>
-        <SignUpForm className={`${styles.customCol} ${styles.formWrapper}`}></SignUpForm>
+        <SignUpForm isLoading={isLoading} setIsLoading={setIsLoading} className={`${styles.customCol} ${styles.formWrapper}`}></SignUpForm>
       </Row>
     </Container>
   );

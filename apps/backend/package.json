@@ -8,9 +8,11 @@
     "tsc": "tsc",
     "dev": "NODE_ENV=development npx prisma migrate dev && ts-node-dev --quiet --exit-child src/index.ts",
     "seed": "npx prisma migrate reset",
+    "seed-production": "ts-node ./prisma/seed-production.ts",
     "lint": "eslint --ext .ts .",
     "fix-lint": "eslint --fix --ext .ts .",
-    "start": "NODE_ENV=development npm run tsc && node build/src/index.js",
+    "build": "npx prisma generate && npx prisma migrate deploy && tsc",
+    "start": "NODE_ENV=production && node build/src/index.js",
     "start-db": "./scripts/start-db.sh",
     "reinitialize-db": "./scripts/reinitialize-db.sh",
     "connect-dev-db": "./scripts/connect-dev-db.sh",
@@ -20,7 +22,7 @@
   },
   "dependencies": {
     "@novu/node": "^0.22.0",
-    "@prisma/client": "^4.14.1",
+    "@prisma/client": "^5.11.0",
     "@types/supertest": "^2.0.12",
     "bcrypt": "^5.1.0",
     "cloudinary": "^2.0.3",
@@ -31,7 +33,9 @@
     "express-async-errors": "^3.1.1",
     "express-form-data": "^2.0.23",
     "jsonwebtoken": "^9.0.0",
-    "pg": "^8.10.0"
+    "pg": "^8.10.0",
+    "prisma": "^5.11.0",
+    "typescript": "^4.5.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -46,11 +50,9 @@
     "eslint-config-airbnb-typescript": "^17.0.0",
     "jest": "^29.5.0",
     "jest-serial-runner": "^1.2.1",
-    "prisma": "^4.14.1",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^4.5.5"
+    "ts-node-dev": "^2.0.0"
   },
   "homepage": "https://github.com/radu-constantin/neighborhood#readme",
   "prisma": {

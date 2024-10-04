@@ -140,11 +140,11 @@ export default function SingleNeighborhood() {
   );
 
   let neighborhoodRequests;
-  let usernames;
+  let users;
 
   if (checkForNeighborhoodDetails(neighborhoodData)) {
     neighborhoodRequests = neighborhoodData.requests;
-    usernames = neighborhoodData.users?.map((user) => user.username);
+    users = neighborhoodData.users;
   } else {
     neighborhoodRequests = null;
   }
@@ -175,7 +175,7 @@ export default function SingleNeighborhood() {
           xs="12"
           md="2"
           className={`${styles.membersContainer} justify-content-md-end ms-md-auto ms-3 pe-0`}>
-          {userRole !== 'NON-MEMBER' ? <UserCircleStack usernames={usernames} /> : null}
+          {userRole !== 'NON-MEMBER' ? <UserCircleStack users={users} /> : null}
           {userRole === 'MEMBER' ? (
             <FontAwesomeIcon
               icon={faDoorOpen}
@@ -197,7 +197,7 @@ export default function SingleNeighborhood() {
           />
           {neighborhoodLocation && smallDisplay ? MapColumn('auto', neighborhoodLocation) : null}
           {userRole !== 'NON-MEMBER' ? (
-            <h2 className={`${styles.title} mt-3`}>Neighborhood Requests</h2>
+            <h2 className={`${styles.title} mt-3`}>Neighbourhood Requests</h2>
           ) : null}
         </Col>
         {neighborhoodLocation && !smallDisplay ? MapColumn('6', neighborhoodLocation) : null}

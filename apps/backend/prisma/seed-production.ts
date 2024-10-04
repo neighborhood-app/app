@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import prismaClient from '../prismaClient';
 import { addSubscribersToTopic, createSubscriber, createTopic, deleteSubscriber, deleteTopic, getAllSubscribers, getTopics } from '../src/services/notificationServices';
-import { Neighborhood } from '../src/types';
 
 const SAMPLE_PASSWORD = 'secret';
 
@@ -50,8 +49,8 @@ async function main() {
   // Create users
   const bob = await prismaClient.user.create({
     data: {
-      username: 'bob1234',
-      email: 'bob1234@example.com',
+      username: 'bob',
+      email: 'bob@example.com',
       password_hash: await getPasswordHash(SAMPLE_PASSWORD),
     },
   });
@@ -104,20 +103,6 @@ async function main() {
     },
   });
 
-  await prismaClient.user.createMany({
-    data: [
-      {username: 'user1', email: 'user1@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
-      {username: 'user2', email: 'user2@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
-      {username: 'user3', email: 'user3@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
-      {username: 'user4', email: 'user4@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
-      {username: 'user5', email: 'user5@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
-      {username: 'user6', email: 'user6@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
-      {username: 'user7', email: 'user7@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
-      {username: 'user8', email: 'user8@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
-      {username: 'user9', email: 'user9@example.com', password_hash: await getPasswordHash(SAMPLE_PASSWORD)},
-    ]
-  })
-
   const users = [bob, radu, shwetank, antonina, maria, mike, leia];
 
   //---------------------------------------------------------
@@ -154,11 +139,9 @@ async function main() {
   const bobNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: bob.id,
-      name: "Bob's Neighborhood",
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+      name: "Maple Grove Estates",
     },
   });
-
   
   await connectUserToNeighborhood(bob.id, bobNeighborhood.id);
   await connectUserToNeighborhood(mike.id, bobNeighborhood.id);
@@ -212,7 +195,7 @@ async function main() {
   const antoninaNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: antonina.id,
-      name: "Antonina's Neighborhood",
+      name: "Sunset Heights",
     },
   });
 
@@ -241,8 +224,8 @@ async function main() {
     data: {
       neighborhood_id: antoninaNeighborhood.id,
       user_id: maria.id,
-      title: 'Install washing machine',
-      content: 'Can anyone help me install a washing machine?',
+      title: 'Setup washing machine',
+      content: 'Can anyone help me setup my washing machine?',
     },
   });
 
@@ -269,7 +252,7 @@ async function main() {
   const shwetankNeighborhood = await prismaClient.neighborhood.create({
     data: {
       admin_id: shwetank.id,
-      name: "Shwetank's Neighborhood",
+      name: "Lakeside Haven",
     },
   });
 
@@ -278,53 +261,6 @@ async function main() {
   const shwetankNeighborhoodKey = `neighborhood:${shwetankNeighborhood.id}`;
   await createTopic(shwetankNeighborhoodKey, shwetankNeighborhood.name);
   await addSubscribersToTopic(shwetankNeighborhoodKey, [shwetank.id]);
-
-  //---------------------------------------------------------
-
-  // Create more neighborhoods and corresponding topics
-  const neighborhoods: Promise<Neighborhood | void>[] = [];
-  for (let count = 1; count < 28;) {
-    for (let userIdx = 0; userIdx < users.length; userIdx += 1) {
-      const user = users[userIdx];
-      const neighborhood = prismaClient.neighborhood.create({
-        data: {
-          admin_id: user.id,
-          name: `Neighborhood ${count}`,
-          description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        },
-      }).then(neighborhood => {        
-        connectUserToNeighborhood(user.id, neighborhood.id).catch(console.error);
-        return neighborhood;
-      }).then(async neighborhood => {
-        const topicKey = `neighborhood:${neighborhood.id}`;
-        createTopic(topicKey, neighborhood.name)
-          .then(_ => {
-            addSubscribersToTopic(topicKey, [user.id])
-          })
-          .catch(console.error);
-      }).catch(err => console.error(err.data));
-
-      neighborhoods.push(neighborhood);
-      count += 1;
-    }
-  }
-
-  try {
-    await Promise.all(neighborhoods);
-  } catch (error) {
-    console.error(error);
-  }
-  //---------------------------------------------------------
-
-  // // Create topics and add subscribers to the new neighborhoods
-  // {
-  //   const promises = [];
-  //   neighborhoods.forEach(neighborhood => {
-  //     promises.push(createTopic(`neighborhood:${neighborhood.id}`, neighborhood.name));
-  //   })
-  //       addSubscribersToTopic(`neighborhood:${neighborhood.id}`, [users[userIdx].id])
-  // }
-  
 }
 
 main()
