@@ -18,6 +18,11 @@
   width: 100%;
 }
 
+.spinner {
+  margin: auto;
+  margin-bottom: 1rem;
+}
+
 @media (max-width: 992px) {
   .form {
     width: 100%;

@@ -20,10 +20,26 @@ const uploadImage = async (imagePath: File | string, publicId: string): Promise<
   const options = {
       public_id: publicId,
       overwrite: true,
+      invalidate: true,
     };
 
     try {
-      const result = await cloudinary.uploader.upload(imagePath, options);      
+      const result = await cloudinary.uploader.upload(imagePath, options);
+      console.log(result);
+      
+      return result.public_id;
+    } catch (error) {
+      console.error(error);
+      return { error: 'Sorry, we couldn\'t upload your image.'}
+    }
+};
+
+// Deletes an image file //
+const deleteImage = async (imagePath: File | string): Promise<string | ErrorObj> => {
+    try {
+      const result = await cloudinary.uploader.destroy(imagePath);   
+      console.log(result);
+      
       return result.public_id;
     } catch (error) {
       console.error(error);
@@ -69,4 +85,4 @@ const uploadImage = async (imagePath: File | string, publicId: string): Promise<
 //   return imageTag;
 // };
 
-export { uploadImage };
+export { uploadImage, deleteImage };

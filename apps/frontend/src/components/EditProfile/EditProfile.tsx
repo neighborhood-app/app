@@ -7,13 +7,21 @@ import extractDate from '../../utils/utilityFunctions';
 import styles from './EditProfile.module.css';
 import { ErrorObj, UpdatableUserFields, UpdateUserInput } from '../../types';
 import userServices from '../../services/users';
+import SpinWheel from '../SpinWheel/SpinWheel';
 
 type Props = {
   profile: UserWithRelatedData;
   closeForm: () => void;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function EditProfile({ profile, closeForm }: Props) {
+export default function EditProfile({
+  profile,
+  closeForm,
+  isLoading,
+  setIsLoading
+ }: Props) {
   const [profPic, setProfPic] = useState<File | undefined>(undefined);
   const [formInput, setFormInput] = useState({
     first_name: profile.first_name || '',
@@ -64,6 +72,13 @@ export default function EditProfile({ profile, closeForm }: Props) {
 
     setProfPic(target.files[0]);
   };
+
+  const changeLoadState = () => setIsLoading(true);
+
+  const cancelEditHandler = () => {
+    setIsLoading(false);
+    closeForm();
+  }
 
   return (
     <>
@@ -141,14 +156,24 @@ export default function EditProfile({ profile, closeForm }: Props) {
               name="image"></Form.Control>
           </Col>
         </Row>
+        <Row className="justify-content-center">
+          {isLoading && <SpinWheel className={styles.spinner}></SpinWheel>}
+        </Row>
         <Row className="mt-4 mt-md-5 justify-content-center">
           <Col md={4} xs={6} className={'d-flex'}>
-            <CustomBtn variant="primary" type="submit" className={styles.btn}>
+            <CustomBtn
+              variant="primary"
+              type="submit"
+              className={styles.btn}
+              onClick={changeLoadState}>
               Submit
             </CustomBtn>
           </Col>
           <Col md={4} xs={6}>
-            <CustomBtn variant="outline-dark" onClick={closeForm} className={styles.btn}>
+            <CustomBtn
+              variant="outline-dark"
+              onClick={cancelEditHandler}
+              className={styles.btn}>
               Cancel
             </CustomBtn>
           </Col>

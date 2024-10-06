@@ -35,6 +35,19 @@ export default function ProfilePage() {
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState<null | ErrorObj>(null);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const loginResponse = useActionData() as Response | ErrorObj;
+
+  useEffect(() => {
+    if (loginResponse && 'error' in loginResponse) {
+      setError(loginResponse);
+      setIsLoading(false);
+    }
+    setTimeout(() => {
+      setError(null);
+    }, 6000);
+  }, [loginResponse]);
+
   useEffect(() => {    
     if (updatedData && 'error' in updatedData) setError(updatedData);
     else if (updatedData) profileData = { ...profileData, ...updatedData };
@@ -65,8 +78,8 @@ export default function ProfilePage() {
   
   return (
     <Container className={styles.container} fluid>
-      <Row className='m-3'>
-        {error && <AlertBox variant='danger' text={error.error}></AlertBox>}
+      <Row className="m-3">
+        {error && <AlertBox variant="danger" text={error.error}></AlertBox>}
       </Row>
       <Row className={styles.header}>
         <Col className={styles.column}>{userImg}</Col>
@@ -82,7 +95,12 @@ export default function ProfilePage() {
       </Row>
       <div>
         {edit ? (
-          <EditProfile profile={profileData} closeForm={closeForm} />
+          <EditProfile
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            profile={profileData}
+            closeForm={closeForm}
+          />
         ) : (
           <ProfileInfo profile={profileData} />
         )}
