@@ -4,7 +4,7 @@ import { fill } from '@cloudinary/url-gen/actions/resize';
 
 // import styles from './CouldImg.module.css';
 
-export default function CloudImg({ src, className }: { src: string;  className: string}) {
+export default function CloudImg({ src, className }: { src: string; className: string }) {
   const cld = new Cloudinary({
     cloud: {
       cloudName: 'dwlk6urra',
@@ -18,9 +18,5 @@ export default function CloudImg({ src, className }: { src: string;  className: 
   myImage.resize(fill().width(250).height(250));
 
   // Render the image in a React component.
-  return (
-    <div>
-      <AdvancedImage className={className} cldImg={myImage} />
-    </div>
-  );
-  }
+  return <AdvancedImage className={className} cldImg={myImage} />;
+}
