@@ -5,6 +5,7 @@ import logger from './logger';
 import config from './config';
 import { RequestWithAuthentication } from '../types';
 import catchError from './catchError';
+// import { decodedTextSpanIntersectsWith } from 'typescript';
 
 /**
  * - Logs method, path and body of the http request
@@ -28,7 +29,7 @@ const unknownEndpoint = (_request: Request, response: Response): void => {
 };
 
 const errorHandler = (error: Error, _req: Request, response: Response, _next: NextFunction)
-: void => {
+  : void => {  
   logger.error(error.message);
 
   if (error.name === 'UserDataError') {
@@ -101,7 +102,7 @@ const tokenExtractor = (req: RequestWithAuthentication, _res: Response, next: Ne
  * else if request has invalid token ends the request with 401
  * else if request has no token, does nothing
  */
-const extractUserId = async (
+const userIdExtractor = (
   req: RequestWithAuthentication,
   res: Response,
   next: NextFunction,
@@ -109,14 +110,21 @@ const extractUserId = async (
   const { token } = req;
 
   if (token) {
-    const secret: string = config.SECRET as string;
-    const decodedToken = jsonwebtoken.verify(token, secret) as JwtPayload;    
-    
-    if (!decodedToken.id) {
-      res.status(401).json({ error: 'Invalid token' });
-    } else {
-      req.loggedUserId = decodedToken.id;
-      req.username = decodedToken.username;
+    // catch synchronous errors thrown by `verify` method
+    try {
+      const secret: string = config.SECRET as string;
+      const decodedToken = jsonwebtoken.verify(token, secret) as JwtPayload;
+
+      if (!decodedToken.id) {
+        res.status(401).json({ error: 'Invalid token' });
+      } else {
+        req.loggedUserId = decodedToken.id;
+        req.username = decodedToken.username;
+      }
+    } catch (error: unknown) {
+      if (error instanceof TokenExpiredError) next(error);
+
+      throw error;
     }
   }
 
@@ -126,7 +134,7 @@ const extractUserId = async (
 /**
  * Same functionality as above but wrapped in `catchError` module
  */
-const userIdExtractor = catchError(extractUserId);
+// const userIdExtractor = catchError(extractUserId);
 
 /**
  * Middleware used to disallow logging in while a user is logged in.
@@ -135,19 +143,19 @@ const userIdExtractor = catchError(extractUserId);
  * else if request has no token, moves on to the next middleware
  * else if request has invalid token, ends the request with 401
  */
-const isUserLoggedIn = catchError(async (
+const isUserLoggedIn = (
   req: RequestWithAuthentication,
   res: Response,
   next: NextFunction,
 ) => {
-  try {
-    return await extractUserId(req, res, next);
+  try {     
+    userIdExtractor(req, res, next);
   } catch (error: unknown) {
-    if (error instanceof TokenExpiredError) return next();
+    if (error instanceof TokenExpiredError) next(error);
 
     throw error;
   }
-});
+};
 
 /**
  * - Ensures that unauthenticated requests are ended immediately

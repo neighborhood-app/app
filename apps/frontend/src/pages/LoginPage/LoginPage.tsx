@@ -13,7 +13,7 @@ import AlertBox from '../../components/AlertBox/AlertBox';
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
   const loginData = Object.fromEntries(formData) as unknown as LoginData;
-  const loginResponse: UserInfo | ErrorObj = await login(loginData);
+  const loginResponse: UserInfo | ErrorObj = await login(loginData);  
 
   if ('error' in loginResponse) {
     return loginResponse;
