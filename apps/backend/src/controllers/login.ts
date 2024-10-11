@@ -11,7 +11,7 @@ loginRouter.post(
   '/',
   middleware.isUserLoggedIn,
   catchError(async (request: RequestWithAuthentication, response: Response) => {
-    const userIsLoggedIn = typeof request.loggedUserId === 'number';
+    const userIsLoggedIn = typeof request.loggedUserId === 'number';    
     if (userIsLoggedIn) return response.status(409).json({ error: 'user already logged in' });
 
     const loginData: LoginData = await loginServices.parseLoginData(request.body);

@@ -34,6 +34,10 @@
   width: 32px;
 }
 
+.cloudImg {
+  border-radius: 50%;
+}
+
 .requestDate {
 padding-top: 0.4em;
 }

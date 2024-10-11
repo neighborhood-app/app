@@ -80,8 +80,7 @@ const generateToken = async (username: string, userId: number): Promise<string> 
   const token = jsonwebtoken.sign(
     userDataForGeneratingToken,
     secret,
-    // { expiresIn: 5 }, // token expires in 1 hour
-    { expiresIn: '24h' }, // token expires in 1000 hours while dev
+    { expiresIn: '24h' }, // token expires in 24 hours
   );
 
   return token;

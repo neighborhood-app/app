@@ -84,20 +84,24 @@ export async function getTopics(numOfTopics: number): Promise<Topic[]> {
 
 /**
  * Creates a new subscriber to receive notifications
- * @param id
+ * @param id to use as subscriberId
+ * @param username
  * @param firstName
  * @param lastName
+ * @param imageURL (optional) to use as the user's avatar
  */
 export async function createSubscriber(
   id: string,
   username: string,
   firstName: string,
   lastName: string,
+  imageURL?: string,
 ) {
   try {
     await novu.subscribers.identify(id, {
       firstName,
       lastName,
+      avatar: imageURL,
       data: {
         username,
       },
@@ -119,6 +123,54 @@ export async function getSubscriber(subscriberId: string) {
   } catch (error: unknown) {
     console.error(`Could not retrieve subscriber with id ${subscriberId}`, error);
     return { error: `Could not retrieve subscriber with id ${subscriberId}` };
+  }
+}
+
+/**
+ * Updates a subscriber's info
+ * @param subscriberId
+ */
+export async function updateSubscriber({
+  subscriberId,
+  firstName,
+  lastName,
+  email,
+  avatar,
+}: {
+  subscriberId: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  avatar?: string;
+}) {
+  try {
+    // If none of the values were updated ('' or undefined), return immediately
+    if ([firstName, lastName, email, avatar].every((val) => !val)) return;
+
+    const subscriberInfo = { firstName, lastName, email, avatar };
+    const options = {
+      method: 'PUT',
+      headers: { Authorization: `ApiKey ${NOVU_API_KEY}` },
+      body: subscriberInfo as unknown as BodyInit,
+    };
+
+    // API currently doesn't work properly
+    await fetch(`https://api.novu.co/v1/subscribers/${subscriberId}`, options)
+      .then((response) => response.json())
+      .then((response) => response.data)
+      .catch((err) => {
+        console.error(err);
+        return { error: `Could not update subscriber ${subscriberId}.` };
+      });
+
+    // const res = await novu.subscribers.update(subscriberId, {
+    //   firstName,
+    //   lastName,
+    //   email,
+    //   avatar: imageUrl,
+    // });
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -202,6 +254,11 @@ export const triggers = {
     username,
   }: JoinNeighborhoodArgs) {
     try {
+      /*
+       * Checks if there is an identical notification in the recent history.
+       * Note that this implementation only checks the first page of results
+       * and not ALL the admin's notifications.
+       */
       const notifications = await getSubscriberNotifications(adminId);
 
       const identicalNotification = notifications.some(
@@ -217,6 +274,9 @@ export const triggers = {
       await novu.trigger('join-neighborhood', {
         to: {
           subscriberId: adminId,
+        },
+        actor: {
+          subscriberId: userId,
         },
         payload: {
           neighborhoodId,

@@ -16,8 +16,10 @@ import { getStoredUser } from '../../utils/auth';
 import CustomBtn from '../CustomBtn/CustomBtn';
 import CreateResponseModal from '../CreateResponseModal/CreateResponseModal';
 import EditRequestModal from '../EditRequestModal/EditRequestModal';
+import CloudImg from '../CloudImg/CouldImg';
 
-const requestImg = require('../../assets/help_wanted.jpeg');
+const requestImg: string = require('../../assets/help_wanted.jpeg');
+const profileImgPlaceholder: string = require('../../assets/icons/user_icon.png');
 
 interface Props {
   request: FullRequestData;
@@ -33,6 +35,7 @@ export default function RequestDescBox({ request }: Props) {
   const handleShowEditReq = () => setShowEditReq(true);
 
   const { user, neighborhood } = request;
+  
   const requestDate = request.time_created.split('T')[0];
   const requestStatusIcon =
     // eslint-disable-next-line no-nested-ternary
@@ -52,6 +55,12 @@ export default function RequestDescBox({ request }: Props) {
 
   const hasUserResponded = request.responses.some(
     (response) => response.user_id === Number(loggedUserId),
+  );
+
+  const userImg = user.image_url ? (
+    <CloudImg src={user.image_url} className={`${styles.userIcon} ${styles.cloudImg}`}></CloudImg>
+  ) : (
+    <Image roundedCircle src={profileImgPlaceholder} className={styles.userIcon}></Image>
   );
 
   const deleteBtnColumn = (
@@ -157,8 +166,8 @@ export default function RequestDescBox({ request }: Props) {
               {displayRequestActions()}
             </Col>
           </Row>
-          <Link to="#" className={styles.reqUserInfo}>
-            <Image className={styles.userIcon} roundedCircle src={requestImg} alt="Request" />
+          <Link to={`/users/${user.id}`} className={styles.reqUserInfo}>
+            {userImg}
             <p className={`${styles.userName} text-muted`}>{userName}</p>
           </Link>
           <p className="pe-sm-3">{request.content}</p>

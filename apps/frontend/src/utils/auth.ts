@@ -37,7 +37,6 @@ export function deleteStoredUser(): null {
  * - checks for user in localStorage
  * - if user present, returns null
  * - else, redirects to '/login'
- * @returns
  */
 export function checkAuthLoader() {
   const user = getStoredUser();
@@ -49,7 +48,11 @@ export function checkAuthLoader() {
   const decodedToken = jwtDecode(user.token);
 
   const isTokenExpired = decodedToken.exp ? Date.now() >= decodedToken.exp * 1000 : null;
-  if (isTokenExpired) return redirect('/login');
+  
+  if (isTokenExpired) {
+    delete window.localStorage.user;
+    return redirect('/login');
+  }
 
   return null;
 }
@@ -58,7 +61,6 @@ export function checkAuthLoader() {
  * - checks for user in localStorage
  * - if user present, it redirects to root
  * - else, returns `null`
- * @returns
  */
 export function redirectLoggedInUser() {
   const user = getStoredUser();

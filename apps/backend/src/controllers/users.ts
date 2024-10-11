@@ -7,8 +7,18 @@ import { UserWithoutPasswordHash, RequestWithAuthentication } from '../types';
 
 const usersRouter = express.Router();
 
+// parse data with connect-multiparty.
+// usersRouter.use(formData.parse());
+// // delete from the request all empty files (size == 0)
+// usersRouter.use(formData.format());
+// // change the file objects to fs.ReadStream
+// usersRouter.use(formData.stream());
+// // union the body and the files
+// usersRouter.use(formData.union());
+
 usersRouter.get(
   '/',
+  middleware.userIdExtractorAndLoginValidator,
   catchError(async (_req: Request, res: Response) => {
     const users: Array<UserWithoutPasswordHash> = await userServices.getAllUsers();
 
@@ -18,6 +28,8 @@ usersRouter.get(
 
 usersRouter.get(
   '/:id',
+  middleware.userIdExtractorAndLoginValidator,
+  middleware.validateURLParams,
   catchError(async (req: Request, res: Response) => {
     const userId: number = Number(req.params.id);
 
@@ -39,6 +51,7 @@ usersRouter.post(
       newUser.username,
       newUser.first_name || '',
       newUser.last_name || '',
+      newUser.image_url || '',
     );
 
     return res.status(201).json(newUser);
@@ -51,10 +64,17 @@ usersRouter.put(
   middleware.userIdExtractorAndLoginValidator,
   catchError(async (req: RequestWithAuthentication, res: Response) => {
     const userId = Number(req.params.id);
-    if (!(userId === Number(req.loggedUserId))) {
+    if (userId !== Number(req.loggedUserId)) {
       return res.status(401).json('Logged user is not the owner of this profile');
     }
-    const updatedUser = await userServices.updateUser(req.body, userId);
+
+    if ('image_url' in req.body && 'path' in req.body.image_url) {
+      req.body.image_url = req.body.image_url.path;
+    } else {
+      req.body.image_url = undefined;
+    }
+    
+    const updatedUser = await userServices.updateUser(req.body, userId);    
     return res.status(200).json(updatedUser);
   }),
 );

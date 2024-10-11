@@ -16,6 +16,8 @@
     "@prisma/client": "^5.11.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@types/express-form-data": "^2.0.5",
     "eslint-config-prettier": "^9.0.0",
     "prettier": "3.0.3"
   }

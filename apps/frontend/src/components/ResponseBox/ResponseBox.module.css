@@ -2,6 +2,10 @@
   width: 30px;
 }
 
+.cloudImg {
+  border-radius: 50%;
+}
+
 .p {
   font-size: 0.7rem;
   line-height: 1.4;

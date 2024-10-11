@@ -6,6 +6,10 @@ export type Request = schema.Request;
 export type Response = schema.Response;
 export type Neighborhood = schema.Neighborhood;
 
+export interface ErrorObj {
+  error: string;
+}
+
 /**
  * format of the User data, without password hash, which is sent in response
  */
@@ -67,6 +71,7 @@ export interface CreateUserData {
   password: string;
   firstName?: string;
   lastName?: string;
+  image_url?: string;
 }
 
 /**
@@ -76,8 +81,9 @@ export type UpdateUserInput = {
   first_name: string;
   last_name: string;
   bio: string;
-  dob?: string;
   email: string;
+  dob?: string;
+  image_url?: string;
 };
 
 export type UpdateUserData = {
@@ -86,6 +92,7 @@ export type UpdateUserData = {
   bio: string;
   dob?: Date;
   email: string;
+  image_url?: string;
 };
 
 /**
