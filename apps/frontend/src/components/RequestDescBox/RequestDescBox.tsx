@@ -58,7 +58,9 @@ export default function RequestDescBox({ request }: Props) {
   );
 
   const userImg = user.image_url ? (
-    <CloudImg src={user.image_url} className={`${styles.userIcon} ${styles.cloudImg}`}></CloudImg>
+    <CloudImg
+      src={user.image_url}
+      className={`${styles.userIcon} ${styles.cloudImg}`}></CloudImg>
   ) : (
     <Image roundedCircle src={profileImgPlaceholder} className={styles.userIcon}></Image>
   );
