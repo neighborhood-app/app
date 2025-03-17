@@ -147,28 +147,12 @@ export async function updateSubscriber({
     // If none of the values were updated ('' or undefined), return immediately
     if ([firstName, lastName, email, avatar].every((val) => !val)) return;
 
-    const subscriberInfo = { firstName, lastName, email, avatar };
-    const options = {
-      method: 'PUT',
-      headers: { Authorization: `ApiKey ${NOVU_API_KEY}` },
-      body: subscriberInfo as unknown as BodyInit,
-    };
-
-    // API currently doesn't work properly
-    await fetch(`https://api.novu.co/v1/subscribers/${subscriberId}`, options)
-      .then((response) => response.json())
-      .then((response) => response.data)
-      .catch((err) => {
-        console.error(err);
-        return { error: `Could not update subscriber ${subscriberId}.` };
-      });
-
-    // const res = await novu.subscribers.update(subscriberId, {
-    //   firstName,
-    //   lastName,
-    //   email,
-    //   avatar: imageUrl,
-    // });
+    await novu.subscribers.update(subscriberId, {
+      firstName,
+      lastName,
+      email,
+      avatar,
+    });
   } catch (error) {
     console.error(error);
   }
