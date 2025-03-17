@@ -36,6 +36,7 @@
 
 .cloudImg {
   border-radius: 50%;
+  pointer-events: none;
 }
 
 .requestDate {

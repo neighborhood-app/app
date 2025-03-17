@@ -58,7 +58,9 @@ export default function RequestDescBox({ request }: Props) {
   );
 
   const userImg = user.image_url ? (
-    <CloudImg src={user.image_url} className={`${styles.userIcon} ${styles.cloudImg}`}></CloudImg>
+    <CloudImg
+      src={user.image_url}
+      className={`${styles.userIcon} ${styles.cloudImg}`}></CloudImg>
   ) : (
     <Image roundedCircle src={profileImgPlaceholder} className={styles.userIcon}></Image>
   );
@@ -166,7 +168,10 @@ export default function RequestDescBox({ request }: Props) {
               {displayRequestActions()}
             </Col>
           </Row>
-          <Link to={`/users/${user.id}`} className={styles.reqUserInfo}>
+          <Link
+            onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
+            to={`/users/${user.id}`}
+            className={styles.reqUserInfo}>
             {userImg}
             <p className={`${styles.userName} text-muted`}>{userName}</p>
           </Link>

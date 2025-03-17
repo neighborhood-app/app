@@ -63,6 +63,7 @@ export default function EditProfile({
     });
 
     closeForm();
+    setIsLoading(false);
   };
 
   const handleImageChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {

@@ -82,7 +82,7 @@ export default function ProfilePage() {
         {error && <AlertBox variant="danger" text={error.error}></AlertBox>}
       </Row>
       <Row className={styles.header}>
-        <Col className={styles.column}>{userImg}</Col>
+        <Col onContextMenu={(e) => e.preventDefault()} className={styles.column}>{userImg}</Col>
         <Col className={`${styles.column} ${styles.headerColumn}`}>
           <h3 className={styles.userName}>@{profileData.username}</h3>
           {nameOfUser && <p>{nameOfUser}</p>}

@@ -15,8 +15,13 @@ export default function CloudImg({ src, className }: { src: string; className: s
   const myImage = cld.image(src);
 
   // Resize to 250 x 250 pixels using the 'fill' crop mode.
-  myImage.resize(fill().width(250).height(250));
+  myImage.resize(fill().width(250).height(250))
 
-  // Render the image in a React component.
-  return <AdvancedImage className={className} cldImg={myImage} />;
+  return (
+    <AdvancedImage
+      onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
+      className={className}
+      cldImg={myImage}
+    />
+  );
 }
