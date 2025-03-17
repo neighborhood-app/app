@@ -168,7 +168,10 @@ export default function RequestDescBox({ request }: Props) {
               {displayRequestActions()}
             </Col>
           </Row>
-          <Link to={`/users/${user.id}`} className={styles.reqUserInfo}>
+          <Link
+            onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
+            to={`/users/${user.id}`}
+            className={styles.reqUserInfo}>
             {userImg}
             <p className={`${styles.userName} text-muted`}>{userName}</p>
           </Link>

@@ -141,6 +141,7 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
   }
   const contactInfo = displayContactInfo();
 
+  console.log(response.user);
   const userImg = response.user.image_url ? (
     <CloudImg
       src={response.user.image_url}
@@ -153,7 +154,10 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
     <Card>
       <Card.Header className={styles.cardHeader}>
         <Row>
-          <Col className="pe-0" xs="auto">
+          <Col
+            onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
+            className="pe-0"
+            xs="auto">
             {userImg}
           </Col>
           <Col className="pe-0 text-muted small" xs="auto">

@@ -20,8 +20,7 @@ const uploadImage = async (imagePath: File | string, publicId: string): Promise<
   const options = {
       public_id: publicId,
       overwrite: true,
-    invalidate: true,
-      type: 'private'
+      invalidate: true,
     };
 
     try {
