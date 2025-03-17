@@ -26,7 +26,7 @@ const Footer = ({ variant = 'layout' }: Props) => (
           {' '}
           <i className="bx bxl-github"></i>
         </a>
-        <a href="#">
+        <a href="https://www.linkedin.com/company/102420198">
           {' '}
           <i className="bx bxl-linkedin"></i>
         </a>
