@@ -65,7 +65,7 @@
 .navIcon {
   color: white;
   font-size: 1.7rem;
-  stroke: #340900;
+  /* stroke: #340900; */
   stroke-width: 40px;
 }
 

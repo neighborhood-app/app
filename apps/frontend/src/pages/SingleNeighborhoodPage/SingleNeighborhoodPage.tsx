@@ -178,6 +178,7 @@ export default function SingleNeighborhood() {
           {userRole !== 'NON-MEMBER' ? <UserCircleStack users={users} /> : null}
           {userRole === 'MEMBER' ? (
             <FontAwesomeIcon
+              title='Leave neighborhood'
               icon={faDoorOpen}
               size="xl"
               className={styles.leaveIcon}
