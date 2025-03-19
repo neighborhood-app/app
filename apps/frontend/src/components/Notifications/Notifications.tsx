@@ -75,12 +75,12 @@ export default function Notifications({
     bellButton: {
       root: {
         svg: {
-          color: '#340900',
+          color: 'white',
           fill: 'white',
           minWidth: '32px',
           minHeight: '32px',
-          '&:hover': { fill: '#ff2b00' },
-          '&:active': { fill: '#e92700' },
+          '&:hover': { fill: '#ff2b00', color: '#ff2b00' },
+          '&:active': { fill: '#e92700', color: '#e92700' },
         },
       },
       dot: {

@@ -141,7 +141,6 @@ export default function ResponseBox({ response, requestOwnerId }: Props) {
   }
   const contactInfo = displayContactInfo();
 
-  console.log(response.user);
   const userImg = response.user.image_url ? (
     <CloudImg
       src={response.user.image_url}
